@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// import { HomeMain } from '~~/.nuxt/components';
-
 const online = useOnline()
 const name = ref('张三')
 
@@ -11,6 +9,7 @@ definePageMeta({
 
 <template>
   <div class="index-box">
+    {{ name }}
     <Suspense>
       <ClientOnly>
         <HomeMain />
