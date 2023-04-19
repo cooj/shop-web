@@ -9,7 +9,6 @@ definePageMeta({
 
 <template>
   <div class="index-box">
-    {{ name }}
     <Suspense>
       <ClientOnly>
         <HomeMain />
