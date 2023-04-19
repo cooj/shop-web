@@ -1,0 +1,40 @@
+{
+  // "extends": "@antfu",
+  "extends": [
+    "@antfu",
+    "@unocss"
+  ],
+  "rules": {
+    // 保存代码时缩进4个空格
+    // "indent": [
+    //   "error",
+    //   4
+    // ]
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "error",
+          "warn"
+        ]
+      }
+    ],
+    "curly": [
+      "error",
+      "multi-line",
+      "consistent"
+    ],
+    "brace-style": "off",
+    "@typescript-eslint/brace-style": [
+      "error",
+      "1tbs"
+      // {
+      //   "allowSingleLine": true
+      // }
+    ],
+    "antfu/if-newline": "off", // 允许if(a==1) return 1  这种单行的格式
+    "vue/component-tags-order": ["error", {
+      "order": [ [ "script", "template" ], "style" ]
+    }]
+  }
+}
