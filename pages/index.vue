@@ -13,13 +13,14 @@ definePageMeta({
   <div class="index-box">
     <Suspense>
       <ClientOnly>
+        ceshi
         <!-- <PageView v-if="online" />
-        <div v-else text-gray:80>
-          You're offline
+          <div v-else text-gray:80>
+            You're offline
         </div> -->
-        <!-- <HomeBanner /> -->
-        <HomeMain />
-      </ClientOnly>
+      <!-- <HomeBanner /> -->
+      <HomeMain />
+    </ClientOnly>
       <template #fallback>
         <div op50 italic>
           <span animate-pulse>Loading...</span>
@@ -27,15 +28,15 @@ definePageMeta({
       </template>
     </Suspense>
     <!-- <InputEntry />
-    <div class="a">
-      {{ name }}
-      <span>-123456</span>
-    </div> -->
+      <div class="a">
+        {{ name }}
+        <span>-123456</span>
+      </div> -->
   </div>
 </template>
 
 <style  lang="scss" scoped>
-.index-box{
+.index-box {
   padding-top: 40px;
   background-color: #f3f3f3;
 }
