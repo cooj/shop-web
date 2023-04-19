@@ -34,13 +34,13 @@
               注册
             </el-button>
           </el-form-item>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-radio-group>
               <el-radio :label="3">
                 我已阅读并同意《工游记网站服务协议》《工游记隐私政策》
               </el-radio>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
     </div>

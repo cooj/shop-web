@@ -37,16 +37,40 @@ declare interface CouponApi_allListResponse {
  * 领取优惠券 请求数据
  */
 declare interface CouponApi_addList {
-  user_id:number //用户id
-  coupon_id:number //优惠券id
-  token:string 
+  user_id: number //用户id
+  coupon_id: number //优惠券id
+  token: string
 }
 
 /**
  * 删除优惠券 请求参数
  */
 declare interface CouponApi_delList {
-  id:number 
+  id: number
   // user_id:number //用户id
-  token:string 
+  token: string
+}
+
+/**
+ * 我的工游豆 请求参数
+ */
+declare interface BeansApi_getList {
+  token: string
+  page?: number //分页页码
+  page_size?: number //每页数量
+  type?: 0 | 1 | 2 //类型 1收入 2支出 0显示全部
+}
+
+/**
+ * 我的工游豆 响应数据
+ */
+declare interface BeansApi_getListResponse {
+  "lists": {
+    "peas": number, //收入支出工游豆
+    "remarks": string, //来源、用途
+    "create_at": string, //时间
+    "type": 1 | 2 //类型 1收入 2支出
+  }[]
+  "total": number //总条数
+  "peas": number //总的工游豆
 }

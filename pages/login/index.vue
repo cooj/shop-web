@@ -89,9 +89,7 @@
             第三方：
           </div>
         </el-col>
-        <el-col :span="6">
-          <el-image class="w50px" :src="url" fit="fill" @click="weChatLogin" />
-        </el-col>
+        <el-image class="h40px w50px" :src="url" @click="weChatLogin" />
       </el-row>
     </div>
   </div>

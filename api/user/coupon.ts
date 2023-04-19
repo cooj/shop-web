@@ -13,5 +13,9 @@ export const CouponApi = {
 }
 
 /**
- *
+ *个人中心 我的工游豆
  */
+export const BeansApi = {
+  // 我的工游豆
+  geList: (data: BeansApi_getList) => useHttp<BeansApi_getListResponse>('/api/mall/get_user_peas', data, { method: 'post' }),
+}
