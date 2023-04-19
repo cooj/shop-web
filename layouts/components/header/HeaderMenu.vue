@@ -1,6 +1,6 @@
 <!-- 导航菜单 -->
 <template>
-  <el-menu class="menu-box flex-1 " :default-active="activeIndex" mode="horizontal">
+  <el-menu class="menu-box flex-1" :default-active="activeIndex" mode="horizontal">
     <el-menu-item v-for="item in menu?.data" :key="item.nav_id" :index="setMenuItemIndex(item.nav_url)">
       <NuxtLink :to="item.nav_url">
         {{ item.nav_name }}

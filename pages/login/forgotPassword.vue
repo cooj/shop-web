@@ -48,7 +48,7 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button class="w400px mt-20px" @click="onClick">
+            <el-button class="mt-20px w400px" @click="onClick">
               重置密码
             </el-button>
           </el-form-item>
@@ -64,7 +64,7 @@
             <el-input v-model="form.define_password" placeholder="请输入新密码" show-password />
           </el-form-item>
           <el-form-item>
-            <el-button class="w400px mt-20px" @click="onEditClick">
+            <el-button class="mt-20px w400px" @click="onEditClick">
               修改
             </el-button>
           </el-form-item>

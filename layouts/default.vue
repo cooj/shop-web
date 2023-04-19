@@ -2,7 +2,7 @@
   <main>
     <slot />
 
-    <div class=" mx-auto text-center opacity-25 text-sm">
+    <div class="mx-auto text-center text-sm opacity-25">
       [Default Layout]
     </div>
   </main>

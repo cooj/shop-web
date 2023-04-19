@@ -38,6 +38,7 @@ import { Navigation } from 'swiper'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
+
 defineProps<{
   images: string[]
 }>()

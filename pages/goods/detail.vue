@@ -79,15 +79,15 @@
               </div>
               <div class="gt">
                 <el-button text bg size="small" class="cursor-default!">
-                  <i class="i-ic-baseline-wechat c-#09bb07 mr3px" />
+                  <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
                   微信
                 </el-button>
                 <el-button text bg size="small" class="cursor-default!">
-                  <i class="i-ic-baseline-payment c-#3887ff mr3px" />
+                  <i class="i-ic-baseline-payment mr3px c-#3887ff" />
                   在线支付
                 </el-button>
                 <el-button text bg size="small" class="cursor-default!">
-                  <i class=" i-ic-twotone-payments c-#ff5335 mr3px" />
+                  <i class="i-ic-twotone-payments mr3px c-#ff5335" />
                   线下转账
                 </el-button>
               </div>
@@ -344,6 +344,7 @@ definePageMeta({
   .tle {
     height: 40px;
     margin-bottom: 8px;
+
     a {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -354,14 +355,16 @@ definePageMeta({
       max-height: 40px;
       font-size: 14px;
       color: var(--el-text-color-regular);
-      &:hover{
+
+      &:hover {
         cursor: pointer;
         color: var(--el-color-primary);
         text-decoration: underline;
       }
     }
   }
-  .pce{
+
+  .pce {
     font-size: 13px;
     font-weight: bold;
     color: var(--el-color-primary);

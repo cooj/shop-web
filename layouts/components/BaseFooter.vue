@@ -83,7 +83,7 @@
       </div>
     </div>
     <div class="footer-bot">
-      <div class="container flex justify-between">
+      <div class="flex justify-between container">
         <div class="left">
           <NuxtLink class="mr5px">
             隐私政策

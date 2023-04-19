@@ -11,14 +11,11 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent } from 'vue';
-
 const props = defineProps<{
-  type: 'goods',
-  icon: string,
+  type: 'goods'
+  icon: string
   href: string
 }>()
-
 </script>
 
 <style lang="scss" scoped></style>

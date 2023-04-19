@@ -4,7 +4,7 @@
       <el-icon style="float: right;margin: 5px;" @click="defData.type = 1">
         <Close />
       </el-icon>
-      <Iframe id="iframe" class="ml40px w300px h400px" :src="weChat" />
+      <Iframe id="iframe" class="ml40px h400px w300px" :src="weChat" />
     </div>
     <div v-else class="login">
       <div v-if="defData.type !== 3">
@@ -101,6 +101,7 @@
 import type { FormInstance, FormRules } from 'element-plus'
 import { Close, Lock, User } from '@element-plus/icons-vue'
 import { LoginApi } from '~/api/login'
+
 definePageMeta({
   layout: 'login',
 })

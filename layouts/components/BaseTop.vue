@@ -14,7 +14,7 @@ initData()
 
 <template>
   <section class="header-top bg-#313131 py5px">
-    <div class="container text-right text-#fff">
+    <div class="text-right text-#fff container">
       <el-button link mr450px>
         <NuxtLink to="/user">
           <span>您好！{{ defData.username }}</span>

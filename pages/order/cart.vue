@@ -128,7 +128,7 @@ const toggleShowList = (param: boolean) => {
 
 definePageMeta({
   layout: 'home',
-  middleware: ''
+  middleware: 'auth',
 })
 </script>
 

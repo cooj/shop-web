@@ -16,7 +16,7 @@
         <ul class="goods-best-list">
           <li v-for="(o, index) in 5" :key="o">
             <NuxtLink class="link">
-              <el-image class="w150px h150px" src="~/assets/images/goods1.png">
+              <el-image class="h150px w150px" src="~/assets/images/goods1.png">
                 <template #error>
                   <div class="image-err">
                     <i class="i-ep-picture" />
@@ -58,7 +58,7 @@
                 </el-button>
               </li>
             </ul>
-            <img class="absolute top-0 left-0 w99% h100% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
+            <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
           </div>
           <div class="right">
             <el-tabs v-model="tableActive" class="tabs-box">
@@ -125,7 +125,7 @@
                 </el-button>
               </li>
             </ul>
-            <img class="absolute top-0 left-0 w99% h100% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
+            <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
           </div>
           <div class="right">
             <el-tabs v-model="tableActive" class="tabs-box">

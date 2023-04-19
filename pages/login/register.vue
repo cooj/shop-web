@@ -29,7 +29,7 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button class="w400px mt-20px" @click="onClick">
+            <el-button class="mt-20px w400px" @click="onClick">
               <!-- <i class="i-ep-plus" /> -->
               注册
             </el-button>

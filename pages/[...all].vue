@@ -4,10 +4,10 @@ const router = useRouter()
 
 <template>
   <main p="x4 y10" text="center teal-700 dark:gray-200">
-    <div text-72px mt50px>
+    <div mt50px text-72px>
       <div i-carbon-warning inline-block />
     </div>
-    <div class="text-72px lh-1em -mt20px mb30px">
+    <div class="mb30px text-72px lh-1em -mt20px">
       404
     </div>
     <div>
@@ -16,11 +16,11 @@ const router = useRouter()
     </div>
     <div>
       <NuxtLink to="/">
-        <button btn text-sm m="3 t8">
+        <button text-sm btn m="3 t8">
           首页
         </button>
       </NuxtLink>
-      <button btn text-sm m="3 t8" @click="router.back()">
+      <button text-sm btn m="3 t8" @click="router.back()">
         返回上一页
       </button>
     </div>

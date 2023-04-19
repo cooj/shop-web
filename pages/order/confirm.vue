@@ -9,19 +9,16 @@
         <el-breadcrumb-item>购物车</el-breadcrumb-item>
       </el-breadcrumb>
       <el-form size="small">
-        <div min-h-200px></div>
+        <div min-h-200px />
       </el-form>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { defineComponent } from 'vue';
-
-
 definePageMeta({
   layout: 'home',
-  middleware: ''
+  middleware: 'auth',
 })
 </script>
 

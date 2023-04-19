@@ -109,7 +109,7 @@
             </div>
           </dt>
           <dd v-for="item in 10" :key="item" class="goods-item-s">
-            <div class="w500px g-info">
+            <div class="g-info w500px">
               <div class="g-info-left">
                 <NuxtLink to="/goods/detail" target="_blank">
                   <div class="lazyload-wrap sku-img-wrap real-image">
@@ -140,10 +140,10 @@
                 </div>
               </div>
             </div>
-            <div class="w180px g-brand">
+            <div class="g-brand w180px">
               FES TO/费斯托
             </div>
-            <div class="w180px g-code">
+            <div class="g-code w180px">
               MS2-LR-M5-D6-AR-MPA-B
             </div>
             <!-- <div class="tw5 feature">
@@ -152,7 +152,7 @@
             <div class="tw7 deliver-leadTime">
               <i class="deliver h24" data-v-0a47a9ed="">当日发货</i>
             </div> -->
-            <div class="w150px g-price text-center">
+            <div class="g-price w150px text-center">
               <div class="g-price-1">
                 <i>￥</i><span class="integer">157</span><span class="decimal">.90</span><span class="unit">/个</span>
               </div>

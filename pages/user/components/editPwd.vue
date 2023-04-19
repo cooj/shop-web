@@ -47,6 +47,7 @@
 import { ArrowRight } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
+
 definePageMeta({
   layout: 'user',
   middleware: 'auth',

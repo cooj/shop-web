@@ -38,7 +38,7 @@ register()
 
 <template>
   <section class="sec-banner">
-    <div class="container flex">
+    <div class="flex container">
       <div class="left-box w25%">
         <HomeClassify />
       </div>

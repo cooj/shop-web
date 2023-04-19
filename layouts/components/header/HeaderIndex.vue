@@ -3,6 +3,7 @@ import HeaderClassify from './HeaderClassify.vue'
 import HeaderMenu from './HeaderMenu.vue'
 import HeaderBanner from './HeaderBanner.vue'
 import HeaderUser from './HeaderUser.vue'
+
 const route = useRoute()
 // console.log('route :>> ', route)
 
@@ -21,7 +22,7 @@ watch(() => route.path, () => {
 <template>
   <div class="nav-banner" :class="defData.isIndex ? 'index' : ''">
     <div class="nav">
-      <div class="container flex">
+      <div class="flex container">
         <div class="left-box">
           <HeaderClassify />
         </div>
@@ -29,7 +30,7 @@ watch(() => route.path, () => {
       </div>
     </div>
     <div v-if="defData.isIndex" class="banner">
-      <div class="container flex h520px">
+      <div class="h520px flex container">
         <div class="left-box">
           <!-- 占位 -->
         </div>

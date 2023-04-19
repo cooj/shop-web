@@ -10,7 +10,7 @@ const search = reactive({
 <template>
   <section class="header-box">
     <div class="mid py40px">
-      <div class="container flex items-center justify-between text-#f8f8f8">
+      <div class="flex items-center justify-between text-#f8f8f8 container">
         <div class="logo">
           <img class="h50px" src="~/assets/images/shop-logo2.png" alt="">
         </div>
