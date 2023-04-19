@@ -11,3 +11,7 @@ export const CouponApi = {
   // 删除优惠券
   delList: (data: CouponApi_delList) => useHttp('/api/mall/del_user_coupon', data, { method: 'post' }),
 }
+
+/**
+ *
+ */

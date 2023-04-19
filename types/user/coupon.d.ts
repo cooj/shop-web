@@ -47,4 +47,6 @@ declare interface CouponApi_addList {
  */
 declare interface CouponApi_delList {
   id:number 
+  // user_id:number //用户id
+  token:string 
 }

@@ -17,7 +17,8 @@
           v-for="item in defData.MyCouponList" :key="item.coupon_id" class="box-card" shadow="hover"
           :data="defData"
         >
-          <div style="font-size: xx-large;">
+          <i class="i-ep-close inline-block" style="float: right;margin: 5px;" @click="delClick(item.coupon_id)" />
+          <div style="font-size: xx-large;font-weight: bold;">
             ￥{{ item.par_value }}
           </div>
           <div style="font-size: 14px;">
@@ -36,18 +37,19 @@
               已使用
             </el-button>
           </div>
-          <el-button type="info" text>
+
+          <!-- <el-button key="plain">
             删除
-          </el-button>
+          </el-button> -->
         </el-card>
       </el-space>
       <div style="margin:20px 0px;font-size: large;">
         优惠券中心
       </div>
       <el-space wrap>
-        <el-card v-for="item in defData.CouponList" :key="item.coupon_id" class="box-card" :data="defData">
+        <el-card v-for="item in defData.CouponList" :key="item.coupon_id" class="box-card" :data="defData" shadow="hover">
           <!-- <div class="card-content"> -->
-          <div style="font-size: xx-large;">
+          <div style="font-size: xx-large;font-weight: bold;">
             ￥{{ item.par_value }}
           </div>
           <div style="font-size: 14px;">
@@ -91,7 +93,6 @@ const initCardData = async () => {
   const res = await CouponApi.geList({ token: a })
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   defData.MyCouponList = res.data.value.data.lists
-  console.log('defData.CouponList :>> ', defData.MyCouponList)
 }
 initCardData()
 
@@ -101,7 +102,6 @@ const showCoupon = async () => {
   const res = await CouponApi.allList({ token: a })
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   defData.CouponList = res.data.value.data
-  console.log('defData.CouponList :>> ', defData.CouponList)
 }
 showCoupon()
 
@@ -124,6 +124,29 @@ const onReceive = async (row: any) => {
   showCoupon()
 }
 
+// 删除
+const delClick = async (row: any) => {
+  const a = sessionStorage.getItem('token') as string
+  ElMessageBox.confirm('此操作将永久删除该条内容，是否继续?', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+    buttonSize: 'default',
+  }).then(async () => {
+    const res = await CouponApi.delList({
+      id: row,
+      token: a,
+    })
+    if (res.data.value?.code !== 200) {
+      ElMessage.error(res.data.value?.msg)
+      return false
+    }
+    ElMessage.success('删除成功')
+    initCardData()
+    showCoupon()
+  }).catch(() => { })
+}
+
 definePageMeta({
   layout: 'user',
   middleware: 'auth',
@@ -137,22 +160,9 @@ definePageMeta({
   align-items: center;
 }
 
-/* .card-content {
-  display: flex;
-  justify-content: space-between;
-} */
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
 .box-card {
   width: 280px;
   height: 150px;
-  /* background-color: var(--el-color-primary); */
+  color: var(--el-color-primary);
 }
 </style>
