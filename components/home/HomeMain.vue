@@ -16,7 +16,7 @@
         <ul class="goods-best-list">
           <li v-for="(o, index) in 5" :key="o">
             <NuxtLink class="link">
-              <el-image class="w150px h150px" src="~/assets/images/goods1.png" lazy>
+              <el-image class="w150px h150px" src="~/assets/images/goods1.png">
                 <template #error>
                   <div class="image-err">
                     <i class="i-ep-picture" />
@@ -36,45 +36,50 @@
         </ul>
       </div>
       <div class="floor-box">
-        <div v-for="item in floor?.data" :key="item.storey_id" class="floor-item">
+        <div class="floor-item">
           <div class="left">
             <h3 class="tle">
-              {{ item.storey_name }}
+              测量仪器
             </h3>
             <ul class="class-list">
-              <li v-for="sub in item.cat_lists" :key="sub.cat_id">
-                <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
-                  <el-button round>
-                    {{ sub.cat_name }}
-                  </el-button>
-                </NuxtLink>
+              <li>
+                <el-button round>
+                  工业检测
+                </el-button>
+              </li>
+              <li>
+                <el-button round>
+                  工业检测
+                </el-button>
+              </li>
+              <li>
+                <el-button round>
+                  工业检测
+                </el-button>
               </li>
             </ul>
-            <img class="absolute top-0 left-0 w99% h100% object-cover -z-1" :src="item.storey_img" alt="">
+            <img class="absolute top-0 left-0 w99% h100% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
           </div>
           <div class="right">
-            <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box">
-              <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
-                :name="`a${i}`">
+            <el-tabs v-model="tableActive" class="tabs-box">
+              <el-tab-pane label="断路器" name="1">
                 <ul class="goods-list">
-                  <li v-for="son in sub.goods_lists" :key="son.goods_id">
-                    <NuxtLink class="link" :to="`goods/detail?id=${son.goods_id}`">
-                      <!-- <div class="im-box">
-                        <img :src="son.goods_img" alt="">
-                      </div> -->
-                      <el-image class="w100% pb100%" :src="son.goods_img" lazy>
+                  <li v-for="item in 10" :key="item">
+                    <NuxtLink class="link">
+                      <div class="im-box">
+                        <img src="~/assets/images/goods1.png" alt="">
+                      </div>
+                      <!-- <el-image class="w150px h150px" src="~/assets/images/goods1.png">
                         <template #error>
                           <div class="image-err">
-                            <i class="i-ep-picture" />
-                          </div>
-                        </template>
-                      </el-image>
-                      <h3 class="goods-name">
-                        {{ son.goods_name }}
-                      </h3>
-                      <div class="price truncate">
+                                            <i class="i-ep-picture" />
+                                          </div>
+                                        </template>
+                                      </el-image> -->
+                      <h3>工游记 一键测量仪</h3>
+                      <div class="price">
                         <span>惊爆价</span>
-                        <em>￥{{ son.shop_price }}</em>
+                        <em>￥200.5</em>
                       </div>
                       <el-button text bg type="danger">
                         大热卖推荐
@@ -83,19 +88,19 @@
                   </li>
                 </ul>
               </el-tab-pane>
+              <el-tab-pane label="继电器" name="2">
+                Config
+              </el-tab-pane>
+              <el-tab-pane label="断路器" name="3">
+                Role
+              </el-tab-pane>
+              <el-tab-pane label="断路器" name="4">
+                Task
+              </el-tab-pane>
             </el-tabs>
           </div>
           <div class="brand-list">
-            <NuxtLink v-for="sub in item.brand_lists" :key="sub.brand_id"
-              :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-              <el-image class="w150px h70px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" lazy>
-                <template #error>
-                  <div class="image-err">
-                    <i class="i-ep-picture" />
-                  </div>
-                </template>
-              </el-image>
-            </NuxtLink>
+            <img class="h80px" src="/public/pwa-192x192.png" alt="">
           </div>
         </div>
         <div class="floor-item">
@@ -128,17 +133,16 @@
                 <ul class="goods-list">
                   <li v-for="item in 10" :key="item">
                     <NuxtLink class="link">
-                      <div v-if="item > 5" class="im-box">
+                      <div class="im-box">
                         <img src="~/assets/images/goods1.png" alt="">
                       </div>
-                      <el-image v-else class="w100% pb100%"
-                        src="https://imgservice4.suning.cn/uimg1/b2c/image/-jN0LRFRqVJ5pDrYaFdF2w.jpg_400w_400h_4e" lazy>
+                      <!-- <el-image class="w150px h150px" src="~/assets/images/goods1.png">
                         <template #error>
                           <div class="image-err">
-                            <i class="i-ep-picture" />
-                          </div>
-                        </template>
-                      </el-image>
+                                            <i class="i-ep-picture" />
+                                          </div>
+                                        </template>
+                                      </el-image> -->
                       <h3>工游记 一键测量仪</h3>
                       <div class="price">
                         <span>惊爆价</span>
@@ -172,33 +176,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HomeApi } from '~/api/home/home'
-
-interface TabActiveType {
-  [k: string]: string | number
-}
-
-const defData = reactive({
-  active: {} as TabActiveType, // 楼层对应tab切换选中项
-})
-
 const tableActive = ref('1')
-const { data: floor, pending } = await HomeApi.getFloor()
-// console.log('data :>> ', floor)
-
-// await useStorage().setItem('app:foo', { hello: 'world' })
-await useStorage('cache').setItem('foo', { hello: 'world' })
-useSessionStorage('s', { a: 123 })
-
-watch(() => pending.value, () => {
-  floor.value?.data.forEach((item) => {
-    defData.active[item.storey_id] = 'a0'
-  })
-  // console.log('useSessionStorage :>> ', useSessionStorage);
-  // console.log('defData.active :>> ', defData.active)
-}, {
-  immediate: true,
-})
 </script>
 
 <style lang="scss" scoped>
@@ -284,7 +262,6 @@ watch(() => pending.value, () => {
     border-left: 10px solid var(--el-color-primary);
     border-right: 10px solid var(--el-color-primary);
     margin-top: 10px;
-    display: flex;
   }
 
   .left {
@@ -382,18 +359,6 @@ watch(() => pending.value, () => {
             height: 100%;
             object-fit: cover;
           }
-        }
-
-        .goods-name {
-          height: 40px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          font-size: 14px;
-          line-height: 20px;
-
         }
       }
     }

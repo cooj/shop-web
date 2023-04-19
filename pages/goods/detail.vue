@@ -133,7 +133,8 @@
                   <NuxtLink class="pos">
                     <img
                       src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0924616_01.jpeg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1673973422000"
-                      alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class="">
+                      alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class=""
+                    >
                   </NuxtLink>
                   <div class="tle">
                     <NuxtLink>LEB/里博 布洛维转换手持式里氏硬度计 TH130 1台 </NuxtLink>
@@ -343,7 +344,6 @@ definePageMeta({
   .tle {
     height: 40px;
     margin-bottom: 8px;
-
     a {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -354,16 +354,14 @@ definePageMeta({
       max-height: 40px;
       font-size: 14px;
       color: var(--el-text-color-regular);
-
-      &:hover {
+      &:hover{
         cursor: pointer;
         color: var(--el-color-primary);
         text-decoration: underline;
       }
     }
   }
-
-  .pce {
+  .pce{
     font-size: 13px;
     font-weight: bold;
     color: var(--el-color-primary);

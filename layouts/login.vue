@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import LoginFooter from './components/LoginFooter.vue'
+// import LoginFooter from './components/LoginFooter.vue'
 import LoginHeader from './components/LoginHeader.vue'
 </script>
 
@@ -7,6 +7,6 @@ import LoginHeader from './components/LoginHeader.vue'
   <main>
     <LoginHeader />
     <slot />
-    <LoginFooter />
+    <!-- <LoginFooter /> -->
   </main>
 </template>

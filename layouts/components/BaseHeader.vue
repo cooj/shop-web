@@ -1,13 +1,10 @@
 <script lang="ts" setup>
-import { useWebSession } from '~/utils/common';
 import HeaderIndex from './header/HeaderIndex.vue'
 
 const search = reactive({
   keyword: '',
   select: '1',
 })
-useWebSession.set('name', { a: 'zhangsan', b: '16' })
-// formatTime
 </script>
 
 <template>
@@ -15,10 +12,7 @@ useWebSession.set('name', { a: 'zhangsan', b: '16' })
     <div class="mid py40px">
       <div class="container flex items-center justify-between text-#f8f8f8">
         <div class="logo">
-          <NuxtLink to="/">
-            <img class="h50px" src="~/assets/images/shop-logo2.png" alt="">
-            <!-- <el-image :src=""></el-image> -->
-          </NuxtLink>
+          <img class="h50px" src="~/assets/images/shop-logo2.png" alt="">
         </div>
         <div class="search-box w50%">
           <el-input v-model="search.keyword" placeholder="" size="large">

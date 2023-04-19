@@ -1,10 +1,25 @@
 <script lang="ts" setup>
-
+const userState = useUserStore()
+const defData = reactive({
+  username: '',
+})
+const initData = async () => {
+  const user = await userState.getUserInfo()
+  if (user.value) {
+    defData.username = user.value.user_name
+  }
+}
+initData()
 </script>
 
 <template>
   <section class="header-top bg-#313131 py5px">
     <div class="container text-right text-#fff">
+      <el-button link mr450px>
+        <NuxtLink to="/user">
+          <span>您好！{{ defData.username }}</span>
+        </NuxtLink>
+      </el-button>
       <el-button link>
         <i class="i-ep-location-information" />
         <span>广东省/深圳市</span>
@@ -17,11 +32,9 @@
         </el-button>
       </NuxtLink>
       <el-divider direction="vertical" />
-      <NuxtLink to="/login/register">
-        <el-button link>
-          <span>注册</span>
-        </el-button>
-      </NuxtLink>
+      <el-button link>
+        <span>注册</span>
+      </el-button>
       <el-divider direction="vertical" />
       <el-button link>
         <span>企业购</span>

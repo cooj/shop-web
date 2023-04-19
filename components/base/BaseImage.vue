@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <el-image v-bind="$attrs" lazy>
+  <el-image v-bind="$attrs">
     <template #error>
       <div class="image-slot">
         <i class="i-ep-picture" />

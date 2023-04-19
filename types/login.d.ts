@@ -14,6 +14,13 @@ declare interface LoginApi_Login {
 }
 
 /**
+ * 登录 响应数据
+ */
+declare interface LoginApi_LoginResponse {
+    "token": string //用户登录凭证
+}
+
+/**
  * 登录页--短信验证码登录 发送短信验证码 请求数据
  */
 declare interface LoginApi_validateCode {
@@ -43,7 +50,7 @@ declare interface LoginApi_submitIdeResponse {
  */
 declare interface LoginApi_getCodeResponse {
 [x: string]: any
-    "session_id": "vs1p98ko0banfo7mt4vpvugtj3" //会话id
+    "session_id": string //会话id
     "validate_code": string //验证码
 }
 
@@ -74,7 +81,7 @@ declare interface LoginApi_GetWeChatResponse {
  * 微信获取openid 请求数据
  */
 declare interface LoginApi_getOpenid {
-    code:string 
+    code: string
 }
 /**
  * 微信获取openID 响应参数
@@ -91,5 +98,5 @@ declare interface LoginApi_getOpenidResponse {
         "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
     },
     "status": 0 | 1, //是否存在 0不存在 1存在
-    "token": "" //管理员登录凭证
+    "token": string //管理员登录凭证
 }      

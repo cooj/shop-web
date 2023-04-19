@@ -1,36 +1,43 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore } from 'pinia'
+import { AccountApi } from '~/api/user/account'
 
 export const useUserStore = defineStore('user', () => {
-  /**
-   * Current named of the user.
-   */
-  const savedName = ref('')
-  const previousNames = ref(new Set<string>())
+  // 用户信息
+  const userInfo = ref<AccountApi_userInfoResponse>()
 
-  const usedNames = computed(() => Array.from(previousNames.value))
-  const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
+  // 获取接口数据
+  const getUserData = async () => {
+    const a = sessionStorage.getItem('token') as string
 
-  /**
-   * Changes the current name of the user and saves the one that was used
-   * before.
-   *
-   * @param name - new name to set
-   */
-  function setNewName(name: string) {
-    if (savedName.value) {
-      previousNames.value.add(savedName.value)
+    const { data } = await AccountApi.userInfo({ token: a })
+
+    await wait(500)
+
+    if (data.value?.code === 200) {
+      userInfo.value = data.value.data
     }
 
-    savedName.value = name
+    return userInfo
+  }
+
+  /**
+   * 获取用户信息
+   * @param update boolean value 是否获取最新数据，默认false
+   * @returns
+   */
+  const getUserInfo = async (update?: boolean) => {
+    if (update) {
+      return await getUserData()
+    } else {
+      if (userInfo.value) return userInfo
+
+      const data = await getUserData()
+      return data
+    }
   }
 
   return {
-    setNewName,
-    otherNames,
-    savedName,
+    userInfo,
+    getUserInfo,
   }
 })
-
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
-}

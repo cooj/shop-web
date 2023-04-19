@@ -2,7 +2,10 @@
  * 登录注册Api
  */
 export const LoginApi = {
-  Login: (data: RequestDataType<LoginApi_Login>) => useHttp<{ number: number }>('/api/mall/login', data, { method: 'post' }),
+  /**
+   * 登录页 —— 登录注册
+   */
+  Login: (data: RequestDataType<LoginApi_Login>) => useHttp<LoginApi_LoginResponse>('/api/mall/login', data, { method: 'post' }),
   /**
    *登录页--短信验证码登录 发送短信验证码
    */
@@ -26,7 +29,7 @@ export const LoginApi = {
    */
   getWeChat: () => useHttp<LoginApi_GetWeChatResponse>('/api/mall/get_wechat_url', '', { method: 'get' }),
   /**
-   * 获取微信getOpenid--验证码API
+   * 获取微信Openid--验证码API
    */
   getOpenid: (data: RequestDataType<LoginApi_getOpenid>) => useHttp<LoginApi_getOpenidResponse>('/api/mall/get_openid', data, { method: 'post' }),
 

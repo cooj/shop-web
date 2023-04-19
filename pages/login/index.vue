@@ -1,7 +1,10 @@
 <template>
   <div class="center">
     <div v-if="defData.type === 4" class="login">
-      <Iframe class="ml40px w300px h400px" :src="weChat" />
+      <el-icon style="float: right;margin: 5px;" @click="defData.type = 1">
+        <Close />
+      </el-icon>
+      <Iframe id="iframe" class="ml40px w300px h400px" :src="weChat" />
     </div>
     <div v-else class="login">
       <div v-if="defData.type !== 3">
@@ -38,7 +41,7 @@
       </div>
       <el-form ref="formRef" label-width="40px" :rules="rules" :model="form" style="max-width: 330px" size="large">
         <el-form-item prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号" :prefix-icon="Avatar" />
+          <el-input v-model="form.phone" placeholder="请输入手机号" :prefix-icon="User" />
         </el-form-item>
         <el-form-item v-if="defData.type === 1" prop="password">
           <el-input v-model="form.password" placeholder="请输入密码" show-password :prefix-icon="Lock" />
@@ -92,16 +95,11 @@
       </el-row>
     </div>
   </div>
-
-  <!-- <el-dialog v-model="dialogVisible" style="width: auto;" align-center draggable>
-    <Iframe class="w300px h400px" :src="weChat" />
-  </el-dialog>
-  </div> -->
 </template>
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import { Avatar, Lock } from '@element-plus/icons-vue'
+import { Close, Lock, User } from '@element-plus/icons-vue'
 import { LoginApi } from '~/api/login'
 definePageMeta({
   layout: 'login',
@@ -122,7 +120,7 @@ const form = reactive({
 
 const rules = reactive<FormRules>({
   phone: [
-    { required: true, pattern: /^1[3|4|5|7|8][0-9]{9}$/, message: '填写正确的手机号格式', trigger: 'blur' },
+    { required: true, pattern: /^(((\d{3,4}-)?[0-9]{7,8})|(1(3|4|5|6|7|8|9)\d{9}))$/, message: '填写正确的手机号格式', trigger: 'blur' },
   ],
   password: [
     { required: true, message: '请输入登录密码', trigger: 'blur' },
@@ -139,7 +137,7 @@ const onClick = async () => {
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
   if (!isRun) return
 
-  if (defData.type === 1) {
+  if (defData.type === 1) { // 账号登录
     const data: LoginApi_Login = {
       type: 1,
       phone: form.phone,
@@ -149,8 +147,9 @@ const onClick = async () => {
     const { data: res } = await LoginApi.Login(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('登录成功')
+    sessionStorage.setItem('token', res.value.data.token)
     return navigateTo('/')
-  } else {
+  } else { // 验证码登录
     const data: LoginApi_Login = {
       type: 2,
       phone: form.phone,
@@ -159,6 +158,7 @@ const onClick = async () => {
     const { data: res } = await LoginApi.Login(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('登录成功')
+    sessionStorage.setItem('token', res.value.data.token)
     return navigateTo('/')
   }
 }
@@ -212,6 +212,8 @@ const getOpenId = async () => {
   }
   const { data: codeId } = await LoginApi.getOpenid(code)
   if (codeId.value?.data.status === 1) { // 已注册用户
+    sessionStorage.setItem('token', codeId.value.data.token)
+    // sessionStorage.getItem('token')
     return navigateTo('/')
   } else { // 未注册用户
     defData.type = 3
@@ -238,10 +240,10 @@ body {
 }
 
 .center {
-  margin-top: 120px;
+  // margin-top: 120px;
   height: 500px;
   // background-color: #797572;
-  background-image:url('../../assets/images/banner-bg.png');
+  background-image: url('../../assets/images/banner-bg.png');
   background-blend-mode: multiply;
 }
 
@@ -250,6 +252,7 @@ body {
   height: 400px;
   background-color: rgb(255, 255, 255);
   position: absolute;
+  border-radius: 5px;
   top: 150px;
   right: 400px;
 }

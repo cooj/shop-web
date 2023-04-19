@@ -11,9 +11,10 @@
 </template>
 
 <style scoped>
-/* .header{
-  background-color: rgb(126, 126, 126);
-} */
+.header{
+  height: 120px;
+  /* background-color: rgb(126, 126, 126); */
+}
 .logo{
 position: absolute;
 left:250px;

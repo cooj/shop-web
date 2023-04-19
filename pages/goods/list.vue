@@ -1,7 +1,7 @@
 <template>
   <section class="text-14px">
     <div class="container">
-      <el-breadcrumb class="goods-breadcrumb">
+      <el-breadcrumb class="goods-breadcrumb" separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">
           首页
         </el-breadcrumb-item>
@@ -116,7 +116,8 @@
                     <img
                       src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0979931_01.jpg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1664162899000"
                       alt="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个"
-                      title="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个" class="">
+                      title="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个" class=""
+                    >
                   </div>
                 </NuxtLink>
               </div>
@@ -192,7 +193,8 @@
               <NuxtLink to="/goods/detail" target="_blank">
                 <img
                   src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0924616_01.jpeg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1673973422000"
-                  alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class="">
+                  alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class=""
+                >
               </NuxtLink>
 
               <div class="goods-price">
@@ -246,9 +248,11 @@
         </el-table> -->
       </div>
       <div class="goods-pagination">
-        <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
+        <el-pagination
+          v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
           :page-sizes="defData.pageSizes" small background layout=" prev, pager, next,total, jumper"
-          :total="defData.total" />
+          :total="defData.total"
+        />
       </div>
     </div>
   </section>

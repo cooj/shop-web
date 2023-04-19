@@ -59,7 +59,7 @@ import 'swiper/css'
 
 // 获取导航
 const { data: banner } = await HomeApi.getBanner()
-// console.log('banner :>> ', banner)
+console.log('banner :>> ', banner)
 </script>
 
 <style lang="scss" scoped>
