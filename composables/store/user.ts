@@ -2,14 +2,28 @@ import { defineStore } from 'pinia'
 import { AccountApi } from '~/api/user/account'
 
 export const useUserStore = defineStore('user', () => {
+  const cookieToken = useCookie<string>('token')
+
+  const token = ref<string>(cookieToken.value)
   // 用户信息
   const userInfo = ref<AccountApi_userInfoResponse>()
 
+  // 设置token
+  const setToken = (val: string) => {
+    token.value = val
+    if (val) cookieToken.value = val
+
+    return token
+  }
+
   // 获取接口数据
   const getUserData = async () => {
-    const a = sessionStorage.getItem('token') as string
+    if (token.value) {
+      ElMessage.error('请先登录')
+      return userInfo
+    }
 
-    const { data } = await AccountApi.userInfo({ token: a })
+    const { data } = await AccountApi.userInfo({ token: token.value })
 
     await wait(500)
 
@@ -39,5 +53,11 @@ export const useUserStore = defineStore('user', () => {
   return {
     userInfo,
     getUserInfo,
+    token,
+    setToken,
   }
-})
+},
+  // {
+  //   persist: true,
+  // }
+)
