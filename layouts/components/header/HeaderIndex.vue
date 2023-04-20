@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import HeaderClassify from './HeaderClassify.vue'
 import HeaderMenu from './HeaderMenu.vue'
+
 import HeaderBanner from './HeaderBanner.vue'
 import HeaderUser from './HeaderUser.vue'
+
+// import HeaderBanner2 from './HeaderBanner2.vue'
 
 const route = useRoute()
 // console.log('route :>> ', route)
@@ -37,6 +40,7 @@ watch(() => route.path, () => {
         <div class="swp">
           <suspense>
             <HeaderBanner />
+            <!-- <HeaderBanner2 /> -->
           </suspense>
         </div>
         <div class="right">

@@ -1,129 +1,161 @@
 <template>
-  <section class="text-14px">
+  <section class="pb30px text-14px">
     <div class="container">
-      <el-breadcrumb class="goods-breadcrumb">
+      <el-breadcrumb class="py15px">
         <el-breadcrumb-item :to="{ path: '/' }">
           首页
         </el-breadcrumb-item>
         <el-breadcrumb-item>购物车</el-breadcrumb-item>
       </el-breadcrumb>
-      <el-form size="small">
-        <div class="goods-attr">
-          <div class="goods-attr-item">
-            <div title="分类" class="left">
-              分类
-            </div>
-            <div class="right">
-              <div class="attr-list">
-                <el-check-tag v-for="item in 10" :key="item" :checked="checked" @change="onChange">
-                  断路器
-                </el-check-tag>
+      <div class="table-cart">
+        <ElTable ref="tableRef" :data="defData.tableData" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column prop="goods_name" label="商品名称" min-width="180">
+            <template #default="{ row }">
+              <div class="h50px flex">
+                <div class="goods_img">
+                  <el-image
+                    class="h50px w50px"
+                    src="https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000"
+                  />
+                </div>
+                <div class="pl10px">
+                  <NuxtLink to="/goods/detail?id=10">
+                    {{ row.goods_name }}
+                  </NuxtLink>
+                </div>
               </div>
-              <el-button class="mx4px my3px" size="small">
-                展开
-                <i class="i-ep-arrow-down" />
-              </el-button>
-              <el-button class="mx4px my3px" size="small">
-                收起
-                <i class="i-ep-arrow-up" />
-              </el-button>
-            </div>
-          </div>
-          <div class="goods-attr-item">
-            <div title="品牌" class="left">
-              品牌
-            </div>
-            <div class="right">
-              <div class="attr-list">
-                <el-check-tag v-for="item in 20" :key="item" :checked="checked" @change="onChange">
-                  百度
-                </el-check-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="goods_code" label="商品型号" width="160" />
+          <el-table-column prop="goods_spec" label="商品规格" width="160" />
+          <el-table-column prop="goods_price" label="价格" width="120" align="center">
+            <template #default="{ row }">
+              <div class="goods_price">
+                {{ row.goods_price }}
               </div>
-              <el-button class="mx4px my3px" size="small">
-                展开/收起
-                <i class="i-ep-arrow-up" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="goods_num" label="商品数量" width="150" align="center">
+            <template #default="{ row }">
+              <el-input-number v-model="row.goods_num" class="w100%!" :precision="0" :min="0" :max="100" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="operate" label="操作" width="100" align="center">
+            <template #default="{ row }">
+              <el-button type="primary" link @click="onRemove(row)">
+                删除
               </el-button>
-            </div>
-          </div>
+            </template>
+          </el-table-column>
+        </ElTable>
+      </div>
+      <div class="table-cart-count">
+        <div class="lt">
+          <el-button type="primary" link @click="onRemoveChose">
+            删除所选商品
+          </el-button>
+          <!-- <el-button type="primary" link>
+            继续购物
+          </el-button> -->
         </div>
-        <div class="goods-opt">
-          <dl class="goods-opt-dl">
-            <dd class="goods-opt-item on cursor-pointer">
-              默认
-            </dd>
-            <dd class="goods-opt-item cursor-pointer">
-              销量
-              <i class="i-ic-baseline-arrow-downward" />
-            </dd>
-            <dd class="goods-opt-item cursor-pointer">
-              价格
-              <i class="i-ep-sort" />
-              <i class="i-ep-sort-up" />
-              <i class="i-ep-sort-down" />
-            </dd>
-            <dd class="goods-opt-item checkbox">
-              <el-checkbox v-model="form.is_stock" label="有库存" />
-            </dd>
-            <dd class="goods-opt-item">
-              <el-input v-model="form.min_price" class="w70px!" size="small" placeholder="最低价" clearable />
-              <span class="mx5px">-</span>
-              <el-input v-model="form.max_price" class="w70px!" size="small" placeholder="最高价" clearable />
-              <el-button class="ml5px" size="small">
-                搜索
-              </el-button>
-            </dd>
-          </dl>
-          <dl class="goods-opt-dl">
-            <dd class="goods-opt-item cursor-pointer" :class="{ show: defData.isList }" @click="toggleShowList(true)">
-              <i class="i-ic-baseline-table-rows" />
-            </dd>
-            <dd class="goods-opt-item cursor-pointer" :class="{ show: !defData.isList }" @click="toggleShowList(false)">
-              <i class="i-ep-menu" />
-            </dd>
-            <dd class="goods-opt-item b-0">
-              共 4,694 件相关商品
-            </dd>
-          </dl>
+        <div class="gt">
+          商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
+          <el-button class="ml5px" type="primary">
+            结算商品
+          </el-button>
         </div>
-      </el-form>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-// 定义变量内容
-const dlRefs = ref<HTMLDivElement[]>([])
-const router = useRouter()
+import { ElTable } from 'element-plus'
+import Big from 'big.js'
+import { GoodsApi } from '~/api/goods/list'
 
-const checked = ref(false)
-
-const onChange = (status: boolean) => {
-  checked.value = status
+interface GoodsTableCartItem {
+  goods_name: 'good海尔彩电LE32G310G 32'
+  goods_img: ''
+  goods_price: 100 // 价格
+  goods_num: 1 // 购买数量
+  goods_id: 1
+  goods_code: '2020-01-01' // 型号
+  goods_spec: '广东省深圳市南山区' // 规格
 }
 
+const tableRef = ref<InstanceType<typeof ElTable>>()
+
 const defData = reactive({
-  isList: true, // 商品显示列表，还是网格
   breadcrumbList: [],
-  tableData: [] as any[],
+  tableData: [
+    {
+      goods_name: 'good海尔彩电LE32G310G 32',
+      goods_img: '',
+      goods_price: 100, // 价格
+      goods_num: 1, // 购买数量
+      goods_id: 1,
+      goods_code: '2020-01-01', // 型号
+      goods_spec: '广东省深圳市南山区', // 规格
+    },
+    {
+      goods_name: '海尔彩电LE32G310G 32',
+      goods_img: '',
+      goods_price: 100, // 价格
+      goods_num: 1, // 购买数量
+      goods_id: 2,
+      goods_code: '2-01-01', // 型号
+      goods_spec: 'sds', // 规格
+    },
+  ] as GoodsTableCartItem[],
+  selectData: [] as GoodsTableCartItem[], // 选中的商品
   page: 1,
   pageSize: 100,
   pageSizes: [100, 200, 300],
   total: 401,
 })
 
-const form = reactive({
-  cate_id: [],
-  brand_id: [],
-  is_stock: false, // 是否有库存
-  min_price: '', // 最低价
-  max_price: '', // 最高价
+// 商品总金额
+const countMoney = computed(() => {
+  const money = defData.selectData.reduce((sum, item) => {
+    return sum + item.goods_price * item.goods_num
+  }, 0)
 
+  return new Big(money).toFixed(2)
 })
 
-// 切换商品显示列表
-const toggleShowList = (param: boolean) => {
-  if (defData.isList === param) return
-  defData.isList = param
+// 获取购物车商品
+const { data: cartData } = await GoodsApi.getCartList()
+console.log('cartData :>> ', cartData)
+
+// el-table多选事件
+const handleSelectionChange = (val: GoodsTableCartItem[]) => {
+  defData.selectData = val
+}
+
+// 删除
+const onRemove = (row: GoodsTableCartItem) => {
+  // 获取到在tableData对应的下标
+  const index = defData.tableData.findIndex(item => item.goods_id === row.goods_id)
+  console.log('index :>> ', index)
+
+  if (index >= 0) {
+    // 调用删除接口
+
+    // 删除
+    defData.tableData.splice(index, 1)
+  }
+}
+
+// 删除所选商品
+const onRemoveChose = () => {
+  const str = defData.selectData.map(item => item.goods_id).join(',')
+  if (str) {
+    // 调用接口
+  } else {
+    ElMessage.error('请选择商品')
+  }
 }
 
 definePageMeta({
@@ -133,104 +165,17 @@ definePageMeta({
 </script>
 
 <style scoped lang="scss">
-.goods-breadcrumb {
-  padding: 15px 0;
-}
-
-.goods-attr {
-
+.table-cart {
+  min-height: 500px;
   background-color: var(--el-color-white);
-  border: 1px solid var(--el-color-info-light-7);
-  font-size: 14px;
-
 }
 
-.goods-attr-item {
-  display: flex;
-  --attr-left-width: 100px;
-  --goods-item-height: 38px;
-
-  +.goods-attr-item {
-    border-top: 1px solid var(--el-color-info-light-7);
-  }
-
-  .left {
-    width: var(--attr-left-width);
-    line-height: var(--goods-item-height);
-    padding: 0 8px;
-    border-right: 1px solid var(--el-color-info-light-7);
-    font-weight: bold;
-  }
-
-  .right {
-    width: calc(100% - var(--attr-left-width));
-    padding: 4px;
-    display: flex;
-    flex-wrap: wrap;
-
-    .attr-list {
-      flex: 1;
-    }
-  }
-
-  :deep(.el-check-tag) {
-    --el-color-info: #555;
-    --el-color-info-light-9: transparent;
-    line-height: 22px;
-    padding: 0 5px;
-    margin: 4px 5px;
-    font-size: 12px;
-    font-weight: normal;
-  }
-
-}
-
-.goods-opt {
-  --goods-opt-height: 38px;
-  margin: 15px 0 7px;
-  border: 1px solid var(--el-color-info-light-7);
+.table-cart-count {
   background-color: var(--el-color-white);
   display: flex;
   justify-content: space-between;
-  height: var(--goods-opt-height);
-  font-size: 12px;
-
-  .goods-opt-dl {
-    display: flex;
-
-    &:nth-child(2n) {
-      .goods-opt-item {
-        border: 0;
-        border-left: 1px solid var(--el-color-info-light-7);
-      }
-    }
-  }
-
-  .goods-opt-item {
-    padding: 0 20px;
-    line-height: var(--goods-opt-height);
-    border-right: 1px solid var(--el-color-info-light-7);
-    display: flex;
-    align-items: center;
-    color: var(--el-text-color-regular);
-
-    &.on {
-      background-color: var(--el-color-primary);
-      color: var(--el-color-white)
-    }
-
-    &.checkbox {
-      padding: 0;
-
-      :deep(.el-checkbox) {
-        padding: 0 20px;
-        height: 100%;
-      }
-    }
-
-    &.show {
-      color: var(--el-color-primary);
-    }
-  }
+  align-items: center;
+  padding: 15px;
+  border-top: 1px solid var(--el-border-color-lighter);
 }
 </style>
