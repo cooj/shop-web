@@ -8,9 +8,9 @@
     <div style="border: 1px solid #50585e;height: 650px;display:flex;justify-content: center;">
       <div style="width: 600px;margin-top: 50px;">
         <el-steps :space="200" :active="defData.step" simple class="mb-70px">
-          <el-step title="Step 1" />
-          <el-step title="Step 2" />
-          <el-step title="Step 3" />
+          <el-step title="身份验证" />
+          <el-step title="修改密码" />
+          <el-step title="完成" />
         </el-steps>
         <el-form
           v-if="defData.step === 1" ref="formRef" label-width="130px" :rules="rules" :model="form"
@@ -49,7 +49,7 @@
           </el-form-item>
           <el-form-item>
             <el-button class="mt-20px w400px" @click="onClick">
-              重置密码
+              下一步重置密码
             </el-button>
           </el-form-item>
         </el-form>

@@ -34,13 +34,15 @@
 <script setup lang="ts">
 import { BeansApi } from '~/api/user/coupon'
 
+const userState = useUserStore()
+
 const defData = reactive({
   tableData: [] as BeansApi_getListResponse['lists'],
   pears: '' as unknown as number,
 })
 
 const initTableData = async () => {
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   const data: BeansApi_getList = {
     token: a,
     type: 0,

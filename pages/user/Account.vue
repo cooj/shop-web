@@ -12,16 +12,10 @@
     <div v-if="defData.type === 1">
       <el-descriptions title="个人信息" :column="1">
         <el-descriptions-item label="头像：">
-          <el-image style="width: 100px; height: 100px" :src="defData.headImgUrl" fit="fill" />
+          <el-image style="width: 100px; height: 100px" :src="defData.headImgUrl" />
         </el-descriptions-item>
-        <el-descriptions-item label="我的名称：">
+        <el-descriptions-item label="我的用户名：">
           {{ defData.user_name }}
-        </el-descriptions-item>
-        <el-descriptions-item label="手机号码：">
-          {{ defData.phone }}
-        </el-descriptions-item>
-        <el-descriptions-item label="电子邮箱：">
-          {{ defData.email }}
         </el-descriptions-item>
       </el-descriptions>
       <el-button type="danger" ml20 mt5 @click="editClick">
@@ -33,7 +27,7 @@
       <el-form ref="formRef" :model="form" label-width="130px" class="pt15px" :rules="rules">
         <el-row>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <!-- <el-form-item prop="headimgurl" label="头像："> -->
+            <el-form-item prop="headimgurl" label="头像：">
             <!-- <el-upload
                 class="avatar-uploader" action="imgUrl"
                 :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
@@ -43,21 +37,11 @@
                   <Plus />
                 </el-icon>
               </el-upload> -->
-            <!-- </el-form-item> -->
+            </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="20" :md="18" :lg="14" :xl="14">
-            <el-form-item prop="user_name" label="我的名称：">
+            <el-form-item prop="user_name" label="我的用户名：">
               <el-input v-model="form.user_name" clearable />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="20" :md="18" :lg="14" :xl="14">
-            <el-form-item prop="phone" label="手机号码：">
-              <el-input v-model="form.phone" clearable />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="20" :md="20" :lg="14" :xl="14">
-            <el-form-item prop="email" label="电子邮箱：">
-              <el-input v-model="form.email" clearable />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -85,23 +69,23 @@
           </NuxtLink>
         </el-descriptions-item>
         <el-descriptions-item label="绑定手机：">
-          {{ defData.phone }}
+          您已绑定手机：{{ defData.phone }}，若手机丢失或停用，请及时更换
         </el-descriptions-item>
         <el-descriptions-item>
-          <!-- <button>
-            修改
-          </button> -->
+          <NuxtLink to="/user/components/editPhone">
+            换绑
+          </NuxtLink>
         </el-descriptions-item>
         <el-descriptions-item label="绑定微信：">
           {{ defData.openid ? '已绑定' : '暂无绑定' }}
         </el-descriptions-item>
         <el-descriptions-item>
-          <!-- <button @click="editPwd">
+        <!-- <button @click="editPwd">
             修改
           </button> -->
         </el-descriptions-item>
       </el-descriptions>
-      <!-- <i class="i-ep-apple block" />
+    <!-- <i class="i-ep-apple block" />
       <i class="ic-baseline-add-home-work block" />
       <i class="i-carbon:battery-low block" /> -->
     </div>
@@ -121,7 +105,7 @@ const defData = reactive({
   user_name: '',
   phone: '',
   email: '',
-  headImgUrl: '',
+  headImgUrl: 'https://goyojo.oss-cn-shenzhen.aliyuncs.com/20230420/202304201450139203.gif',
   openid: '',
 })
 
@@ -158,12 +142,9 @@ const form = reactive({
 
 // 规则
 const rules = reactive<FormRules>({
-  phone: [{ required: true, pattern: /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' }],
   user_name: [
     { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
     { min: 2, max: 16, message: '最少2个,最多16个字符', trigger: 'blur' }],
-  email: [
-    { required: true, pattern: /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/, message: '填写正确的邮箱格式', trigger: 'blur' }],
 })
 
 // 获取用户信息
@@ -189,7 +170,7 @@ const editClick = () => {
 
 // 修改用户信息 确定
 const onClick = async () => {
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   const data: AccountApi_editInfo = {
     token: a,
     username: form.user_name,

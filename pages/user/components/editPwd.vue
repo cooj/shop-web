@@ -9,7 +9,7 @@
         <el-breadcrumb-item>修改密码</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px" size="large">
+    <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px">
       <el-row>
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <el-form-item prop="password" label="新密码">
@@ -32,11 +32,6 @@
               返回
             </NuxtLink>
           </el-button>
-          <el-button>
-            <NuxtLink to="/login/forgotPassword">
-              忘记密码
-            </NuxtLink>
-          </el-button>
         </el-form-item>
       </el-col>
     </el-form>
@@ -48,10 +43,7 @@ import { ArrowRight } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
 
-definePageMeta({
-  layout: 'user',
-  middleware: 'auth',
-})
+const userState = useUserStore()
 
 const formRef = ref<FormInstance>()
 const form = reactive({
@@ -80,7 +72,7 @@ const editPwd = async () => {
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
   if (!isRun) return
   if (form.confirm_password !== form.password) return ElMessage.error('密码不一致')
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   const data: AccountApi_editPwd = {
     token: a,
     password: form.password,
@@ -91,6 +83,11 @@ const editPwd = async () => {
   ElMessage.success('修改成功')
   return navigateTo('/user/Account')
 }
+
+definePageMeta({
+  layout: 'user',
+  middleware: 'auth',
+})
 </script>
 
 <style scoped></style>

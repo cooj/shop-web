@@ -89,7 +89,7 @@ const defData = reactive({
 
 // 初始化数据 我的优惠券
 const initCardData = async () => {
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   const res = await CouponApi.geList({ token: a })
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   defData.MyCouponList = res.data.value.data.lists
@@ -98,7 +98,7 @@ initCardData()
 
 // 展示所有优惠券
 const showCoupon = async () => {
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   const res = await CouponApi.allList({ token: a })
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   defData.CouponList = res.data.value.data
@@ -111,7 +111,7 @@ const onReceive = async (row: any) => {
   if (user.value) {
     defData.user_id = user.value.user_id
   }
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   const data: CouponApi_addList = {
     user_id: defData.user_id as number,
     coupon_id: row,
@@ -126,7 +126,7 @@ const onReceive = async (row: any) => {
 
 // 删除
 const delClick = async (row: any) => {
-  const a = sessionStorage.getItem('token') as string
+  const a = userState.token
   ElMessageBox.confirm('此操作将永久删除该条内容，是否继续?', '提示', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
