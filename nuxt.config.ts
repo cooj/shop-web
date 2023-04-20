@@ -10,8 +10,12 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     // '@nuxt/devtools',
     '@element-plus/nuxt',
+    // 'nuxt-typed-router',
+    // '@pinia-plugin-persistedstate/nuxt',
   ],
+  plugins: [
 
+  ],
   experimental: {
     // when using generate, payload js assets included in sw precache manifest
     // but missing on offline, disabling extraction it until fixed
