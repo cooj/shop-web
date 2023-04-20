@@ -155,7 +155,6 @@ const onClick = async () => {
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('登录成功')
     userState.setToken(res.value.data.token)
-    // userState.token
     return navigateTo('/')
   } else { // 验证码登录
     const data: LoginApi_Login = {
@@ -205,7 +204,10 @@ const getCodeClick = async () => {
 const url = 'https://img.sj33.cn/uploads/allimg/201402/7-140223103130591.png'
 const weChat = ref()
 const weChatLogin = async () => {
-  const { data: res } = await LoginApi.getWeChat()
+  const data: LoginApi_getChat = {
+    qrcode_type: 1,
+  }
+  const { data: res } = await LoginApi.getWeChat(data)
 
   if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
   weChat.value = res.value?.data.url

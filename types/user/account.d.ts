@@ -18,6 +18,7 @@ declare interface AccountApi_userInfoResponse {
   "type": 1 | 2, //用户类型 1：普通用户，2：企业用户
   "enterprise_name": string, //企业名称
   "set_time": string
+  "nickname": string //微信昵称
 }
 
 /**

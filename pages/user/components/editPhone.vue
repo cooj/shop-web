@@ -101,7 +101,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { LoginApi } from '~/api/login'
 
 const defData = reactive({
-  step: 2,
+  step: 1,
   vali_code: '1234', // 验证码
   session_id: '',
   time: 0, // 验证码倒计时时间

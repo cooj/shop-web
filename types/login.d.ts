@@ -63,6 +63,15 @@ declare interface LoginApi_submitPas {
     password: string //密码
     define_password: string //确认密码
 }
+
+
+/**
+ * 获取微信二维码路径 - 请求参数
+ */
+declare interface LoginApi_getChat {
+    qrcode_type: 1 | 2 //类型 1跳登录页 2跳个人中心页
+}
+
 /**
  * 获取微信二维码路径 - 响应数据
  */

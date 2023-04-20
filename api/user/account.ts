@@ -8,4 +8,6 @@ export const AccountApi = {
   editInfo: (data: RequestDataType<AccountApi_editInfo>) => useHttp('/api/mall/get_user_info', data, { method: 'post' }),
   // 用户信息 -- 修改密码
   editPwd: (data: RequestDataType<AccountApi_editPwd>) => useHttp('/api/mall/edit_pwd', data, { method: 'post' }),
+  // 用户信息 -- 解绑微信
+  del_openid: () => useHttp('/api/mall/del_openid', '', { method: 'post' }),
 }

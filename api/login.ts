@@ -27,7 +27,7 @@ export const LoginApi = {
   /**
    * 获取微信二维码路径--验证码API
    */
-  getWeChat: () => useHttp<LoginApi_GetWeChatResponse>('/api/mall/get_wechat_url', '', { method: 'get' }),
+  getWeChat: (data: RequestDataType<LoginApi_getChat>) => useHttp<LoginApi_GetWeChatResponse>('/api/mall/get_wechat_url', data, { method: 'post' }),
   /**
    * 获取微信Openid--验证码API
    */

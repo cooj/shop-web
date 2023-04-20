@@ -10,14 +10,15 @@
     </div>
     <!-- ***********个人信息*************************************** -->
     <div v-if="defData.type === 1">
-      <el-descriptions title="个人信息" :column="1">
-        <el-descriptions-item label="头像：">
-          <el-image style="width: 100px; height: 100px" :src="defData.headImgUrl" />
-        </el-descriptions-item>
-        <el-descriptions-item label="我的用户名：">
-          {{ defData.user_name }}
-        </el-descriptions-item>
-      </el-descriptions>
+      <div style="font-weight: bold">
+        个人信息
+      </div>
+      <div style="margin:15px 0px;font-size: 14px;">
+        头像： <el-image style="width: 100px; height: 100px" :src="defData.headImgUrl" />
+      </div>
+      <div style="margin:15px 0px;font-size: 14px;">
+        我的用户名：{{ defData.user_name }}
+      </div>
       <el-button type="danger" ml20 mt5 @click="editClick">
         修改
       </el-button>
@@ -28,7 +29,7 @@
         <el-row>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item prop="headimgurl" label="头像：">
-            <!-- <el-upload
+              <!-- <el-upload
                 class="avatar-uploader" action="imgUrl"
                 :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
               >
@@ -77,15 +78,22 @@
           </NuxtLink>
         </el-descriptions-item>
         <el-descriptions-item label="绑定微信：">
-          {{ defData.openid ? '已绑定' : '暂无绑定' }}
+          {{ defData.nickname ? '已绑定' : '暂无绑定' }}{{ defData.nickname }}
         </el-descriptions-item>
         <el-descriptions-item>
-        <!-- <button @click="editPwd">
-            修改
-          </button> -->
+          <div v-if="defData.nickname">
+            <button @click="delWeChat">
+              解绑
+            </button>
+          </div>
+          <div v-else>
+            <NuxtLink to="/user/components/getWeChat">
+              绑定
+            </NuxtLink>
+          </div>
         </el-descriptions-item>
       </el-descriptions>
-    <!-- <i class="i-ep-apple block" />
+      <!-- <i class="i-ep-apple block" />
       <i class="ic-baseline-add-home-work block" />
       <i class="i-carbon:battery-low block" /> -->
     </div>
@@ -107,6 +115,7 @@ const defData = reactive({
   email: '',
   headImgUrl: 'https://goyojo.oss-cn-shenzhen.aliyuncs.com/20230420/202304201450139203.gif',
   openid: '',
+  nickname: '',
 })
 
 const formRef = ref<FormInstance>()
@@ -156,6 +165,7 @@ const initData = async () => {
     defData.phone = user.value.phone
     defData.headImgUrl = user.value.headimgurl
     defData.openid = user.value.openid
+    defData.nickname = user.value.nickname
   }
 }
 
@@ -182,6 +192,13 @@ const onClick = async () => {
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   ElMessage.success('修改成功')
   defData.type = 1
+}
+
+// 解绑微信
+const delWeChat = async () => {
+  const res = await AccountApi.del_openid()
+  if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
+  ElMessage.success('解绑成功')
 }
 
 definePageMeta({
