@@ -4,7 +4,7 @@
       <el-icon style="float: right;margin: 5px;" @click="defData.type = 1">
         <Close />
       </el-icon>
-      <Iframe id="iframe" class="ml40px h400px w300px" :src="weChat" />
+      <iframe id="iframe" class="ml40px h400px w300px" :src="weChat" />
     </div>
     <div v-else class="login">
       <div v-if="defData.type !== 3">
@@ -98,7 +98,11 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
 import { Close, Lock, User } from '@element-plus/icons-vue'
+
+// import Big from 'big.js'
 import { LoginApi } from '~/api/login'
+
+const userState = useUserStore()
 
 definePageMeta({
   layout: 'login',
@@ -133,6 +137,10 @@ const formRef = ref<FormInstance>()
 
 // 登录
 const onClick = async () => {
+  // console.log('0.1+0.2 :>> ', 0.1 + 0.2) // 0.3
+  // const num = Big(0.1).plus(0.2)
+  // console.log('Big(0.7).plus(x).plus(y)  :>> ', num, num.toNumber()) // )
+
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
   if (!isRun) return
 
@@ -146,7 +154,8 @@ const onClick = async () => {
     const { data: res } = await LoginApi.Login(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('登录成功')
-    sessionStorage.setItem('token', res.value.data.token)
+    userState.setToken(res.value.data.token)
+    // userState.token
     return navigateTo('/')
   } else { // 验证码登录
     const data: LoginApi_Login = {
@@ -157,7 +166,7 @@ const onClick = async () => {
     const { data: res } = await LoginApi.Login(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('登录成功')
-    sessionStorage.setItem('token', res.value.data.token)
+    userState.setToken(res.value.data.token)
     return navigateTo('/')
   }
 }
@@ -206,13 +215,13 @@ const weChatLogin = async () => {
 
 // 获取OpenId
 const getOpenId = async () => {
+  if (!route.query.code) return
   const code: LoginApi_getOpenid = {
     code: route.query.code as string,
   }
   const { data: codeId } = await LoginApi.getOpenid(code)
   if (codeId.value?.data.status === 1) { // 已注册用户
-    sessionStorage.setItem('token', codeId.value.data.token)
-    // sessionStorage.getItem('token')
+    userState.setToken(codeId.value.data.token)
     return navigateTo('/')
   } else { // 未注册用户
     defData.type = 3

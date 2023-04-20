@@ -45,11 +45,6 @@
       </div>
     </div>
   </div>
-
-  <!-- <div style="margin-top: 120px; width:1152px;height: 650px;position: absolute; left: 330px;">
-    <div style="width: 600px;position: absolute; left: 300px;top:40px">
-    </div>
-  </div> -->
 </template>
 
 <script setup lang="ts">
