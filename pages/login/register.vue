@@ -111,7 +111,7 @@ const onClick = async () => {
   if (!isRun) return
 
   const data: LoginApi_Login = {
-    type: 2,
+    type: 3,
     phone: form.phone,
     validate_code: form.validate_code,
 
