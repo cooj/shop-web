@@ -49,3 +49,11 @@ declare interface AccountApi_editPhone {
   sms_code:string //短信验证
   token:string //
 }
+
+/**
+ * 个人中心 修改邮箱 请求数据
+ */
+declare interface AccountApi_editEmail {
+  email: string //电子邮箱，比如 example@qq.com
+  token:string //
+}

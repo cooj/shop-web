@@ -85,6 +85,14 @@
             </NuxtLink>
           </div>
         </el-descriptions-item>
+        <el-descriptions-item label="绑定邮箱：">
+          您已绑定邮箱：{{ defData.email }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <NuxtLink to="/user/components/editEmail">
+            修改
+          </NuxtLink>
+        </el-descriptions-item>
       </el-descriptions>
       <!-- <i class="i-ep-apple block" />
       <i class="ic-baseline-add-home-work block" />
