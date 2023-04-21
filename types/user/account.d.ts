@@ -19,6 +19,7 @@ declare interface AccountApi_userInfoResponse {
   "enterprise_name": string, //企业名称
   "set_time": string
   "nickname": string //微信昵称
+  "email_status": 0 | 1 //是否激活邮箱 0未激活 1已激活
 }
 
 /**
@@ -27,8 +28,6 @@ declare interface AccountApi_userInfoResponse {
 declare interface AccountApi_editInfo {
   token: string
   username: string //用户名
-  phone: string //联系电话
-  email: string //电子邮箱
   headimgurl: string //头像
 }
 
@@ -39,4 +38,14 @@ declare interface AccountApi_editPwd {
   token: string
   password: string //密码
   confirm_password: string //确认密码
+}
+
+
+/**
+ * 个人中心 修改手机号 请求数据
+ */
+declare interface AccountApi_editPhone {
+  phone: string //手机号
+  sms_code:string //短信验证
+  token:string //
 }

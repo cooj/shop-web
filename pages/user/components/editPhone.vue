@@ -65,16 +65,16 @@
         v-else-if="defData.step === 2" ref="formRef" label-width="250px" :rules="rules" :model="form"
         style="max-width: 600px"
       >
-        <el-form-item prop="password" label="新手机号：">
-          <el-input v-model="form.password" placeholder="请输入新手机号" show-password />
+        <el-form-item prop="phone" label="新手机号：">
+          <el-input v-model="form.new_phone" placeholder="请输入新手机号" />
         </el-form-item>
         <el-form-item prop="sms_code" label="短信验证码：">
           <el-col :span="15">
-            <el-input v-model.trim="form.sms_code" type="text" placeholder="请输入短信验证码" clearable tabindex="3" />
+            <el-input v-model.trim="form.new_code" type="text" placeholder="请输入短信验证码" clearable tabindex="3" />
           </el-col>
           <el-col :span="1" />
           <el-col :span="8">
-            <el-button v-if="defData.sendCode" class="w100%" @click="getSmsCodeClick">
+            <el-button v-if="defData.sendCode" class="w100%" @click="getNewCodeClick">
               获取验证码
             </el-button>
             <el-button v-else class="w100%">
@@ -99,37 +99,31 @@
 import { ArrowRight } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { LoginApi } from '~/api/login'
+import { AccountApi } from '~/api/user/account'
+
+const userState = useUserStore()
 
 const defData = reactive({
-  step: 1,
+  step: 2,
   vali_code: '1234', // 验证码
   session_id: '',
   time: 0, // 验证码倒计时时间
   sendCode: true, // true：发送验证码 false:倒计时
   phone: '',
-  code: '',
 })
 const formRef = ref<FormInstance>()
 const form = reactive({
-  user_name: '',
   phone: '',
-  email: '',
-  headimgurl: '',
-  confirm_password: '',
-  password: '',
+  new_phone: '',
   sms_code: '', // 短信验证码
+  new_code: '',
   vali_code: '', // 验证码
-  define_password: '', // 确认新密码
 })
 
 // 规则
 const rules = reactive<FormRules>({
   phone: [
     { required: true, pattern: /^(((\d{3,4}-)?[0-9]{7,8})|(1(3|4|5|6|7|8|9)\d{9}))$/, message: '填写正确的手机号格式', trigger: 'blur' },
-  ],
-  password: [
-    { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
-    { pattern: /^[^\u4E00-\u9FA5 ]{6,16}$/, message: '不含有中文和空格,至少6位,最多16位', trigger: 'blur' },
   ],
   sms_code: [
     { required: true, message: '请输入短信验证码', trigger: 'blur' },
@@ -142,6 +136,16 @@ const rules = reactive<FormRules>({
     { pattern: /^[^\u4E00-\u9FA5 ]{6,16}$/, message: '不含有中文和空格,至少6位,最多16位', trigger: 'blur' },
   ],
 })
+
+// 获取当前手机号
+const NowPhone = async () => {
+  const user = await userState.getUserInfo()
+  if (user.value) {
+    defData.phone = user.value.phone
+    form.phone = defData.phone
+  }
+}
+NowPhone()
 
 // 获取短信验证码 step1
 const getSmsCodeClick = async () => {
@@ -172,6 +176,7 @@ const getValidCodeClick = async () => {
   defData.vali_code = res.value.data.validate_code
 }
 getValidCodeClick()
+
 //  验证进入下一步 step1
 const onClick = async () => {
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
@@ -179,30 +184,49 @@ const onClick = async () => {
   const data: LoginApi_submitIde = {
     vali_code: form.vali_code,
     sms_code: form.sms_code,
-    phone: form.phone,
+    phone: defData.phone,
     session_id: defData.session_id,
   }
   const { data: res } = await LoginApi.submitIde(data)
   if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
   ElMessage.success('身份验证成功')
-  defData.phone = form.phone // 暂存step1 手机号
-  defData.code = res.value.data.code // 暂存step1 验证码
   defData.step = 2
+}
+
+// 获取短信验证码 step2
+const getNewCodeClick = async () => {
+  if (!form.new_phone) ElMessage.error('请先输入手机号码')
+  const data: LoginApi_validateCode = {
+    type: 3,
+    phone: form.new_phone,
+  }
+  const { data: res } = await LoginApi.validateCode(data)
+  if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+  ElMessage.success('发送成功')
+  defData.sendCode = false
+  defData.time = 60
+  const times = setInterval(() => {
+    defData.time--
+    if (defData.time <= 0) {
+      defData.sendCode = true
+      clearInterval(times)
+    }
+  }, 1000)
 }
 
 // 提交 step2
 const onEditClick = async () => {
-  const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
-  if (!isRun) return
-  // const data: LoginApi_submitPas = {
-  //   code: defData.code,
-  //   phone: defData.phone,
-  //   password: form.password,
-  //   define_password: form.define_password,
-  // }
-  // const { data: res } = await LoginApi.submitPas(data)
-  // if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
-  // ElMessage.success('修改成功')
+  if (!form.new_phone || !form.new_code) return ElMessage.error('必填项不能为空')
+  if (form.new_phone === defData.phone) return ElMessage.error('新手机号与当前手机号不能相同')
+  const a = userState.token
+  const data: AccountApi_editPhone = {
+    phone: form.new_phone,
+    sms_code: form.new_code,
+    token: a,
+  }
+  const { data: res } = await AccountApi.editPhone(data)
+  if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+  ElMessage.success('修改成功')
   defData.step = 3
 }
 

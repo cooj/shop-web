@@ -14,7 +14,7 @@
         个人信息
       </div>
       <div style="margin:15px 0px;font-size: 14px;">
-        头像： <el-image style="width: 100px; height: 100px" :src="defData.headImgUrl" />
+        头像： <el-image class="h100px w100px" :src="defData.headImgUrl" />
       </div>
       <div style="margin:15px 0px;font-size: 14px;">
         我的用户名：{{ defData.user_name }}
@@ -29,15 +29,8 @@
         <el-row>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item prop="headimgurl" label="头像：">
-              <!-- <el-upload
-                class="avatar-uploader" action="imgUrl"
-                :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload"
-              >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <el-icon v-else class="avatar-uploader-icon">
-                  <Plus />
-                </el-icon>
-              </el-upload> -->
+              <!-- <UploadFile v-model="form.headimgurl" /> -->
+              <ElementUploadImg v-model="form.headimgurl" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="20" :md="18" :lg="14" :xl="14">
@@ -128,27 +121,6 @@ const form = reactive({
   password: '',
 })
 
-// 上传头像
-// const imageUrl = ref('')
-
-// const handleAvatarSuccess: UploadProps['onSuccess'] = (
-//   response,
-//   uploadFile,
-// ) => {
-//   imageUrl.value = URL.createObjectURL(uploadFile.raw!)
-// }
-
-// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-//   if (rawFile.type !== 'image/jpeg') {
-//     ElMessage.error('Avatar picture must be JPG format!')
-//     return false
-//   } else if (rawFile.size / 1024 / 1024 > 2) {
-//     ElMessage.error('Avatar picture size can not exceed 2MB!')
-//     return false
-//   }
-//   return true
-// }
-
 // 规则
 const rules = reactive<FormRules>({
   user_name: [
@@ -184,8 +156,6 @@ const onClick = async () => {
   const data: AccountApi_editInfo = {
     token: a,
     username: form.user_name,
-    phone: form.phone,
-    email: form.email,
     headimgurl: form.headimgurl,
   }
   const res = await AccountApi.editInfo(data)

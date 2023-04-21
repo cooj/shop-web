@@ -10,4 +10,6 @@ export const AccountApi = {
   editPwd: (data: RequestDataType<AccountApi_editPwd>) => useHttp('/api/mall/edit_pwd', data, { method: 'post' }),
   // 用户信息 -- 解绑微信
   del_openid: () => useHttp('/api/mall/del_openid', '', { method: 'post' }),
+  // 用户信息 -- 修改手机号
+  editPhone: (data: RequestDataType<AccountApi_editPhone>) => useHttp('/api/mall/edit_phone', data, { method: 'post' }),
 }
