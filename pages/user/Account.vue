@@ -29,8 +29,7 @@
         <el-row>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-form-item prop="headimgurl" label="头像：">
-              <!-- <UploadFile v-model="form.headimgurl" /> -->
-              <ElementUploadImg v-model="form.headimgurl" />
+              <BaseUpload v-model="form.headImgUrl" />
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="20" :md="18" :lg="14" :xl="14">
@@ -55,7 +54,7 @@
     <div mt40px>
       <el-descriptions title="账户安全" :column="2">
         <el-descriptions-item label="登录密码：">
-          （联网账号存在被盗风险，建议定期更改密码以保护账户安全）
+          联网账号存在被盗风险，建议定期更改密码以保护账户安全
         </el-descriptions-item>
         <el-descriptions-item>
           <NuxtLink to="/user/components/editPwd">
@@ -86,7 +85,10 @@
           </div>
         </el-descriptions-item>
         <el-descriptions-item label="绑定邮箱：">
-          您已绑定邮箱：{{ defData.email }}
+          {{ defData.email ? '您已绑定邮箱' : '暂未绑定' }}{{ defData.email }}
+          <el-button v-if="defData.email && defData.email_status === 0" @click="sendEmail">
+            去激活
+          </el-button>
         </el-descriptions-item>
         <el-descriptions-item>
           <NuxtLink to="/user/components/editEmail">
@@ -117,6 +119,7 @@ const defData = reactive({
   headImgUrl: 'https://goyojo.oss-cn-shenzhen.aliyuncs.com/20230420/202304201450139203.gif',
   openid: '',
   nickname: '',
+  email_status: 0,
 })
 
 const formRef = ref<FormInstance>()
@@ -124,7 +127,7 @@ const form = reactive({
   user_name: '',
   phone: '',
   email: '',
-  headimgurl: '',
+  headImgUrl: '',
   confirm_password: '',
   password: '',
 })
@@ -143,16 +146,17 @@ const initData = async () => {
     defData.user_name = user.value.user_name
     defData.email = user.value.email
     defData.phone = user.value.phone
-    defData.headImgUrl = user.value.headimgurl
     defData.openid = user.value.openid
     defData.nickname = user.value.nickname
+    defData.email_status = user.value.email_status
+    if (user.value.headimgurl) defData.headImgUrl = user.value.headimgurl
   }
 }
 
 // 修改用户信息
 const editClick = () => {
   defData.type = 2
-  form.headimgurl = defData.headImgUrl
+  form.headImgUrl = defData.headImgUrl
   form.user_name = defData.user_name
   form.phone = defData.phone
   form.email = defData.email
@@ -160,15 +164,16 @@ const editClick = () => {
 
 // 修改用户信息 确定
 const onClick = async () => {
-  const a = userState.token
   const data: AccountApi_editInfo = {
-    token: a,
-    username: form.user_name,
-    headimgurl: form.headimgurl,
+    user_name: form.user_name,
+    headimgurl: form.headImgUrl,
   }
   const res = await AccountApi.editInfo(data)
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   ElMessage.success('修改成功')
+  userState.getUserInfo(true)
+  defData.user_name = data.user_name
+  defData.headImgUrl = data.headimgurl
   defData.type = 1
 }
 
@@ -177,6 +182,16 @@ const delWeChat = async () => {
   const res = await AccountApi.del_openid()
   if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
   ElMessage.success('解绑成功')
+}
+
+// 发送激活邮件
+const sendEmail = async () => {
+  const data: AccountApi_sendEmail = {
+    email: defData.email,
+  }
+  const res = await AccountApi.sendEmail(data)
+  if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
+  ElMessage.success('激活邮件发送成功')
 }
 
 definePageMeta({
@@ -190,7 +205,7 @@ onBeforeMount(() => {
 </script>
 
 <style scoped>
-.avatar-uploader .el-upload {
+.avatar-upload.avatar-uploader .el-upload {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;
   cursor: pointer;

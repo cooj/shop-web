@@ -7,7 +7,7 @@
     </div>
     <div style="border: 1px solid #50585e;height: 650px;display:flex;justify-content: center;">
       <div style="width: 600px;margin-top: 50px;">
-        <el-steps :space="200" :active="defData.step" simple class="mb-70px">
+        <el-steps :space="200" :active="defData.step" class="mb-70px ml130px">
           <el-step title="身份验证" />
           <el-step title="修改密码" />
           <el-step title="完成" />

@@ -7,7 +7,7 @@
     </div>
     <div style="border: 1px solid #50585e;height: 650px;display:flex;justify-content: center;">
       <div style="width: 600px;margin-top: 50px;">
-        <div style="font-size: xx-large;margin: 40px 160px;">
+        <div style="font-size: xx-large;margin: 40px;text-align: center;">
           欢迎您注册工游记
         </div>
         <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px" size="large">

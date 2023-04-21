@@ -26,8 +26,7 @@ declare interface AccountApi_userInfoResponse {
  * 个人中心 -- 编辑用户 请求参数
  */
 declare interface AccountApi_editInfo {
-  token: string
-  username: string //用户名
+  user_name: string //用户名
   headimgurl: string //头像
 }
 
@@ -56,4 +55,19 @@ declare interface AccountApi_editPhone {
 declare interface AccountApi_editEmail {
   email: string //电子邮箱，比如 example@qq.com
   token:string //
+}
+
+/**
+ * 个人中心 发送激活邮箱 请求参数
+ */
+declare interface AccountApi_sendEmail {
+  email: string //电子邮箱，比如 example@qq.com
+}
+
+/**
+ * 个人中心 激活验证邮箱 请求参数
+ */
+declare interface AccountApi_VerifyEmail {
+  email: string //电子邮箱，比如 example@qq.com
+  code:string //提交密码验证码
 }

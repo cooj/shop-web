@@ -43,12 +43,15 @@ getWeChat()
 // 获取OpenId
 const getOpenId = async () => {
   if (!route.query.code) return
-  const code: LoginApi_getOpenid = {
-    code: route.query.code as string,
-  }
-  const { data: codeId } = await LoginApi.getOpenid(code)
-  if (codeId.value?.data.token) {
-    userState.setToken(codeId.value.data.token)
+  const user = await userState.getUserInfo()
+  if (user.value) {
+    const code: LoginApi_getOpenid = {
+      code: route.query.code as string,
+      user_id: user.value.user_id,
+    }
+    const { data: codeId } = await LoginApi.getOpenid(code)
+    if (codeId.value?.code !== 200) return ElMessage.error(codeId.value?.msg)
+    return navigateTo('/user/account')
   }
 }
 getOpenId()

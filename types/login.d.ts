@@ -91,6 +91,7 @@ declare interface LoginApi_GetWeChatResponse {
  */
 declare interface LoginApi_getOpenid {
     code: string
+    user_id?:number //用户ID（跳个人中心页传）
 }
 /**
  * 微信获取openID 响应参数
