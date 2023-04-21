@@ -18,6 +18,26 @@ interface GoodsApi_GetClass {
 }
 
 
+/**
+ * 获取购物车商品列表 - 响应数据
+ */
+declare interface GoodsApi_GetCartListResponse {
+  "goods_list": {
+    "id": 4, //记录ID
+    "user_id": 1, //用户ID
+    "goods_id": 3, //商品id
+    "goods_number": 4, //数量
+    "create_time": "2023-03-30 14:17:36", //添加时间
+    "goods_name": "红钐 按键寿命试验机 HSL-TA3 三工位", //商品名称
+    "goods_code": "HSL-TA3", //商品型号
+    "shop_price": "0.00", //原价
+    "goods_img": "https://goyojo.oss-cn-shenzhen.aliyuncs.com/20230104/202301041419308274.jpg?x-oss-process=image/quality,Q_50", //商品图片
+    "goods_weight": "0.00", //商品重量
+    "unit": "台" //单位
+  }[]
+}
+
+
 
 
 

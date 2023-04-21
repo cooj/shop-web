@@ -9,7 +9,9 @@ const initData = async () => {
     defData.username = user.value.user_name
   }
 }
-initData()
+onBeforeMount(() => {
+  initData()
+})
 </script>
 
 <template>

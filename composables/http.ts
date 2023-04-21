@@ -10,8 +10,9 @@ type ReqOption = Parameters<UseFetchType>[1]
 // type RequestDataType<T = Record<string, any>> = '' | { (): T } | T
 
 export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqOption) => {
-  const headers = useRequestHeaders(['cookie']) // as HeadersInit
-  //   console.log('headers :>> ', headers)
+  const token = useCookie('token')
+  const headers = useRequestHeaders(['token']) // as HeadersInit
+  // console.log('headers :>> ', headers)
   //   console.log('headers :>> ', headers.cookie)
   const runtimeConfig = useRuntimeConfig()
   //   console.log('runtimeConfig :>> ', runtimeConfig)
@@ -19,14 +20,11 @@ export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqO
 
   const options = opt || {}
 
-  //   if (headers.cookie)
-  //     options.headers.cookie = headers.cookie
-
-  //   const d = data?.()
-  //   console.log('d :>> ', d)
-
-  //   if (data)
-  //     options.body = data
+  if (token.value) {
+    headers.token = token.value
+  }
+  // @ts-expect-error accept， header暂时不确定ts写法
+  options.headers = headers
 
   // 设置请求参数
   if (data) {
@@ -42,6 +40,7 @@ export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqO
     options.baseURL = runtimeConfig.public.apiBase || ''
   }
   // console.log('options.baseURL :>> ', options.baseURL);
+  // console.log('options :>> ', options)
   // 发送请求出错
   options.onRequestError = () => {
     console.error('请求出错，请重试！')

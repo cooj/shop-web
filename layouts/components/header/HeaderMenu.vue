@@ -17,7 +17,7 @@
       </NuxtLink>
     </el-menu-item>
     <el-menu-item index="4">
-      <NuxtLink to="/goods/detail1">
+      <NuxtLink to="/order/cart">
         清仓特卖
       </NuxtLink>
     </el-menu-item>
