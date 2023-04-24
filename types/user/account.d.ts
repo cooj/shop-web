@@ -34,7 +34,7 @@ declare interface AccountApi_editInfo {
  * 个人中心 -- 修改密码 请求参数
  */
 declare interface AccountApi_editPwd {
-  token: string
+  // token: string
   password: string //密码
   confirm_password: string //确认密码
 }
@@ -46,7 +46,7 @@ declare interface AccountApi_editPwd {
 declare interface AccountApi_editPhone {
   phone: string //手机号
   sms_code:string //短信验证
-  token:string //
+  // token:string //
 }
 
 /**
@@ -54,7 +54,7 @@ declare interface AccountApi_editPhone {
  */
 declare interface AccountApi_editEmail {
   email: string //电子邮箱，比如 example@qq.com
-  token:string //
+  // token:string //
 }
 
 /**

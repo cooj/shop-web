@@ -8,7 +8,9 @@ import BaseTop from './components/BaseTop.vue'
 
 <template>
   <main>
-    <BaseTop />
+    <ClientOnly>
+      <BaseTop />
+    </ClientOnly>
     <BaseHeader />
     <!-- <BaseMenu /> -->
     <slot />

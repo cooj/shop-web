@@ -9,4 +9,12 @@ export const CommonApi = {
   upload: (data: RequestDataType<FormData>) => useHttp<CommonApi_UploadResponse>('/api/mall/upload_image', data, {
     method: 'post',
   }),
+
+  /**
+   * 获取商城信息
+   * @returns
+   */
+  getSystem: () => useHttp<CommonApi_GetSystemResponse>('/api/index/setup_info', '', {
+    method: 'get',
+  }),
 }

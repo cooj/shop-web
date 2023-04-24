@@ -102,7 +102,7 @@ import { Close, Lock, User } from '@element-plus/icons-vue'
 // import Big from 'big.js'
 import { LoginApi } from '~/api/login'
 
-const userState = useUserStore()
+const userState = useUserState()
 
 definePageMeta({
   layout: 'login',

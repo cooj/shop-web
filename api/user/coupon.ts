@@ -3,9 +3,9 @@
  */
 export const CouponApi = {
   // 我的优惠券
-  geList: (data: { token: string }) => useHttp<CouponApi_getListResponse>('/api/mall/get_coupon_list', data, { method: 'post' }),
+  geList: () => useHttp<CouponApi_getListResponse>('/api/mall/get_coupon_list', '', { method: 'get' }),
   // 优惠券列表
-  allList: (data: { token: string }) => useHttp<CouponApi_allListResponse[]>('/api/index/get_coupon_list', data, { method: 'post' }),
+  allList: () => useHttp<CouponApi_allListResponse[]>('/api/index/get_coupon_list', '', { method: 'get' }),
   // 领取优惠券
   addList: (data: CouponApi_addList) => useHttp('/api/mall/add_coupon', data, { method: 'post' }),
   // 删除优惠券

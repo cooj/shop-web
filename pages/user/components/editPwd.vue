@@ -43,8 +43,6 @@ import { ArrowRight } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
 
-const userState = useUserStore()
-
 const formRef = ref<FormInstance>()
 const form = reactive({
   user_name: '',
@@ -72,9 +70,8 @@ const editPwd = async () => {
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
   if (!isRun) return
   if (form.confirm_password !== form.password) return ElMessage.error('密码不一致')
-  const a = userState.token
+
   const data: AccountApi_editPwd = {
-    token: a,
     password: form.password,
     confirm_password: form.confirm_password,
   }

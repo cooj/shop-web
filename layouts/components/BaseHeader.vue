@@ -9,12 +9,14 @@ const search = reactive({
 
 <template>
   <section class="header-box">
-    <div class="mid py40px">
+    <div class="mid py25px">
       <div class="flex items-center justify-between text-#f8f8f8 container">
         <div class="logo">
-          <img class="h50px" src="~/assets/images/shop-logo2.png" alt="">
+          <NuxtLink to="/">
+            <img class="h50px" src="~/assets/images/shop-logo2.png" alt="">
+          </NuxtLink>
         </div>
-        <div class="search-box w50%">
+        <div class="search-box relative w50%">
           <el-input v-model="search.keyword" placeholder="" size="large">
             <template #prepend>
               <el-select v-model="search.select" placeholder="" size="large" style="width: 115px">
@@ -24,6 +26,9 @@ const search = reactive({
               </el-select>
             </template>
           </el-input>
+          <div class="absolute left-0 mt3px text-12px">
+            热门搜索：123,45466,8799,56456
+          </div>
         </div>
         <div class="cart">
           <el-button type="primary" size="large">

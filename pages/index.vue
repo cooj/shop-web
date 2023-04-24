@@ -10,9 +10,9 @@ definePageMeta({
 <template>
   <div class="index-box">
     <Suspense>
-      <ClientOnly>
-        <HomeMain />
-      </ClientOnly>
+      <HomeMain />
+      <!-- <ClientOnly>
+        </ClientOnly> -->
       <template #fallback>
         <div italic op50>
           <span animate-pulse>Loading...</span>

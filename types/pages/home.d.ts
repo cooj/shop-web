@@ -22,6 +22,21 @@ declare interface HomeApi_GetNavResponse {
   "sort": 10
 }
 
+/**
+ * 精选商品 - 响应数据
+ */
+declare interface HomeApi_GetNewsGoodsResponse {
+  "lists": {
+    "goods_id": 256,
+    "goods_name": "艾斯瑞 冷热冲击试验箱 ASR-100D 100L   -60-150水冷3厢",
+    "goods_img": "",
+    "purchase_price": "0.00",
+    "shop_price": "0.00"
+  }[],
+  "total": 1
+
+}
+
 
 /**
  * 获取楼层商品 - 响应数据

@@ -7,11 +7,6 @@ import '~/assets/scss/app.scss'
 
 const locale = ref(zhCn)
 
-// let a = -1
-// if (a > 0){ a++}
-
-// console.log('a :>> ', a);
-
 useHead({
   title: appName,
 })
@@ -30,7 +25,7 @@ useHead({
 html,
 body,
 #__nuxt {
-  height: 100vh;
+  // height: 100vh;
   margin: 0;
   padding: 0;
   // background: $bgColor;

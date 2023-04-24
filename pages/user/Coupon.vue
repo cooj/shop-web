@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { CouponApi } from '~/api/user/coupon'
 
-const userState = useUserStore()
+const userState = useUserState()
 
 const defData = reactive({
   MyCouponList: [] as CouponApi_getListResponse['lists'],
@@ -89,8 +89,7 @@ const defData = reactive({
 
 // 初始化数据 我的优惠券
 const initCardData = async () => {
-  const a = userState.token
-  const res = await CouponApi.geList({ token: a })
+  const res = await CouponApi.geList()
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   defData.MyCouponList = res.data.value.data.lists
 }
@@ -98,8 +97,7 @@ initCardData()
 
 // 展示所有优惠券
 const showCoupon = async () => {
-  const a = userState.token
-  const res = await CouponApi.allList({ token: a })
+  const res = await CouponApi.allList()
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
   defData.CouponList = res.data.value.data
 }
@@ -111,11 +109,10 @@ const onReceive = async (row: any) => {
   if (user.value) {
     defData.user_id = user.value.user_id
   }
-  const a = userState.token
+
   const data: CouponApi_addList = {
     user_id: defData.user_id as number,
     coupon_id: row,
-    token: a,
   }
   const res = await CouponApi.addList(data)
   if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
@@ -126,7 +123,6 @@ const onReceive = async (row: any) => {
 
 // 删除
 const delClick = async (row: any) => {
-  const a = userState.token
   ElMessageBox.confirm('此操作将永久删除该条内容，是否继续?', '提示', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
@@ -135,7 +131,6 @@ const delClick = async (row: any) => {
   }).then(async () => {
     const res = await CouponApi.delList({
       id: row,
-      token: a,
     })
     if (res.data.value?.code !== 200) {
       ElMessage.error(res.data.value?.msg)

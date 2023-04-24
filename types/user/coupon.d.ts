@@ -39,7 +39,7 @@ declare interface CouponApi_allListResponse {
 declare interface CouponApi_addList {
   user_id: number //用户id
   coupon_id: number //优惠券id
-  token: string
+
 }
 
 /**
@@ -48,14 +48,13 @@ declare interface CouponApi_addList {
 declare interface CouponApi_delList {
   id: number
   // user_id:number //用户id
-  token: string
+  // token: string
 }
 
 /**
  * 我的工游豆 请求参数
  */
 declare interface BeansApi_getList {
-  token: string
   page?: number //分页页码
   page_size?: number //每页数量
   type?: 0 | 1 | 2 //类型 1收入 2支出 0显示全部

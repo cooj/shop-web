@@ -7,65 +7,69 @@
         </el-breadcrumb-item>
         <el-breadcrumb-item>购物车</el-breadcrumb-item>
       </el-breadcrumb>
-      <div class="table-cart">
-        <ElTable ref="tableRef" :data="defData.tableData" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="goods_name" label="商品名称" min-width="180">
-            <template #default="{ row }">
-              <div class="h50px flex">
-                <div class="goods_img">
-                  <el-image
-                    class="h50px w50px"
-                    src="https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000"
-                  />
+      <ClientOnly>
+        <div class="table-cart">
+          <ElTable ref="tableRef" :data="defData.tableData" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column prop="goods_name" label="商品名称" min-width="180">
+              <template #default="{ row }">
+                <div class="h50px flex">
+                  <div class="goods_img">
+                    <el-image class="h50px w50px" :src="row.goods_img" />
+                  </div>
+                  <div class="pl10px">
+                    <NuxtLink to="/goods/detail?id=10">
+                      {{ row.goods_name }}
+                    </NuxtLink>
+                  </div>
                 </div>
-                <div class="pl10px">
-                  <NuxtLink to="/goods/detail?id=10">
-                    {{ row.goods_name }}
-                  </NuxtLink>
+              </template>
+            </el-table-column>
+            <el-table-column prop="goods_code" label="商品型号" width="160" />
+            <el-table-column prop="goods_spec" label="商品规格" width="160" />
+            <el-table-column prop="goods_price" label="价格" width="120" align="center">
+              <template #default="{ row }">
+                <div class="goods_price">
+                  {{ row.goods_price }}
                 </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="goods_code" label="商品型号" width="160" />
-          <el-table-column prop="goods_spec" label="商品规格" width="160" />
-          <el-table-column prop="goods_price" label="价格" width="120" align="center">
-            <template #default="{ row }">
-              <div class="goods_price">
-                {{ row.goods_price }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="goods_num" label="商品数量" width="150" align="center">
-            <template #default="{ row }">
-              <el-input-number v-model="row.goods_num" class="w100%!" :precision="0" :min="0" :max="100" />
-            </template>
-          </el-table-column>
-          <el-table-column prop="operate" label="操作" width="100" align="center">
-            <template #default="{ row }">
-              <el-button type="primary" link @click="onRemove(row)">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </ElTable>
-      </div>
-      <div class="table-cart-count">
-        <div class="lt">
-          <el-button type="primary" link @click="onRemoveChose">
-            删除所选商品
-          </el-button>
-          <!-- <el-button type="primary" link>
+              </template>
+            </el-table-column>
+            <el-table-column prop="goods_num" label="商品数量" width="150" align="center">
+              <template #default="{ row }">
+                <el-input-number v-model="row.goods_num" class="w100%!" :precision="0" :min="0" :max="100" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="operate" label="操作" width="100" align="center">
+              <template #default="{ row }">
+                <el-button type="primary" link @click="onRemove(row)">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </ElTable>
+        </div>
+        <div class="table-cart-count">
+          <div class="lt">
+            <el-button type="primary" link @click="onRemoveChose">
+              删除所选商品
+            </el-button>
+            <!-- <el-button type="primary" link>
             继续购物
           </el-button> -->
+          </div>
+          <div class="gt">
+            <NuxtLink to="/order/confirm">
+              go
+            </NuxtLink>
+            商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
+            <el-button class="ml5px" type="primary">
+              结算商品
+            </el-button>
+          </div>
+          <!-- https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000 -->
         </div>
-        <div class="gt">
-          商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
-          <el-button class="ml5px" type="primary">
-            结算商品
-          </el-button>
-        </div>
-      </div>
+        <BaseUpload v-model="defData.url" />
+      </ClientOnly>
     </div>
   </section>
 </template>
@@ -77,7 +81,7 @@ import { GoodsApi } from '~/api/goods/list'
 
 interface GoodsTableCartItem {
   goods_name: 'good海尔彩电LE32G310G 32'
-  goods_img: ''
+  goods_img: string
   goods_price: 100 // 价格
   goods_num: 1 // 购买数量
   goods_id: 1
@@ -88,11 +92,12 @@ interface GoodsTableCartItem {
 const tableRef = ref<InstanceType<typeof ElTable>>()
 
 const defData = reactive({
+  url: '',
   breadcrumbList: [],
   tableData: [
     {
       goods_name: 'good海尔彩电LE32G310G 32',
-      goods_img: '',
+      goods_img: 'https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000',
       goods_price: 100, // 价格
       goods_num: 1, // 购买数量
       goods_id: 1,
@@ -127,7 +132,7 @@ const countMoney = computed(() => {
 
 // 获取购物车商品
 const { data: cartData } = await GoodsApi.getCartList()
-console.log('cartData :>> ', cartData)
+// console.log('cartData :>> ', cartData)
 
 // el-table多选事件
 const handleSelectionChange = (val: GoodsTableCartItem[]) => {
@@ -138,7 +143,7 @@ const handleSelectionChange = (val: GoodsTableCartItem[]) => {
 const onRemove = (row: GoodsTableCartItem) => {
   // 获取到在tableData对应的下标
   const index = defData.tableData.findIndex(item => item.goods_id === row.goods_id)
-  console.log('index :>> ', index)
+  // console.log('index :>> ', index)
 
   if (index >= 0) {
     // 调用删除接口

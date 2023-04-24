@@ -33,7 +33,7 @@ watch(() => route.path, () => {
       </div>
     </div>
     <div v-if="defData.isIndex" class="banner">
-      <div class="h520px flex container">
+      <div class="h100% flex container">
         <div class="left-box">
           <!-- 占位 -->
         </div>
@@ -56,7 +56,7 @@ watch(() => route.path, () => {
   --banner-left-width: 230px;
   --banner-right-width: 250px;
   --banner-width: 700px;
-  --banner-height: 520px;
+  --banner-height: 400px;
   position: relative;
 
   &::after {
@@ -89,6 +89,7 @@ watch(() => route.path, () => {
   .swp {
     width: var(--banner-width);
     height: 100%;
+    padding: 0 6px;
   }
 
   .right {

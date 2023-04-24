@@ -101,7 +101,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { LoginApi } from '~/api/login'
 import { AccountApi } from '~/api/user/account'
 
-const userState = useUserStore()
+const userState = useUserState()
 
 const defData = reactive({
   step: 1,
@@ -218,11 +218,10 @@ const getNewCodeClick = async () => {
 const onEditClick = async () => {
   if (!form.new_phone || !form.new_code) return ElMessage.error('必填项不能为空')
   if (form.new_phone === defData.phone) return ElMessage.error('新手机号与当前手机号不能相同')
-  const a = userState.token
+
   const data: AccountApi_editPhone = {
     phone: form.new_phone,
     sms_code: form.new_code,
-    token: a,
   }
   const { data: res } = await AccountApi.editPhone(data)
   if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)

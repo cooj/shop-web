@@ -23,7 +23,7 @@ export const useUserStore = defineStore('user', () => {
       return userInfo
     }
 
-    const { data } = await AccountApi.userInfo({ token: token.value })
+    const { data } = await AccountApi.userInfo()
 
     await wait(500)
 

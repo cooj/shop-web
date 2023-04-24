@@ -25,7 +25,7 @@ import { ArrowRight } from '@element-plus/icons-vue'
 import { LoginApi } from '~/api/login'
 
 const route = useRoute()
-const userState = useUserStore()
+const userState = useUserState()
 
 // 微信扫码登录
 const weChat = ref()

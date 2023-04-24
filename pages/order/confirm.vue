@@ -6,7 +6,12 @@
         <el-breadcrumb-item :to="{ path: '/' }">
           首页
         </el-breadcrumb-item>
-        <el-breadcrumb-item>购物车</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/order/cart' }">
+          购物车
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>
+          订单结算
+        </el-breadcrumb-item>
       </el-breadcrumb>
       <el-form size="small">
         <div min-h-200px />

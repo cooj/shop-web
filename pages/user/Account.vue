@@ -109,7 +109,7 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
 
-const userState = useUserStore()
+const userState = useUserState()
 
 const defData = reactive({
   type: 1, // 1个人信息 2修改个人信息

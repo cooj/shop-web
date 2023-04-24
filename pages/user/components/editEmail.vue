@@ -38,8 +38,6 @@ import { ArrowRight } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
 
-const userState = useUserStore()
-
 const formRef = ref<FormInstance>()
 const form = reactive({
   email: '',
@@ -56,9 +54,7 @@ const rules = reactive<FormRules>({
 const editPwd = async () => {
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
   if (!isRun) return
-  const a = userState.token
   const data: AccountApi_editEmail = {
-    token: a,
     email: form.email,
   }
   const { data: res } = await AccountApi.editEmail(data)

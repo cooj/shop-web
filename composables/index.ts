@@ -1,1 +1,3 @@
-export { useUserStore } from './store/user'
+export { useGoodsStore } from './store/goods'
+
+export { useSystemState, useUserState } from './state/system'
