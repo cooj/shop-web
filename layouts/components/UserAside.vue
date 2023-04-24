@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 40px;padding:10px;text-align: center;font-size: 16px;">
+  <div style="height: 40px;padding:10px;text-align: center;font-size: 17px;">
     个人中心
   </div>
   <el-divider border-style="dotted" style="margin:10px 0;" />
@@ -104,7 +104,7 @@
 
 .title {
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: bold;
 }
 
@@ -118,7 +118,7 @@ li {
   color: #000;
   padding: 8px 10px;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 li:hover {
