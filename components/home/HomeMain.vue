@@ -23,7 +23,9 @@
                   </div>
                 </template>
               </el-image>
-              <h3>{{ item.goods_name }}</h3>
+              <h3 class="tle">
+                {{ item.goods_name }}
+              </h3>
               <div class="price">
                 <span>惊爆价</span>
                 <em>￥{{ item.shop_price }}</em>
@@ -288,6 +290,19 @@ onMounted(async () => {
 
     &:hover {
       box-shadow: 0 0 10px #eee;
+    }
+
+    .tle {
+      height: 48px;
+      overflow: hidden;
+      line-height: 24px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
   }
 

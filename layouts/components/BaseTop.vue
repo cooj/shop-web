@@ -13,11 +13,7 @@ const initData = async () => {
 
 // 退出登录
 const onLoginOut = async () => {
-  const { data } = await useFetch<{ code: number }>('/api/loginOut')
-  if (data.value?.code === 200) {
-    // navigateTo('/')
-    window.location.href = '/'
-  }
+  useLoginOut()
 }
 
 onBeforeMount(() => {
@@ -81,7 +77,8 @@ onBeforeMount(() => {
   .el-button {
     --el-button-text-color: #fff;
     --el-font-size-base: 13px;
-    &.el-button--danger{
+
+    &.el-button--danger {
       --el-button-text-color: var(--el-color-danger-light-8);
     }
   }

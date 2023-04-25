@@ -48,14 +48,34 @@ watch(() => route.path, () => {
         </div>
       </div>
     </div>
+    <div v-if="defData.isIndex" class="market">
+      <div class="flex container">
+        <NuxtLink to="/">
+          <img class="h150px w100%" src="assets/images/pic/card1.png" alt="">
+          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+        </NuxtLink>
+        <NuxtLink to="/">
+          <img class="h150px w100%" src="assets/images/pic/card2.png" alt="">
+          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+        </NuxtLink>
+        <NuxtLink to="/">
+          <img class="h150px w100%" src="assets/images/pic/card3.png" alt="">
+          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+        </NuxtLink>
+        <NuxtLink to="/">
+          <img class="h150px w100%" src="assets/images/pic/card4.png" alt="">
+          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+        </NuxtLink>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .nav-banner {
   --banner-left-width: 230px;
-  --banner-right-width: 250px;
-  --banner-width: 700px;
+  --banner-right-width: 230px;
+  --banner-width: 720px;
   --banner-height: 400px;
   position: relative;
 
@@ -105,6 +125,22 @@ watch(() => route.path, () => {
 
   .banner {
     height: var(--banner-height);
+  }
+}
+
+.market {
+  --m-gap-width: 8px;
+  --m-card-number: 4;
+  padding: var(--m-gap-width) 0;
+
+  .flex {
+
+    gap: var(--m-gap-width);
+
+    >a {
+      width: calc((100% - var(--m-gap-width) * (--m-card-number - 1)) / 4);
+
+    }
   }
 }
 </style>
