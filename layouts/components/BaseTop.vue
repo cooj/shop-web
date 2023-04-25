@@ -13,11 +13,7 @@ const initData = async () => {
 
 // 退出登录
 const onLoginOut = async () => {
-  const { data } = await useFetch<{ code: number }>('/api/loginOut')
-  if (data.value?.code === 200) {
-    // navigateTo('/')
-    window.location.href = '/'
-  }
+  useLoginOut()
 }
 
 onBeforeMount(() => {

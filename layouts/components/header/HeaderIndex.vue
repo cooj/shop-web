@@ -74,8 +74,8 @@ watch(() => route.path, () => {
 <style lang="scss" scoped>
 .nav-banner {
   --banner-left-width: 230px;
-  --banner-right-width: 250px;
-  --banner-width: 700px;
+  --banner-right-width: 230px;
+  --banner-width: 720px;
   --banner-height: 400px;
   position: relative;
 

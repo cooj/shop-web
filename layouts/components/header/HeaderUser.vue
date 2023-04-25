@@ -6,19 +6,35 @@
       <div class="user-login">
         <div class="flex items-center">
           <div class="face">
-            <i class="i-carbon-user-avatar-filled-alt block text-48px" />
+            <el-image v-if="userData?.user_id && userData?.headimgurl" class="h58px w58px" :src="userData?.headimgurl" />
+            <i v-else class="i-carbon-user-avatar-filled-alt block text-48px" />
           </div>
-          <p class="text-14px font700">
-            欢迎光临工游记商城
-          </p>
+          <div class="text-14px font700">
+            <p> 欢迎光临工游记商城</p>
+            <p v-if="userData?.user_id">
+              你好！{{ userData?.user_name }}
+            </p>
+          </div>
         </div>
-        <div class="pb15px pt10px text-center">
-          <el-button class="min-w70px" type="primary" size="small">
-            注 册
+        <div v-if="userData?.user_id" class="pt12px text-center">
+          <el-button class="min-w70px" type="danger" size="small">
+            个人中心
           </el-button>
-          <el-button class="min-w70px" type="primary" size="small" plain>
-            登 录
+          <el-button class="min-w70px" type="info" size="small" plain @click="onLoginOut">
+            退出登录
           </el-button>
+        </div>
+        <div v-else class="pb15px pt10px text-center">
+          <NuxtLink to="/login/register">
+            <el-button class="min-w70px" type="primary" size="small">
+              注 册
+            </el-button>
+          </NuxtLink>
+          <NuxtLink to="/login" class="ml10px">
+            <el-button class="min-w70px" type="primary" size="small" plain>
+              登 录
+            </el-button>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -71,7 +87,15 @@
 </template>
 
 <script lang="ts" setup>
+const userState = useUserState()
+const userData = await userState.getUserInfo()
 
+/**
+ * 退出登录
+ */
+const onLoginOut = () => {
+  useLoginOut()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -93,19 +117,36 @@
 
   .user-warp {
     height: calc(100% - var(--m-welcome-height) - var(--m-tle-height));
+    padding-top: 10px;
 
     &-ul {
       height: 100%;
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-gap: 2px;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
 
       li {
-        width: 50%;
-        text-align: center;
+        >a {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          height: 100%;
+          width: 100%;
+          font-size: 12px;
 
-        .icon-box {
+          &:hover {
+            box-shadow: 0 0 8px 0 rgba(65, 65, 65, .2);
+            border-radius: 3px;
+          }
+
+          .icon-box {
+            margin-bottom: 8px;
+          }
+
           img {
-
+            width: 24px;
             margin: 0 auto;
           }
         }
@@ -117,6 +158,7 @@
     .face {
       color: var(--el-text-color-regular);
       margin-right: 5px;
+      height: 58px;
     }
   }
 
