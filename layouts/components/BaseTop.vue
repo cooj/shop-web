@@ -81,7 +81,8 @@ onBeforeMount(() => {
   .el-button {
     --el-button-text-color: #fff;
     --el-font-size-base: 13px;
-    &.el-button--danger{
+
+    &.el-button--danger {
       --el-button-text-color: var(--el-color-danger-light-8);
     }
   }
