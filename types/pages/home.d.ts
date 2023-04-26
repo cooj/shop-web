@@ -76,3 +76,21 @@ declare interface HomeApi_GetFloorGoods {
   "shop_price": "0.00"
 }
 
+
+
+
+
+
+
+/**
+ * 
+ */
+declare interface HomeApi_GetArticleResponse {
+  "id": number, //记录ID    5
+  "pid": number, //父级ID   默认0
+  "name": "关于我们", //导航名称
+  "children": {
+    "id": 8, //文章ID
+    "name": "关于我们" //文章标题
+  }[]
+}
