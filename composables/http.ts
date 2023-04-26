@@ -10,7 +10,7 @@ type ReqOption = Parameters<UseFetchType>[1]
 // type RequestDataType<T = Record<string, any>> = '' | { (): T } | T
 
 export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqOption) => {
-  const token = useCookie('token')
+  const token = useCookie('admin_token')
   const headers = useRequestHeaders(['token']) // as HeadersInit
   // console.log('headers :>> ', headers)
   //   console.log('headers :>> ', headers.cookie)
