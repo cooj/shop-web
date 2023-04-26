@@ -47,7 +47,7 @@
               <ul class="class-list">
                 <li v-for="sub in item.cat_lists" :key="sub.cat_id">
                   <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
-                    <el-button round>
+                    <el-button round size="small">
                       {{ sub.cat_name }}
                     </el-button>
                   </NuxtLink>
@@ -215,6 +215,7 @@ const defData = reactive({
 
 const goodsBestRef = ref(null)
 const navVisible = useElementVisibility(goodsBestRef)
+// const { x, y } = useWindowScroll()
 
 const { data: floor, pending } = await HomeApi.getFloor()
 // console.log('data :>> ', floor)
@@ -226,6 +227,9 @@ const { data: goods } = await HomeApi.getNewGoods()
 const goodsList = ref(goods.value?.data.lists)
 
 // console.log(process)
+watch(navVisible, (val) => {
+  console.log('val :>> ', val)
+})
 
 // watch(() => pending.value, () => {
 //   floor.value?.data.forEach((item) => {
@@ -235,8 +239,8 @@ const goodsList = ref(goods.value?.data.lists)
 //   immediate: true,
 // })
 
-const system = useSystemState()
-console.log('system.get :>> ', await system.getSystemInfo())
+// const system = useSystemState()
+// console.log('system.get :>> ', await system.getSystemInfo())
 
 onMounted(async () => {
   await wait(1000)

@@ -98,8 +98,8 @@ const moveImg = () => {
 
   // 小图跟大图宽度比例为1:1.5,需要在这基础上扩大1.5倍
   // 大图的显示的位置
-  largePosition.backgroundPositionX = `${-(2 * 1.5) * position.x}px`
-  largePosition.backgroundPositionY = `${-(2 * 1.5) * position.y}px`
+  largePosition.backgroundPositionX = `${-(2 * 1.2) * position.x}px`
+  largePosition.backgroundPositionY = `${-(2 * 1.2) * position.y}px`
 }
 const moveOutImg = () => {
   show.value = false
@@ -214,8 +214,8 @@ const onSlideChange = () => {
     position: absolute;
     top: 0;
     left: 101%;
-    width: 600px;
-    height: 600px;
+    width: 480px;
+    height: 480px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-repeat: no-repeat;
     background-size: 200% 200%;

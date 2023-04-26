@@ -40,6 +40,7 @@ module.exports = {
     //   scopes: [],
     // scope 类型（定义之后，可通过上下键选择）
     scopes: [
+      ['pages', '页面相关'],
       ['components', '组件相关'],
       ['hooks', 'hook 相关'],
       ['utils', 'utils 相关'],

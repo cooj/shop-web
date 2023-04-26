@@ -12,7 +12,7 @@
       </NuxtLink>
     </el-menu-item>
     <el-menu-item index="3">
-      <NuxtLink to="/goods/detail">
+      <NuxtLink to="/goods/detail-2">
         行家精选
       </NuxtLink>
     </el-menu-item>

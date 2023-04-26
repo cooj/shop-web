@@ -1,0 +1,588 @@
+<template>
+  <section class="goods-detail">
+    <div v-if="defData.loading" class="container">
+      <GoodsBreadcrumb class="my15px" :cid="goodsData?.cat_id" :name="goodsData?.goods_name" />
+      <div class="goods-main">
+        <div class="goods-zoom">
+          <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
+          <div v-else class="image-err">
+            <i class="i-ep-picture" />
+          </div>
+        </div>
+        <div class="goods-cen">
+          <div class="goods-tle">
+            {{ goodsData?.goods_name }}
+          </div>
+          <ul class="goods-pros">
+            <li class="items-center bg-#f8f8f8">
+              <div class="lt">
+                价格
+              </div>
+              <div class="gt">
+                <div class="price1">
+                  <b>￥{{ goodsData?.shop_price }}<span v-if="goodsData?.unit">/包</span></b>
+                  <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
+                </div>
+              </div>
+            </li>
+            <li class="items-center bg-#f8f8f8 -mt10px">
+              <div class="lt" />
+              <div class="gt">
+                <span class="price3" @click="onApprove">
+                  注册企业会员享企业价
+                  <i class="i-ep-arrow-right inline-block" />
+                </span>
+                <span class="text-12px c-#666">会员价</span>
+              </div>
+            </li>
+            <li>
+              <div class="lt">
+                商品编号
+              </div>
+              <div class="gt">
+                {{ goodsData?.goods_sn }}
+              </div>
+            </li>
+            <li>
+              <div class="lt">
+                商品型号
+              </div>
+              <div class="gt">
+                {{ goodsData?.goods_code }}
+              </div>
+            </li>
+            <!-- <li>
+              <div class="lt">
+                品牌
+              </div>
+              <div class="gt">
+                0.迪塞福
+              </div>
+            </li>
+            <li>
+              <div class="lt">
+                重量
+              </div>
+              <div class="gt">
+                0.2170kg
+              </div>
+            </li> -->
+            <li>
+              <div class="lt">
+                库存
+              </div>
+              <div v-if="goodsData" class="gt">
+                <p v-if="goodsData?.goods_number > 10">
+                  有货
+                </p>
+                <p v-else-if="goodsData?.goods_number > 0">
+                  商品即将售完
+                </p>
+                <p v-else>
+                  暂无库存
+                </p>
+              </div>
+            </li>
+            <li>
+              <div class="lt">
+                支付方式
+              </div>
+              <div class="gt">
+                <el-button text bg size="small" class="cursor-default!">
+                  <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
+                  微信
+                </el-button>
+                <el-button text bg size="small" class="cursor-default!">
+                  <i class="i-ic-baseline-payment mr3px c-#3887ff" />
+                  在线支付
+                </el-button>
+                <el-button text bg size="small" class="cursor-default!">
+                  <i class="i-ic-twotone-payments mr3px c-#ff5335" />
+                  线下转账
+                </el-button>
+              </div>
+            </li>
+            <li class="items-center">
+              <div class="lt">
+                购买数量
+              </div>
+              <div class="gt">
+                <el-input-number v-model="form.number" :min="1" :max="10000" />
+                <span class="ml5px c-#aaa">起购量:1个</span>
+              </div>
+            </li>
+            <li class="my8px b-t b-t-dashed">
+              <!--  -->
+            </li>
+            <li>
+              <div class="lt" />
+              <div class="gt">
+                <el-button v-if="2" type="primary" text bg size="small">
+                  <i class="i-carbon-favorite-filled mr3px" />
+                  收藏
+                </el-button>
+                <el-button v-else text bg size="small">
+                  <i class="i-carbon-favorite mr3px" />
+                  收藏
+                </el-button>
+                <el-button text bg size="small" @click="onShare">
+                  <i class="i-ep-share mr3px" />
+                  分享
+                </el-button>
+              </div>
+            </li>
+            <li class="buy-item">
+              <div class="lt">
+                <!-- 购买数量 -->
+              </div>
+              <div class="gt">
+                <el-button type="primary" size="large">
+                  立即购买
+                </el-button>
+                <el-button type="primary" plain size="large">
+                  <i class="i-carbon-shopping-cart mr3px" />
+                  加入购物车
+                </el-button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="goods-right">
+          <img src="https://www.gdbmro.com/goodsImg/lADPDgtYxBInjCPNAW7M1w_215_366.jpg" alt="">
+        </div>
+      </div>
+      <div class="goods-cont">
+        <div class="lt">
+          <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
+            <el-tab-pane label="推荐商品" name="1">
+              <ul class="goods-list">
+                <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
+                  <NuxtLink class="pos" :to="`/goods/detail-${item.goods_id}`">
+                    <img :src="item.goods_img" :alt="item.goods_name" :title="item.goods_name">
+                  </NuxtLink>
+                  <div class="tle">
+                    <NuxtLink :to="`/goods/detail-${item.goods_id}`">
+                      {{ item.goods_name }}
+                    </NuxtLink>
+                  </div>
+                  <div class="pce">
+                    <span>￥{{ item.shop_price }}</span>
+                  </div>
+                </li>
+              </ul>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+        <div class="gt">
+          <el-tabs v-model="defData.rightActive" class="goods-gt-tabs">
+            <el-tab-pane label="商品详情" name="1">
+              <div v-html="goodsData?.goods_desc" />
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
+    </div>
+    <div v-else class="container">
+      <div class="no-goods-box">
+        <div class="no-goods text-center">
+          <div class="i-ic-baseline-manage-search inline-block text-56px c-#666" />
+          <h3 class="text-30px c-#666">
+            抱歉，没有找到相关商品...
+          </h3>
+          <div class="my30px text-left">
+            <p class="mb5px">
+              可能原因为:
+            </p>
+            <p style="margin-bottom:5px">
+              <b>网址有错误</b> &gt; 请检查网址地址是否正确或存在多余错误字符
+            </p>
+            <p><b>网址已失效</b> &gt; 当前访问的商品/活动已下架</p>
+          </div>
+
+          <div class="my30px">
+            <NuxtLink to="/">
+              <el-button type="primary" size="large">
+                返回首页
+              </el-button>
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ClientOnly>
+      <el-dialog v-model="defData.shareVisible" title="分享给好友" width="400px" center draggable>
+        <div class="text-center">
+          <el-image :src="defData.shareCode" class="h120px w120px -mt20px" />
+          <div class="">
+            <el-button type="success" text @click="onCopy('text')">
+              复制链接地址
+            </el-button>
+            <el-button type="warning" text @click="onCopy('img')">
+              复制二维码
+            </el-button>
+          </div>
+        </div>
+      </el-dialog>
+    </ClientOnly>
+  </section>
+</template>
+
+<script lang="ts" setup>
+import QRCode from 'qrcode'
+import { GoodsApi } from '~/api/goods/list'
+
+const route = useRoute()
+const userState = useUserState()
+
+const defData = reactive({
+  breadcrumbList: [],
+  leftActive: '1',
+  rightActive: '1',
+  loading: true,
+  imgReady: false,
+  shareVisible: false,
+  shareCode: '', // 分享二维码
+  shareLink: '', // 分享的链接地址
+})
+// 商品信息
+const goodsData = ref<GoodsApi_GetInfoResponse>()
+const goodsImgList = ref<string[]>([])
+
+const form = reactive({
+  number: 1, // 购买数量
+})
+
+const initData = async () => {
+  const id = Number(route.params.id)
+  const { data } = await GoodsApi.getInfo({ goods_id: id })
+  if (data.value?.code === 200) {
+    const dat = data.value.data
+    console.log('dat :>> ', dat)
+    if (dat.goods_id === id) {
+      goodsData.value = dat
+
+      // 商品图片
+      const imgArr: string[] = dat.goods_img ? [dat.goods_img] : []
+      dat.photo_lists.forEach((item) => {
+        if (item.photo_url) imgArr.push(item.photo_url)
+      })
+      goodsImgList.value = imgArr
+
+      // 设置seo
+      const meta = []
+      if (dat.web_desc) meta.push({ name: 'description', content: dat.web_desc })
+      if (dat.web_keywords) meta.push({ name: 'keywords', content: dat.web_keywords })
+      useHead({
+        title: dat.web_title || dat.goods_name,
+        meta,
+      })
+    } else {
+      // ElMessage.error('未获取到商品信息,请检查地址是否正确')
+      defData.loading = false
+      // navigateTo('/404')
+    }
+  } else {
+    //
+  }
+}
+initData()
+
+// 商品分享
+const onShare = async () => {
+  if (userState.userInfo.value?.user_id) {
+    defData.shareLink = `${location.origin}/login/register?id=${userState.userInfo.value?.user_id}`
+    if (!defData.shareCode) {
+      defData.shareCode = await QRCode.toDataURL(defData.shareLink)
+    }
+
+    defData.shareVisible = true
+  } else {
+    navigateTo('/login')
+  }
+}
+
+/**
+ * base64转Blob：
+ */
+const base64ToBlob = (url: string) => {
+  const arr = url.split(',')
+  const mime = arr[0].match(/:(.*?);/)?.[1]
+  const bstr = atob(arr[1])
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  return new Blob([u8arr], { type: mime })
+}
+
+// 复制链接地址或二维码
+const onCopy = (type: 'text' | 'img') => {
+  if (type === 'text') {
+    // navigator.clipboard.write()
+    navigator.clipboard.writeText(defData.shareLink).then(() => {
+      ElMessage.success('复制成功')
+    }).catch(() => {
+      const e = document.createElement('textarea')
+      document.body.appendChild(e)
+      e.innerHTML = defData.shareLink
+      e.select()
+      if (document.execCommand('copy')) {
+        document.execCommand('copy')
+      }
+      document.body.removeChild(e)
+      ElMessage.success('复制成功')
+    })
+  } else {
+    const myBlob = base64ToBlob(defData.shareCode)
+    navigator.clipboard.write([new window.ClipboardItem({ [myBlob.type]: myBlob })]).then(() => {
+      ElMessage.success('复制成功')
+    })
+  }
+}
+
+// 认证企业会员
+const onApprove = () => {
+  if (userState.userInfo.value?.user_id) {
+    navigateTo('/login')
+  } else {
+    // 转到企业认证页面
+  }
+}
+
+definePageMeta({
+  layout: 'home',
+})
+</script>
+
+<style lang="scss" scoped>
+.goods-detail {
+  :deep(.el-dialog__header) {
+    margin-left: 16px;
+  }
+}
+
+.goods-main {
+  display: flex;
+  justify-content: space-between;
+  --goods-img-zoom-width: 400px;
+  --goods-right-width: 230px;
+
+  .goods-zoom {
+    width: var(--goods-img-zoom-width);
+    background-color: var(--el-color-white);
+
+    .image-err {
+      background-color: var(--el-color-white);
+    }
+
+    :deep(.swiper-box) {
+      margin-bottom: 10px;
+      --swiper-navigation-sides-offset: 8px;
+
+      .swp {
+        width: calc(100% - 60px);
+      }
+
+    }
+  }
+
+  .goods-cen {
+    --goods-cen-left-blank: 10px;
+    width: calc(100% - var(--goods-img-zoom-width) - var(--goods-right-width) - var(--goods-cen-left-blank));
+    margin-left: var(--goods-cen-left-blank);
+    background-color: var(--el-color-white);
+    padding: 10px;
+    padding-left: 20px;
+    padding-top: 20px;
+  }
+
+  .goods-right {
+    width: var(--goods-right-width);
+    background-color: var(--el-color-white);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .goods-tle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .goods-pros {
+
+    >li {
+      font-size: 14px;
+      display: flex;
+      text-align: left;
+      font-weight: normal;
+      // line-height: 24px;
+      line-height: 1.6;
+
+      .lt {
+        width: 80px;
+        padding: 5px 8px;
+
+        color: var(--el-text-color-secondary);
+      }
+
+      .gt {
+        flex: 1;
+        padding: 5px 8px;
+        color: var(--el-text-color-primary);
+
+        .price1 {
+
+          b {
+            font-size: 28px;
+            color: var(--el-color-primary);
+
+            span {
+              font-size: 70%;
+              font-weight: normal;
+            }
+          }
+
+        }
+
+        .price2 {
+          font-size: 16px;
+          text-decoration: line-through;
+          color: var(--el-text-color-secondary);
+        }
+
+        .price3 {
+          display: inline-flex;
+          align-items: center;
+          padding-left: 3px;
+          border: 1px solid var(--el-color-info);
+          font-size: 12px;
+          cursor: pointer;
+
+          &:hover {
+            color: var(--el-color-primary);
+            border-color: var(--el-color-primary);
+          }
+        }
+      }
+    }
+
+    .buy-item {
+      :deep(.el-button) {
+        --el-font-size-base: 16px;
+      }
+    }
+
+  }
+}
+
+.goods-cont {
+  display: flex;
+  justify-content: space-between;
+  --goods-cont-left-width: 250px;
+  margin: 20px 0;
+
+  .lt {
+    width: var(--goods-cont-left-width);
+
+    :deep(.el-tabs--top) {
+
+      // :not(:last-child)
+      .el-tabs__item.is-top:nth-child(2) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .gt {
+    width: calc(100% - var(--goods-cont-left-width) - 10px);
+    background-color: var(--el-color-white);
+
+  }
+
+  :deep(.el-tabs--top) {
+
+    // :not(:last-child)
+    .el-tabs__item {
+      font-weight: bold;
+    }
+
+    .el-tabs__item.is-top:nth-child(2) {
+      // padding-left: 20px;
+      margin-left: 20px;
+    }
+  }
+
+  :deep(.el-tabs__content) {
+    padding: 10px;
+  }
+
+  .goods-lt-tabs {
+    background-color: var(--el-color-white);
+    min-height: 350px;
+  }
+
+  .goods-gt-tabs {
+    :deep(.el-tabs__content) {
+      padding: 15px;
+    }
+  }
+}
+
+.goods-list {
+  li {
+    padding: 10px;
+
+    +li {
+      border-top: 1px dashed var(--el-border-color-light);
+    }
+  }
+
+  .pos {
+    padding-bottom: 100%;
+    display: block;
+  }
+
+  .tle {
+    height: 40px;
+    margin-bottom: 8px;
+
+    a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 20px;
+      max-height: 40px;
+      font-size: 14px;
+      color: var(--el-text-color-regular);
+
+      &:hover {
+        cursor: pointer;
+        color: var(--el-color-primary);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .pce {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--el-color-primary);
+  }
+}
+
+.no-goods-box {
+  margin: 20px 0;
+  padding: 30px;
+  border: 1px solid var(--el-border-color-light);
+  background-color: var(--el-color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+</style>
