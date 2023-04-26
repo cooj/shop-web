@@ -12,6 +12,8 @@ export const useSystemState = () => {
     // console.log('system.value :>> ', system.value)
     if (system.value) return system
     const { data } = await CommonApi.getSystem()
+
+    await wait(800)
     if (data.value?.code === 200) {
       system.value = data.value.data
     } else {
@@ -31,7 +33,7 @@ export const useSystemState = () => {
  * @returns
  */
 export const useUserState = () => {
-  const cookieToken = useCookie<string>('token')
+  const cookieToken = useCookie<string>('admin_token')
 
   const token = useState<string | null>('token', () => cookieToken.value)
 
