@@ -111,7 +111,7 @@
           <dd v-for="item in 10" :key="item" class="goods-item-s">
             <div class="g-info w500px">
               <div class="g-info-left">
-                <NuxtLink to="/goods/detail" target="_blank">
+                <NuxtLink to="/goods/detail-10" target="_blank">
                   <div class="lazyload-wrap sku-img-wrap real-image">
                     <img
                       src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0979931_01.jpg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1664162899000"
@@ -123,7 +123,7 @@
               </div>
               <div class="g-info-right">
                 <div class="name">
-                  <NuxtLink class="link" to="/goods/detail" target="_blank">
+                  <NuxtLink class="link" to="/goods/detail-10" target="_blank">
                     FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个
                   </NuxtLink>
                 </div>
@@ -190,7 +190,7 @@
         <ul v-else class="goods-list-ul">
           <li v-for="item in 11" :key="item">
             <div class="goods-list-item">
-              <NuxtLink to="/goods/detail" target="_blank">
+              <NuxtLink to="/goods/detail-500" target="_blank">
                 <img
                   src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0924616_01.jpeg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1673973422000"
                   alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class=""
@@ -212,7 +212,7 @@
                 </div>
               </div>
               <div class="goods-name" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台">
-                <NuxtLink to="/goods/detail" target="_blank">
+                <NuxtLink to="/goods/detail-300" target="_blank">
                   LEEB/里博 布洛维转换手持式里氏<em>硬度计</em> TH130 1台 布洛维转换手持式里氏硬度计
                 </NuxtLink>
               </div>

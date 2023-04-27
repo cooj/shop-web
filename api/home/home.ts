@@ -26,4 +26,9 @@ export const HomeApi = {
    */
   getNewGoods: () => useHttp<HomeApi_GetNewsGoodsResponse>('/api/index/goods_lists', '', { method: 'get' }),
 
+  /**
+   * 底部文章导航
+   */
+  getArticle: () => useHttp<HomeApi_GetArticleResponse[]>('/api/index/get_article', '', { method: 'get' }),
+
 }

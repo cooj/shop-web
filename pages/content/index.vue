@@ -4,7 +4,7 @@
 
 <template>
   <div class="h50vh">
-    这是首页
+    内容中心
   </div>
 </template>
 
