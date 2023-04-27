@@ -210,8 +210,24 @@
       </div>
     </div>
     <ClientOnly>
-      <el-dialog v-model="defData.shareVisible" title="分享给好友" width="400px" center draggable>
-        <div class="text-center">
+      <el-dialog v-model="defData.shareVisible" title="分享给好友" width="450px" draggable>
+        <el-form class="-mt20px" label-position="top">
+          <el-form-item label="链接地址">
+            <el-input v-model="defData.shareLink" class="pr12px w70%!" disabled />
+            <el-button type="primary" class="w30%" @click="onCopy('text')">
+              复制地址
+            </el-button>
+          </el-form-item>
+          <el-form-item label="二维码">
+            <div class="flex">
+              <el-image :src="defData.shareCode" class="mr12px h120px w120px b b-1 b-#eee" />
+              <el-button type="primary" @click="onDownload">
+                下载二维码
+              </el-button>
+            </div>
+          </el-form-item>
+        </el-form>
+        <!-- <div class="text-center">
           <el-image :src="defData.shareCode" class="h120px w120px -mt20px" />
           <div class="">
             <el-button type="success" text @click="onCopy('text')">
@@ -221,7 +237,7 @@
               复制二维码
             </el-button>
           </div>
-        </div>
+        </div> -->
       </el-dialog>
     </ClientOnly>
   </section>
@@ -235,7 +251,6 @@ const route = useRoute()
 const userState = useUserState()
 
 const defData = reactive({
-  breadcrumbList: [],
   leftActive: '1',
   rightActive: '1',
   loading: true,
@@ -317,12 +332,12 @@ const base64ToBlob = (url: string) => {
 }
 
 // 复制链接地址或二维码
-const onCopy = (type: 'text' | 'img') => {
+const onCopy = async (type: 'text' | 'img') => {
   if (type === 'text') {
-    // navigator.clipboard.write()
-    navigator.clipboard.writeText(defData.shareLink).then(() => {
+    try {
+      await navigator.clipboard.writeText(defData.shareLink)
       ElMessage.success('复制成功')
-    }).catch(() => {
+    } catch (err) {
       const e = document.createElement('textarea')
       document.body.appendChild(e)
       e.innerHTML = defData.shareLink
@@ -332,13 +347,37 @@ const onCopy = (type: 'text' | 'img') => {
       }
       document.body.removeChild(e)
       ElMessage.success('复制成功')
-    })
+    }
+    // navigator.clipboard.writeText(defData.shareLink).then(() => {
+    //   ElMessage.success('复制成功')
+    // }).catch(() => {
+    //   const e = document.createElement('textarea')
+    //   document.body.appendChild(e)
+    //   e.innerHTML = defData.shareLink
+    //   e.select()
+    //   if (document.execCommand('copy')) {
+    //     document.execCommand('copy')
+    //   }
+    //   document.body.removeChild(e)
+    //   ElMessage.success('复制成功')
+    // })
   } else {
     const myBlob = base64ToBlob(defData.shareCode)
     navigator.clipboard.write([new window.ClipboardItem({ [myBlob.type]: myBlob })]).then(() => {
       ElMessage.success('复制成功')
     })
   }
+}
+
+// 下载二维码
+const onDownload = () => {
+  const myBlob = base64ToBlob(defData.shareCode)
+  const link = document.createElement('a')
+  link.href = window.URL.createObjectURL(myBlob)
+  link.download = 'qrcode.png'
+  link.click()
+
+  document.removeChild(link)
 }
 
 // 认证企业会员
@@ -356,12 +395,6 @@ definePageMeta({
 </script>
 
 <style lang="scss" scoped>
-.goods-detail {
-  :deep(.el-dialog__header) {
-    margin-left: 16px;
-  }
-}
-
 .goods-main {
   display: flex;
   justify-content: space-between;
