@@ -14,15 +14,20 @@ declare interface RecordApi_GetList {
  * 获取商品收藏、商品浏览历史记录 - 响应数据
  */
 declare interface RecordApi_GetListResponse {
-  "id": 1, //记录ID
-  "user_id": 1, //用户id
-  "goods_id": 1, //商品id
-  "is_collect": 1, //是否收藏 1是 0否
-  "collect_time": 1680251000, //收藏时间
-  "is_recent": 0, //是否最近浏览 1是 0否
-  "recent_time": 0, //最近浏览时间
-  "user_name": "小明xxx", //用户名
-  "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位" //商品名称
+  "id": number, //记录ID
+  "user_id": number, //用户id
+  "goods_id": number, //商品id
+  "is_collect": 1 | 1, //是否收藏 1是 0否
+  "collect_time": string, //收藏时间
+  "is_recent": 0 | 1, //是否最近浏览 1是 0否
+  "recent_time": string, //最近浏览时间
+  "user_name": string, //用户名
+  "goods_name": string //商品名称
+  "goods_img":string //商品图片
+  "purchase_price":number 
+  "shop_price":number 
+  "gross_margin":number 
+  "grade_num":number
 }
 
 /**
