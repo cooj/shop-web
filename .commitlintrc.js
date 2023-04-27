@@ -42,6 +42,7 @@ module.exports = {
     scopes: [
       ['pages', '页面相关'],
       ['components', '组件相关'],
+      ['api', '接口相关'],
       ['hooks', 'hook 相关'],
       ['utils', 'utils 相关'],
       ['element-ui', '对 element-ui 的调整'],
