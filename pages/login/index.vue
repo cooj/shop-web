@@ -1,5 +1,5 @@
 <template>
-  <div class="center">
+  <div class="center flex items-center justify-center">
     <div v-if="defData.type === 4" class="login">
       <el-icon style="float: right;margin: 5px;" @click="defData.type = 1">
         <Close />
@@ -250,21 +250,20 @@ body {
 }
 
 .center {
-  // margin-top: 120px;
-  height: 500px;
-  // background-color: #797572;
-  background-image: url('../../assets/images/banner-bg.png');
-  background-blend-mode: multiply;
+  width: 100%;
+  height: 700px;
+  background-image: url('assets/images/login-bg.png');
+  background-size: cover;
+  // background-repeat: no-repeat;
+  background-position: center;
 }
 
 .login {
   width: 390px;
   height: 400px;
   background-color: rgb(255, 255, 255);
-  position: absolute;
   border-radius: 5px;
-  top: 150px;
-  right: 400px;
+  margin-top: -115px;
 }
 
 .title {
