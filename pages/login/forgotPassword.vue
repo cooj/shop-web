@@ -1,79 +1,81 @@
 <template>
   <div class="container">
-    <div>
-      已有账号，去<NuxtLink to="/login">
-        登录
-      </NuxtLink>
-    </div>
-    <div style="border: 1px solid #50585e;height: 650px;display:flex;justify-content: center;">
-      <div style="width: 600px;margin-top: 50px;">
-        <el-steps :space="200" :active="defData.step" class="mb-70px ml130px">
-          <el-step title="身份验证" />
-          <el-step title="修改密码" />
-          <el-step title="完成" />
-        </el-steps>
-        <el-form
-          v-if="defData.step === 1" ref="formRef" label-width="130px" :rules="rules" :model="form"
-          style="max-width: 500px" size="large"
-        >
-          <el-form-item prop="phone" label="手机号码：">
-            <el-input v-model="form.phone" placeholder="请输入手机号" />
-          </el-form-item>
-          <el-form-item prop="vali_code" label="验证码：">
-            <el-col :span="15">
-              <el-input
-                v-model.trim="form.vali_code" type="text" maxlength="4" placeholder="请输入验证码" clearable
-                tabindex="3" @keyup.enter="onClick"
-              />
-            </el-col>
-            <el-col :span="1" />
-            <el-col :span="8">
-              <el-button class="w100%" @click="getValidCodeClick">
-                {{ defData.vali_code }}
+    <div style="height: 650px;background-color: white;margin: 10px 0;">
+      <div class="pr5px pt5px text-right">
+        <NuxtLink to="/login">
+          已有账号，去登录
+        </NuxtLink>
+      </div>
+      <div class="w100% flex justify-center">
+        <div style="width: 600px;margin-top: 50px">
+          <el-steps :space="200" :active="defData.step" class="mb-70px ml130px">
+            <el-step title="身份验证" />
+            <el-step title="修改密码" />
+            <el-step title="完成" />
+          </el-steps>
+          <el-form
+            v-if="defData.step === 1" ref="formRef" label-width="130px" :rules="rules" :model="form"
+            style="max-width: 500px" size="large"
+          >
+            <el-form-item prop="phone" label="手机号码：">
+              <el-input v-model="form.phone" placeholder="请输入手机号" />
+            </el-form-item>
+            <el-form-item prop="vali_code" label="验证码：">
+              <el-col :span="15">
+                <el-input
+                  v-model.trim="form.vali_code" type="text" maxlength="4" placeholder="请输入验证码" clearable
+                  tabindex="3" @keyup.enter="onClick"
+                />
+              </el-col>
+              <el-col :span="1" />
+              <el-col :span="8">
+                <el-button class="w100%" @click="getValidCodeClick">
+                  {{ defData.vali_code }}
+                </el-button>
+              </el-col>
+            </el-form-item>
+            <el-form-item prop="sms_code" label="短信验证码：">
+              <el-col :span="15">
+                <el-input v-model.trim="form.sms_code" type="text" placeholder="请输入短信验证码" clearable tabindex="3" />
+              </el-col>
+              <el-col :span="1" />
+              <el-col :span="8">
+                <el-button v-if="defData.sendCode" class="w100%" @click="getSmsCodeClick">
+                  获取验证码
+                </el-button>
+                <el-button v-else class="w100%">
+                  {{ defData.time }}秒
+                </el-button>
+              </el-col>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="danger" class="mt-20px w400px" @click="onClick">
+                下一步重置密码
               </el-button>
-            </el-col>
-          </el-form-item>
-          <el-form-item prop="sms_code" label="短信验证码：">
-            <el-col :span="15">
-              <el-input v-model.trim="form.sms_code" type="text" placeholder="请输入短信验证码" clearable tabindex="3" />
-            </el-col>
-            <el-col :span="1" />
-            <el-col :span="8">
-              <el-button v-if="defData.sendCode" class="w100%" @click="getSmsCodeClick">
-                获取验证码
+            </el-form-item>
+          </el-form>
+          <el-form
+            v-else-if="defData.step === 2" ref="formRef" label-width="130px" :rules="rules" :model="form"
+            style="max-width: 500px" size="large"
+          >
+            <el-form-item prop="password" label="新密码">
+              <el-input v-model="form.password" placeholder="请输入新密码" show-password />
+            </el-form-item>
+            <el-form-item prop="define_password" label="确认密码">
+              <el-input v-model="form.define_password" placeholder="请输入新密码" show-password />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="danger" class="mt-20px w400px" @click="onEditClick">
+                修改
               </el-button>
-              <el-button v-else class="w100%">
-                {{ defData.time }}秒
-              </el-button>
-            </el-col>
-          </el-form-item>
-          <el-form-item>
-            <el-button class="mt-20px w400px" @click="onClick">
-              下一步重置密码
-            </el-button>
-          </el-form-item>
-        </el-form>
-        <el-form
-          v-else-if="defData.step === 2" ref="formRef" label-width="130px" :rules="rules" :model="form"
-          style="max-width: 500px" size="large"
-        >
-          <el-form-item prop="password" label="新密码">
-            <el-input v-model="form.password" placeholder="请输入新密码" show-password />
-          </el-form-item>
-          <el-form-item prop="define_password" label="确认密码">
-            <el-input v-model="form.define_password" placeholder="请输入新密码" show-password />
-          </el-form-item>
-          <el-form-item>
-            <el-button class="mt-20px w400px" @click="onEditClick">
-              修改
-            </el-button>
-          </el-form-item>
-        </el-form>
-        <div v-else style="font-size: xx-large;margin: 40px 150px;">
-          恭喜，密码修改成功,去
-          <NuxtLink to="/login" style="color: red;">
-            登录
-          </NuxtLink>
+            </el-form-item>
+          </el-form>
+          <div v-else style="font-size: xx-large;margin: 40px 150px;">
+            恭喜，密码修改成功,去
+            <NuxtLink to="/login" style="color: red;">
+              登录
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>

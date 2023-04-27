@@ -94,7 +94,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { EnterpriseApi } from '~/api/user/enterprise'
 
 const formRef = ref<FormInstance>()
-const userState = useUserStore()
+const userState = useUserState()
 const activeName = ref('first')
 const testUrl = 'https://5b0988e595225.cdn.sohucs.com/images/20171111/d2d60e489c3e4517ac2780c0058a7ef0.jpeg'
 const defData = reactive({
