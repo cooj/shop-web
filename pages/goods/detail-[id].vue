@@ -117,11 +117,11 @@
             <li>
               <div class="lt" />
               <div class="gt">
-                <el-button v-if="2" type="primary" text bg size="small">
+                <el-button v-if="goodsData?.is_collect" type="primary" text bg size="small">
                   <i class="i-carbon-favorite-filled mr3px" />
                   收藏
                 </el-button>
-                <el-button v-else text bg size="small">
+                <el-button v-else text bg size="small" @click="onCollect">
                   <i class="i-carbon-favorite mr3px" />
                   收藏
                 </el-button>
@@ -139,7 +139,7 @@
                 <el-button type="primary" size="large">
                   立即购买
                 </el-button>
-                <el-button type="primary" plain size="large">
+                <el-button type="primary" plain size="large" @click="onAddCart">
                   <i class="i-carbon-shopping-cart mr3px" />
                   加入购物车
                 </el-button>
@@ -246,6 +246,7 @@
 <script lang="ts" setup>
 import QRCode from 'qrcode'
 import { GoodsApi } from '~/api/goods/list'
+import { RecordApi } from '~/api/user/record'
 
 const route = useRoute()
 const userState = useUserState()
@@ -301,6 +302,53 @@ const initData = async () => {
   }
 }
 initData()
+
+// 商品收藏
+const onCollect = async () => {
+  // 用户未登录时
+  if (!userState.userInfo.value?.user_id) {
+    return navigateTo('/login')
+  }
+  // 已经收藏了，取消收藏状态
+  if (goodsData.value?.is_collect) {
+    // 清除收藏
+    const params: RecordApi_Del = {
+      goods_ids: goodsData.value.goods_id.toString(),
+      type: 1,
+      user_id: userState.userInfo.value.user_id,
+    }
+    const { data } = await RecordApi.del(params)
+    if (data.value?.code === 200) {
+      goodsData.value.is_collect = 0 // 清除收藏标志位
+    }
+  } else {
+    const params: RecordApi_Add = {
+      goods_id: goodsData.value!.goods_id,
+      type: 1,
+      user_id: userState.userInfo.value.user_id,
+    }
+    const { data } = await RecordApi.add(params)
+    if (data.value?.code === 200) {
+      goodsData.value!.is_collect = 1
+    }
+  }
+}
+
+// 加入购物车
+const onAddCart = async () => {
+  const { number } = form
+  if (number > 0 && goodsData.value?.goods_id) {
+    const { data } = await GoodsApi.addCart({ goods_id: goodsData.value.goods_id, goods_number: number })
+    if (data.value?.code === 200) {
+      ElMessage.success('加入购物车成功')
+      form.number = 1
+    } else {
+      ElMessage.error('加入购物车失败')
+    }
+  } else {
+    ElMessage.error('购买数量不能为0')
+  }
+}
 
 // 商品分享
 const onShare = async () => {
@@ -388,6 +436,24 @@ const onApprove = () => {
     // 转到企业认证页面
   }
 }
+
+// 添加商品浏览历史
+const onHistory = async () => {
+  // 进入页面2秒后加入历史记录中
+  await wait(2000)
+  if (userState.userInfo.value?.user_id) {
+    const params: RecordApi_Add = {
+      user_id: userState.userInfo.value.user_id,
+      goods_id: goodsData.value!.goods_id,
+      type: 2,
+    }
+    await RecordApi.add(params)
+  }
+}
+
+onMounted(() => {
+  onHistory()
+})
 
 definePageMeta({
   layout: 'home',

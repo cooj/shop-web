@@ -64,6 +64,7 @@ declare interface GoodsApi_GetInfoResponse {
   "is_new": 0, //是否新品
   "is_hot": 0, //是否热品
   "is_sale": 1, //上下架
+  "is_collect": 0|1, // 是否已加入收藏    1是0否    
   "keywords": "", //关键字
   "title": "xxxxxx", //副标题
   "type_id": 0, //类型id

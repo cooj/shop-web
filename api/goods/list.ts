@@ -21,6 +21,12 @@ export const GoodsApi = {
   getCartList: () => useHttp<GoodsApi_GetCartListResponse>('/api/mall/cart_list', '', { method: 'get' }),
 
   /**
+   * 加入购物车操作 - 检查是否允许加入购物车中的商品，并根据条
+   * @returns
+   */
+  addCart: (data: { goods_id: number; goods_number: number }) => useHttp('/api/mall/add_cart', data, { method: 'post' }),
+
+  /**
    * 修改购物车商品数量
    * @returns
    */
