@@ -57,6 +57,8 @@
 import type { FormInstance, FormRules } from 'element-plus'
 import { LoginApi } from '~/api/login'
 
+const route = useRoute()
+
 definePageMeta({
   layout: 'login',
 })
@@ -120,13 +122,12 @@ const getCodeClick = async () => {
 const onClick = async () => {
   const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
   if (!isRun) return
-
   const data: LoginApi_Login = {
     type: 3,
     phone: form.phone,
     validate_code: form.validate_code,
-
   }
+  if (route.query.id) data.share_id = Number(route.query.id)
   const { data: res } = await LoginApi.Login(data)
   if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
   ElMessage.success('注册成功')
