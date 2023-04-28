@@ -26,7 +26,7 @@ declare interface GoodsApi_GetCartListResponse {
     "id": 4, //记录ID
     "user_id": 1, //用户ID
     "goods_id": 3, //商品id
-    "goods_number": 4, //数量
+    "goods_number": number, //数量    4
     "create_time": "2023-03-30 14:17:36", //添加时间
     "goods_name": "红钐 按键寿命试验机 HSL-TA3 三工位", //商品名称
     "goods_code": "HSL-TA3", //商品型号
@@ -41,6 +41,20 @@ declare interface GoodsApi_GetCartListResponse {
  * 商品详情 - 响应数据
  */
 declare interface GoodsApi_GetInfoResponse {
+  goods_info:GoodsApi_GoodsInfoData,
+  "photo_lists": {
+    "photo_url": "https://images.yumishe.cn/20220625/202208200259163777.jpg", //相册url
+    "sort": 2 //排序
+  }[], //相册列表
+  "link_lists": {
+    "goods_id": 49, //id
+    "goods_name": "红钐 可勃取样器 HSZ-KBQ", //名称
+    "goods_img": "", //主图
+    "shop_price": "0.00" //本店价
+  }[] //商品关联列表
+}
+
+declare interface GoodsApi_GoodsInfoData{
   "goods_id": 45, //id
   "goods_abbr": "xxx笔记本777", //简介
   "goods_name": "艾斯瑞 xxx笔记本777 mac-book max xxxxxx", //名称
@@ -79,16 +93,6 @@ declare interface GoodsApi_GetInfoResponse {
   "web_keywords": "xxx", //页面关键字
   "web_title": "yyy", //页面标题
   "web_desc": "zzz", //页面描述
-  "photo_lists": {
-    "photo_url": "https://images.yumishe.cn/20220625/202208200259163777.jpg", //相册url
-    "sort": 2 //排序
-  }[], //相册列表
-  "link_lists": {
-    "goods_id": 49, //id
-    "goods_name": "红钐 可勃取样器 HSZ-KBQ", //名称
-    "goods_img": "", //主图
-    "shop_price": "0.00" //本店价
-  }[] //商品关联列表
 }
 
 
@@ -129,4 +133,11 @@ declare interface GoodsListParamsQuery {
   keyword?: string; // 关键字
   cid?: string | number;   // 商品分类id   类别
   bid?: string | number;   // 商品品牌id
+}
+
+/**
+ * 商品详情页面参数
+ */
+declare interface GoodsDetailParamsQuery {
+  id: number; // 商品id
 }

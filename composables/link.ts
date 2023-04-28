@@ -44,3 +44,33 @@ export const linkGoodsList = (params: GoodsListParams) => {
   //   },
   // })
 }
+
+/**
+ * 进入商品页面方法
+ */
+export const linkGoodsDetail = (params: { query: GoodsDetailParamsQuery; url: boolean }) => {
+  const url = '/goods/detail'
+
+  const data = params.query
+
+  // console.log('data :>> ', data)
+
+  // 返回地址的形式, /goods/list?cid=1
+  if (params.url) {
+    const list = Object.keys(data).map(i => `${i}=${encodeURIComponent(data[i as keyof GoodsDetailParamsQuery] || '')}`)
+    return list.length > 0 ? `${url}?${list.join('&')}` : url
+  } else {
+    return navigateTo({
+      path: url,
+      query: data as {},
+    })
+  }
+
+  // return navigateTo({
+  //   path: '/goods/list',
+  //   query: {
+  //     page: 1,
+  //     sort: 'asc',
+  //   },
+  // })
+}

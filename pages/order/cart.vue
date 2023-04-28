@@ -1,6 +1,9 @@
 <template>
   <section class="pb30px text-14px">
     <div class="container">
+      <!-- <div class="mx-a my-20px w60%">
+        <GoodsSettleStep :active="1" />
+      </div> -->
       <el-breadcrumb class="py15px">
         <el-breadcrumb-item :to="{ path: '/' }">
           首页
@@ -15,10 +18,10 @@
               <template #default="{ row }">
                 <div class="h50px flex">
                   <div class="goods_img">
-                    <el-image class="h50px w50px" :src="row.goods_img" />
+                    <BaseImage class="h50px w50px" :src="row.goods_img" />
                   </div>
                   <div class="pl10px">
-                    <NuxtLink to="/goods/detail-15">
+                    <NuxtLink class="goods_link" to="/goods/detail-15" target="_blank">
                       {{ row.goods_name }}
                     </NuxtLink>
                   </div>
@@ -27,16 +30,13 @@
             </el-table-column>
             <el-table-column prop="goods_code" label="商品型号" width="160" />
             <el-table-column prop="goods_spec" label="商品规格" width="160" />
-            <el-table-column prop="goods_price" label="价格" width="120" align="center">
+            <el-table-column prop="shop_price" label="价格" width="120" align="center" />
+            <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
               <template #default="{ row }">
-                <div class="goods_price">
-                  {{ row.goods_price }}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column prop="goods_num" label="商品数量" width="150" align="center">
-              <template #default="{ row }">
-                <el-input-number v-model="row.goods_num" class="w100%!" :precision="0" :min="0" :max="100" />
+                <el-input-number
+                  v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100"
+                  @change="onChangeNumber(row)"
+                />
               </template>
             </el-table-column>
             <el-table-column prop="operate" label="操作" width="100" align="center">
@@ -50,7 +50,7 @@
         </div>
         <div class="table-cart-count">
           <div class="lt">
-            <el-button type="primary" link @click="onRemoveChose">
+            <el-button type="primary" link @click="onRemove('all')">
               删除所选商品
             </el-button>
             <!-- <el-button type="primary" link>
@@ -62,13 +62,15 @@
               go
             </NuxtLink>
             商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
-            <el-button class="ml5px" type="primary">
+            <el-button
+              class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
+              @click="onSettle"
+            >
               结算商品
             </el-button>
           </div>
           <!-- https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000 -->
         </div>
-        <BaseUpload v-model="defData.url" />
       </ClientOnly>
     </div>
   </section>
@@ -79,89 +81,89 @@ import { ElTable } from 'element-plus'
 import Big from 'big.js'
 import { GoodsApi } from '~/api/goods/list'
 
-interface GoodsTableCartItem {
-  goods_name: 'good海尔彩电LE32G310G 32'
-  goods_img: string
-  goods_price: 100 // 价格
-  goods_num: 1 // 购买数量
-  goods_id: 1
-  goods_code: '2020-01-01' // 型号
-  goods_spec: '广东省深圳市南山区' // 规格
-}
+type GoodsTableCartItem = GoodsApi_GetCartListResponse['goods_list'][0]
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 
 const defData = reactive({
   url: '',
   breadcrumbList: [],
-  tableData: [
-    {
-      goods_name: 'good海尔彩电LE32G310G 32',
-      goods_img: 'https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000',
-      goods_price: 100, // 价格
-      goods_num: 1, // 购买数量
-      goods_id: 1,
-      goods_code: '2020-01-01', // 型号
-      goods_spec: '广东省深圳市南山区', // 规格
-    },
-    {
-      goods_name: '海尔彩电LE32G310G 32',
-      goods_img: '',
-      goods_price: 100, // 价格
-      goods_num: 1, // 购买数量
-      goods_id: 2,
-      goods_code: '2-01-01', // 型号
-      goods_spec: 'sds', // 规格
-    },
-  ] as GoodsTableCartItem[],
+  tableData: [] as GoodsTableCartItem[],
   selectData: [] as GoodsTableCartItem[], // 选中的商品
-  page: 1,
-  pageSize: 100,
-  pageSizes: [100, 200, 300],
-  total: 401,
 })
 
 // 商品总金额
 const countMoney = computed(() => {
   const money = defData.selectData.reduce((sum, item) => {
-    return sum + item.goods_price * item.goods_num
+    return sum + Number(item.shop_price) * item.goods_number
   }, 0)
 
   return new Big(money).toFixed(2)
 })
 
-// 获取购物车商品
-const { data: cartData } = await GoodsApi.getCartList()
-// console.log('cartData :>> ', cartData)
+const initTableData = async () => {
+  // 获取购物车商品
+  const { data } = await GoodsApi.getCartList()
+  await wait(500)
+  console.log('cartData :>> ', data)
+  if (data.value?.code === 200) {
+    defData.tableData = data.value.data.goods_list
+  } else {
+    ElMessage.error(data.value?.msg)
+  }
+}
 
 // el-table多选事件
 const handleSelectionChange = (val: GoodsTableCartItem[]) => {
   defData.selectData = val
 }
 
-// 删除
-const onRemove = (row: GoodsTableCartItem) => {
-  // 获取到在tableData对应的下标
-  const index = defData.tableData.findIndex(item => item.goods_id === row.goods_id)
-  // console.log('index :>> ', index)
-
-  if (index >= 0) {
-    // 调用删除接口
-
-    // 删除
-    defData.tableData.splice(index, 1)
-  }
-}
-
-// 删除所选商品
-const onRemoveChose = () => {
-  const str = defData.selectData.map(item => item.goods_id).join(',')
-  if (str) {
-    // 调用接口
+/**
+ * 删除购物车商品
+ * @param row 当前行的数据对象。GoodsTableCartItem 或 多选选中的商品defData.selectData
+ */
+const onRemove = async (row: GoodsTableCartItem | 'all') => {
+  let ids = ''
+  if (row === 'all') { // 删除所有选中的商品
+    if (!defData.selectData.length) return ElMessage.error('请选择需要删除的商品')
+    ids = defData.selectData.map(item => item.id).join(',') // 获取选中的id
   } else {
-    ElMessage.error('请选择商品')
+    ids = row.id.toString()
+
+    // // 获取到在tableData对应的下标
+    // const index = defData.tableData.findIndex(item => item.goods_id === row.goods_id)
+    // // console.log('index :>> ', index)
+    // // 删除
+    // defData.tableData.splice(index, 1)
+  }
+
+  const { data } = await GoodsApi.delCart({ id: ids }) // 删除选中的商品记录 或者 删除所有购物
+  if (data.value?.code === 200) {
+    initTableData() // 重新获取列表数据
+  } else {
+    ElMessage.error(data.value?.msg) // 提示错误消息 或者 显示错误消息 或者 显示
   }
 }
+
+// 数量增加减少
+const onChangeNumber = useDebounceFn(async (row: GoodsTableCartItem) => {
+  const { data } = await GoodsApi.editNum({
+    id: row.id,
+    number: row.goods_number,
+  })
+  if (data.value?.code === 200) {
+    if (data.value.data.goods_number < row.goods_number) row.goods_number = data.value.data.goods_number
+  }
+}, 1000)
+
+// 订单结算
+const onSettle = () => {
+  if (!defData.selectData.length) return false
+}
+
+onBeforeMount(() => {
+  initTableData()
+})
 
 definePageMeta({
   layout: 'home',
@@ -170,9 +172,31 @@ definePageMeta({
 </script>
 
 <style scoped lang="scss">
+.step-box {}
+
 .table-cart {
   min-height: 500px;
   background-color: var(--el-color-white);
+
+  .goods_img {
+    :deep(.image-slot) {
+      background-color: var(--el-color-info-light-9);
+
+      i {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .goods_link {
+    font-weight: bold;
+    color: var(--el-table-text-color);
+
+    &:hover {
+      color: var(--el-color-primary);
+      text-decoration: underline;
+    }
+  }
 }
 
 .table-cart-count {

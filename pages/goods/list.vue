@@ -400,16 +400,11 @@ definePageMeta({
     }
   }
 }
-
 .goods-list-ul {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -7px;
-
-  li {
-    width: 20%;
-    padding: 7px;
-  }
+    display: grid;
+    gap: 15px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding: 10px 0;
 }
 
 // 网格

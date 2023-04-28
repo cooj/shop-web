@@ -20,7 +20,7 @@ interface BreadcrumbItemType {
 }
 
 const props = defineProps<{
-  cid: number // 商品分类id
+  cid?: number | '' // 商品分类id
   name?: string // 商品名称，如果有商品的话
 }>()
 const goodsState = useGoodsStore()

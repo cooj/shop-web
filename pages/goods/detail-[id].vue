@@ -1,7 +1,7 @@
 <template>
   <section class="goods-detail">
     <div v-if="defData.loading" class="container">
-      <GoodsBreadcrumb class="my15px" :cid="goodsData?.cat_id" :name="goodsData?.goods_name" />
+      <GoodsBreadcrumb class="my15px" :cid="goodsInfo?.cat_id" :name="goodsInfo?.goods_name" />
       <div class="goods-main">
         <div class="goods-zoom">
           <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
@@ -9,49 +9,50 @@
             <i class="i-ep-picture" />
           </div>
         </div>
-        <div class="goods-cen">
-          <div class="goods-tle">
-            {{ goodsData?.goods_name }}
-          </div>
-          <ul class="goods-pros">
-            <li class="items-center bg-#f8f8f8">
-              <div class="lt">
-                价格
-              </div>
-              <div class="gt">
-                <div class="price1">
-                  <b>￥{{ goodsData?.shop_price }}<span v-if="goodsData?.unit">/包</span></b>
-                  <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
+        <ClientOnly>
+          <div class="goods-cen">
+            <div class="goods-tle">
+              {{ goodsInfo?.goods_name }}
+            </div>
+            <ul class="goods-pros">
+              <li class="items-center bg-#f8f8f8">
+                <div class="lt">
+                  价格
                 </div>
-              </div>
-            </li>
-            <li class="items-center bg-#f8f8f8 -mt10px">
-              <div class="lt" />
-              <div class="gt">
-                <span class="price3" @click="onApprove">
-                  注册企业会员享企业价
-                  <i class="i-ep-arrow-right inline-block" />
-                </span>
-                <span class="text-12px c-#666">会员价</span>
-              </div>
-            </li>
-            <li>
-              <div class="lt">
-                商品编号
-              </div>
-              <div class="gt">
-                {{ goodsData?.goods_sn }}
-              </div>
-            </li>
-            <li>
-              <div class="lt">
-                商品型号
-              </div>
-              <div class="gt">
-                {{ goodsData?.goods_code }}
-              </div>
-            </li>
-            <!-- <li>
+                <div class="gt">
+                  <div class="price1">
+                    <b>￥{{ goodsInfo?.shop_price }}<span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit }}</span></b>
+                    <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
+                  </div>
+                </div>
+              </li>
+              <li class="items-center bg-#f8f8f8 -mt10px">
+                <div class="lt" />
+                <div class="gt">
+                  <span class="price3" @click="onApprove">
+                    注册企业会员享企业价
+                    <i class="i-ep-arrow-right inline-block" />
+                  </span>
+                  <span class="text-12px c-#666">会员价</span>
+                </div>
+              </li>
+              <li>
+                <div class="lt">
+                  商品编号
+                </div>
+                <div class="gt">
+                  {{ goodsInfo?.goods_sn }}
+                </div>
+              </li>
+              <li>
+                <div class="lt">
+                  商品型号
+                </div>
+                <div class="gt">
+                  {{ goodsInfo?.goods_code }}
+                </div>
+              </li>
+              <!-- <li>
               <div class="lt">
                 品牌
               </div>
@@ -67,89 +68,90 @@
                 0.2170kg
               </div>
             </li> -->
-            <li>
-              <div class="lt">
-                库存
-              </div>
-              <div v-if="goodsData" class="gt">
-                <p v-if="goodsData?.goods_number > 10">
-                  有货
-                </p>
-                <p v-else-if="goodsData?.goods_number > 0">
-                  商品即将售完
-                </p>
-                <p v-else>
-                  暂无库存
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="lt">
-                支付方式
-              </div>
-              <div class="gt">
-                <el-button text bg size="small" class="cursor-default!">
-                  <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
-                  微信
-                </el-button>
-                <el-button text bg size="small" class="cursor-default!">
-                  <i class="i-ic-baseline-payment mr3px c-#3887ff" />
-                  在线支付
-                </el-button>
-                <el-button text bg size="small" class="cursor-default!">
-                  <i class="i-ic-twotone-payments mr3px c-#ff5335" />
-                  线下转账
-                </el-button>
-              </div>
-            </li>
-            <li class="items-center">
-              <div class="lt">
-                购买数量
-              </div>
-              <div class="gt">
-                <el-input-number v-model="form.number" :min="1" :max="10000" />
-                <span class="ml5px c-#aaa">起购量:1个</span>
-              </div>
-            </li>
-            <li class="my8px b-t b-t-dashed">
-              <!--  -->
-            </li>
-            <li>
-              <div class="lt" />
-              <div class="gt">
-                <el-button v-if="goodsData?.is_collect" type="primary" text bg size="small">
-                  <i class="i-carbon-favorite-filled mr3px" />
-                  收藏
-                </el-button>
-                <el-button v-else text bg size="small" @click="onCollect">
-                  <i class="i-carbon-favorite mr3px" />
-                  收藏
-                </el-button>
-                <el-button text bg size="small" @click="onShare">
-                  <i class="i-ep-share mr3px" />
-                  分享
-                </el-button>
-              </div>
-            </li>
-            <li class="buy-item">
-              <div class="lt">
-                <!-- 购买数量 -->
-              </div>
-              <div class="gt">
-                <el-button type="primary" size="large">
-                  立即购买
-                </el-button>
-                <el-button type="primary" plain size="large" @click="onAddCart">
-                  <i class="i-carbon-shopping-cart mr3px" />
-                  加入购物车
-                </el-button>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="goods-right">
-          <img src="https://www.gdbmro.com/goodsImg/lADPDgtYxBInjCPNAW7M1w_215_366.jpg" alt="">
-        </div>
+              <li>
+                <div class="lt">
+                  库存
+                </div>
+                <div v-if="goodsInfo" class="gt">
+                  <p v-if="goodsInfo?.goods_number > 10">
+                    有货
+                  </p>
+                  <p v-else-if="goodsInfo?.goods_number > 0">
+                    商品即将售完
+                  </p>
+                  <p v-else>
+                    暂无库存
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div class="lt">
+                  支付方式
+                </div>
+                <div class="gt">
+                  <el-button text bg size="small" class="cursor-default!">
+                    <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
+                    微信
+                  </el-button>
+                  <el-button text bg size="small" class="cursor-default!">
+                    <i class="i-ic-baseline-payment mr3px c-#3887ff" />
+                    在线支付
+                  </el-button>
+                  <el-button text bg size="small" class="cursor-default!">
+                    <i class="i-ic-twotone-payments mr3px c-#ff5335" />
+                    线下转账
+                  </el-button>
+                </div>
+              </li>
+              <li class="items-center">
+                <div class="lt">
+                  购买数量
+                </div>
+                <div class="gt">
+                  <el-input-number v-model="form.number" :min="1" :max="10000" />
+                  <span class="ml5px c-#aaa">起购量:1个</span>
+                </div>
+              </li>
+              <li class="my8px b-t b-t-dashed">
+                <!--  -->
+              </li>
+              <li>
+                <div class="lt" />
+                <div class="gt">
+                  <el-button v-if="goodsInfo?.is_collect" type="primary" text bg size="small">
+                    <i class="i-carbon-favorite-filled mr3px" />
+                    收藏
+                  </el-button>
+                  <el-button v-else text bg size="small" @click="onCollect">
+                    <i class="i-carbon-favorite mr3px" />
+                    收藏
+                  </el-button>
+                  <el-button text bg size="small" @click="onShare">
+                    <i class="i-ep-share mr3px" />
+                    分享
+                  </el-button>
+                </div>
+              </li>
+              <li class="buy-item">
+                <div class="lt">
+                  <!-- 购买数量 -->
+                </div>
+                <div class="gt">
+                  <el-button type="primary" size="large">
+                    立即购买
+                  </el-button>
+                  <el-button type="primary" plain size="large" @click="onAddCart">
+                    <i class="i-carbon-shopping-cart mr3px" />
+                    加入购物车
+                  </el-button>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="goods-right">
+            <img src="https://www.gdbmro.com/goodsImg/lADPDgtYxBInjCPNAW7M1w_215_366.jpg" alt="">
+          </div>
+        </ClientOnly>
       </div>
       <div class="goods-cont">
         <div class="lt">
@@ -176,7 +178,7 @@
         <div class="gt">
           <el-tabs v-model="defData.rightActive" class="goods-gt-tabs">
             <el-tab-pane label="商品详情" name="1">
-              <div v-html="goodsData?.goods_desc" />
+              <div v-html="goodsInfo?.goods_desc" />
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -184,29 +186,7 @@
     </div>
     <div v-else class="container">
       <div class="no-goods-box">
-        <div class="no-goods text-center">
-          <div class="i-ic-baseline-manage-search inline-block text-56px c-#666" />
-          <h3 class="text-30px c-#666">
-            抱歉，没有找到相关商品...
-          </h3>
-          <div class="my30px text-left">
-            <p class="mb5px">
-              可能原因为:
-            </p>
-            <p style="margin-bottom:5px">
-              <b>网址有错误</b> &gt; 请检查网址地址是否正确或存在多余错误字符
-            </p>
-            <p><b>网址已失效</b> &gt; 当前访问的商品/活动已下架</p>
-          </div>
-
-          <div class="my30px">
-            <NuxtLink to="/">
-              <el-button type="primary" size="large">
-                返回首页
-              </el-button>
-            </NuxtLink>
-          </div>
-        </div>
+        <BaseError />
       </div>
     </div>
     <ClientOnly>
@@ -262,6 +242,7 @@ const defData = reactive({
 })
 // 商品信息
 const goodsData = ref<GoodsApi_GetInfoResponse>()
+const goodsInfo = ref<GoodsApi_GoodsInfoData>()
 const goodsImgList = ref<string[]>([])
 
 const form = reactive({
@@ -273,12 +254,15 @@ const initData = async () => {
   const { data } = await GoodsApi.getInfo({ goods_id: id })
   if (data.value?.code === 200) {
     const dat = data.value.data
-    console.log('dat :>> ', dat)
-    if (dat.goods_id === id) {
+    const infoData = dat.goods_info
+    // console.log('dat :>> ', dat)
+    // if (goods.goods_id === id) {
+    if (infoData) {
       goodsData.value = dat
+      goodsInfo.value = infoData
 
       // 商品图片
-      const imgArr: string[] = dat.goods_img ? [dat.goods_img] : []
+      const imgArr: string[] = infoData.goods_img ? [infoData.goods_img] : []
       dat.photo_lists.forEach((item) => {
         if (item.photo_url) imgArr.push(item.photo_url)
       })
@@ -286,10 +270,10 @@ const initData = async () => {
 
       // 设置seo
       const meta = []
-      if (dat.web_desc) meta.push({ name: 'description', content: dat.web_desc })
-      if (dat.web_keywords) meta.push({ name: 'keywords', content: dat.web_keywords })
+      if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
+      if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
       useHead({
-        title: dat.web_title || dat.goods_name,
+        title: infoData.web_title || infoData.goods_name,
         meta,
       })
     } else {
@@ -310,26 +294,26 @@ const onCollect = async () => {
     return navigateTo('/login')
   }
   // 已经收藏了，取消收藏状态
-  if (goodsData.value?.is_collect) {
+  if (goodsInfo.value?.is_collect) {
     // 清除收藏
     const params: RecordApi_Del = {
-      goods_ids: goodsData.value.goods_id.toString(),
+      goods_ids: goodsInfo.value.goods_id.toString(),
       type: 1,
       user_id: userState.userInfo.value.user_id,
     }
     const { data } = await RecordApi.del(params)
     if (data.value?.code === 200) {
-      goodsData.value.is_collect = 0 // 清除收藏标志位
+      goodsInfo.value.is_collect = 0 // 清除收藏标志位
     }
   } else {
     const params: RecordApi_Add = {
-      goods_id: goodsData.value!.goods_id,
+      goods_id: goodsInfo.value!.goods_id,
       type: 1,
       user_id: userState.userInfo.value.user_id,
     }
     const { data } = await RecordApi.add(params)
     if (data.value?.code === 200) {
-      goodsData.value!.is_collect = 1
+      goodsInfo.value!.is_collect = 1
     }
   }
 }
@@ -337,8 +321,8 @@ const onCollect = async () => {
 // 加入购物车
 const onAddCart = async () => {
   const { number } = form
-  if (number > 0 && goodsData.value?.goods_id) {
-    const { data } = await GoodsApi.addCart({ goods_id: goodsData.value.goods_id, goods_number: number })
+  if (number > 0 && goodsInfo.value?.goods_id) {
+    const { data } = await GoodsApi.addCart({ goods_id: goodsInfo.value.goods_id, goods_number: number })
     if (data.value?.code === 200) {
       ElMessage.success('加入购物车成功')
       form.number = 1
@@ -444,7 +428,7 @@ const onHistory = async () => {
   if (userState.userInfo.value?.user_id) {
     const params: RecordApi_Add = {
       user_id: userState.userInfo.value.user_id,
-      goods_id: goodsData.value!.goods_id,
+      goods_id: goodsInfo.value!.goods_id,
       type: 2,
     }
     await RecordApi.add(params)
@@ -469,6 +453,7 @@ definePageMeta({
 
   .goods-zoom {
     width: var(--goods-img-zoom-width);
+    min-height: var(--goods-img-zoom-width);
     background-color: var(--el-color-white);
 
     .image-err {

@@ -41,8 +41,31 @@
   }
 }
 
-.el-dialog.el-dialog--center {
-  .el-dialog__header {
-    margin-left: 16px;
+.el-dialog {
+
+  &.el-dialog--center {
+    .el-dialog__header {
+      margin-left: 16px;
+    }
   }
+
+  &.is-fullscreen {
+    display: flex;
+    flex-direction: column;
+
+    .el-dialog__body {
+      flex: 1;
+      overflow: auto;
+
+      .dialog-body-box {
+        height: unset;
+      }
+    }
+  }
+
+  .el-dialog__body {
+    padding: 20px;
+
+  }
+
 }

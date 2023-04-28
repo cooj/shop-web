@@ -27,7 +27,7 @@ export const GoodsApi = {
   addCart: (data: { goods_id: number; goods_number: number }) => useHttp('/api/mall/add_cart', data, { method: 'post' }),
 
   /**
-   * 修改购物车商品数量
+   * 修改购物车商品数量 id:购物车id   number:商品修改数量
    * @returns
    */
   editNum: (data: { id: number; number: number }) => useHttp<{ 'number': number; 'goods_number': number }>('/api/mall/add_sub_cart', data, { method: 'post' }),

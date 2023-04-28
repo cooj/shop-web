@@ -2,7 +2,7 @@
   <section class="header-box">
     <el-form class="py25px" size="large">
       <div class="flex items-center justify-between text-#f8f8f8 container">
-        <div class="logo">
+        <div class="logo min-w150px">
           <NuxtLink to="/">
             <img class="h50px" :src="systemInfo?.shop_logo" alt="">
           </NuxtLink>
