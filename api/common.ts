@@ -17,4 +17,11 @@ export const CommonApi = {
   getSystem: () => useHttp<CommonApi_GetSystemResponse>('/api/index/setup_info', '', {
     method: 'get',
   }),
+
+  /**
+   * 地区列表-- 获取全部地区数据
+   */
+  getAllRegion: () => useHttp<CommonApi_GetAllRegionItem[]>('/api/index/get_address', '', {
+    method: 'get',
+  }),
 }

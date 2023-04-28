@@ -41,6 +41,7 @@
   }
 }
 
+// el-dialog弹窗
 .el-dialog {
 
   &.el-dialog--center {
@@ -68,4 +69,15 @@
 
   }
 
+}
+
+// el-cascader级联选择器
+.el-cascader-menu {
+  .el-cascader-node {
+
+    .el-cascader-node__prefix,
+    .el-cascader-node__postfix {
+      position: absolute;
+    }
+  }
 }

@@ -13,7 +13,7 @@
           订单结算
         </el-breadcrumb-item>
       </el-breadcrumb>
-      <el-form>
+      <el-form :model="form">
         <section class="sec-box">
           <div class="tle">
             <b>收货地址</b>
@@ -21,6 +21,27 @@
               新增地址
             </el-button>
           </div>
+          <el-form-item prop="address">
+            <el-radio-group v-if="!defData.addressList.length" v-model="form.address_id" class="address-radio">
+              <el-radio v-for="item in defData.addressList" :key="item.address_id" :label="item.address_id">
+                <span>{{ setAddressText(item) }}</span>
+                <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                <span class="mx5px">{{ item.phone }}</span>
+                <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+              </el-radio>
+
+              <el-radio :label="6">
+                Option B
+              </el-radio>
+              <el-radio :label="9">
+                Option C
+              </el-radio>
+            </el-radio-group>
+            <div v-else class="w100% text-center text-13px c-#666">
+              暂无收货地址,请点击
+              <span class="cursor-pointer hover:c-#d7231e" @click="onAddress">新增地址</span>
+            </div>
+          </el-form-item>
         </section>
         <section class="sec-box">
           <div class="tle">
@@ -29,6 +50,27 @@
               新增地址
             </el-button>
           </div>
+          <el-form-item prop="address">
+            <el-radio-group v-if="!defData.addressList.length" v-model="form.address_id" class="address-radio">
+              <el-radio v-for="item in defData.addressList" :key="item.address_id" :label="item.address_id">
+                <span>{{ setAddressText(item) }}</span>
+                <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                <span class="mx5px">{{ item.phone }}</span>
+                <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+              </el-radio>
+
+              <el-radio :label="6">
+                Option B
+              </el-radio>
+              <el-radio :label="9">
+                Option C
+              </el-radio>
+            </el-radio-group>
+            <div v-else class="w100% text-center text-13px c-#666">
+              暂无收货地址,请点击
+              <span class="cursor-pointer hover:c-#d7231e" @click="onAddress">新增地址</span>
+            </div>
+          </el-form-item>
         </section>
         <section class="sec-box">
           <div class="tle">
@@ -70,9 +112,6 @@
         <section class="sec-box">
           <div class="tle">
             <b>支付方式</b>
-            <el-button text bg size="small">
-              新增地址
-            </el-button>
           </div>
           <div>
             <el-radio-group v-model="form.payType">
@@ -137,17 +176,20 @@
         </section>
       </el-form>
     </div>
-    <UserAddressModel ref="modelRef" />
+    <UserAddressModel ref="modelRef" @update="getAddress" />
   </section>
 </template>
 
 <script lang="ts" setup>
+import { UserAddressApi } from '~/api/user/address'
 import UserAddressModel from '~/components/user/UserAddressModel.vue'
 
 const modelRef = ref<InstanceType<typeof UserAddressModel>>()
 
 const defData = reactive({
-
+  type: 1, // 添加收货地址使用 1：收货地址 2：发票地址
+  addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
+  billAddressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
 })
 
 const form = reactive({
@@ -169,11 +211,55 @@ const form = reactive({
     warn_number: 1,
   }],
   payType: 1, // 支付方式 1-在线，  2：对公转账
+  address_id: '' as '' | number, // 地址id
 })
 
-const onAddress = () => {
+const initDefaultData = async () => {
+  const [res1] = await Promise.all([
+    UserAddressApi.getList(), // 获取所有地址列表
+
+  ])
+  await wait(500)
+  // console.log('res1 :>> ', res1)
+  if (res1.data.value?.code === 200) {
+    defData.addressList = res1.data.value.data
+  }
+}
+
+// 地址信息拼接
+const setAddressText = (row: UserAddressApi_GetListResponse) => {
+  const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
+  if (row.province) arr.push(row.province) // 省份 名称 或 省份id 或 省份名称id 或
+  if (row.city) arr.push(row.city)
+  if (row.area) arr.push(row.area) //
+  if (row.address) arr.push(row.address) //
+
+  return arr.join('  ')
+}
+/**
+ * 新增地址
+ * @param type 1：收货地址 2：发票地址
+ */
+const onAddress = (type: 1 | 2) => {
+  defData.type = type
   modelRef.value?.onOpenDialog()
 }
+// 获取地址
+const getAddress = (params: UserAddressApi_Edit) => {
+  if (defData.type === 1) {
+    form.address_id = params.address_id
+    const data = {
+      ...params,
+      user_id: 0,
+    }
+    defData.addressList.unshift(data)
+    defData.billAddressList.push(data)
+  }
+}
+
+onBeforeMount(() => {
+  initDefaultData()
+})
 
 definePageMeta({
   layout: 'home',
@@ -196,6 +282,27 @@ definePageMeta({
     }
   }
 
+}
+
+.address-radio {
+  display: flex;
+  width: 100%;
+
+  .el-radio {
+    width: 100%;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    margin: 0;
+
+    &:hover {
+      background-color: var(--el-color-danger-light-9);
+    }
+
+    &.is-checked {
+      font-weight: bold;
+      border-color: var(--el-color-danger-light-7);
+    }
+  }
 }
 
 .prefer-ul {

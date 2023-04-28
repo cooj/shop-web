@@ -49,7 +49,7 @@ watch(() => route.path, () => {
       </div>
     </div>
     <div v-if="defData.isIndex" class="market">
-      <div class="flex container">
+      <div class="grid container">
         <NuxtLink to="/">
           <img class="h150px w100%" src="assets/images/pic/card1.png" alt="">
           <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
@@ -133,14 +133,9 @@ watch(() => route.path, () => {
   --m-card-number: 4;
   padding: var(--m-gap-width) 0;
 
-  .flex {
-
+  .grid {
     gap: var(--m-gap-width);
-
-    >a {
-      width: calc((100% - var(--m-gap-width) * (--m-card-number - 1)) / 4);
-
-    }
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>

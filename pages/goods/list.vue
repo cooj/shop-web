@@ -402,8 +402,8 @@ definePageMeta({
 }
 .goods-list-ul {
     display: grid;
-    gap: 15px;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
     padding: 10px 0;
 }
 

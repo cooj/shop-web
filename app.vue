@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :locale="locale">
+  <el-config-provider :locale="locale" :message="messageConfig">
     <VitePwaManifest />
     <NuxtLayout>
       <NuxtPage />
@@ -14,6 +14,11 @@ import '~/assets/scss/default.scss'
 import '~/assets/scss/app.scss'
 
 const locale = ref(zhCn)
+
+// 提示框
+const messageConfig = reactive({
+  max: 1,
+})
 
 // 获取商城信息
 const useSystem = useSystemState()

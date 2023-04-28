@@ -67,3 +67,17 @@ declare interface CommonApi_GetSystemResponse {
   "recom_inte": "20", //订单分成百分比
   "recom_money": "10" //现金分成百分比
 }
+
+
+
+
+/**
+ * 地区列表 - 获取所有地址 - 响应数据
+ */
+declare interface CommonApi_GetAllRegionItem {
+  "codeid": number,
+  "parentid": number //父级id 第一层默认0
+  "cityName": string,
+  "pid_arr": number[],
+  "children": CommonApi_GetAllRegionItem[]
+}
