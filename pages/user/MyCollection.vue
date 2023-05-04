@@ -17,7 +17,7 @@
               <el-image class="h50px w50px" :src="row.goods_img" />
             </div>
             <div class="pl10px">
-              <NuxtLink to="/goods/detail-15">
+              <NuxtLink :to="`/goods/detail-${row.goods_id}`">
                 {{ row.goods_name }}
               </NuxtLink>
             </div>
@@ -31,6 +31,11 @@
           <div class="shop_price">
             {{ row.shop_price }}
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="collect_time" label="收藏时间" width="170px" align="center">
+        <template #default="{ row }">
+          {{ formatTime(row.collect_time) }}
         </template>
       </el-table-column>
       <el-table-column prop="operate" label="操作" width="100" align="center">
@@ -70,13 +75,13 @@ const initTableData = async () => {
 }
 initTableData()
 
-const onRemove = async (row: RecordApi_Del) => {
+const onRemove = async (row: any) => {
   const user = await userState.getUserInfo()
   if (user.value) {
     const data: RecordApi_Del = {
       type: 1,
       user_id: user.value.user_id,
-      goods_ids: row.goods_ids,
+      goods_ids: row.goods_id,
     }
 
     const res = await RecordApi.del(data)

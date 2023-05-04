@@ -44,6 +44,8 @@ declare interface RecordApi_Add {
  */
 declare interface RecordApi_Del extends Omit<RecordApi_Add,'goods_id'> {
   goods_ids: string;  // 商品id，多个以英文逗号分隔
+  user_id: number; //用户id
+  type: 1 | 2 //1收藏，2最近浏览
 }
 
 
