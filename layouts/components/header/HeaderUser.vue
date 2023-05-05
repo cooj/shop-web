@@ -17,9 +17,11 @@
           </div>
         </div>
         <div v-if="userData?.user_id" class="pt12px text-center">
-          <el-button class="min-w70px" type="danger" size="small">
-            个人中心
-          </el-button>
+          <NuxtLink to="/user" class="mr20px">
+            <el-button class="min-w70px" type="danger" size="small">
+              个人中心
+            </el-button>
+          </NuxtLink>
           <el-button class="min-w70px" type="info" size="small" plain @click="onLoginOut">
             退出登录
           </el-button>

@@ -320,6 +320,12 @@ const onCollect = async () => {
 
 // 加入购物车
 const onAddCart = async () => {
+  // 用户未登录时，不允许加入购物车页面
+  if (!userState.userInfo.value?.user_id) {
+    ElMessage.error('请先登录!')
+    return navigateTo('/login')
+  }
+
   const { number } = form
   if (number > 0 && goodsInfo.value?.goods_id) {
     const { data } = await GoodsApi.addCart({ goods_id: goodsInfo.value.goods_id, goods_number: number })

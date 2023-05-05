@@ -58,9 +58,6 @@
           </el-button> -->
           </div>
           <div class="gt">
-            <NuxtLink to="/order/confirm">
-              go
-            </NuxtLink>
             商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
             <el-button
               class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
@@ -105,7 +102,6 @@ const initTableData = async () => {
   // 获取购物车商品
   const { data } = await GoodsApi.getCartList()
   await wait(500)
-  console.log('cartData :>> ', data)
   if (data.value?.code === 200) {
     defData.tableData = data.value.data.goods_list
   } else {
@@ -159,6 +155,12 @@ const onChangeNumber = useDebounceFn(async (row: GoodsTableCartItem) => {
 // 订单结算
 const onSettle = () => {
   if (!defData.selectData.length) return false
+  const ids = defData.selectData.map(item => item.id).join(',') // 获取选中的id
+
+  navigateTo({
+    path: '/order/confirm',
+    query: { cart_id: ids },
+  })
 }
 
 onBeforeMount(() => {

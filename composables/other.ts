@@ -1,4 +1,5 @@
 import type { FormInstance } from 'element-plus'
+import Big from 'big.js'
 
 /**
  * 退出登录
@@ -32,4 +33,13 @@ export const useFormVerify = async (formEl: FormInstance | undefined) => {
       return false
     }
   })
+}
+
+/**
+ * 数字格式化，默认保留两位小数
+ * @param num
+ * @returns
+ */
+export const formatNumber = (num: number, scale = 2) => {
+  return new Big(num).toFixed(scale)
 }

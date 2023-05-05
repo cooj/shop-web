@@ -19,7 +19,7 @@ export const UserAddressApi = {
    * 用户地址 - 修改
    * @returns
    */
-  edit: (data: UserAddressApi_Edit) => useHttp('/api/mall/add_address', data, { method: 'post' }),
+  edit: (data: UserAddressApi_Edit) => useHttp('/api/mall/edit_address', data, { method: 'post' }),
 
   /**
    * 用户地址 - 删除
