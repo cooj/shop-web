@@ -151,3 +151,73 @@ declare interface OrderApi_GetInfoResponse {
     "goods_img": ""
   }[]
 }
+
+
+/**
+ * 获取订单列表 - 请求参数
+ */
+declare interface OrderApi_GetOrderList {
+  status: number,  // 订单状态 0全部 1待支付 2待发货 3待确认 4已取消
+  main_order_no: string // 订单号  M20230424090858907460
+  pay_type: number;  // 支付类型 1微信 2支付宝 3线下
+  consignee_name: string;  // 收件人名
+  start_time: string;  // 下单开始时间  2023-04-01
+  end_time: string // 下单结束时间  2023-04-14
+}
+
+/**
+ * 获取订单列表 - 响应数据
+ */
+declare interface OrderApi_GetOrderListResponse extends ListTotal {
+  "lists": {
+    "order_id": 17, //订单ID
+    "main_order_no": "M20230424090858907460", //主订单号
+    "status": 0, //订单状态
+    "user_id": 1, //用户id
+    "total_price": "4199.04", //总金额
+    "total_number": 6, //总数量
+    "pay_type": 0, //类型 1微信 2支付宝 3线下
+    "pay_sn": "", //支付流水号
+    "pay_status": 0, //支付状态 0未支付 1已支付 2已取消 3已退款
+    "pay_time": 0, //支付时间
+    "coupon_price": "0.00", //优惠金额
+    "coupon_draw_id": 0, //优惠券id
+    "cerate_time": "2023-04-24 09:08:59", //下单时间
+    "deduct_peas": 420, //抵扣工游豆数量
+    "give_peas": 0,
+    "use_peas": 3,
+    "freight_price": "0.00", //运费
+    "user_discount": "0.96", //会员折扣率
+    "pay_price": "4196.04",
+    "meet_price": "4196.04", //实付金额
+    "consignee_name": "张三", //收件人
+    "consignee_phone": "1388888888", //收件人手机号
+    "province": "广东省", //省份
+    "city": "深圳市", //城市
+    "area": "光明区", //地区
+    "address": "楼村75号", //地址明细
+    "salesman_id": 0, //经手人ID
+    "remarks": "测试平摊金额", //备注
+    "bill_status": 0, //开票状态
+    "logistics_id": 0, //配送方式 id
+    "out_time": 0, //发货时间
+    "out_status": 0, //发货状态 0未发货 1已发货
+    "logistics_no": "", //快递单号
+    "env_type": "", //同步环境类型
+    "is_delete": 0, //是否删除 0否 1是
+    "is_refund": 0,
+    "goods_info": {
+      "main_order_no": "M20230424090858907460", //主订单号
+      "order_no": "C20230424090858560610", //订单号
+      "goods_id": 1, //商品id
+      "price": "192.00", //商品价格
+      "goods_number": 2, //数量
+      "meet_price": "191.86", //实付金额
+      "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
+      "goods_img": ""
+    }[]
+
+  }[]
+
+
+}

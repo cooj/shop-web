@@ -178,7 +178,7 @@ definePageMeta({
   background-color: var(--el-color-white);
 
   .goods_img {
-    :deep(.image-slot) {
+    :deep(.image-error) {
       background-color: var(--el-color-info-light-9);
 
       i {

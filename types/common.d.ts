@@ -66,6 +66,16 @@ declare interface CommonApi_GetSystemResponse {
   "recom_level": "100", //等级分成上限
   "recom_inte": "20", //订单分成百分比
   "recom_money": "10" //现金分成百分比
+  footer_content:string;  // 底部内容 可以是HTML或者其他格式 
+  sale_tel:string; //售后电话
+  work_time:string; // 工作时间
+  wx_code:string; //微信二维码
+  copyright:string; // 版权信息
+  filings: string,    // 备案号 '粤ICP备18004771号-1'
+  filings_url: string,  // 备案链接 'http://www.baidu.com'
+  ico_img:string; //网站ico图标
+  small_logo:string; //小图logo
+  seo_keywords:string; // Seo关键词 可以是任意大写字符串 不需要加逗号 或者空
 }
 
 

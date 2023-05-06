@@ -2,18 +2,7 @@
   <div class="footer-box bg-#333">
     <div class="container">
       <div class="footer-top">
-        <div class="feature-item">
-          <img src="//storage.360buyimg.com/vipmro-pc/img/bottom/footer01.png" class="icon">
-        </div>
-        <div class="feature-item">
-          <img src="//storage.360buyimg.com/vipmro-pc/img/bottom/footer02.png" class="icon">
-        </div>
-        <div class="feature-item">
-          <img src="//storage.360buyimg.com/vipmro-pc/img/bottom/footer03.png" class="icon">
-        </div>
-        <div class="feature-item">
-          <img src="//storage.360buyimg.com/vipmro-pc/img/bottom/footer04.png" class="icon">
-        </div>
+        <div class="content" v-html="systemInfo?.footer_content" />
       </div>
       <div class="mid">
         <ul class="footer-link">
@@ -30,16 +19,16 @@
         </ul>
         <div class="footer-right">
           <div class="footer-logo">
-            <img class="mb15px" src="~/assets/images/shop-logo.png" alt="">
-            <p> 售后电话 400 998 3304</p>
-            <p>工作时间 9:00-18:00</p>
+            <BaseImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
+            <p> 售后电话 {{ systemInfo?.sale_tel }}</p>
+            <p>工作时间 {{ systemInfo?.work_time }}</p>
           </div>
           <div class="footer-code">
             <div class="footer-code-box text-center">
               <div class="mb5px">
                 公众号二维码
               </div>
-              <img class="w110px" src="https://images.gdbmro.com/index/public_code.jpg" alt="">
+              <BaseImage class="w110px pb100%" :src="systemInfo?.wx_code" />
               <!-- <div class="footer-code-item">
                 <div class="mb5px">
                   公众号二维码
@@ -65,11 +54,10 @@
           </NuxtLink>
         </div>
         <div class="right">
-          Copyright@2023
-          工游记工业科技（深圳）有限公司
-          版权所有
-          <!-- 粤ICP备18004771号-1 -->
-          {{ systemInfo?.icp }}
+          {{ systemInfo?.copyright }}
+          <NuxtLink :to="systemInfo?.filings_url" target="_blank" class="ml5px">
+            {{ systemInfo?.filings }}
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -117,6 +105,15 @@ const navList = ref(footer.value?.data)
   display: flex;
   justify-content: center;
   margin-bottom: 50px;
+
+  .content {
+    width: 100%;
+    text-align: center;
+
+    :deep(img) {
+      display: inline-block;
+    }
+  }
 }
 
 .footer-link {

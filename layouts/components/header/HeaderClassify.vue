@@ -5,18 +5,18 @@
     <i class="i-ic-outline-format-list-bulleted" />
     <span class="ml8px">商品分类</span>
     <ul class="goods-class-child">
-      <li v-for="item in cateList" :key="item.cat_id">
+      <li v-for="item in cateList" :key="item.id">
         <div class="card">
           <div class="tle flex items-center text-13px font-bold">
             <div class="w20px">
               <i class="i-ep-service block" />
             </div>
-            <h6>{{ item.cat_name }}</h6>
+            <h6>{{ item.custom_name }}</h6>
           </div>
           <div class="flex">
             <div class="w20px" />
             <div class="card-link flex-1 text-13px">
-              <NuxtLink v-for="sub in item.children" :key="sub.cat_id" class="mr5px inline-block"
+              <NuxtLink v-for="sub in item.lists" :key="sub.cat_id" class="mr5px inline-block"
                 :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
                 <span>{{ sub.cat_name }}</span>
               </NuxtLink>
@@ -25,7 +25,7 @@
         </div>
         <div class="goods-class-pane">
           <dl>
-            <dd v-for="sub in item.children" :key="sub.cat_id">
+            <dd v-for="sub in item.lists" :key="sub.cat_id">
               <div class="lt">
                 <NuxtLink :to="`/goods/list?c=${sub.cat_id}`">
                   {{ sub.cat_name }}
@@ -37,58 +37,6 @@
               <div class="gt">
                 <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="`/goods/list?c=${son.cat_id}`">
                   {{ son.cat_name }}
-                </NuxtLink>
-              </div>
-            </dd>
-          </dl>
-        </div>
-      </li>
-    </ul>
-    <ul v-if="0" class="goods-class-child all">
-      <!-- <li v-for="item in cate?.data" :key="item.cat_id">
-        <NuxtLink :to="`/goods/list?c=${item.cat_id}`">
-          <i class="i-ep-service" />
-          <span>{{ item.cat_name }}</span>
-        </NuxtLink>
-        <div class="goods-class-pane">
-          <dl>
-            <dd v-for="sub in item.children" :key="sub.cat_id">
-              <div class="lt">
-                <NuxtLink :to="`/goods/list?c=${sub.cat_id}`">
-                  {{ sub.cat_name }}
-                </NuxtLink>
-              </div>
-              <div class="ico">
-                <i class="i-ep-arrow-right" />
-              </div>
-              <div class="gt">
-                <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="`/goods/list?c=${son.cat_id}`">
-                  {{ son.cat_name }}
-                </NuxtLink>
-              </div>
-            </dd>
-          </dl>
-        </div>
-                              </li> -->
-      <li v-for="item in 17" :key="item">
-        <NuxtLink to="/" @mouseenter="showGoodsPane()">
-          <i class="i-ep-service" />
-          <span>商品分类</span>
-        </NuxtLink>
-        <div class="goods-class-pane">
-          <dl>
-            <dd v-for="sub in 5" :key="sub">
-              <div class="lt">
-                <NuxtLink :to="`/goods/list?c=${sub}`">
-                  商品分类{{ item }}-{{ sub }}
-                </NuxtLink>
-              </div>
-              <div class="ico">
-                <i class="i-ep-arrow-right" />
-              </div>
-              <div class="gt">
-                <NuxtLink v-for="son in 3" :key="son" :to="`/goods/list?c=${son}`">
-                  硬度计{{ item }}-{{ sub }}-{{ son }}
                 </NuxtLink>
               </div>
             </dd>
@@ -100,23 +48,24 @@
 </template>
 
 <script lang="ts" setup>
-const goodsState = useGoodsState()
+import { GoodsApi } from '~/api/goods/list'
+
+// const goodsState = useGoodsState()
 
 const defData = reactive({
   active: -1,
   show: false,
 })
 
+// // 获取商品分类
+// const cateList = await goodsState.getGoodsClass()
+// console.log('cateList :>> ', cateList)
 // 获取商品分类
-const cateList = await goodsState.getGoodsClass()
-console.log('cateList :>> ', cateList)
-// 获取商品分类
-// const { data: cate } = await GoodsApi.getClass()
+const { data: cate } = await GoodsApi.getClass()
+const cateList = computed(() => {
+  return cate.value?.data
+})
 //
-
-const showGoodsPane = () => {
-
-}
 </script>
 
 <style lang="scss" scoped>
@@ -264,32 +213,5 @@ const showGoodsPane = () => {
       color: var(--el-color-primary);
     }
   }
-}
-
-:global(body .nav-banner.index .goods-class-child.all) {
-  display: flex !important;
-  flex-direction: column;
-  // .goods-class-child.all {
-  //   display: flex !important;
-  //   flex-direction: column;
-  // }
-
-}
-
-:global(body .nav-banner.index .goods-class-child.all li) {
-  height: calc(100% / 17);
-}
-
-:global(body .nav-banner.index .goods-class-child.all li>a) {
-  line-height: 100%;
-  height: 100%;
-}
-
-.goods-class-child.all li:hover {
-  >a {
-    background-color: var(--el-color-info-light-8);
-  }
-
-  // color: var(--el-text-color-regular);
 }
 </style>
