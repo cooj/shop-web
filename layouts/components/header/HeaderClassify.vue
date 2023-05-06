@@ -4,10 +4,10 @@
     <!-- <i class="i-carbon-list" /> -->
     <i class="i-ic-outline-format-list-bulleted" />
     <span class="ml8px">商品分类</span>
-    <ul v-if="0" class="goods-class-child">
+    <ul class="goods-class-child">
       <li v-for="item in cateList" :key="item.cat_id">
         <div class="card">
-          <div class="tle flex items-center text-12px font-bold">
+          <div class="tle flex items-center text-13px font-bold">
             <div class="w20px">
               <i class="i-ep-service block" />
             </div>
@@ -15,11 +15,9 @@
           </div>
           <div class="flex">
             <div class="w20px" />
-            <div class="card-link flex-1 text-12px">
-              <NuxtLink
-                v-for="sub in item.children" :key="sub.cat_id" class="mr4px inline-block"
-                :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })"
-              >
+            <div class="card-link flex-1 text-13px">
+              <NuxtLink v-for="sub in item.children" :key="sub.cat_id" class="mr5px inline-block"
+                :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
                 <span>{{ sub.cat_name }}</span>
               </NuxtLink>
             </div>
@@ -46,7 +44,7 @@
         </div>
       </li>
     </ul>
-    <ul class="goods-class-child all">
+    <ul v-if="0" class="goods-class-child all">
       <!-- <li v-for="item in cate?.data" :key="item.cat_id">
         <NuxtLink :to="`/goods/list?c=${item.cat_id}`">
           <i class="i-ep-service" />
@@ -102,7 +100,7 @@
 </template>
 
 <script lang="ts" setup>
-const goodsState = useGoodsStore()
+const goodsState = useGoodsState()
 
 const defData = reactive({
   active: -1,
@@ -111,6 +109,7 @@ const defData = reactive({
 
 // 获取商品分类
 const cateList = await goodsState.getGoodsClass()
+console.log('cateList :>> ', cateList)
 // 获取商品分类
 // const { data: cate } = await GoodsApi.getClass()
 //
@@ -146,32 +145,39 @@ const showGoodsPane = () => {
   display: none;
   // box-shadow: -1px 3px 12px -1px rgba(0, 0, 0, .3);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 5px 0;
 
   .card {
     --b-border-width: 10px;
-    padding: var(--b-border-width);
+    padding: 5px var(--b-border-width);
     // background-color: #333;
     position: relative;
     z-index: 1;
 
     &::after {
-      --b-position-width: 7px;
+      --b-position-left: 7px;
+      --b-position-top: 0px;
       content: '';
       display: block;
       position: absolute;
-      top: var(--b-position-width);
-      left: var(--b-position-width);
-      width: calc(100% - var(--b-position-width) * 2);
-      height: calc(100% - var(--b-position-width) * 2);
+      top: var(--b-position-top);
+      left: var(--b-position-left);
+      width: calc(100% - var(--b-position-left) * 2);
+      height: calc(100% - var(--b-position-top) * 2);
       // background-color: var(--el-color-info-light-8);
       z-index: -1;
       border-radius: 2px;
     }
 
     &-link {
-      >a:hover {
-        color: var(--el-color-primary);
+      >a {
+        color: var(--el-text-color-regular);
+
+        &:hover {
+          color: var(--el-color-primary);
+        }
       }
+
     }
   }
 

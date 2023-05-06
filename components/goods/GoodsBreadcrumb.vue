@@ -23,7 +23,7 @@ const props = defineProps<{
   cid?: number | '' // 商品分类id
   name?: string // 商品名称，如果有商品的话
 }>()
-const goodsState = useGoodsStore()
+const goodsState = useGoodsState()
 const goodsClass = await goodsState.getGoodsClass()
 
 // 设置商品导航菜单

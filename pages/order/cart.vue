@@ -1,3 +1,4 @@
+<!-- 购物车 -->
 <template>
   <section class="pb30px text-14px">
     <div class="container">
@@ -21,7 +22,7 @@
                     <BaseImage class="h50px w50px" :src="row.goods_img" />
                   </div>
                   <div class="pl10px">
-                    <NuxtLink class="goods_link" to="/goods/detail-15" target="_blank">
+                    <NuxtLink class="goods_link" :to="`/goods/detail-${row.goods_id}`" target="_blank">
                       {{ row.goods_name }}
                     </NuxtLink>
                   </div>
@@ -33,10 +34,8 @@
             <el-table-column prop="shop_price" label="价格" width="120" align="center" />
             <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
               <template #default="{ row }">
-                <el-input-number
-                  v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100"
-                  @change="onChangeNumber(row)"
-                />
+                <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100"
+                  @change="onChangeNumber(row)" />
               </template>
             </el-table-column>
             <el-table-column prop="operate" label="操作" width="100" align="center">
@@ -59,10 +58,8 @@
           </div>
           <div class="gt">
             商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
-            <el-button
-              class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
-              @click="onSettle"
-            >
+            <el-button class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
+              @click="onSettle">
               结算商品
             </el-button>
           </div>

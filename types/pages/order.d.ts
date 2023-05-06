@@ -3,7 +3,7 @@
  * 获取购物车结算商品 - 请求参数
  */
 declare interface OrderApi_GetSettleCart {
-  cart_id: number;  //  购物车列表ID
+  cart_id: string;  //  购物车列表ID
   address_id?: number;    // 地址ID (用于算出运费)
 }
 
@@ -97,4 +97,57 @@ declare interface OrderApi_ConfirmSettleResponse {
   "main_order_no": "M20230419141058256483", //主订单号
   "meet_price": 0, //应付金额
   "status": 0 //是否需要支付 1是 0否
+}
+
+
+/**
+ * 获取订单信息 - 响应数据
+ */
+declare interface OrderApi_GetInfoResponse {
+  "order_id": 6, //订单ID
+  "main_order_no": "M20230412102104894540", //主订单号
+  "status": 0, //订单状态
+  "user_id": 1, //用户id
+  "total_price": "107.52", //总金额
+  "total_number": 10, //总数量
+  "pay_type": 3, //类型 1微信 2支付宝 3线下
+  "pay_sn": "XS20230412103144876929", //支付流水号
+  "pay_status": 1, //支付状态 0未支付 1已支付 2已取消 3已退款
+  "pay_time": "2023-04-12 10:31:44", //支付时间
+  "coupon_price": "0.00", //优惠金额
+  "coupon_draw_id": 0, //优惠券id
+  "cerate_time": "2023-04-12 10:21:04", //下单时间
+  "deduct_peas": 0, //抵扣工游豆数量
+  "give_peas": 0,
+  "use_peas": 2,
+  "freight_price": "0.00", //运费
+  "user_discount": "0.96", //会员折扣率
+  "pay_price": "0.00",
+  "meet_price": "105.52", //实付金额
+  "consignee_name": "小明", //发货
+  "consignee_phone": "13177778888", //收件人手机号
+  "province": "", //省份
+  "city": "", //城市
+  "area": "", //地区
+  "address": "广东深圳光明云智科技园", //地址明细
+  "salesman_id": 0, //经手人ID
+  "remarks": "", //备注
+  "bill_status": 0, //开票状态
+  "logistics_id": 0, //配送方式 id
+  "out_time": "", //发货时间
+  "out_status": 0, //发货状态 0未发货 1已发货
+  "logistics_no": "", //快递单号
+  "env_type": "", //同步环境类型
+  "is_delete": 0, //是否删除 0否 1是
+  "is_refund": 0,
+  "goods_list": {
+    "main_order_no": "M20230412102104894540", //主订单号
+    "order_no": "C20230412102104404443", //订单号
+    "goods_id": 1, //商品id
+    "price": "9.60", //价格
+    "goods_number": 2, //数量
+    "meet_price": "0.00", //实付金额
+    "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
+    "goods_img": ""
+  }[]
 }

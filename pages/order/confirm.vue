@@ -154,27 +154,16 @@
                 <b>优惠方式</b>
               </div>
             </div>
-            <el-form-item prop="is_coupon" label="优惠券">
-              <span class="mr10px c-#666">是否使用优惠券</span>
-              <el-radio-group v-model="form.is_coupon">
-                <el-radio :label="1">
-                  是
+            <el-form-item prop="coupon_id" label="优惠券">
+              <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
+                <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id" :label="item.coupon_draw_id">
+                  {{ item.coupon_name }}-减{{ item.par_value }}
                 </el-radio>
                 <el-radio :label="0">
-                  否
+                  不使用优惠券
                 </el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item prop="is_coupon" label="">
-              <span class="mr10px c-#666">是否使用优惠券</span>
-              <el-radio-group v-model="form.is_coupon">
-                <el-radio :label="1">
-                  是
-                </el-radio>
-                <el-radio :label="0">
-                  否
-                </el-radio>
-              </el-radio-group>
+              <span v-else class="text-12px c-#888">暂无可用优惠券</span>
             </el-form-item>
             <el-form-item prop="is_peas" label="工游豆">
               <span class="mr10px c-#666">是否使用工游豆</span>
@@ -187,10 +176,8 @@
                 </el-radio>
               </el-radio-group>
               <span v-if="peasNumber.max === 0" class="text-12px c-#999">工游豆可用数量为0</span>
-              <el-input-number
-                v-if="form.is_peas && peasNumber.max" v-model="form.peas_number" :precision="0"
-                :min="peasNumber.min" :max="peasNumber.max"
-              />
+              <el-input-number v-if="form.is_peas && peasNumber.max" v-model="form.peas_number" :precision="0"
+                :min="peasNumber.min" :max="peasNumber.max" />
             </el-form-item>
           </section>
           <section class="sec-box flex mb0!">
@@ -220,10 +207,13 @@
               <li>
                 <span class="item-title">运费减免：</span><span class="item-text">-￥0.00</span>
               </li>
+              <li>
+                <span class="item-title">优惠券：</span><span class="item-text">-￥10.00</span>
+              </li>
             </ul>
           </section>
           <section class="sec-box flex items-center justify-end b-t b-t-#eee">
-            <b class="mr30px">实付款：<span class="main-color text-24px">¥19.90</span></b>
+            <b class="mr30px">实付款：<span class="main-color text-24px">¥{{ payMoney }}</span></b>
             <el-button type="primary" class="min-w150px" size="large" @click="onSubmit">
               <b>提交订单</b>
             </el-button>
@@ -272,7 +262,6 @@ const form = reactive({
 
   is_invoice: 1, // 是否开发票 1：是 0：否 （默认1）
 
-  is_coupon: 1, // 是否使用优惠券 1：是 0：否 （默认为1）
   coupon_id: '' as '' | number, // 使用的优惠券编号或编号列表（可选）
   is_peas: 1, // 是否使用工游豆 1：是 0：否 (默认为1)
   peas_number: '' as '' | number, // 使用的工游豆数量
@@ -296,18 +285,28 @@ const peasNumber = computed(() => {
   return { min, max }
 })
 
+const payMoney = computed(() => {
+  return defData.total_price + defData.freight_price
+})
+
 const initDefaultData = async () => {
   const numReg = /^[0-9]*$/ // 检查数字是否合法或不包含数字的正则表达式 或 空或空字符串
 
-  const cart_id = route.query.cart_id // 购物车id
+  const cart_id = route.query.cart_id as string // 购物车id
   const goods_id = route.query.goods_id // 商品id
   const goods_number = route.query.goods_number // 商品数量
 
-  if (cart_id && numReg.test(cart_id as string)) { // 购物车结算
-    const { data: res } = await OrderApi.getSettleCart({ cart_id: Number(cart_id) })
+  if (cart_id) { // 购物车结算
+    const { data: res } = await OrderApi.getSettleCart({ cart_id })
     await wait(500)
     console.log('re  sss :>> ', res)
     if (res.value?.code === 200) {
+      // 未获取到商品时
+      if (res.value?.data.goods_list.length === 0) {
+        defData.ready = false
+        return
+      }
+
       form.tableData = res.value?.data.goods_list
       defData.couponList = res.value?.data.coupon_list
 
@@ -392,10 +391,15 @@ const onSubmit = async () => {
   if (form.is_invoice) {
     //
   }
+  let goods_peas = Number(form.peas_number)
+  if (!goods_peas) {
+    form.is_peas = 0
+    goods_peas = 0
+  }
 
   const params: OrderApi_ConfirmSettle = {
     is_peas: form.is_peas,
-    goods_peas: Number(form.peas_number),
+    goods_peas,
     address_id: Number(form.address_id),
     coupon_draw_id: form.coupon_id || 0,
     remarks: form.remark,

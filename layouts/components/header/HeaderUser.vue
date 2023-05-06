@@ -91,6 +91,7 @@
 <script lang="ts" setup>
 const userState = useUserState()
 const userData = await userState.getUserInfo()
+console.log('userData :>> ', userData);
 
 /**
  * 退出登录
