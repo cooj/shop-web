@@ -23,7 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-
 import type { TableInstance } from 'element-plus'
 import { ElPagination, ElTable, ElTableColumn } from 'element-plus'
 

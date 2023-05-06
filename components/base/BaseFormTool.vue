@@ -3,7 +3,7 @@
     <!-- :ref="setItemRef" -->
     <!-- :ref="(el: FormItemInstance | any) => { if (el) formItemRef[index] = el }" -->
     <el-form-item v-for="(item, index) in searchData.config" :key="index" ref="formItemRef"
-      :class="setFormItemClass(index)" v-bind="item.itemProp as any" :prop="item.itemProp.prop">
+      :class="setFormItemClass(index)" v-bind="item.itemProp" :prop="item.itemProp.prop">
       <div class="item-content" :style="{ width: setElWidth(item.width) }">
         <slot v-if="item.slot" :name="item.itemProp.prop" :row="searchData.data" :width="setElWidth(item.width)" />
         <el-input v-else v-model.trim="searchData.data[item.itemProp.prop]" :style="{ width: setElWidth(item.width) }"
@@ -12,24 +12,22 @@
     </el-form-item>
     <el-form-item ref="lastItemRef" label="">
       <el-button type="primary" @click="onSearch">
-        <el-icon>
-          <ele-Search />
-        </el-icon>
+        <i class="i-ep-search mr4px h1em w1em" />
         查询
       </el-button>
       <el-button @click="onReset">
-        <el-icon>
-          <ele-Refresh />
-        </el-icon>
+        <i class="i-ep-refresh mr4px h1em w1em" />
         重置
       </el-button>
       <slot />
-      <el-button v-if="!props.data.hideBtn" type="primary" link @click="onToggle">
+      <el-button v-if="hideBtn === false" type="primary" link @click="onToggle">
         <template v-if="defData.showAll">
-          收起<el-icon><ele-ArrowUp /></el-icon>
+          收起
+          <i class="i-ep-arrow-up h1em w1em" />
         </template>
         <template v-else>
-          展开<el-icon><ele-ArrowDown /></el-icon>
+          展开
+          <i class="i-ep-arrow-down h1em w1em" />
         </template>
       </el-button>
     </el-form-item>
@@ -59,6 +57,8 @@ const defData = reactive({
 })
 
 const searchData = ref(props.data)
+
+const hideBtn = computed(() => !!props.data.hideBtn)
 
 // const searchData = reactive({
 //     data: props.data.data,

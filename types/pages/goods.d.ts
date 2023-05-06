@@ -3,7 +3,16 @@
 /**
  * 获取商品分类 - 响应数据
  */
-declare interface GoodsApi_GetClassResponse extends GoodsApi_GetClass {
+declare interface GoodsApi_GetClassResponse {
+
+  "id": number,   // id 2
+  "cat_ids": string,    // 商品分类id列表或逗号分隔的字符串  "1271,1275"
+
+  "custom_name": string,   // 名称 "设备1/设备2"
+  "icon": string,   // "iconfont icon-home_00"
+  "sort": number,   // 1
+  "is_show": 0 | 1,   // 1
+  "lists": GoodsApi_GetClass[]
 
 }
 
@@ -41,7 +50,7 @@ declare interface GoodsApi_GetCartListResponse {
  * 商品详情 - 响应数据
  */
 declare interface GoodsApi_GetInfoResponse {
-  goods_info:GoodsApi_GoodsInfoData,
+  goods_info: GoodsApi_GoodsInfoData,
   "photo_lists": {
     "photo_url": "https://images.yumishe.cn/20220625/202208200259163777.jpg", //相册url
     "sort": 2 //排序
@@ -54,7 +63,7 @@ declare interface GoodsApi_GetInfoResponse {
   }[] //商品关联列表
 }
 
-declare interface GoodsApi_GoodsInfoData{
+declare interface GoodsApi_GoodsInfoData {
   "goods_id": 45, //id
   "goods_abbr": "xxx笔记本777", //简介
   "goods_name": "艾斯瑞 xxx笔记本777 mac-book max xxxxxx", //名称
@@ -78,7 +87,7 @@ declare interface GoodsApi_GoodsInfoData{
   "is_new": 0, //是否新品
   "is_hot": 0, //是否热品
   "is_sale": 1, //上下架
-  "is_collect": 0|1, // 是否已加入收藏    1是0否    
+  "is_collect": 0 | 1, // 是否已加入收藏    1是0否    
   "keywords": "", //关键字
   "title": "xxxxxx", //副标题
   "type_id": 0, //类型id

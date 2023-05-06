@@ -5,7 +5,7 @@
 <template>
   <el-image v-bind="$attrs">
     <template #error>
-      <div class="image-slot">
+      <div class="image-err">
         <i class="i-ep-picture" />
       </div>
     </template>
@@ -13,13 +13,7 @@
 </template>
 
 <style lang="scss" scoped>
-.image-slot {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+.image-error {
   i {
     font-size: 36px;
   }

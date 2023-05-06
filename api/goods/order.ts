@@ -37,4 +37,32 @@ export const OrderApi = {
    */
   getInfo: (data: { main_order_no: string }) => useHttp<OrderApi_GetInfoResponse>('/api/mall_order/order_details', data, { method: 'post' }),
 
+  /**
+   * 获取订单列表
+   * @param data main_order_no:订单编号;
+   * @returns
+   */
+  getOrderList: (data: OrderApi_GetOrderList) => useHttp<OrderApi_GetOrderListResponse>('/api/mall_order/get_order_list', data, { method: 'post' }),
+
+  /**
+   * 取消订单
+   * @param data main_order_no:订单编号;
+   * @returns
+   */
+  cancelOrder: (data: { main_order_no: string }) => useHttp('/api/mall_order/cancel_order', data, { method: 'post' }),
+
+  /**
+   * 确认订单（确认收货）
+   * @param data main_order_no:订单编号;
+   * @returns
+   */
+  confirmOrder: (data: { main_order_no: string }) => useHttp('/api/mall_order/affirm_order', data, { method: 'post' }),
+
+  /**
+   * 删除订单
+   * @param data main_order_no:订单编号;
+   * @returns
+   */
+  delOrder: (data: { main_order_no: string }) => useHttp('/api/mall_order/del_order', data, { method: 'post' }),
+
 }
