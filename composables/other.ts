@@ -2,6 +2,17 @@ import type { FormInstance } from 'element-plus'
 import Big from 'big.js'
 
 /**
+ * 清除
+ */
+export const useClearToken = async () => {
+  const { data } = await useFetch<{ code: number }>('/api/loginOut')
+  if (data.value?.code === 200) {
+    // navigateTo('/')
+    // window.location.href = '/'
+  }
+}
+
+/**
  * 退出登录
  */
 export const useLoginOut = async () => {

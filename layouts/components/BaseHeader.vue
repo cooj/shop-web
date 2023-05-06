@@ -27,10 +27,13 @@
           </div>
         </div>
         <div class="cart">
-          <el-button type="primary" class="min-w150px">
-            <i class="i-ep-shopping-cart-full mr8px" />
-            购物车
-          </el-button>
+          <NuxtLink to="/order/cart">
+            <el-button type="primary" class="min-w150px">
+              <i class="i-ep-shopping-cart-full mr8px" />
+              购物车
+            </el-button>
+          </NuxtLink>
+
           <!-- <el-button>
             <i class="i-ep-shopping-cart-full" />
             批量下单

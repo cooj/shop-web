@@ -34,8 +34,37 @@
     ],
     "antfu/if-newline": "off", // 允许if(a==1) return 1  这种单行的格式
     "antfu/top-level-function": "off",
-    "vue/component-tags-order": ["error", {
-      "order": [ [ "script", "template" ], "style" ]
-    }]
+    "vue/component-tags-order": [
+      "error",
+      {
+        "order": [
+          [
+            "script",
+            "template"
+          ],
+          "style"
+        ]
+      }
+    ],
+    "vue/first-attribute-linebreak": [
+      "warn",
+      {
+        "multiline": "beside"
+      }
+    ],
+    "vue/html-closing-bracket-newline": [
+      "warn",
+      {
+        "multiline": "never"
+      }
+    ],
+    "vue/html-indent": [
+      "warn",
+      2,
+      {
+        "alignAttributesVertically": false
+      }
+    ],
+    "vue/dot-location":"off"
   }
 }

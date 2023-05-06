@@ -9,12 +9,12 @@
   </p>
   <ul class="block">
     <li>
-      <NuxtLink to="/user">
+      <NuxtLink to="/order/list">
         我的订单
       </NuxtLink>
     </li>
     <li>
-      <NuxtLink to="/user/Return">
+      <NuxtLink to="/order/return">
         退换货订单
       </NuxtLink>
     </li>

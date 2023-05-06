@@ -27,7 +27,7 @@ export function getParentNode<T = any>(classifyList: Array<T>, val: T[keyof T], 
       }
     }
   }
-  forFn(classifyList, val)
+  forFn(classifyList || [], val)
   return temp
 }
 

@@ -1,6 +1,7 @@
+<!-- 退货订单 -->
 <template>
   <div>
-    <!-- 我的订单 -->
+    退货订单
   </div>
 </template>
 
@@ -8,12 +9,7 @@
 definePageMeta({
   layout: 'user',
   middleware: 'auth',
-  redirect: {
-    path: '/order/list',
-  },
 })
 </script>
 
-<style  lang="scss" scoped>
-
-</style>
+<style  lang="scss" scoped></style>
