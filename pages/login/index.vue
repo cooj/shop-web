@@ -228,7 +228,7 @@ const getOpenId = async () => {
   } else { // 未注册用户
     defData.type = 3
     const info: LoginApi_Login = {
-      type: 2,
+      type: 3,
       phone: form.phone,
       validate_code: form.validate_code,
       nickname: codeId.value?.data.openid_info.nickname,
