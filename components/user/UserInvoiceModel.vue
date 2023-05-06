@@ -1,4 +1,4 @@
-<!-- 新增、修改地址 -->
+<!-- 新增、修改发票 -->
 <template>
   <!-- auto-height -->
   <BaseDialog
@@ -119,11 +119,11 @@ const rules = reactive<FormRules>({
 
 const comData = computed(() => {
   let dat = {
-    title: '新增地址',
+    title: '新增发票',
   }
   if (defData.type === 2) {
     dat = {
-      title: '修改地址',
+      title: '修改发票',
     }
   }
   return dat

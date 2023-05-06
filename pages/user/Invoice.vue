@@ -46,7 +46,7 @@ const modelRef = ref<InstanceType<typeof UserInvoiceModel>>()
 
 // 新增
 const onAdd = async () => {
-
+   modelRef.value?.onOpenDialog()
 }
 
 // 修改

@@ -180,6 +180,32 @@
             <el-tab-pane label="商品详情" name="1">
               <div v-html="goodsInfo?.goods_desc" />
             </el-tab-pane>
+            <el-tab-pane label="商品问答" name="2">
+              <el-input v-model="form.question" style="width: 300px;margin-right: 10px;" placeholder="输入提问" clearable />
+              <el-button style="background-color: var(--el-color-primary);color: white;" @click="questionClick">
+                发送提问
+              </el-button>
+
+              <el-table :data="defData.tableData" style="width: 100%">
+                <!-- <el-table-column type="expand">
+                  <template #default="props">
+                    <div m="4">
+                      <h3>回答</h3>
+                      <el-table :data="props.row.family">
+                        <el-table-column label="用户" prop="user_name" />
+                        <el-table-column label="内容" prop="content" />
+                      </el-table>
+                    </div>
+                  </template>
+                </el-table-column> -->
+                <el-table-column label="" prop="user_name" />
+                <el-table-column label="" prop="content" />
+              </el-table>
+              <div class="goods-pagination">
+                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
+                  small background layout=" prev, pager, next,total, jumper" :total="defData.total" />
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </div>
@@ -226,12 +252,17 @@
 <script lang="ts" setup>
 import QRCode from 'qrcode'
 import { GoodsApi } from '~/api/goods/list'
+import { InterListApi } from '~/api/user/interList'
 import { RecordApi } from '~/api/user/record'
 
 const route = useRoute()
 const userState = useUserState()
 
 const defData = reactive({
+  user_id: 0,
+  page: 1,
+  total: 10,
+  pageSize: 10,
   leftActive: '1',
   rightActive: '1',
   loading: true,
@@ -239,18 +270,25 @@ const defData = reactive({
   shareVisible: false,
   shareCode: '', // 分享二维码
   shareLink: '', // 分享的链接地址
+  tableData: [] as InterListApi_getListResponse['lists'],
 })
 // 商品信息
-const goodsData = ref<GoodsApi_GetInfoResponse>()
+const goodsData = ref<GoodsApi_GetInfoResponse > ()
 const goodsInfo = ref<GoodsApi_GoodsInfoData>()
 const goodsImgList = ref<string[]>([])
 
 const form = reactive({
   number: 1, // 购买数量
+  question: '', // 问答列表 提问
 })
 
 const initData = async () => {
   const id = Number(route.params.id)
+  // 正则判断id是否为数字
+  if (!(/^[0-9]+$/.test(id))) {
+    defData.loading = false
+    return
+  }
   const { data } = await GoodsApi.getInfo({ goods_id: id })
   if (data.value?.code === 200) {
     const dat = data.value.data
@@ -286,6 +324,43 @@ const initData = async () => {
   }
 }
 initData()
+
+// 问答列表 获取数据
+const interListData = async () => {
+  const param: InterListApi_getList = {
+    is_paging: 1,
+    page: defData.page,
+    pagesize: defData.pageSize,
+    goods_id: Number(route.params.id),
+  }
+  const res = await InterListApi.getList(param)
+  if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
+  defData.tableData = res.data.value.data.lists
+  defData.total = res.data.value.data.total
+}
+interListData()
+
+// 新增问答
+const questionClick = async () => {
+  if (!form.question) return ElMessage.error('请先输入')
+  const user = await userState.getUserInfo()
+  if (user.value) {
+    defData.user_id = user.value.user_id
+  } else {
+    return
+  }
+  const info: InterListApi_addList = {
+    goods_id: Number(route.params.id),
+    user_id: defData.user_id,
+    type: 1,
+    q_id: 0,
+    content: form.question,
+  }
+  const { data: inter } = await InterListApi.addList(info)
+  if (inter.value?.code !== 200) return ElMessage.error(inter.value?.msg)
+  ElMessage.success('成功')
+  form.question = ''
+}
 
 // 商品收藏
 const onCollect = async () => {
