@@ -13,7 +13,7 @@ export const useSystemState = () => {
     if (system.value) return system
     const { data, error } = await CommonApi.getSystem()
     // 接口发生错误时
-    if (error) return system
+    if (error.value) return system
     await wait(800)
     if (data.value?.code === 200) {
       system.value = data.value.data
@@ -50,7 +50,6 @@ export const useUserState = () => {
 
   // 获取用户接口数据
   const getUserData = async () => {
-    console.log('token.value :>> ', token.value)
     if (!token.value) {
       // ElMessage.error('请先登录')
       return userInfo
@@ -59,9 +58,10 @@ export const useUserState = () => {
     const { data, error } = await AccountApi.userInfo()
 
     await wait(800)
-    console.log('error :>> ', error)
+
     // 接口发生错误时
-    if (error) {
+    if (error.value) {
+      // await useClearToken()
       token.value = ''
       return userInfo
     }
