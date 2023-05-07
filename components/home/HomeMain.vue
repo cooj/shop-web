@@ -38,7 +38,7 @@
         </ul>
       </div>
       <client-only>
-        <div class="floor-box">
+        <div  ref="floorRef" class="floor-box">
           <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
             <div class="left">
               <h3 class="tle">
@@ -182,7 +182,7 @@
         </div>
         <Transition v-if="defData.ready" name="slide">
           <!-- mode="out-in" -->
-          <div v-show="!navVisible" class="floor-nav">
+          <div v-show="(!navVisible && floorVisible)" class="floor-nav">
             <a v-for="item in floor?.data" :key="item.storey_id" :href="`#fl${item.storey_id}`">
               {{ item.storey_name }}
             </a>
@@ -215,6 +215,9 @@ const defData = reactive({
 
 const goodsBestRef = ref(null)
 const navVisible = useElementVisibility(goodsBestRef)
+
+const floorRef=ref(null)
+const floorVisible = useElementVisibility(floorRef)
 // const { x, y } = useWindowScroll()
 
 const { data: floor, pending } = await HomeApi.getFloor()
