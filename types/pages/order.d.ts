@@ -169,7 +169,12 @@ declare interface OrderApi_GetOrderList {
  * 获取订单列表 - 响应数据
  */
 declare interface OrderApi_GetOrderListResponse extends ListTotal {
-  "lists": {
+  "lists": OrderApi_GetOrderListItem[]
+
+
+}
+
+declare interface OrderApi_GetOrderListItem{
     "order_id": 17, //订单ID
     "main_order_no": "M20230424090858907460", //主订单号
     "status": 0, //订单状态
@@ -217,7 +222,45 @@ declare interface OrderApi_GetOrderListResponse extends ListTotal {
       "goods_img": ""
     }[]
 
-  }[]
+  
+}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 我的订单 - table数据类型
+declare interface OrderListTableData {
+  index: number; // 序列号
+  order_info: OrderApi_GetOrderListResponse["lists"][0] ; // 订单信息（下单时间排序）	
+  order_mount: number;//订单金额	
+  consignee_info: any; //收货人信息	
+  // 物流/支付信息	
+  status: number; // 订单状态	
 }

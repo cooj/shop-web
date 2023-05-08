@@ -55,3 +55,10 @@ export const useFormVerify = async (formEl: FormInstance | undefined) => {
 export const formatNumber = (num: number, scale = 2) => {
   return new Big(num).toFixed(scale)
 }
+
+export const PAGINATION = {
+  total: 0, // 总条数
+  page: 1, // 当前页面
+  page_size: 20, // 每页显示的数量
+  page_sizes: [20, 50, 100, 200, 500],
+}

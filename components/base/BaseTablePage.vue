@@ -3,7 +3,7 @@
   <div ref="tablePageRef" class="table-page">
     <div class="table-page-content">
       <ElTable ref="tableRef" v-bind="$attrs" :data="props.data" :max-height="tableHeight">
-        <ElTableColumn v-for="(item, index) in headerList" :key="index" v-bind="(item as any)" show-overflow-tooltip>
+        <ElTableColumn v-for="(item, index) in headerList" :key="index" show-overflow-tooltip v-bind="(item as any)">
           <template v-if="item.slotHeader" #header="scope">
             <slot :name="`${item.property}Header`" :scopes="scope" />
           </template>
@@ -57,6 +57,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  autoHeight: {
+    type: Boolean,
+    default: false,
+  }
 })
 
 const emits = defineEmits<{
@@ -72,6 +76,7 @@ const pageRef = ref<InstanceType<typeof ElPagination> | null>(null)
 const { height: tHei } = useElementSize(tablePageRef as any)
 const { height: pageHei } = useElementBounding(pageRef as never)
 const tableHeight = computed(() => {
+  if (props.autoHeight) return 'unset'
   const pHei = pageHei.value ? pageHei.value + 15 : 0
   const hei = Math.floor(tHei.value - pHei) % 2 ? Math.floor(tHei.value - pHei) - 1 : Math.floor(tHei.value - pHei)
   // unset\min-content
@@ -146,6 +151,7 @@ defineExpose({
   // min-height: 100%;
   height: 100%;
   overflow: auto;
+  border: 0;
 
   &-content {
     flex: 1;

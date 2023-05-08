@@ -73,3 +73,17 @@ export const wait = (ms: number) => {
     setTimeout(resolve, ms)
   })
 }
+
+/**
+ * 数组拼接成字符串（去除数组中为false的项）
+ * @param list 需要拼接的数组
+ * @param symbol 连接的符号，默认使用英文逗号
+ * @returns
+ */
+export const strJoin = (list: string[], symbol = ',') => {
+  const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
+  list.forEach((item) => {
+    if (item) arr.push(item)
+  })
+  return arr.join(symbol)
+}
