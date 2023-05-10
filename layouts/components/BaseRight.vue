@@ -1,0 +1,104 @@
+<template>
+  <div class="fixed-box">
+    <ul class="side-ul">
+      <li>
+        <div class="side-item">
+          <i class="i-ep-service" />
+          <p class="text">
+            客服
+          </p>
+        </div>
+      </li>
+      <li>
+        <NuxtLink class="side-item" to="/order/list">
+          <i class="i-ep-user-filled" />
+          <p class="text">
+            我的
+          </p>
+        </NuxtLink>
+      </li>
+      <li>
+        <NuxtLink class="side-item" to="/order/cart">
+          <i class="i-ic-twotone-shopping-cart" />
+          <p class="text">
+            购物车
+          </p>
+        </NuxtLink>
+      </li>
+      <li>
+        <NuxtLink class="side-item" to="/user/browseHistory">
+          <i class="i-ep-list" />
+          <p class="text">
+            浏览历史
+          </p>
+        </NuxtLink>
+      </li>
+      <li>
+        <a class="side-item" href="#">
+          <i class="i-ic-baseline-arrow-upward" />
+          <p class="text">
+            返回顶部
+          </p>
+        </a>
+        <!-- <div class="side-item side-item-top" @click="goBackTop">
+          <i class="i-ic-baseline-arrow-upward" />
+          <p class="text">
+            返回顶部
+          </p>
+        </div> -->
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script lang="ts" setup>
+// const el = ref<HTMLElement | null>(null)
+// const rt = useScroll(el, { behavior: 'smooth' })
+
+// const goBackTop = () => {
+//   console.log('y :>> ', rt)
+// }
+</script>
+
+<style lang="scss" scoped>
+.fixed-box {
+  position: fixed;
+  right: 0;
+  top: 300px;
+}
+
+.side-ul {
+  li {
+    width: 60px;
+    height: 55px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .08);
+    font-size: 12px;
+    background-color: var(--el-color-white);
+  }
+
+  .side-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--el-color-primary);
+      color: var(--el-color-white);
+    }
+
+    &-top {
+      position: relative;
+      font-size: 12px;
+      border-radius: 0;
+    }
+
+    i {
+      font-size: 18px;
+    }
+  }
+}
+</style>

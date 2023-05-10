@@ -181,13 +181,14 @@
               <div v-html="goodsInfo?.goods_desc" />
             </el-tab-pane>
             <el-tab-pane label="商品问答" name="2">
-              <el-input v-model="form.question" style="width: 300px;margin-right: 10px;" placeholder="输入提问" clearable />
-              <el-button style="background-color: var(--el-color-primary);color: white;" @click="questionClick">
-                发送提问
-              </el-button>
+              <ClientOnly>
+                <el-input v-model="form.question" style="width: 300px;margin-right: 10px;" placeholder="输入提问" clearable />
+                <el-button style="background-color: var(--el-color-primary);color: white;" @click="questionClick">
+                  发送提问
+                </el-button>
 
-              <el-table :data="defData.tableData" style="width: 100%">
-                <!-- <el-table-column type="expand">
+                <el-table :data="defData.tableData" style="width: 100%">
+                  <!-- <el-table-column type="expand">
                   <template #default="props">
                     <div m="4">
                       <h3>回答</h3>
@@ -198,13 +199,14 @@
                     </div>
                   </template>
                 </el-table-column> -->
-                <el-table-column label="" prop="user_name" />
-                <el-table-column label="" prop="content" />
-              </el-table>
-              <div class="goods-pagination">
-                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
-                  small background layout=" prev, pager, next,total, jumper" :total="defData.total" />
-              </div>
+                  <el-table-column label="" prop="user_name" />
+                  <el-table-column label="" prop="content" />
+                </el-table>
+                <div class="goods-pagination">
+                  <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
+                    layout=" prev, pager, next,total, jumper" :total="defData.total" />
+                </div>
+              </ClientOnly>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -273,7 +275,7 @@ const defData = reactive({
   tableData: [] as InterListApi_getListResponse['lists'],
 })
 // 商品信息
-const goodsData = ref<GoodsApi_GetInfoResponse > ()
+const goodsData = ref<GoodsApi_GetInfoResponse>()
 const goodsInfo = ref<GoodsApi_GoodsInfoData>()
 const goodsImgList = ref<string[]>([])
 
@@ -281,15 +283,16 @@ const form = reactive({
   number: 1, // 购买数量
   question: '', // 问答列表 提问
 })
+const goods_id = useRouteParam('id')
 
 const initData = async () => {
-  const id = Number(route.params.id)
+  if (!goods_id.value) return
   // 正则判断id是否为数字
-  if (!(/^[0-9]+$/.test(id))) {
+  if (!(/^[0-9]+$/.test(goods_id.value))) {
     defData.loading = false
     return
   }
-  const { data } = await GoodsApi.getInfo({ goods_id: id })
+  const { data } = await GoodsApi.getInfo({ goods_id: Number(goods_id.value) })
   if (data.value?.code === 200) {
     const dat = data.value.data
     const infoData = dat.goods_info

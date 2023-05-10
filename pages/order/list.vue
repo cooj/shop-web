@@ -21,9 +21,9 @@
           下单时间：{{ scopes.row.order_info.cerate_time }}</div>
         <ul v-else class="goods-list">
           <li v-for="item in scopes.row.order_info.goods_info" :key="item.goods_id">
-
-            <el-image class="w55px h55px"
-              src="https://private.zkh.com/PRODUCT/BIG/BIG_AA4478338_01.jpeg?x-oss-process=style/webp_nowatermark_350&timestamp=1672388932000"></el-image>
+            <BaseImage class="w55px h55px" :src="item.goods_img" />
+            <!-- <el-image class="w55px h55px"
+              src="https://private.zkh.com/PRODUCT/BIG/BIG_AA4478338_01.jpeg?x-oss-process=style/webp_nowatermark_350&timestamp=1672388932000"></el-image> -->
             <div class="text">
               <h3 class="tle">
                 <NuxtLink :to="`/goods/detail-${item.goods_id}`">{{ item.goods_name }}</NuxtLink>

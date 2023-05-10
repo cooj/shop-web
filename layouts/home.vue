@@ -4,6 +4,7 @@ import BaseHeader from './components/BaseHeader.vue'
 
 // import BaseMenu from './components/BaseMenu.vue'
 import BaseTop from './components/BaseTop.vue'
+import BaseRight from './components/BaseRight.vue'
 </script>
 
 <template>
@@ -19,5 +20,6 @@ import BaseTop from './components/BaseTop.vue'
       [Home Layout]
     </div>
     <BaseFooter />
+    <BaseRight />
   </main>
 </template>

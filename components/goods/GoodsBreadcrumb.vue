@@ -29,15 +29,15 @@ const goodsClass = await goodsState.getGoodsClass()
 // 设置商品导航菜单
 const breadcrumbList = computed(() => {
   const list: BreadcrumbItemType[] = []
-  if (props.cid) {
-    const arr = getParentNode(goodsClass.value, props.cid, 'cat_id')
-    arr.forEach((item) => {
-      list.push({
-        id: item.cat_id,
-        name: item.cat_name,
-      })
-    })
-  }
+  // if (props.cid) {
+  //   const arr = getParentNode(goodsClass.value, props.cid, 'cat_id')
+  //   arr.forEach((item) => {
+  //     list.push({
+  //       id: item.cat_id,
+  //       name: item.cat_name,
+  //     })
+  //   })
+  // }
   if (props.name) list.push({ id: 0, name: props.name })
 
   return list

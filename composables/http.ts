@@ -23,7 +23,7 @@ export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqO
   if (token.value) {
     headers.token = token.value
   }
-  // @ts-expect-error accept， header暂时不确定ts写法
+
   options.headers = headers
 
   // 设置请求参数
@@ -87,7 +87,7 @@ export const useHttp2 = <T = any>(url: string, data?: RequestDataType, opt?: Req
   if (token.value) {
     headers.token = token.value
   }
-  // @ts-expect-error accept， header暂时不确定ts写法
+
   options.headers = headers
 
   // 设置请求参数

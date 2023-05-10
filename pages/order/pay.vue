@@ -13,7 +13,7 @@
             订单支付
           </el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="mb20px bg-#fff p15px">
+        <div class="mb20px min-h300px bg-#fff p15px">
           <el-result v-if="defData.status === 0" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
             <template #extra>
               <div class="radio-box mb20px">
@@ -43,6 +43,7 @@
               <el-button type="primary" @click="onPayment">
                 立即支付
               </el-button>
+              <div ref="alipayRef" class="hidden" v-html="defData.aliData" />
             </template>
           </el-result>
           <el-result v-else-if="defData.status === 1" icon="success" title="订单支付完成" sub-title="">
@@ -71,27 +72,29 @@
 <script lang="ts" setup>
 import { OrderApi } from '~/api/goods/order'
 
-const route = useRoute()
+const alipayRef = ref<HTMLDivElement>()
+
 const defData = reactive({
   ready: true,
-  status: 0, // 支付状态 0未支付 1已支付 2已取消 3已退款
-  order_no: '',
+  status: -1, // 支付状态 0未支付 1已支付 2已取消 3已退款
+  aliData: '', // 支付宝返回的form表单代码
 })
 
 const form = reactive({
   payType: '' as '' | 1 | 2 | 3,
 })
 
-const order_no = route.query.order_no as string // 订单编号
+// 订单编号
+const order_no = computed(() => {
+  return useRouteQuery('out_trade_no').value || useRouteQuery('order_no').value
+})
 
-// if (!order_no) defData.ready = false
 const initDefaultData = async () => {
-  if (!order_no) return defData.ready = false
-  const { data: res } = await OrderApi.getInfo({ main_order_no: order_no })
+  if (!order_no.value) return defData.ready = false
+  const { data: res } = await OrderApi.getInfo({ main_order_no: order_no.value })
   await wait(500)
-  console.log('res :>> ', res)
+  // console.log('res :>> ', res)
   if (res.value?.code === 200) {
-    defData.order_no = order_no
     defData.status = res.value.data.pay_status
   } else {
     ElMessage.error(res.value?.msg)
@@ -101,15 +104,32 @@ const initDefaultData = async () => {
 
 // 支付
 const onPayment = async () => {
+  if (!order_no.value) return
   if (!form.payType) return ElMessage.error('请选择支付方式')// 验证选择的支付方式是否选择了支付方式
 
-
-  const { data: res } = await OrderApi.payOrder({ main_order_no: defData.order_no, pay_type: form.payType })
-  console.log('res :>> ', res);
+  const { data: res } = await OrderApi.payOrder({ main_order_no: order_no.value, pay_type: form.payType })
+  // console.log(error)
+  // console.log('res :>> ', res)
   if (res.value?.code === 200) {
+    if (form.payType === 2) {
+      defData.aliData = res.value?.data
+      nextTick(() => {
+        const form = alipayRef.value?.firstElementChild as HTMLFormElement
+        form.setAttribute('target', '_blank')
+        form.submit()
+      })
+      // const aliPaySubmit = document.getElementById('alipaySubmit')
+      // if (aliPaySubmit) document.body.removeChild(aliPaySubmit)// 删除动态创建的按钮元素，防止隐藏按钮造成的
+      // const div = document.createElement('div')
+      // div.id = 'aliPaySubmit'
+      // div.innerHTML = res.value?.data
+      // document.body.appendChild(div)
+      // const form = div.firstElementChild as HTMLFormElement
+      // form.setAttribute('target', '_blank')
+      // form.submit()
+    }
     if (form.payType === 3) defData.status = 1
   }
-
 }
 
 initDefaultData()

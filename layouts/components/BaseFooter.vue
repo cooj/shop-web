@@ -74,7 +74,7 @@ const systemInfo = await useSystem.getSystemInfo()
 
 // 获取底部导航
 const { data: footer } = await HomeApi.getArticle()
-const navList = ref(footer.value?.data)
+const navList = computed(() => footer.value?.data)
 // console.log('footer :>> ', footer)
 </script>
 

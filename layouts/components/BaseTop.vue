@@ -5,7 +5,7 @@ const defData = reactive({
 })
 const initData = async () => {
   const user = await userState.getUserInfo()
-
+  console.log('user :>> ', user);
   if (user.value) {
     defData.username = user.value.user_name
   }
