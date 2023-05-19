@@ -22,7 +22,7 @@
                     <BaseImage class="h50px w50px" :src="row.goods_img" />
                   </div>
                   <div class="pl10px">
-                    <NuxtLink class="goods_link" :to="`/goods/detail-${row.goods_id}`" target="_blank">
+                    <NuxtLink class="goods_link" :to="`/goods/${row.goods_id}`" target="_blank">
                       {{ row.goods_name }}
                     </NuxtLink>
                   </div>

@@ -159,11 +159,11 @@
             <el-tab-pane label="推荐商品" name="1">
               <ul class="goods-list">
                 <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
-                  <NuxtLink class="pos" :to="`/goods/detail-${item.goods_id}`">
+                  <NuxtLink class="pos" :to="`/goods/${item.goods_id}`">
                     <img :src="item.goods_img" :alt="item.goods_name" :title="item.goods_name">
                   </NuxtLink>
                   <div class="tle">
-                    <NuxtLink :to="`/goods/detail-${item.goods_id}`">
+                    <NuxtLink :to="`/goods/${item.goods_id}`">
                       {{ item.goods_name }}
                     </NuxtLink>
                   </div>

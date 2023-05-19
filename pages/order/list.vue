@@ -26,7 +26,7 @@
               src="https://private.zkh.com/PRODUCT/BIG/BIG_AA4478338_01.jpeg?x-oss-process=style/webp_nowatermark_350&timestamp=1672388932000"></el-image> -->
             <div class="text">
               <h3 class="tle">
-                <NuxtLink :to="`/goods/detail-${item.goods_id}`">{{ item.goods_name }}</NuxtLink>
+                <NuxtLink :to="`/goods/${item.goods_id}`">{{ item.goods_name }}</NuxtLink>
               </h3>
               <div class="pce text-12px c-#888"> 价格：<span class="mr5px">￥{{ item.price }}</span>
                 数量：<span>{{ item.goods_number }}</span>

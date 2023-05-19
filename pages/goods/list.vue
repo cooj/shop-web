@@ -76,11 +76,11 @@
             </dd>
           </dl>
           <dl class="goods-opt-dl">
-            <dd class="goods-opt-item cursor-pointer" :class="{ show: defData.isList }" @click="toggleShowList(true)">
-              <i class="i-ic-baseline-table-rows" />
-            </dd>
             <dd class="goods-opt-item cursor-pointer" :class="{ show: !defData.isList }" @click="toggleShowList(false)">
               <i class="i-ep-menu" />
+            </dd>
+            <dd class="goods-opt-item cursor-pointer" :class="{ show: defData.isList }" @click="toggleShowList(true)">
+              <i class="i-ic-baseline-table-rows" />
             </dd>
             <dd class="goods-opt-item b-0">
               共 4,694 件相关商品
@@ -111,19 +111,18 @@
           <dd v-for="item in 10" :key="item" class="goods-item-s">
             <div class="g-info w500px">
               <div class="g-info-left">
-                <NuxtLink to="/goods/detail-10" target="_blank">
+                <NuxtLink to="/goods/10" target="_blank">
                   <div class="lazyload-wrap sku-img-wrap real-image">
                     <img
                       src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0979931_01.jpg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1664162899000"
                       alt="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个"
-                      title="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个" class=""
-                    >
+                      title="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个" class="">
                   </div>
                 </NuxtLink>
               </div>
               <div class="g-info-right">
                 <div class="name">
-                  <NuxtLink class="link" to="/goods/detail-10" target="_blank">
+                  <NuxtLink class="link" to="/goods/10" target="_blank">
                     FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个
                   </NuxtLink>
                 </div>
@@ -190,11 +189,10 @@
         <ul v-else class="goods-list-ul">
           <li v-for="item in 11" :key="item">
             <div class="goods-list-item">
-              <NuxtLink to="/goods/detail-500" target="_blank">
+              <NuxtLink to="/goods/500" target="_blank">
                 <img
                   src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0924616_01.jpeg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1673973422000"
-                  alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class=""
-                >
+                  alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class="">
               </NuxtLink>
 
               <div class="goods-price">
@@ -212,7 +210,7 @@
                 </div>
               </div>
               <div class="goods-name" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台">
-                <NuxtLink to="/goods/detail-300" target="_blank">
+                <NuxtLink to="/goods/300" target="_blank">
                   LEEB/里博 布洛维转换手持式里氏<em>硬度计</em> TH130 1台 布洛维转换手持式里氏硬度计
                 </NuxtLink>
               </div>
@@ -248,11 +246,9 @@
         </el-table> -->
       </div>
       <div class="goods-pagination">
-        <el-pagination
-          v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
+        <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
           :page-sizes="defData.pageSizes" small background layout=" prev, pager, next,total, jumper"
-          :total="defData.total"
-        />
+          :total="defData.total" />
       </div>
     </div>
   </section>
@@ -270,7 +266,7 @@ const onChange = (status: boolean) => {
 }
 
 const defData = reactive({
-  isList: true, // 商品显示列表，还是网格
+  isList: false, // 商品显示列表，还是网格
   breadcrumbList: [],
   tableData: [] as any[],
   page: 1,
@@ -400,11 +396,12 @@ definePageMeta({
     }
   }
 }
+
 .goods-list-ul {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(5, 1fr);
-    padding: 10px 0;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 10px 0;
 }
 
 // 网格

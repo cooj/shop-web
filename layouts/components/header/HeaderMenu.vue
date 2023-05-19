@@ -6,13 +6,13 @@
         {{ item.nav_name }}
       </NuxtLink>
     </el-menu-item>
-    <el-menu-item index="2">
+    <!-- <el-menu-item index="2">
       <NuxtLink to="/goods/list">
         品牌导航
       </NuxtLink>
     </el-menu-item>
     <el-menu-item index="3">
-      <NuxtLink to="/goods/detail-2">
+      <NuxtLink to="/goods/2">
         行家精选
       </NuxtLink>
     </el-menu-item>
@@ -30,7 +30,7 @@
       <NuxtLink to="/goods/detail3">
         内容资讯
       </NuxtLink>
-    </el-menu-item>
+    </el-menu-item> -->
   </el-menu>
 </template>
 

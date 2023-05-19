@@ -10,20 +10,13 @@ import HeaderUser from './HeaderUser.vue'
 const route = useRoute()
 // console.log('route :>> ', route)
 
-const defData = reactive({
-  isIndex: false,
-})
-
-// 监听是否为首页，显示首页模块头部内容
-watch(() => route.path, () => {
-  defData.isIndex = route.path === '/'
-}, {
-  immediate: true,
+const isIndex = computed(() => {
+  return route.path === '/'
 })
 </script>
 
 <template>
-  <div class="nav-banner" :class="defData.isIndex ? 'index' : ''">
+  <div class="nav-banner" :class="isIndex ? 'index' : ''">
     <div class="nav">
       <div class="flex container">
         <div class="left-box">
@@ -32,7 +25,7 @@ watch(() => route.path, () => {
         <HeaderMenu />
       </div>
     </div>
-    <div v-if="defData.isIndex" class="banner">
+    <div v-if="isIndex" class="banner">
       <div class="h100% flex container">
         <div class="left-box">
           <!-- 占位 -->
@@ -48,7 +41,7 @@ watch(() => route.path, () => {
         </div>
       </div>
     </div>
-    <div v-if="defData.isIndex" class="market">
+    <div v-if="isIndex" class="market">
       <div class="grid container">
         <NuxtLink to="/">
           <img class="h150px w100%" src="assets/images/pic/card1.png" alt="">
@@ -75,7 +68,7 @@ watch(() => route.path, () => {
 .nav-banner {
   // --banner-left-width: 230px;
   // --banner-right-width: 230px;
-  --banner-left-width: var(--m-aside-width,230px);
+  --banner-left-width: var(--m-aside-width, 230px);
   --banner-right-width: 230px;
   --banner-width: 720px;
   --banner-height: 400px;
