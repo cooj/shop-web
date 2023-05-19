@@ -19,7 +19,7 @@
                             <template #default="{ row }">
                                 <div class="h50px flex">
                                     <div class="goods_img">
-                                        <BaseImage class="h50px w50px" :src="row.goods_img" />
+                                        <CoImage class="h50px w50px" :src="row.goods_img" />
                                     </div>
                                     <div class="pl10px">
                                         <NuxtLink class="goods_link" :to="`/goods/${row.goods_id}`" target="_blank">

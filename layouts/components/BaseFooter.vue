@@ -19,7 +19,7 @@
                 </ul>
                 <div class="footer-right">
                     <div class="footer-logo">
-                        <BaseImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
+                        <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
                         <p> 售后电话 {{ systemInfo?.sale_tel }}</p>
                         <p>工作时间 {{ systemInfo?.work_time }}</p>
                     </div>
@@ -28,7 +28,7 @@
                             <div class="mb5px">
                                 公众号二维码
                             </div>
-                            <BaseImage class="w110px pb100%" :src="systemInfo?.wx_code" />
+                            <CoImage class="w110px pb100%" :src="systemInfo?.wx_code" />
                             <!-- <div class="footer-code-item">
                 <div class="mb5px">
                   公众号二维码

@@ -1,7 +1,7 @@
 <!-- 新增、修改发票 -->
 <template>
     <!-- auto-height -->
-    <BaseDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden :title="comData.title"
+    <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden :title="comData.title"
         width="680px" @close="onClose" @cancel="onClose" @confirm="onConfirm">
         <el-form ref="formRef" :model="form.data" :label-width="130" :rules="rules">
             <el-row>
@@ -57,7 +57,7 @@
                 </el-col>
             </el-row>
         </el-form>
-    </BaseDialog>
+    </CoDialog>
 </template>
 
 <script lang="ts" setup>

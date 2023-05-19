@@ -37,7 +37,7 @@
                             <span style="color: var(--el-color-primary);"> (请下载模板打印，盖章后拍照上传认证图片)</span>
                         </el-form-item>
                         <el-form-item prop="enterprise_file" label="认证图片：">
-                            <BaseUpload v-model="form.enterprise_file" />
+                            <CoUpload v-model="form.enterprise_file" />
                         </el-form-item>
                     </el-tab-pane>
                     <el-tab-pane label="企业认证" name="second">

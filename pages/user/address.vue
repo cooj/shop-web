@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import UserAddressModel from '~/components/user/UserAddressModel.vue'
+import { UserAddressModel } from '#components'
 
 import { UserAddressApi } from '~/api/user/address'
 

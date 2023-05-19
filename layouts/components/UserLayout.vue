@@ -55,17 +55,17 @@
                             我关注的
                         </dt>
                         <dd>
-                            <NuxtLink to="/user/myCollection">
+                            <NuxtLink to="/user/collect">
                                 我的收藏
                             </NuxtLink>
                         </dd>
                         <dd>
-                            <NuxtLink to="/user/interList">
+                            <NuxtLink to="/user/question">
                                 问答列表
                             </NuxtLink>
                         </dd>
                         <dd>
-                            <NuxtLink to="/user/browseHistory">
+                            <NuxtLink to="/user/history">
                                 浏览历史
                             </NuxtLink>
                         </dd>
@@ -111,48 +111,48 @@
 
 <style lang="scss" scoped>
 .router-link-active {
-  color: var(--el-color-primary);
+    color: var(--el-color-primary);
 }
 
 .layout-box {
-  padding: 20px 0;
+    padding: 20px 0;
 
-  .left {
-    width: var(--m-aside-width);
-    margin-right: 10px;
-    background-color: var(--el-color-white);
-  }
+    .left {
+        width: var(--m-aside-width);
+        margin-right: 10px;
+        background-color: var(--el-color-white);
+    }
 
-  .right {
-    background-color: var(--el-color-white);
+    .right {
+        background-color: var(--el-color-white);
 
-  }
+    }
 }
 
 .dl-list {
-  text-align: center;
-  padding-top: 10px;
+    text-align: center;
+    padding-top: 10px;
 
-  dt {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size:15px;
-    line-height: 2;
-  }
-
-  dd {
-    font-size: 14px;
-    line-height: 32px;
-
-    a {
-      display: block;
-
-      &:hover {
-        color: var(--el-color-primary);
-      }
+    dt {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 2;
     }
-  }
+
+    dd {
+        font-size: 14px;
+        line-height: 32px;
+
+        a {
+            display: block;
+
+            &:hover {
+                color: var(--el-color-primary);
+            }
+        }
+    }
 }
 </style>

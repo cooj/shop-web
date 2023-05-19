@@ -1,8 +1,8 @@
 <template>
-    <div ref="tablePageRef" class="table-page">
-        <div class="table-page-content">
+    <div ref="tablePageRef" class="co-table">
+        <div class="co-table-content">
             <ElTable ref="tableRef" v-bind="$attrs" :data="props.data" :max-height="tableHeight">
-                <ElTableColumn v-for="(item, index) in headerList" :key="index" show-overflow-tooltip v-bind="item as any">
+                <ElTableColumn v-for="(item, index) in headerList" :key="index" show-overflow-tooltip v-bind="item">
                     <template v-if="item.slotHeader" #header="scope">
                         <slot :name="`${item.property}Header`" :scopes="scope" />
                     </template>
@@ -15,7 +15,7 @@
             </ElTable>
         </div>
         <ElPagination v-if="defData.pagination.total" ref="pageRef" v-model:current-page="defData.pagination.page"
-            v-model:page-size="defData.pagination.page_size" small="small" :page-sizes="defData.pagination.page_sizes"
+            v-model:page-size="defData.pagination.page_size" small :page-sizes="defData.pagination.page_sizes"
             :total="defData.pagination.total" :pager-count="5" background layout="total, sizes, prev, pager, next, jumper"
             class="mt15px" @size-change="onHandleSizeChange" @current-change="onHandleCurrentChange" />
     </div>
@@ -28,7 +28,9 @@ import { ElPagination, ElTable, ElTableColumn } from 'element-plus'
 // 分页
 type Pagination = BaseTableDataType['pagination']
 
-type TableHeaderType = BaseTableDataType['tableHeader'] | typeof ElTableColumn[]
+// TODO 暂时设置为any，vue3.3可设设置 generic="T"，泛型组件
+// type TableHeaderType = BaseTableHeaderType<any, any> & TableColumnCtx<any>
+type TableHeaderType = any
 
 // type PropsDataType={
 //     data:TableType["data"],
@@ -45,7 +47,7 @@ const props = defineProps({
         default: () => [],
     },
     tableHeader: {
-        type: Array as PropType<TableHeaderType>,
+        type: Array as PropType<TableHeaderType[]>,
         required: true,
     },
     page: {
@@ -63,8 +65,8 @@ const props = defineProps({
 })
 
 const emits = defineEmits<{
-  (e: 'update:page', param: Pagination): void
-  (e: 'update:table-header', param: TableHeaderType): void
+    (e: 'update:page', param: Pagination): void
+    (e: 'update:table-header', param: TableHeaderType[]): void
 }>()
 
 const tableRef = ref<TableInstance>()
@@ -131,29 +133,30 @@ const onHandleSizeChange = async (val: number) => {
 const headerList = computed(() => {
     return props.tableHeader.map(item => item)
 })
-const setHeader = ref(props.tableHeader)
-// 设置 tool header 数据
-// const setHeader = computed(() => {
-//  return props.header.filter((v) => v.isCheck);
-// });
-const moveRef = ref<HTMLDivElement>()
+
+// const setHeader = ref(props.tableHeader)
+// // 设置 tool header 数据
+// // const setHeader = computed(() => {
+// //  return props.header.filter((v) => v.isCheck);
+// // });
+// const moveRef = ref<HTMLDivElement>()
 
 defineExpose({
     tableRef,
 })
 </script>
 
-<style lang="scss" scoped>
-.table-page {
-  display: flex;
-  flex-direction: column;
-  // min-height: 100%;
-  height: 100%;
-  overflow: auto;
-  border: 0;
+<style lang="scss">
+.co-table {
+    display: flex;
+    flex-direction: column;
+    // min-height: 100%;
+    height: 100%;
+    overflow: auto;
+    border: 0;
 
-  &-content {
-    flex: 1;
-  }
+    &-content {
+        flex: 1;
+    }
 }
 </style>

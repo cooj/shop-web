@@ -21,7 +21,8 @@
                                 </div>
                                 <div class="gt">
                                     <div class="price1">
-                                        <b>￥{{ goodsInfo?.shop_price }}<span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit }}</span></b>
+                                        <b>￥{{ goodsInfo?.shop_price }}<span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit
+                                        }}</span></b>
                                         <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
                                     </div>
                                 </div>
@@ -137,7 +138,7 @@
                                     <!-- 购买数量 -->
                                 </div>
                                 <div class="gt">
-                                    <el-button type="primary" size="large">
+                                    <el-button type="primary" size="large" @click="onBuyGoods">
                                         立即购买
                                     </el-button>
                                     <el-button type="primary" plain size="large" @click="onAddCart">
@@ -182,8 +183,10 @@
                         </el-tab-pane>
                         <el-tab-pane label="商品问答" name="2">
                             <ClientOnly>
-                                <el-input v-model="form.question" style="width: 300px;margin-right: 10px;" placeholder="输入提问" clearable />
-                                <el-button style="background-color: var(--el-color-primary);color: white;" @click="questionClick">
+                                <el-input v-model="form.question" style="width: 300px;margin-right: 10px;"
+                                    placeholder="输入提问" clearable />
+                                <el-button style="background-color: var(--el-color-primary);color: white;"
+                                    @click="questionClick">
                                     发送提问
                                 </el-button>
 
@@ -203,8 +206,8 @@
                                     <el-table-column label="" prop="content" />
                                 </el-table>
                                 <div class="goods-pagination">
-                                    <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
-                                        layout=" prev, pager, next,total, jumper" :total="defData.total" />
+                                    <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
+                                        small background layout=" prev, pager, next,total, jumper" :total="defData.total" />
                                 </div>
                             </ClientOnly>
                         </el-tab-pane>
@@ -323,7 +326,7 @@ const initData = async () => {
             // navigateTo('/404')
         }
     } else {
-    //
+        //
     }
 }
 initData()
@@ -373,7 +376,7 @@ const onCollect = async () => {
     }
     // 已经收藏了，取消收藏状态
     if (goodsInfo.value?.is_collect) {
-    // 清除收藏
+        // 清除收藏
         const params: RecordApi_Del = {
             goods_ids: goodsInfo.value.goods_id.toString(),
             type: 1,
@@ -391,9 +394,22 @@ const onCollect = async () => {
         }
         const { data } = await RecordApi.add(params)
         if (data.value?.code === 200) {
-      goodsInfo.value!.is_collect = 1
+            goodsInfo.value!.is_collect = 1
         }
     }
+}
+
+// 立即购买
+const onBuyGoods = () => {
+    const param = {
+        goods_id: goodsInfo.value!.goods_id,
+        goods_number: form.number,
+    }
+
+    navigateTo({
+        path: '/order/confirm',
+        query: param,
+    })
 }
 
 // 加入购物车
@@ -420,6 +436,9 @@ const onAddCart = async () => {
 
 // 商品分享
 const onShare = async () => {
+    console.log(userState.userInfo.value)
+
+    console.log(userState.userInfo.value?.user_id)
     if (userState.userInfo.value?.user_id) {
         defData.shareLink = `${location.origin}/login/register?id=${userState.userInfo.value?.user_id}`
         if (!defData.shareCode) {
@@ -464,19 +483,19 @@ const onCopy = async (type: 'text' | 'img') => {
             document.body.removeChild(e)
             ElMessage.success('复制成功')
         }
-    // navigator.clipboard.writeText(defData.shareLink).then(() => {
-    //   ElMessage.success('复制成功')
-    // }).catch(() => {
-    //   const e = document.createElement('textarea')
-    //   document.body.appendChild(e)
-    //   e.innerHTML = defData.shareLink
-    //   e.select()
-    //   if (document.execCommand('copy')) {
-    //     document.execCommand('copy')
-    //   }
-    //   document.body.removeChild(e)
-    //   ElMessage.success('复制成功')
-    // })
+        // navigator.clipboard.writeText(defData.shareLink).then(() => {
+        //   ElMessage.success('复制成功')
+        // }).catch(() => {
+        //   const e = document.createElement('textarea')
+        //   document.body.appendChild(e)
+        //   e.innerHTML = defData.shareLink
+        //   e.select()
+        //   if (document.execCommand('copy')) {
+        //     document.execCommand('copy')
+        //   }
+        //   document.body.removeChild(e)
+        //   ElMessage.success('复制成功')
+        // })
     } else {
         const myBlob = base64ToBlob(defData.shareCode)
         navigator.clipboard.write([new window.ClipboardItem({ [myBlob.type]: myBlob })]).then(() => {
@@ -501,12 +520,14 @@ const onApprove = () => {
     if (userState.userInfo.value?.user_id) {
         navigateTo('/login')
     } else {
-    // 转到企业认证页面
+        // 转到企业认证页面
     }
 }
 
 // 添加商品浏览历史
 const onHistory = async () => {
+    // 只在客户端时执行
+    if (!process.client) return
     // 进入页面2秒后加入历史记录中
     await wait(2000)
     if (userState.userInfo.value?.user_id) {
@@ -530,227 +551,227 @@ definePageMeta({
 
 <style lang="scss" scoped>
 .goods-main {
-  display: flex;
-  justify-content: space-between;
-  --goods-img-zoom-width: 400px;
-  --goods-right-width: 230px;
-
-  .goods-zoom {
-    width: var(--goods-img-zoom-width);
-    min-height: var(--goods-img-zoom-width);
-    background-color: var(--el-color-white);
-
-    .image-err {
-      background-color: var(--el-color-white);
-    }
-
-    :deep(.swiper-box) {
-      margin-bottom: 10px;
-      --swiper-navigation-sides-offset: 8px;
-
-      .swp {
-        width: calc(100% - 60px);
-      }
-
-    }
-  }
-
-  .goods-cen {
-    --goods-cen-left-blank: 10px;
-    width: calc(100% - var(--goods-img-zoom-width) - var(--goods-right-width) - var(--goods-cen-left-blank));
-    margin-left: var(--goods-cen-left-blank);
-    background-color: var(--el-color-white);
-    padding: 10px;
-    padding-left: 20px;
-    padding-top: 20px;
-  }
-
-  .goods-right {
-    width: var(--goods-right-width);
-    background-color: var(--el-color-white);
-    padding: 10px;
     display: flex;
-    align-items: center;
-  }
+    justify-content: space-between;
+    --goods-img-zoom-width: 400px;
+    --goods-right-width: 230px;
 
-  .goods-tle {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
+    .goods-zoom {
+        width: var(--goods-img-zoom-width);
+        min-height: var(--goods-img-zoom-width);
+        background-color: var(--el-color-white);
 
-  .goods-pros {
+        .image-err {
+            background-color: var(--el-color-white);
+        }
 
-    >li {
-      font-size: 14px;
-      display: flex;
-      text-align: left;
-      font-weight: normal;
-      // line-height: 24px;
-      line-height: 1.6;
+        :deep(.swiper-box) {
+            margin-bottom: 10px;
+            --swiper-navigation-sides-offset: 8px;
 
-      .lt {
-        width: 80px;
-        padding: 5px 8px;
-
-        color: var(--el-text-color-secondary);
-      }
-
-      .gt {
-        flex: 1;
-        padding: 5px 8px;
-        color: var(--el-text-color-primary);
-
-        .price1 {
-
-          b {
-            font-size: 28px;
-            color: var(--el-color-primary);
-
-            span {
-              font-size: 70%;
-              font-weight: normal;
+            .swp {
+                width: calc(100% - 60px);
             }
-          }
 
         }
-
-        .price2 {
-          font-size: 16px;
-          text-decoration: line-through;
-          color: var(--el-text-color-secondary);
-        }
-
-        .price3 {
-          display: inline-flex;
-          align-items: center;
-          padding-left: 3px;
-          border: 1px solid var(--el-color-info);
-          font-size: 12px;
-          cursor: pointer;
-
-          &:hover {
-            color: var(--el-color-primary);
-            border-color: var(--el-color-primary);
-          }
-        }
-      }
     }
 
-    .buy-item {
-      :deep(.el-button) {
-        --el-font-size-base: 16px;
-      }
+    .goods-cen {
+        --goods-cen-left-blank: 10px;
+        width: calc(100% - var(--goods-img-zoom-width) - var(--goods-right-width) - var(--goods-cen-left-blank));
+        margin-left: var(--goods-cen-left-blank);
+        background-color: var(--el-color-white);
+        padding: 10px;
+        padding-left: 20px;
+        padding-top: 20px;
     }
 
-  }
+    .goods-right {
+        width: var(--goods-right-width);
+        background-color: var(--el-color-white);
+        padding: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .goods-tle {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .goods-pros {
+
+        >li {
+            font-size: 14px;
+            display: flex;
+            text-align: left;
+            font-weight: normal;
+            // line-height: 24px;
+            line-height: 1.6;
+
+            .lt {
+                width: 80px;
+                padding: 5px 8px;
+
+                color: var(--el-text-color-secondary);
+            }
+
+            .gt {
+                flex: 1;
+                padding: 5px 8px;
+                color: var(--el-text-color-primary);
+
+                .price1 {
+
+                    b {
+                        font-size: 28px;
+                        color: var(--el-color-primary);
+
+                        span {
+                            font-size: 70%;
+                            font-weight: normal;
+                        }
+                    }
+
+                }
+
+                .price2 {
+                    font-size: 16px;
+                    text-decoration: line-through;
+                    color: var(--el-text-color-secondary);
+                }
+
+                .price3 {
+                    display: inline-flex;
+                    align-items: center;
+                    padding-left: 3px;
+                    border: 1px solid var(--el-color-info);
+                    font-size: 12px;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: var(--el-color-primary);
+                        border-color: var(--el-color-primary);
+                    }
+                }
+            }
+        }
+
+        .buy-item {
+            :deep(.el-button) {
+                --el-font-size-base: 16px;
+            }
+        }
+
+    }
 }
 
 .goods-cont {
-  display: flex;
-  justify-content: space-between;
-  --goods-cont-left-width: 250px;
-  margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    --goods-cont-left-width: 250px;
+    margin: 20px 0;
 
-  .lt {
-    width: var(--goods-cont-left-width);
+    .lt {
+        width: var(--goods-cont-left-width);
+
+        :deep(.el-tabs--top) {
+
+            // :not(:last-child)
+            .el-tabs__item.is-top:nth-child(2) {
+                margin-left: 20px;
+            }
+        }
+    }
+
+    .gt {
+        width: calc(100% - var(--goods-cont-left-width) - 10px);
+        background-color: var(--el-color-white);
+
+    }
 
     :deep(.el-tabs--top) {
 
-      // :not(:last-child)
-      .el-tabs__item.is-top:nth-child(2) {
-        margin-left: 20px;
-      }
-    }
-  }
+        // :not(:last-child)
+        .el-tabs__item {
+            font-weight: bold;
+        }
 
-  .gt {
-    width: calc(100% - var(--goods-cont-left-width) - 10px);
-    background-color: var(--el-color-white);
-
-  }
-
-  :deep(.el-tabs--top) {
-
-    // :not(:last-child)
-    .el-tabs__item {
-      font-weight: bold;
+        .el-tabs__item.is-top:nth-child(2) {
+            // padding-left: 20px;
+            margin-left: 20px;
+        }
     }
 
-    .el-tabs__item.is-top:nth-child(2) {
-      // padding-left: 20px;
-      margin-left: 20px;
-    }
-  }
-
-  :deep(.el-tabs__content) {
-    padding: 10px;
-  }
-
-  .goods-lt-tabs {
-    background-color: var(--el-color-white);
-    min-height: 350px;
-  }
-
-  .goods-gt-tabs {
     :deep(.el-tabs__content) {
-      padding: 15px;
+        padding: 10px;
     }
-  }
+
+    .goods-lt-tabs {
+        background-color: var(--el-color-white);
+        min-height: 350px;
+    }
+
+    .goods-gt-tabs {
+        :deep(.el-tabs__content) {
+            padding: 15px;
+        }
+    }
 }
 
 .goods-list {
-  li {
-    padding: 10px;
+    li {
+        padding: 10px;
 
-    +li {
-      border-top: 1px dashed var(--el-border-color-light);
+        +li {
+            border-top: 1px dashed var(--el-border-color-light);
+        }
     }
-  }
 
-  .pos {
-    padding-bottom: 100%;
-    display: block;
-  }
+    .pos {
+        padding-bottom: 100%;
+        display: block;
+    }
 
-  .tle {
-    height: 40px;
-    margin-bottom: 8px;
+    .tle {
+        height: 40px;
+        margin-bottom: 8px;
 
-    a {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      line-height: 20px;
-      max-height: 40px;
-      font-size: 14px;
-      color: var(--el-text-color-regular);
+        a {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 20px;
+            max-height: 40px;
+            font-size: 14px;
+            color: var(--el-text-color-regular);
 
-      &:hover {
-        cursor: pointer;
+            &:hover {
+                cursor: pointer;
+                color: var(--el-color-primary);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .pce {
+        font-size: 13px;
+        font-weight: bold;
         color: var(--el-color-primary);
-        text-decoration: underline;
-      }
     }
-  }
-
-  .pce {
-    font-size: 13px;
-    font-weight: bold;
-    color: var(--el-color-primary);
-  }
 }
 
 .no-goods-box {
-  margin: 20px 0;
-  padding: 30px;
-  border: 1px solid var(--el-border-color-light);
-  background-color: var(--el-color-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
+    margin: 20px 0;
+    padding: 30px;
+    border: 1px solid var(--el-border-color-light);
+    background-color: var(--el-color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
 }
 </style>

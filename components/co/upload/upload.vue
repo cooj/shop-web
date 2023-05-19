@@ -1,7 +1,7 @@
 <template>
-    <div class="upload-box" :class="`limit${props.limit}`">
-        <el-upload v-if="props.type === 'text'" v-model:file-list="defData.uploadList" class="upload-text"
-            :class="{ 'hide-upload': defData.hideUpload }" action="/" list-type="text" :limit="props.limit"
+    <div class="co-upload" :class="`limit${props.limit}`">
+        <el-upload v-if="props.type === 'text'" v-model:file-list="defData.uploadList" class="co-upload-text"
+            :class="{ 'co-upload-hide': defData.hideUpload }" action="/" list-type="text" :limit="props.limit"
             :on-change="onImgChange" :auto-upload="false" :accept="props.accept" :multiple="props.multiple">
             <!--  :on-preview="onImgPreview" :on-remove="onImgRemove" -->
             <el-button type="primary" link>
@@ -16,7 +16,7 @@
                 </el-button>
             </template>
         </el-upload>
-        <el-upload v-else v-model:file-list="defData.uploadList" :class="{ 'hide-upload': defData.hideUpload }" action="/"
+        <el-upload v-else v-model:file-list="defData.uploadList" :class="{ 'co-upload-hide': defData.hideUpload }" action="/"
             list-type="picture-card" :limit="props.limit" :on-change="onImgChange" :auto-upload="false" :accept="props.accept"
             :multiple="props.multiple">
             <i class="i-ep-plus block" />
@@ -197,7 +197,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.hide-upload {
+.co-upload-hide {
   :deep() {
     .el-upload {
       display: none;
@@ -205,7 +205,7 @@ defineExpose({
   }
 }
 
-.upload-box {
+.co-upload {
   &.limit1 {
     :deep(.el-upload-list--picture-card) {
 
@@ -229,7 +229,7 @@ defineExpose({
       opacity: 1;
     }
 
-    .upload-text {
+    .co-upload-text {
 
       .el-upload-list--text {
         margin: 0;

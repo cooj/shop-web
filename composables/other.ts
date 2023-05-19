@@ -7,7 +7,7 @@ import Big from 'big.js'
  * @param init 默认值
  * @returns
  */
-export function useRouteParam<T = string>(name: string, init?: T) {
+export function useRouteParam<T = string>(name: string, init = '' as T) {
     const route = useRoute()
     return computed(() => route.params[name] as T ?? init)
 }
@@ -17,7 +17,7 @@ export function useRouteParam<T = string>(name: string, init?: T) {
  * @param init
  * @returns
  */
-export function useRouteQuery<T = string>(name: string, init?: T) {
+export function useRouteQuery<T = string>(name: string, init = '' as T) {
     const route = useRoute()
     return computed(() => route.query[name] as T ?? init)
 }

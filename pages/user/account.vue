@@ -29,7 +29,7 @@
                 <el-row>
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                         <el-form-item prop="headimgurl" label="头像：">
-                            <BaseUpload v-model="form.headImgUrl" />
+                            <CoUpload v-model="form.headImgUrl" />
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="20" :md="18" :lg="14" :xl="14">

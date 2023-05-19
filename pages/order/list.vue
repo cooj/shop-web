@@ -1,7 +1,7 @@
 <!-- 订单列表 -->
 <template>
     <div>
-        <BaseFormTool :data="searchData" inline @submit.prevent="onSearch">
+        <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
             <template #pay_type="{ row }">
                 <el-select v-model="row.pay_type" filterable clearable placeholder="">
                     <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
@@ -12,8 +12,8 @@
                     <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item" :value="index" />
                 </el-select>
             </template>
-        </BaseFormTool>
-        <BaseTablePage v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
+        </CoTableTool>
+        <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
             :data="tableData.data" :span-method="arraySpanMethod" auto-height scrollbar-always-on border
             @update:page="onHandleCurrentChange">
             <template #order_info="{ scopes }">
@@ -23,7 +23,7 @@
                 </div>
                 <ul v-else class="goods-list">
                     <li v-for="item in scopes.row.order_info.goods_info" :key="item.goods_id">
-                        <BaseImage class="h55px w55px" :src="item.goods_img" />
+                        <CoImage class="h55px w55px" :src="item.goods_img" />
                         <!-- <el-image class="w55px h55px"
               src="https://private.zkh.com/PRODUCT/BIG/BIG_AA4478338_01.jpeg?x-oss-process=style/webp_nowatermark_350&timestamp=1672388932000"></el-image> -->
                         <div class="text">
@@ -90,7 +90,7 @@
                     </el-button>
                 </template>
             </template>
-        </BaseTablePage>
+        </CoTable>
     </div>
 </template>
 

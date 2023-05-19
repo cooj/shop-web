@@ -1,6 +1,7 @@
 <template>
     <ClientOnly>
-        <el-dialog v-model="visible" v-bind="$attrs" :fullscreen="defData.fullscreen" draggable @close="onClose">
+        <el-dialog v-model="visible" class="co-dialog" v-bind="$attrs" :fullscreen="defData.fullscreen" draggable
+            @close="onClose">
             <template #header>
                 <span class="el-dialog__title">
                     {{ props.title }}
@@ -101,37 +102,37 @@ const onConfirm = () => {
 
 <style lang="scss" scoped>
 .dialog-body-box {
-  display: flex;
-  flex-direction: column;
-  height: calc(70vh - 150px);
+    display: flex;
+    flex-direction: column;
+    height: calc(70vh - 150px);
 
-  &.auto-height {
-    height: auto;
-  }
+    &.auto-height {
+        height: auto;
+    }
 
-  :deep(>.dialog-flex) {
-    flex: 1;
-    overflow: auto;
-  }
+    :deep(>.dialog-flex) {
+        flex: 1;
+        overflow: auto;
+    }
 }
 
 .dialog-full {
-  margin-right: 54px;
+    margin-right: 54px;
 
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
-  .el-dialog__close {
-    display: block;
-    margin: 0 auto;
-    width: 1em;
-    height: 1em;
-    margin-top: -3px;
-  }
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    .el-dialog__close {
+        display: block;
+        margin: 0 auto;
+        width: 1em;
+        height: 1em;
+        margin-top: -3px;
+    }
 
-  .dialog-full-close {
-    transform: rotate(180deg);
-  }
+    .dialog-full-close {
+        transform: rotate(180deg);
+    }
 
 }
 </style>

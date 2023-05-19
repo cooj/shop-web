@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import UserInvoiceModel from '~/components/user/UserInvoiceModel.vue'
+import { UserInvoiceModel } from '#components'
 
 const modelRef = ref<InstanceType<typeof UserInvoiceModel>>()
 

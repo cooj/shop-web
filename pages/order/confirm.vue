@@ -24,8 +24,10 @@
                             </el-button>
                         </div>
                         <el-form-item prop="address_id" label-width="auto">
-                            <el-radio-group v-if="defData.addressList.length" v-model="form.address_id" class="address-radio">
-                                <el-radio v-for="item in defData.addressList" :key="item.address_id" :label="item.address_id">
+                            <el-radio-group v-if="defData.addressList.length" v-model="form.address_id"
+                                class="address-radio">
+                                <el-radio v-for="item in defData.addressList" :key="item.address_id"
+                                    :label="item.address_id">
                                     <span>{{ setAddressText(item) }}</span>
                                     <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
                                     <span class="mx5px">{{ item.phone }}</span>
@@ -65,8 +67,10 @@
                         </el-form-item>
 
                         <el-form-item v-if="form.is_invoice" prop="bill_address_id" label="收票地址">
-                            <el-radio-group v-if="defData.billAddressList.length" v-model="form.bill_address_id" class="address-radio">
-                                <el-radio v-for="item in defData.billAddressList" :key="item.address_id" :label="item.address_id">
+                            <el-radio-group v-if="defData.billAddressList.length" v-model="form.bill_address_id"
+                                class="address-radio">
+                                <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
+                                    :label="item.address_id">
                                     <span>{{ setAddressText(item) }}</span>
                                     <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
                                     <span class="mx5px">{{ item.phone }}</span>
@@ -88,7 +92,7 @@
                                 <template #default="{ row }">
                                     <div class="h50px flex">
                                         <div class="goods_img">
-                                            <BaseImage class="h50px w50px" :src="row.goods_img" />
+                                            <CoImage class="h50px w50px" :src="row.goods_img" />
                                         </div>
                                         <div class="pl10px">
                                             <NuxtLink class="goods_link">
@@ -156,7 +160,8 @@
                         </div>
                         <el-form-item prop="coupon_id" label="优惠券">
                             <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
-                                <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id" :label="item.coupon_draw_id">
+                                <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id"
+                                    :label="item.coupon_draw_id">
                                     {{ item.coupon_name }}-减{{ item.par_value }}
                                 </el-radio>
                                 <el-radio :label="0">
@@ -183,18 +188,21 @@
                     <section class="sec-box flex mb0!">
                         <div class="flex-1">
                             <el-form-item prop="remark" label="备注信息">
-                                <el-input v-model="form.remark" maxlength="150" show-word-limit resize="none" :rows="3" type="textarea" />
+                                <el-input v-model="form.remark" maxlength="150" show-word-limit resize="none" :rows="3"
+                                    type="textarea" />
                             </el-form-item>
                         </div>
                         <ul class="prefer-ul w300px">
                             <li>
-                                <span class="item-title">商品总件数：</span><span class="item-text">{{ defData.count_number }}件</span>
+                                <span class="item-title">商品总件数：</span><span class="item-text">{{ defData.count_number
+                                }}件</span>
                             </li>
                             <!-- <li>
                 <span class="item-title">含危险品：</span><span class="item-text">0件</span>
               </li> -->
                             <li>
-                                <span class="item-title">商品总金额：</span><span class="item-text">￥{{ formatNumber(defData.total_price)
+                                <span class="item-title">商品总金额：</span><span class="item-text">￥{{
+                                    formatNumber(defData.total_price)
                                 }}</span>
                             </li>
                             <!-- <li>
@@ -233,9 +241,8 @@
 import type { FormInstance, FormRules } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
 import { UserAddressApi } from '~/api/user/address'
-import UserAddressModel from '~/components/user/UserAddressModel.vue'
+import { UserAddressModel } from '#components'
 
-const route = useRoute()
 const modelRef = ref<InstanceType<typeof UserAddressModel>>()
 const formRef = ref<FormInstance>()
 
@@ -264,7 +271,7 @@ const form = reactive({
 
     coupon_id: '' as '' | number, // 使用的优惠券编号或编号列表（可选）
     is_peas: 1, // 是否使用工游豆 1：是 0：否 (默认为1)
-    peas_number: '' as '' | number, // 使用的工游豆数量
+    peas_number: 0, // 使用的工游豆数量
     remark: '', // 备注信息
 })
 
@@ -292,53 +299,55 @@ const payMoney = computed(() => {
 const initDefaultData = async () => {
     const numReg = /^[0-9]*$/ // 检查数字是否合法或不包含数字的正则表达式 或 空或空字符串
 
-    const cart_id = route.query.cart_id as string // 购物车id
-    const goods_id = route.query.goods_id // 商品id
-    const goods_number = route.query.goods_number // 商品数量
+    const cart_id = useRouteQuery('cart_id') // 购物车id
+    const goods_id = useRouteQuery('goods_id') // 商品id
+    const goods_number = useRouteQuery('goods_number') // 商品数量
 
-    if (cart_id) { // 购物车结算
-        const { data: res } = await OrderApi.getSettleCart({ cart_id })
-        await wait(500)
-        console.log('re  sss :>> ', res)
-        if (res.value?.code === 200) {
-            // 未获取到商品时
-            if (res.value?.data.goods_list.length === 0) {
-                defData.ready = false
-                return
-            }
+    const num = numReg.test(goods_number.value) ? (Number(goods_number) || 1) : 1
+    // 0:不请求接口，1：根据购物车id请求，2：根据商品id请求，
+    let type = 0
 
-            form.tableData = res.value?.data.goods_list
-            defData.couponList = res.value?.data.coupon_list
+    if (cart_id.value) {
+        type = 1
+    } else if (goods_id.value && numReg.test(goods_id.value)) {
+        type = 2
+    }
 
-            defData.count_number = res.value?.data.number
-            defData.total_price = res.value?.data.total_price
-            defData.total_peas = res.value?.data.total_peas
-            defData.user_peas = res.value?.data.user_peas
-            defData.freight_price = res.value?.data.freight_price
-        } else {
+    // 获取结算商品信息、用户地址
+    const [res1, res2] = await Promise.all([
+        type === 1
+            ? OrderApi.getSettleCart({ cart_id: cart_id.value })
+            : (type === 2 ? OrderApi.getSettleGoods({ goods_id: Number(goods_id.value), goods_number: num }) : undefined),
+        UserAddressApi.getList(),
+    ])
+
+    await wait(800)
+
+    if (res1 && res1.data.value?.code === 200) {
+        const data = res1.data.value?.data
+        // 未获取到商品时
+        if (data.goods_list.length === 0) {
             defData.ready = false
             return
         }
-    } else if (goods_id && numReg.test(goods_id as string)) { // 立即购买
-        const num = numReg.test(goods_number as string) ? (Number(goods_number) || 1) : 1
-        const res = await OrderApi.getSettleGoods({ goods_id: Number(goods_id), goods_number: num })
-        console.log('re  sss0100 :>> ', res)
+
+        form.tableData = data.goods_list
+        defData.couponList = data.coupon_list
+
+        defData.count_number = data.number
+        defData.total_price = data.total_price
+        defData.total_peas = data.total_peas
+        defData.user_peas = data.user_peas
+        defData.freight_price = data.freight_price
     } else {
         defData.ready = false
-        return false
+        return
     }
 
-    const [res1] = await Promise.all([
-        UserAddressApi.getList(), // 获取所有地址列表
-
-    ])
-    // const res1 = await useAsyncData(() => $fetch('/api/testData'))
-    await wait(500)
-    console.log('res1 :>> ', res1)
-    console.log('res1.data.value?.code :>> ', res1.data.value?.code)
-    if (res1.data.value?.code === 200) {
-        defData.addressList = res1.data.value.data
-        defData.billAddressList = res1.data.value.data
+    if (res2 && res2.data.value?.code === 200) {
+        const data = res2.data.value?.data
+        defData.addressList = data
+        defData.billAddressList = data
     }
 }
 
@@ -389,7 +398,7 @@ const onSubmit = async () => {
     if (!isRun) return false
     // 是否开发票
     if (form.is_invoice) {
-    //
+        //
     }
     let goods_peas = Number(form.peas_number)
     if (!goods_peas) {
@@ -446,52 +455,52 @@ definePageMeta({
 
 <style lang="scss" scoped>
 .sec-box {
-  background: var(--el-color-white);
-  padding: 15px;
-  margin-bottom: 20px;
+    background: var(--el-color-white);
+    padding: 15px;
+    margin-bottom: 20px;
 
-  .tle {
-    font-size: 15px;
-    margin-bottom: 10px;
+    .tle {
+        font-size: 15px;
+        margin-bottom: 10px;
 
-    b {
-      margin-right: 8px;
+        b {
+            margin-right: 8px;
+        }
     }
-  }
 
 }
 
 .address-radio {
-  display: flex;
-  width: 100%;
-
-  .el-radio {
+    display: flex;
     width: 100%;
-    padding: 0 10px;
-    border: 1px solid transparent;
-    margin: 0;
 
-    &:hover {
-      background-color: var(--el-color-danger-light-9);
-    }
+    .el-radio {
+        width: 100%;
+        padding: 0 10px;
+        border: 1px solid transparent;
+        margin: 0;
 
-    &.is-checked {
-      font-weight: bold;
-      border-color: var(--el-color-danger-light-7);
+        &:hover {
+            background-color: var(--el-color-danger-light-9);
+        }
+
+        &.is-checked {
+            font-weight: bold;
+            border-color: var(--el-color-danger-light-7);
+        }
     }
-  }
 }
 
 .prefer-ul {
-  font-size: 12px;
-  text-align: right;
-  color: #333;
-  line-height: 2;
+    font-size: 12px;
+    text-align: right;
+    color: #333;
+    line-height: 2;
 
-  .item-text {
-    display: inline-block;
-    min-width: 90px;
-    color: var(--el-color-primary);
-  }
+    .item-text {
+        display: inline-block;
+        min-width: 90px;
+        color: var(--el-color-primary);
+    }
 }
 </style>
