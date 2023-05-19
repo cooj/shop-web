@@ -24,7 +24,7 @@ declare interface BaseFormToolType<T = any, U = any> {
   // config: {
   //     [key in keyof T]: { label: string, slot?: boolean, placeholder: string, width: string }
   // },
-  config: { itemProp: { label: string, prop: keyof T, [key: string]: any; }, slot?: boolean, placeholder?: string, width?: string }[]
+  config: { itemProp: { label: string, prop: string, [key: string]: any; }, slot?: boolean, placeholder?: string, width?: string }[]
   searchFunc: () => void,     // 查询方法
   hideBtn?: boolean
   showAll?: boolean
