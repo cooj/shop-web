@@ -26,7 +26,7 @@ export function useRouteQuery<T = string>(name: string, init?: T) {
  * 清除token
  */
 export const useClearToken = async () => {
-    const { data } = await useFetch<{ code: number }>('/api/loginOut')
+    const { data } = await useFetch<{ code: number }>('/api/user/out')
     if (data.value?.code === 200) {
         return true
     } else {
@@ -38,9 +38,9 @@ export const useClearToken = async () => {
  * 退出登录
  */
 export const useLoginOut = async () => {
-    const { data } = await useFetch<{ code: number }>('/api/loginOut')
+    const { data } = await useFetch<{ code: number }>('/api/user/out')
     if (data.value?.code === 200) {
-    // navigateTo('/')
+        // navigateTo('/')
         window.location.href = '/'
     }
 }

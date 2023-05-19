@@ -62,43 +62,44 @@
 
 <style lang="scss" scoped>
 .fixed-box {
-  position: fixed;
-  right: 0;
-  top: 300px;
+    position: fixed;
+    right: 0;
+    top: 300px;
+    z-index: 1;
 }
 
 .side-ul {
-  li {
-    width: 60px;
-    height: 55px;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .08);
-    font-size: 12px;
-    background-color: var(--el-color-white);
-  }
-
-  .side-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--el-color-primary);
-      color: var(--el-color-white);
+    li {
+        width: 60px;
+        height: 55px;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, .08);
+        font-size: 12px;
+        background-color: var(--el-color-white);
     }
 
-    &-top {
-      position: relative;
-      font-size: 12px;
-      border-radius: 0;
-    }
+    .side-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
 
-    i {
-      font-size: 18px;
+        &:hover {
+            background-color: var(--el-color-primary);
+            color: var(--el-color-white);
+        }
+
+        &-top {
+            position: relative;
+            font-size: 12px;
+            border-radius: 0;
+        }
+
+        i {
+            font-size: 18px;
+        }
     }
-  }
 }
 </style>
