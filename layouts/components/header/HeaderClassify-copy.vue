@@ -1,67 +1,67 @@
 <!-- 商品分类 -->
 <template>
-  <div class="goods-class-tle">
-    <!-- <i class="i-carbon-list" /> -->
-    <i class="i-ic-outline-format-list-bulleted" />
-    <span class="ml8px">商品分类</span>
-    <ul class="goods-class-child">
-      <li>
-        <NuxtLink to="/" @mouseenter="showGoodsPane()">
-          <i class="i-ep-service" />
-          <span>商品分类</span>
-        </NuxtLink>
-        <div class="goods-class-pane">
-          <el-form-item label="硬度计">
-            <NuxtLink to="/">
-              <i class="i-ep-service" />
-              <span>商品分类</span>
-            </NuxtLink>
-            <NuxtLink to="/">
-              <i class="i-ep-service" />
-              <span>商品分类</span>
-            </NuxtLink>
-            <NuxtLink to="/">
-              <i class="i-ep-service" />
-              <span>商品分类</span>
-            </NuxtLink>
-          </el-form-item>
-        </div>
-      </li>
-      <li v-for="item in cate?.data" :key="item.cat_id">
-        <NuxtLink :to="`/goods/list?c=${item.cat_id}`">
-          <i class="i-ep-service" />
-          <span>{{ item.cat_name }}</span>
-        </NuxtLink>
-        <div class="goods-class-pane">
-          <dl>
-            <dd v-for="sub in item.children" :key="sub.cat_id">
-              <div class="lt">
-                <NuxtLink :to="`/goods/list?c=${sub.cat_id}`">
-                  {{ sub.cat_name }}
+    <div class="goods-class-tle">
+        <!-- <i class="i-carbon-list" /> -->
+        <i class="i-ic-outline-format-list-bulleted" />
+        <span class="ml8px">商品分类</span>
+        <ul class="goods-class-child">
+            <li>
+                <NuxtLink to="/" @mouseenter="showGoodsPane()">
+                    <i class="i-ep-service" />
+                    <span>商品分类</span>
                 </NuxtLink>
-              </div>
-              <div class="ico">
-                <i class="i-ep-arrow-right" />
-              </div>
-              <div class="gt">
-                <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="`/goods/list?c=${son.cat_id}`">
-                  {{ son.cat_name }}
+                <div class="goods-class-pane">
+                    <el-form-item label="硬度计">
+                        <NuxtLink to="/">
+                            <i class="i-ep-service" />
+                            <span>商品分类</span>
+                        </NuxtLink>
+                        <NuxtLink to="/">
+                            <i class="i-ep-service" />
+                            <span>商品分类</span>
+                        </NuxtLink>
+                        <NuxtLink to="/">
+                            <i class="i-ep-service" />
+                            <span>商品分类</span>
+                        </NuxtLink>
+                    </el-form-item>
+                </div>
+            </li>
+            <li v-for="item in cate?.data" :key="item.cat_id">
+                <NuxtLink :to="`/goods/list?c=${item.cat_id}`">
+                    <i class="i-ep-service" />
+                    <span>{{ item.cat_name }}</span>
                 </NuxtLink>
-              </div>
-            </dd>
-          </dl>
-        </div>
-      </li>
-    </ul>
-  </div>
+                <div class="goods-class-pane">
+                    <dl>
+                        <dd v-for="sub in item.children" :key="sub.cat_id">
+                            <div class="lt">
+                                <NuxtLink :to="`/goods/list?c=${sub.cat_id}`">
+                                    {{ sub.cat_name }}
+                                </NuxtLink>
+                            </div>
+                            <div class="ico">
+                                <i class="i-ep-arrow-right" />
+                            </div>
+                            <div class="gt">
+                                <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="`/goods/list?c=${son.cat_id}`">
+                                    {{ son.cat_name }}
+                                </NuxtLink>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script lang="ts" setup>
 import { GoodsApi } from '~/api/goods/list'
 
 const defData = reactive({
-  active: -1,
-  show: false,
+    active: -1,
+    show: false,
 })
 
 const showGoodsPane = () => {

@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <div class="container">
-      文章列表
+    <div>
+        <div class="container">
+            文章列表
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 definePageMeta({
-  layout: 'home',
+    layout: 'home',
 })
 </script>

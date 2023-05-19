@@ -1,202 +1,194 @@
 <template>
-  <div class="">
-    <div class="container">
-      <div ref="goodsBestRef" class="goods-best">
-        <div class="goods-best-tle">
-          <div class="lt">
-            新品优选<sub>明星产品，趋势热销</sub>
-          </div>
-          <NuxtLink>
-            <el-button link>
-              更多
-              <i class="i-ep-arrow-right" />
-            </el-button>
-          </NuxtLink>
-        </div>
-        <ul class="goods-best-list">
-          <li v-for="item in goodsList" :key="item.goods_id">
-            <NuxtLink class="link" :to="`/goods/detail?id=${item.goods_id}`">
-              <el-image class="h150px w150px" :src="item.goods_img" lazy>
-                <template #error>
-                  <div class="image-err">
-                    <i class="i-ep-picture" />
-                  </div>
-                </template>
-              </el-image>
-              <h3 class="tle">
-                {{ item.goods_name }}
-              </h3>
-              <div class="price">
-                <span>惊爆价</span>
-                <em>￥{{ item.shop_price }}</em>
-              </div>
-              <el-button text bg type="danger">
-                大热卖推荐
-              </el-button>
-            </NuxtLink>
-          </li>
-        </ul>
-      </div>
-      <client-only>
-        <div  ref="floorRef" class="floor-box">
-          <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
-            <div class="left">
-              <h3 class="tle">
-                {{ item.storey_name }}
-              </h3>
-              <ul class="class-list">
-                <li v-for="sub in item.cat_lists" :key="sub.cat_id">
-                  <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
-                    <el-button round size="small">
-                      {{ sub.cat_name }}
-                    </el-button>
-                  </NuxtLink>
-                </li>
-              </ul>
-              <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" :src="item.storey_img" alt="">
+    <div class="">
+        <div class="container">
+            <div ref="goodsBestRef" class="goods-best">
+                <div class="goods-best-tle">
+                    <div class="lt">
+                        新品优选<sub>明星产品，趋势热销</sub>
+                    </div>
+                    <NuxtLink>
+                        <el-button link>
+                            更多
+                            <i class="i-ep-arrow-right" />
+                        </el-button>
+                    </NuxtLink>
+                </div>
+                <ul class="goods-best-list">
+                    <li v-for="item in goodsList" :key="item.goods_id">
+                        <NuxtLink class="link" :to="`/goods/detail?id=${item.goods_id}`">
+                            <el-image class="h150px w150px" :src="item.goods_img" lazy>
+                                <template #error>
+                                    <div class="image-err">
+                                        <i class="i-ep-picture" />
+                                    </div>
+                                </template>
+                            </el-image>
+                            <h3 class="tle">
+                                {{ item.goods_name }}
+                            </h3>
+                            <div class="price">
+                                <span>惊爆价</span>
+                                <em>￥{{ item.shop_price }}</em>
+                            </div>
+                            <el-button text bg type="danger">
+                                大热卖推荐
+                            </el-button>
+                        </NuxtLink>
+                    </li>
+                </ul>
             </div>
-            <div class="right">
-              <el-tabs
-                v-model="defData.active[item.storey_id]" class="tabs-box"
-                :class="item.class_lists.length <= 1 ? 'one-tab' : ''"
-              >
-                <el-tab-pane
-                  v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
-                  :name="`a${i}`"
-                >
-                  <ul class="goods-list">
-                    <li v-for="son in sub.goods_lists" :key="son.goods_id">
-                      <NuxtLink class="link" :to="`goods/detail?id=${son.goods_id}`">
-                        <!-- <div class="im-box">
+            <client-only>
+                <div ref="floorRef" class="floor-box">
+                    <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
+                        <div class="left">
+                            <h3 class="tle">
+                                {{ item.storey_name }}
+                            </h3>
+                            <ul class="class-list">
+                                <li v-for="sub in item.cat_lists" :key="sub.cat_id">
+                                    <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
+                                        <el-button round size="small">
+                                            {{ sub.cat_name }}
+                                        </el-button>
+                                    </NuxtLink>
+                                </li>
+                            </ul>
+                            <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" :src="item.storey_img" alt="">
+                        </div>
+                        <div class="right">
+                            <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
+                                :class="item.class_lists.length <= 1 ? 'one-tab' : ''">
+                                <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
+                                    :name="`a${i}`">
+                                    <ul class="goods-list">
+                                        <li v-for="son in sub.goods_lists" :key="son.goods_id">
+                                            <NuxtLink class="link" :to="`goods/detail?id=${son.goods_id}`">
+                                                <!-- <div class="im-box">
                         <img :src="son.goods_img" alt="">
                       </div> -->
-                        <el-image class="w100% pb100%" :src="son.goods_img" lazy>
-                          <template #error>
-                            <div class="image-err">
-                              <i class="i-ep-picture" />
-                            </div>
-                          </template>
-                        </el-image>
-                        <h3 class="goods-name">
-                          {{ son.goods_name }}
-                        </h3>
-                        <div class="price truncate">
-                          <span>惊爆价</span>
-                          <em>￥{{ son.shop_price }}</em>
+                                                <el-image class="w100% pb100%" :src="son.goods_img" lazy>
+                                                    <template #error>
+                                                        <div class="image-err">
+                                                            <i class="i-ep-picture" />
+                                                        </div>
+                                                    </template>
+                                                </el-image>
+                                                <h3 class="goods-name">
+                                                    {{ son.goods_name }}
+                                                </h3>
+                                                <div class="price truncate">
+                                                    <span>惊爆价</span>
+                                                    <em>￥{{ son.shop_price }}</em>
+                                                </div>
+                                                <el-button text bg type="danger">
+                                                    大热卖推荐
+                                                </el-button>
+                                            </NuxtLink>
+                                        </li>
+                                    </ul>
+                                </el-tab-pane>
+                            </el-tabs>
                         </div>
-                        <el-button text bg type="danger">
-                          大热卖推荐
-                        </el-button>
-                      </NuxtLink>
-                    </li>
-                  </ul>
-                </el-tab-pane>
-              </el-tabs>
-            </div>
-            <div class="brand-list">
-              <NuxtLink
-                v-for="sub in item.brand_lists" :key="sub.brand_id"
-                :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })"
-              >
-                <el-image class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" lazy>
-                  <template #error>
-                    <div class="image-err">
-                      <i class="i-ep-picture" />
+                        <div class="brand-list">
+                            <NuxtLink v-for="sub in item.brand_lists" :key="sub.brand_id"
+                                :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
+                                <el-image class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" lazy>
+                                    <template #error>
+                                        <div class="image-err">
+                                            <i class="i-ep-picture" />
+                                        </div>
+                                    </template>
+                                </el-image>
+                            </NuxtLink>
+                        </div>
                     </div>
-                  </template>
-                </el-image>
-              </NuxtLink>
-            </div>
-          </div>
-          <div class="floor-item">
-            <div class="left">
-              <h3 class="tle">
-                测量仪器
-              </h3>
-              <ul class="class-list">
-                <li>
-                  <el-button round>
-                    工业检测
-                  </el-button>
-                </li>
-                <li>
-                  <el-button round>
-                    工业检测
-                  </el-button>
-                </li>
-                <li>
-                  <el-button round>
-                    工业检测
-                  </el-button>
-                </li>
-              </ul>
-              <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
-            </div>
-            <div class="right">
-              <el-tabs v-model="tableActive" class="tabs-box">
-                <el-tab-pane label="断路器" name="1">
-                  <ul class="goods-list">
-                    <li v-for="item in 10" :key="item">
-                      <NuxtLink class="link">
-                        <div v-if="item > 5" class="im-box">
-                          <img src="~/assets/images/goods1.png" alt="">
+                    <div class="floor-item">
+                        <div class="left">
+                            <h3 class="tle">
+                                测量仪器
+                            </h3>
+                            <ul class="class-list">
+                                <li>
+                                    <el-button round>
+                                        工业检测
+                                    </el-button>
+                                </li>
+                                <li>
+                                    <el-button round>
+                                        工业检测
+                                    </el-button>
+                                </li>
+                                <li>
+                                    <el-button round>
+                                        工业检测
+                                    </el-button>
+                                </li>
+                            </ul>
+                            <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" src="~/assets/images/floor1.png" alt="">
                         </div>
-                        <el-image
-                          v-else class="w100% pb100%"
-                          src="https://imgservice4.suning.cn/uimg1/b2c/image/-jN0LRFRqVJ5pDrYaFdF2w.jpg_400w_400h_4e"
-                          lazy
-                        >
-                          <template #error>
-                            <div class="image-err">
-                              <i class="i-ep-picture" />
-                            </div>
-                          </template>
-                        </el-image>
-                        <h3>工游记 一键测量仪</h3>
-                        <div class="price">
-                          <span>惊爆价</span>
-                          <em>￥200.5</em>
+                        <div class="right">
+                            <el-tabs v-model="tableActive" class="tabs-box">
+                                <el-tab-pane label="断路器" name="1">
+                                    <ul class="goods-list">
+                                        <li v-for="item in 10" :key="item">
+                                            <NuxtLink class="link">
+                                                <div v-if="item > 5" class="im-box">
+                                                    <img src="~/assets/images/goods1.png" alt="">
+                                                </div>
+                                                <el-image v-else class="w100% pb100%"
+                                                    src="https://imgservice4.suning.cn/uimg1/b2c/image/-jN0LRFRqVJ5pDrYaFdF2w.jpg_400w_400h_4e"
+                                                    lazy>
+                                                    <template #error>
+                                                        <div class="image-err">
+                                                            <i class="i-ep-picture" />
+                                                        </div>
+                                                    </template>
+                                                </el-image>
+                                                <h3>工游记 一键测量仪</h3>
+                                                <div class="price">
+                                                    <span>惊爆价</span>
+                                                    <em>￥200.5</em>
+                                                </div>
+                                                <el-button text bg type="danger">
+                                                    大热卖推荐
+                                                </el-button>
+                                            </NuxtLink>
+                                        </li>
+                                    </ul>
+                                </el-tab-pane>
+                                <el-tab-pane label="继电器" name="2">
+                                    Config
+                                </el-tab-pane>
+                                <el-tab-pane label="断路器" name="3">
+                                    Role
+                                </el-tab-pane>
+                                <el-tab-pane label="断路器" name="4">
+                                    Task
+                                </el-tab-pane>
+                            </el-tabs>
                         </div>
-                        <el-button text bg type="danger">
-                          大热卖推荐
-                        </el-button>
-                      </NuxtLink>
-                    </li>
-                  </ul>
-                </el-tab-pane>
-                <el-tab-pane label="继电器" name="2">
-                  Config
-                </el-tab-pane>
-                <el-tab-pane label="断路器" name="3">
-                  Role
-                </el-tab-pane>
-                <el-tab-pane label="断路器" name="4">
-                  Task
-                </el-tab-pane>
-              </el-tabs>
-            </div>
-            <div class="brand-list">
-              <img class="h80px" src="/pwa-192x192.png" alt="">
-            </div>
-          </div>
+                        <div class="brand-list">
+                            <img class="h80px" src="/pwa-192x192.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <Transition v-if="defData.ready" name="slide">
+                    <!-- mode="out-in" -->
+                    <div v-show="(!navVisible && floorVisible)" class="floor-nav">
+                        <a v-for="item in floor?.data" :key="item.storey_id" :href="`#fl${item.storey_id}`">
+                            {{ item.storey_name }}
+                        </a>
+                        <a href="#fl1">
+                            仪器仪表
+                        </a>
+                        <a href="#fl2">
+                            办公用品
+                        </a>
+                    </div>
+                </Transition>
+            </client-only>
         </div>
-        <Transition v-if="defData.ready" name="slide">
-          <!-- mode="out-in" -->
-          <div v-show="(!navVisible && floorVisible)" class="floor-nav">
-            <a v-for="item in floor?.data" :key="item.storey_id" :href="`#fl${item.storey_id}`">
-              {{ item.storey_name }}
-            </a>
-            <a href="#fl1">
-              仪器仪表
-            </a>
-            <a href="#fl2">
-              办公用品
-            </a>
-          </div>
-        </Transition>
-      </client-only>
     </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -209,21 +201,21 @@ interface TabActiveType {
 const tableActive = ref('1')
 
 const defData = reactive({
-  active: {} as TabActiveType, // 楼层对应tab切换选中项
-  ready: false, // 楼层是否加载完成
+    active: {} as TabActiveType, // 楼层对应tab切换选中项
+    ready: false, // 楼层是否加载完成
 })
 
 const goodsBestRef = ref(null)
 const navVisible = useElementVisibility(goodsBestRef)
 
-const floorRef=ref(null)
+const floorRef = ref(null)
 const floorVisible = useElementVisibility(floorRef)
 // const { x, y } = useWindowScroll()
 
 const { data: floor, pending } = await HomeApi.getFloor()
 // console.log('data :>> ', floor)
 floor.value?.data.forEach((item) => {
-  defData.active[item.storey_id] = 'a0'
+    defData.active[item.storey_id] = 'a0'
 })
 const { data: goods } = await HomeApi.getNewGoods()
 // console.log('goods :>> ', goods)
@@ -231,7 +223,7 @@ const goodsList = ref(goods.value?.data.lists)
 
 // console.log(process)
 watch(navVisible, (val) => {
-  console.log('val :>> ', val)
+    console.log('val :>> ', val)
 })
 
 // watch(() => pending.value, () => {
@@ -246,8 +238,8 @@ watch(navVisible, (val) => {
 // console.log('system.get :>> ', await system.getSystemInfo())
 
 onMounted(async () => {
-  await wait(1000)
-  defData.ready = true
+    await wait(1000)
+    defData.ready = true
 })
 </script>
 

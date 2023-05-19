@@ -1,3 +1,52 @@
+<template>
+    <div class="nav-banner" :class="isIndex ? 'index' : ''">
+        <div class="nav">
+            <div class="flex container">
+                <div class="left-box">
+                    <HeaderClassify />
+                </div>
+                <HeaderMenu />
+            </div>
+        </div>
+        <div v-if="isIndex" class="banner">
+            <div class="h100% flex container">
+                <div class="left-box">
+                    <!-- 占位 -->
+                </div>
+                <div class="swp">
+                    <suspense>
+                        <HeaderBanner />
+                        <!-- <HeaderBanner2 /> -->
+                    </suspense>
+                </div>
+                <div class="right">
+                    <HeaderUser />
+                </div>
+            </div>
+        </div>
+        <div v-if="isIndex" class="market">
+            <div class="grid container">
+                <NuxtLink to="/">
+                    <img class="h150px w100%" src="assets/images/pic/card1.png" alt="">
+                    <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+                </NuxtLink>
+                <NuxtLink to="/">
+                    <img class="h150px w100%" src="assets/images/pic/card2.png" alt="">
+                    <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+                </NuxtLink>
+                <NuxtLink to="/">
+                    <img class="h150px w100%" src="assets/images/pic/card3.png" alt="">
+                    <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+                </NuxtLink>
+                <NuxtLink to="/">
+                    <img class="h150px w100%" src="assets/images/pic/card4.png" alt="">
+                    <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
+                </NuxtLink>
+            </div>
+        </div>
+    </div>
+</template>
+
 <script lang="ts" setup>
 import HeaderClassify from './HeaderClassify.vue'
 import HeaderMenu from './HeaderMenu.vue'
@@ -11,58 +60,9 @@ const route = useRoute()
 // console.log('route :>> ', route)
 
 const isIndex = computed(() => {
-  return route.path === '/'
+    return route.path === '/'
 })
 </script>
-
-<template>
-  <div class="nav-banner" :class="isIndex ? 'index' : ''">
-    <div class="nav">
-      <div class="flex container">
-        <div class="left-box">
-          <HeaderClassify />
-        </div>
-        <HeaderMenu />
-      </div>
-    </div>
-    <div v-if="isIndex" class="banner">
-      <div class="h100% flex container">
-        <div class="left-box">
-          <!-- 占位 -->
-        </div>
-        <div class="swp">
-          <suspense>
-            <HeaderBanner />
-            <!-- <HeaderBanner2 /> -->
-          </suspense>
-        </div>
-        <div class="right">
-          <HeaderUser />
-        </div>
-      </div>
-    </div>
-    <div v-if="isIndex" class="market">
-      <div class="grid container">
-        <NuxtLink to="/">
-          <img class="h150px w100%" src="assets/images/pic/card1.png" alt="">
-          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
-        </NuxtLink>
-        <NuxtLink to="/">
-          <img class="h150px w100%" src="assets/images/pic/card2.png" alt="">
-          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
-        </NuxtLink>
-        <NuxtLink to="/">
-          <img class="h150px w100%" src="assets/images/pic/card3.png" alt="">
-          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
-        </NuxtLink>
-        <NuxtLink to="/">
-          <img class="h150px w100%" src="assets/images/pic/card4.png" alt="">
-          <!-- <el-image class="h150px w100%" src="assets/images/pic/card1.png" /> -->
-        </NuxtLink>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .nav-banner {

@@ -1,13 +1,13 @@
 <template>
-  <div>
-    站内信息
-  </div>
+    <div>
+        站内信息
+    </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'user',
-  middleware: 'auth',
+    layout: 'user',
+    middleware: 'auth',
 })
 </script>
 

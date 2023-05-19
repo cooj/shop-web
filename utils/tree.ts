@@ -7,28 +7,28 @@
  * @returns any[]
 */
 export function getParentNode<T = any>(classifyList: Array<T>, val: T[keyof T], key = 'id' as keyof T, children = 'children' as keyof T): T[] {
-  const temp: any[] = []
-  const forFn = function (arr: any[], id: T[keyof T]) {
-    for (let i = 0; i < arr.length; i++) {
-      const item = arr[i]
-      // 找到值对应的那一项，追加进去
-      if (item[key] === val) temp.push(item)
-      if (item[children]) {
-        const data1 = item[children].find((item1: any) => {
-          return item1[key] === id
-        })
-        if (data1) {
-          temp.unshift(item) // 数组前面追加进去
-          forFn(classifyList, item[key])
-          break
-        } else {
-          forFn(item[children], id)
+    const temp: any[] = []
+    const forFn = function (arr: any[], id: T[keyof T]) {
+        for (let i = 0; i < arr.length; i++) {
+            const item = arr[i]
+            // 找到值对应的那一项，追加进去
+            if (item[key] === val) temp.push(item)
+            if (item[children]) {
+                const data1 = item[children].find((item1: any) => {
+                    return item1[key] === id
+                })
+                if (data1) {
+                    temp.unshift(item) // 数组前面追加进去
+                    forFn(classifyList, item[key])
+                    break
+                } else {
+                    forFn(item[children], id)
+                }
+            }
         }
-      }
     }
-  }
-  forFn(classifyList || [], val)
-  return temp
+    forFn(classifyList || [], val)
+    return temp
 }
 
 /**
@@ -40,19 +40,19 @@ export function getParentNode<T = any>(classifyList: Array<T>, val: T[keyof T], 
  * @returns
  */
 export function findNodeItem<T = any>(data: Array<T>, val: T[keyof T], key = 'id' as keyof T, children = 'children' as keyof T): T | undefined {
-  let temp: any = ''
-  const forFn = function (arr: any[], id: T[keyof T]) {
-    for (let i = 0; i < arr.length; i++) {
-      if (temp) break // 已经拿到值了,就退出循环
-      const item = arr[i]
-      // 找到值对应的那一项，赋值
-      if (item[key] === val) temp = item
+    let temp: any = ''
+    const forFn = function (arr: any[], id: T[keyof T]) {
+        for (let i = 0; i < arr.length; i++) {
+            if (temp) break // 已经拿到值了,就退出循环
+            const item = arr[i]
+            // 找到值对应的那一项，赋值
+            if (item[key] === val) temp = item
 
-      if (item[children]) forFn(item[children], id)
+            if (item[children]) forFn(item[children], id)
+        }
     }
-  }
-  forFn(data, val)
-  return temp
+    forFn(data, val)
+    return temp
 }
 
 /**
@@ -63,15 +63,15 @@ export function findNodeItem<T = any>(data: Array<T>, val: T[keyof T], key = 'id
  * @param children 子类元素集合的键名，默认为'children'
  */
 export const filterTreeList = <T = any>(data: T[], keyword: T[keyof T], name: keyof T, children = 'children' as keyof T): T[] => {
-  const result = []
-  let item: any
-  for (item of data) {
-    if (item[name].includes(keyword)) {
-      result.push(item)
-    } else if (item.children && item.children.length > 0) {
-      const filteredChildren = filterTreeList(item.children, keyword, name, children)
-      if (filteredChildren.length > 0) result.push({ ...item, children: filteredChildren })
+    const result = []
+    let item: any
+    for (item of data) {
+        if (item[name].includes(keyword)) {
+            result.push(item)
+        } else if (item.children && item.children.length > 0) {
+            const filteredChildren = filterTreeList(item.children, keyword, name, children)
+            if (filteredChildren.length > 0) result.push({ ...item, children: filteredChildren })
+        }
     }
-  }
-  return result
+    return result
 }

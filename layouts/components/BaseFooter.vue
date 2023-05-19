@@ -1,67 +1,67 @@
 <template>
-  <div class="footer-box bg-#333">
-    <div class="container">
-      <div class="footer-top">
-        <div class="content" v-html="systemInfo?.footer_content" />
-      </div>
-      <div class="mid">
-        <ul class="footer-link">
-          <li v-for="item in navList" :key="item.id">
-            <dl>
-              <dt>{{ item.name }}</dt>
-              <dd v-for="sub in item.children" :key="sub.id">
-                <NuxtLink :to="`/content/list?id=${sub.id}`">
-                  {{ sub.name }}
-                </NuxtLink>
-              </dd>
-            </dl>
-          </li>
-        </ul>
-        <div class="footer-right">
-          <div class="footer-logo">
-            <BaseImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
-            <p> 售后电话 {{ systemInfo?.sale_tel }}</p>
-            <p>工作时间 {{ systemInfo?.work_time }}</p>
-          </div>
-          <div class="footer-code">
-            <div class="footer-code-box text-center">
-              <div class="mb5px">
-                公众号二维码
-              </div>
-              <BaseImage class="w110px pb100%" :src="systemInfo?.wx_code" />
-              <!-- <div class="footer-code-item">
+    <div class="footer-box bg-#333">
+        <div class="container">
+            <div class="footer-top">
+                <div class="content" v-html="systemInfo?.footer_content" />
+            </div>
+            <div class="mid">
+                <ul class="footer-link">
+                    <li v-for="item in navList" :key="item.id">
+                        <dl>
+                            <dt>{{ item.name }}</dt>
+                            <dd v-for="sub in item.children" :key="sub.id">
+                                <NuxtLink :to="`/content/list?id=${sub.id}`">
+                                    {{ sub.name }}
+                                </NuxtLink>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+                <div class="footer-right">
+                    <div class="footer-logo">
+                        <BaseImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
+                        <p> 售后电话 {{ systemInfo?.sale_tel }}</p>
+                        <p>工作时间 {{ systemInfo?.work_time }}</p>
+                    </div>
+                    <div class="footer-code">
+                        <div class="footer-code-box text-center">
+                            <div class="mb5px">
+                                公众号二维码
+                            </div>
+                            <BaseImage class="w110px pb100%" :src="systemInfo?.wx_code" />
+                            <!-- <div class="footer-code-item">
                 <div class="mb5px">
                   公众号二维码
                 </div>
                 <img class="w110px" src="https://images.gdbmro.com/index/public_code.jpg" alt="">
               </div> -->
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+        <div class="footer-bot">
+            <div class="flex justify-between container">
+                <div class="left">
+                    <NuxtLink class="mr5px">
+                        隐私政策
+                    </NuxtLink>
+                    <NuxtLink class="mr5px">
+                        用户协议
+                    </NuxtLink>
+                    <NuxtLink class="mr5px">
+                        网站导航
+                    </NuxtLink>
+                </div>
+                <div class="right">
+                    {{ systemInfo?.copyright }}
+                    <NuxtLink :to="systemInfo?.filings_url" target="_blank" class="ml5px">
+                        {{ systemInfo?.filings }}
+                    </NuxtLink>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="footer-bot">
-      <div class="flex justify-between container">
-        <div class="left">
-          <NuxtLink class="mr5px">
-            隐私政策
-          </NuxtLink>
-          <NuxtLink class="mr5px">
-            用户协议
-          </NuxtLink>
-          <NuxtLink class="mr5px">
-            网站导航
-          </NuxtLink>
-        </div>
-        <div class="right">
-          {{ systemInfo?.copyright }}
-          <NuxtLink :to="systemInfo?.filings_url" target="_blank" class="ml5px">
-            {{ systemInfo?.filings }}
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts" setup>

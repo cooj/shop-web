@@ -1,31 +1,25 @@
 <template>
-  <div class="goods-image mb10px">
-    <!-- 大图 -->
-    <div v-show="show" class="large" :style="[{ backgroundImage: `url(${images[currIndex]})` }, largePosition]" />
-    <!-- 中图 -->
-    <div ref="target" class="middle" @mousemove="moveImg" @mouseleave="moveOutImg">
-      <img :src="images[currIndex]" alt="">
-      <!-- 遮罩色块 -->
-      <div v-show="show" class="layer" :style="layerPosition" />
+    <div class="goods-image mb10px">
+        <!-- 大图 -->
+        <div v-show="show" class="large" :style="[{ backgroundImage: `url(${images[currIndex]})` }, largePosition]" />
+        <!-- 中图 -->
+        <div ref="target" class="middle" @mousemove="moveImg" @mouseleave="moveOutImg">
+            <img :src="images[currIndex]" alt="">
+            <!-- 遮罩色块 -->
+            <div v-show="show" class="layer" :style="layerPosition" />
+        </div>
     </div>
-  </div>
-  <div class="swiper-box">
-    <Swiper
-      class="swp" :slides-per-view="5" :slides-per-group="5" :space-between="10" :navigation="{
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      }" :modules="modules" @swiper="onSwiper" @slide-change="onSlideChange"
-    >
-      <SwiperSlide
-        v-for="(item, index) in images" :key="index" class="swp-slide"
-        :class="{ active: index === currIndex }"
-      >
-        <img :src="item" alt="" @mouseenter="currIndex = index">
-      </SwiperSlide>
-    </Swiper>
-    <div class="swiper-button-next" />
-    <div class="swiper-button-prev" />
-  </div>
+    <div class="swiper-box">
+        <Swiper class="swp" :slides-per-view="5" :slides-per-group="5" :space-between="10" :navigation="{ nextEl: '.swiper-button-next',
+                                                                                                          prevEl: '.swiper-button-prev' }" :modules="modules" @swiper="onSwiper" @slide-change="onSlideChange">
+            <SwiperSlide v-for="(item, index) in images" :key="index" class="swp-slide"
+                :class="{ active: index === currIndex }">
+                <img :src="item" alt="" @mouseenter="currIndex = index">
+            </SwiperSlide>
+        </Swiper>
+        <div class="swiper-button-next" />
+        <div class="swiper-button-prev" />
+    </div>
 </template>
 
 <script  lang="ts" setup>
@@ -52,13 +46,13 @@ const currIndex = ref(0)
 const show = ref(false)
 // 2. 遮罩的坐标(样式)
 const layerPosition = reactive({
-  left: '',
-  top: '',
+    left: '',
+    top: '',
 })
 // 3. 大图背景定位(样式)
 const largePosition = reactive({
-  backgroundPositionX: '',
-  backgroundPositionY: '',
+    backgroundPositionX: '',
+    backgroundPositionY: '',
 })
 // 4. 使用useMouseInElement得到基于元素左上角的坐标和是否离开元素数据
 // const target: any = ref(null)
@@ -66,43 +60,43 @@ const target = ref<HTMLDivElement | null>(null)
 const { elementX, elementY, isOutside } = useMouseInElement(target)
 
 const moveImg = () => {
-  if (!target.value) return
-  const domData = target.value.getBoundingClientRect()
+    if (!target.value) return
+    const domData = target.value.getBoundingClientRect()
 
-  // 5. 根据得到数据设置样式数据和是否显示数据
-  show.value = !isOutside.value
-  // 计算坐标
-  let position = { x: 0, y: 0 }
+    // 5. 根据得到数据设置样式数据和是否显示数据
+    show.value = !isOutside.value
+    // 计算坐标
+    let position = { x: 0, y: 0 }
 
-  let x = elementX.value - 100
-  let y = elementY.value - 100
+    let x = elementX.value - 100
+    let y = elementY.value - 100
 
-  if (x <= 0) x = 0
-  if (x >= domData.width - 200) x = domData.width - 200
-  if (y <= 0) y = 0
-  if (y >= domData.width - 200) y = domData.width - 200
-  position = { x, y }
+    if (x <= 0) x = 0
+    if (x >= domData.width - 200) x = domData.width - 200
+    if (y <= 0) y = 0
+    if (y >= domData.width - 200) y = domData.width - 200
+    position = { x, y }
 
-  // if (elementX.value < 100) position.x = 0
-  // else if (elementX.value > 300) position.x = 200
-  // else position.x = elementX.value - 100
+    // if (elementX.value < 100) position.x = 0
+    // else if (elementX.value > 300) position.x = 200
+    // else position.x = elementX.value - 100
 
-  // if (elementY.value < 100) position.y = 0
-  // else if (elementY.value > 300) position.y = 200
-  // else position.y = elementY.value - 100
+    // if (elementY.value < 100) position.y = 0
+    // else if (elementY.value > 300) position.y = 200
+    // else position.y = elementY.value - 100
 
-  // 给样式赋值
-  // 中图遮罩层的位置
-  layerPosition.left = `${position.x}px`
-  layerPosition.top = `${position.y}px`
+    // 给样式赋值
+    // 中图遮罩层的位置
+    layerPosition.left = `${position.x}px`
+    layerPosition.top = `${position.y}px`
 
-  // 小图跟大图宽度比例为1:1.5,需要在这基础上扩大1.5倍
-  // 大图的显示的位置
-  largePosition.backgroundPositionX = `${-(2 * 1.2) * position.x}px`
-  largePosition.backgroundPositionY = `${-(2 * 1.2) * position.y}px`
+    // 小图跟大图宽度比例为1:1.5,需要在这基础上扩大1.5倍
+    // 大图的显示的位置
+    largePosition.backgroundPositionX = `${-(2 * 1.2) * position.x}px`
+    largePosition.backgroundPositionY = `${-(2 * 1.2) * position.y}px`
 }
 const moveOutImg = () => {
-  show.value = false
+    show.value = false
 }
 
 // watch([elementX, elementY, isOutside], () => {

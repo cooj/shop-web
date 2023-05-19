@@ -1,50 +1,50 @@
 <template>
-  <section class="header-box">
-    <el-form class="py25px" size="large">
-      <div class="flex items-center justify-between text-#f8f8f8 container">
-        <div class="logo min-w150px">
-          <NuxtLink to="/">
-            <img class="h50px" :src="systemInfo?.shop_logo" alt="">
-          </NuxtLink>
-        </div>
-        <div class="search-box relative w50%">
-          <el-input v-model="search.keyword" placeholder="">
-            <template #prepend>
-              <el-select v-model="search.select" placeholder="" style="width: 115px">
-                <el-option label="全部商品" value="1" />
-                <el-option label="精选商品" value="2" />
-                <el-option label="特价商品" value="3" />
-              </el-select>
-            </template>
-            <template #append>
-              <el-button type="primary" class="btn-search min-w100px" @click="onSearch">
-                搜 索
-              </el-button>
-            </template>
-          </el-input>
-          <div class="absolute left-0 mt3px text-12px">
-            热门搜索：123,45466,8799,56456
-          </div>
-        </div>
-        <div class="cart">
-          <NuxtLink to="/order/cart">
-            <el-button type="primary" class="min-w150px">
-              <i class="i-ep-shopping-cart-full mr8px" />
-              购物车
-            </el-button>
-          </NuxtLink>
+    <section class="header-box">
+        <el-form class="py25px" size="large">
+            <div class="flex items-center justify-between text-#f8f8f8 container">
+                <div class="logo min-w150px">
+                    <NuxtLink to="/">
+                        <img class="h50px" :src="systemInfo?.shop_logo" alt="">
+                    </NuxtLink>
+                </div>
+                <div class="search-box relative w50%">
+                    <el-input v-model="search.keyword" placeholder="">
+                        <template #prepend>
+                            <el-select v-model="search.select" placeholder="" style="width: 115px">
+                                <el-option label="全部商品" value="1" />
+                                <el-option label="精选商品" value="2" />
+                                <el-option label="特价商品" value="3" />
+                            </el-select>
+                        </template>
+                        <template #append>
+                            <el-button type="primary" class="btn-search min-w100px" @click="onSearch">
+                                搜 索
+                            </el-button>
+                        </template>
+                    </el-input>
+                    <div class="absolute left-0 mt3px text-12px">
+                        热门搜索：123,45466,8799,56456
+                    </div>
+                </div>
+                <div class="cart">
+                    <NuxtLink to="/order/cart">
+                        <el-button type="primary" class="min-w150px">
+                            <i class="i-ep-shopping-cart-full mr8px" />
+                            购物车
+                        </el-button>
+                    </NuxtLink>
 
-          <!-- <el-button>
+                    <!-- <el-button>
             <i class="i-ep-shopping-cart-full" />
             批量下单
           </el-button> -->
-        </div>
-      </div>
-    </el-form>
-    <!-- <client-only></client-only> -->
+                </div>
+            </div>
+        </el-form>
+        <!-- <client-only></client-only> -->
 
-    <HeaderIndex />
-  </section>
+        <HeaderIndex />
+    </section>
 </template>
 
 <script lang="ts" setup>
@@ -53,8 +53,8 @@ import HeaderIndex from './header/HeaderIndex.vue'
 const route = useRoute()
 
 const search = reactive({
-  keyword: '',
-  select: '1',
+    keyword: '',
+    select: '1',
 })
 
 const useSystem = useSystemState()
@@ -62,21 +62,21 @@ const systemInfo = ref(useSystem.system)
 
 // 搜索
 const onSearch = () => {
-  if (search.keyword.trim()) {
-    linkGoodsList({
-      query: {
-        keyword: search.keyword,
-      },
-    })
-  } else if (route.path === '/goods/list') {
-    linkGoodsList({
-      query: {},
-    })
-  }
+    if (search.keyword.trim()) {
+        linkGoodsList({
+            query: {
+                keyword: search.keyword,
+            },
+        })
+    } else if (route.path === '/goods/list') {
+        linkGoodsList({
+            query: {},
+        })
+    }
 }
 
 watch(() => route.query.keyword, (val) => {
-  search.keyword = val ? val as string : ''
+    search.keyword = val ? val as string : ''
 })
 </script>
 

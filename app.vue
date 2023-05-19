@@ -1,10 +1,10 @@
 <template>
-  <el-config-provider :locale="locale" :message="messageConfig">
-    <VitePwaManifest />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </el-config-provider>
+    <el-config-provider :locale="locale" :message="messageConfig">
+        <VitePwaManifest />
+        <NuxtLayout>
+            <NuxtPage />
+        </NuxtLayout>
+    </el-config-provider>
 </template>
 
 <script setup lang="ts">
@@ -17,7 +17,7 @@ const locale = ref(zhCn)
 
 // 提示框
 const messageConfig = reactive({
-  max: 1,
+    max: 1,
 })
 
 // 获取商城信息
@@ -25,13 +25,13 @@ const useSystem = useSystemState()
 const systemInfo = await useSystem.getSystemInfo()
 const icon = useFavicon()
 if (systemInfo.value?.ico_img) {
-  icon.value = systemInfo.value?.ico_img
+    icon.value = systemInfo.value?.ico_img
 }
 useHead({
-  title: systemInfo.value?.shop_title,
-  meta: [
-    { name: 'description', content: systemInfo.value?.shop_describe },
-  ],
+    title: systemInfo.value?.shop_title,
+    meta: [
+        { name: 'description', content: systemInfo.value?.shop_describe },
+    ],
 })
 </script>
 

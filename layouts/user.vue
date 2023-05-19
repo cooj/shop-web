@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <BaseTop />
-    <BaseHeader />
-    <!-- <div class="container">
+    <div>
+        <BaseTop />
+        <BaseHeader />
+        <!-- <div class="container">
     <el-container>
       <el-aside style="margin-top: 20px;margin-right:10px;width: 230px;background-color: white;">
         <UserAside />
@@ -12,15 +12,15 @@
       </el-main>
     </el-container>
   </div> -->
-    <UserLayout>
-      <slot />
-    </UserLayout>
-    <div class="mx-auto h0 text-right text-sm opacity-25">
-      [User Layout]
+        <UserLayout>
+            <slot />
+        </UserLayout>
+        <div class="mx-auto h0 text-right text-sm opacity-25">
+            [User Layout]
+        </div>
+        <BaseFooter />
+        <BaseRight />
     </div>
-    <BaseFooter />
-    <BaseRight />
-  </div>
 </template>
 
 <script lang="ts" setup>

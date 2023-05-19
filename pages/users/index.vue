@@ -1,16 +1,16 @@
 <template>
-  <div>
+    <div>
     <!-- 我的订单 -->
-  </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'user',
-  middleware: 'auth',
-  redirect: {
-    path: '/order/list',
-  },
+    layout: 'user',
+    middleware: 'auth',
+    redirect: {
+        path: '/order/list',
+    },
 })
 </script>
 

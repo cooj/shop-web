@@ -8,8 +8,8 @@ import Big from 'big.js'
  * @returns
  */
 export function useRouteParam<T = string>(name: string, init?: T) {
-  const route = useRoute()
-  return computed(() => route.params[name] as T ?? init)
+    const route = useRoute()
+    return computed(() => route.params[name] as T ?? init)
 }
 /**
  * vue路由获取query参数（获取？后面的参数）   /goods/list?name=foo&price=10
@@ -18,31 +18,31 @@ export function useRouteParam<T = string>(name: string, init?: T) {
  * @returns
  */
 export function useRouteQuery<T = string>(name: string, init?: T) {
-  const route = useRoute()
-  return computed(() => route.query[name] as T ?? init)
+    const route = useRoute()
+    return computed(() => route.query[name] as T ?? init)
 }
 
 /**
  * 清除token
  */
 export const useClearToken = async () => {
-  const { data } = await useFetch<{ code: number }>('/api/loginOut')
-  if (data.value?.code === 200) {
-    return true
-  } else {
-    return false
-  }
+    const { data } = await useFetch<{ code: number }>('/api/loginOut')
+    if (data.value?.code === 200) {
+        return true
+    } else {
+        return false
+    }
 }
 
 /**
  * 退出登录
  */
 export const useLoginOut = async () => {
-  const { data } = await useFetch<{ code: number }>('/api/loginOut')
-  if (data.value?.code === 200) {
+    const { data } = await useFetch<{ code: number }>('/api/loginOut')
+    if (data.value?.code === 200) {
     // navigateTo('/')
-    window.location.href = '/'
-  }
+        window.location.href = '/'
+    }
 }
 
 /**
@@ -51,21 +51,21 @@ export const useLoginOut = async () => {
  * @returns boolean true-验证通过，false-验证不通过
  */
 export const useFormVerify = async (formEl: FormInstance | undefined) => {
-  if (!formEl) {
-    ElMessage.error('未获取到对应的组件,formEl为空')
-    return false
-  }
-  return await formEl.validate((valid, fields) => {
-    if (valid) {
-      return true
-    } else {
-      const obj: any = fields
-      const firstKey = Object.keys(obj)[0]
-      const text = obj[firstKey][0].message
-      ElMessage.error(text)
-      return false
+    if (!formEl) {
+        ElMessage.error('未获取到对应的组件,formEl为空')
+        return false
     }
-  })
+    return await formEl.validate((valid, fields) => {
+        if (valid) {
+            return true
+        } else {
+            const obj: any = fields
+            const firstKey = Object.keys(obj)[0]
+            const text = obj[firstKey][0].message
+            ElMessage.error(text)
+            return false
+        }
+    })
 }
 
 /**
@@ -74,12 +74,12 @@ export const useFormVerify = async (formEl: FormInstance | undefined) => {
  * @returns
  */
 export const formatNumber = (num: number, scale = 2) => {
-  return new Big(num).toFixed(scale)
+    return new Big(num).toFixed(scale)
 }
 
 export const PAGINATION = {
-  total: 0, // 总条数
-  page: 1, // 当前页面
-  page_size: 20, // 每页显示的数量
-  page_sizes: [20, 50, 100, 200, 500],
+    total: 0, // 总条数
+    page: 1, // 当前页面
+    page_size: 20, // 每页显示的数量
+    page_sizes: [20, 50, 100, 200, 500],
 }

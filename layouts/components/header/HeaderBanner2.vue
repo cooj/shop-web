@@ -1,7 +1,7 @@
 <!-- 轮播图 -->
 
 <template>
-  <!-- <Swiper class="swp-banner" :slides-per-view="1" :centered-slides="true" :pagination="{ hideOnClick: false }">
+    <!-- <Swiper class="swp-banner" :slides-per-view="1" :centered-slides="true" :pagination="{ hideOnClick: false }">
     <SwiperSlide v-for="item in banner?.data" :key="item.banner_id">
       <NuxtLink :to="item.banner_link">
         <img class="im" :src="item.banner_img" alt="">
@@ -11,13 +11,13 @@
       <img class="im" src="~/assets/images/banner.png" alt="">
       </SwiperSlide>
     </Swiper> -->
-  <swiper-container class="swp-banner" :slides-per-view="1" :centered-slides="true" :pagination="{ hideOnClick: false }">
-    <SwiperSlide v-for="item in banner?.data" :key="item.banner_id">
-      <NuxtLink :to="item.banner_link">
-        <img class="im" :src="item.banner_img" alt="">
-      </NuxtLink>
-    </SwiperSlide>
-  </swiper-container>
+    <swiper-container class="swp-banner" :slides-per-view="1" :centered-slides="true" :pagination="{ hideOnClick: false }">
+        <SwiperSlide v-for="item in banner?.data" :key="item.banner_id">
+            <NuxtLink :to="item.banner_link">
+                <img class="im" :src="item.banner_img" alt="">
+            </NuxtLink>
+        </SwiperSlide>
+    </swiper-container>
 </template>
 
 <script lang="ts" setup>

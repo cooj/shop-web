@@ -1,3 +1,12 @@
+<template>
+    <div text-gray:80>
+        <h3>1111----    {{ s?.data.total }}</h3>
+        <span font-500 text-gray>{{ data?.pageview }}</span>
+        page views since
+        <span text-gray>{{ time }}</span>
+    </div>
+</template>
+
 <script setup lang="ts">
 import { CommonApi } from '~~/api/common'
 
@@ -10,7 +19,7 @@ const { data } = await useFetch('/api/pageview')
 // console.log('a :>> ', a)
 
 const defData = reactive({
-  page: 1,
+    page: 1,
 })
 
 // const { data: b } = useHttp('/api/v1/news/list', () => {
@@ -26,12 +35,3 @@ const { data: s } = CommonApi.getList()
 
 const time = useTimeAgo(() => data.value?.startAt || 0)
 </script>
-
-<template>
-  <div text-gray:80>
-    <h3>1111----    {{ s?.data.total }}</h3>
-    <span font-500 text-gray>{{ data?.pageview }}</span>
-    page views since
-    <span text-gray>{{ time }}</span>
-  </div>
-</template>

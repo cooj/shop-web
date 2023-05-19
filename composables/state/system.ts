@@ -6,27 +6,27 @@ import { AccountApi } from '~/api/user/account'
  * @returns
  */
 export const useSystemState = () => {
-  const system = useState<CommonApi_GetSystemResponse | undefined>('system')
+    const system = useState<CommonApi_GetSystemResponse | undefined>('system')
 
-  const getSystemInfo = async (update?: boolean) => {
+    const getSystemInfo = async (update?: boolean) => {
     // console.log('system.value :>> ', system.value)
-    if (system.value) return system
-    const { data, error } = await CommonApi.getSystem()
-    // 接口发生错误时
-    if (error.value) return system
-    await wait(800)
-    if (data.value?.code === 200) {
-      system.value = data.value.data
-    } else {
-      ElMessage.error(data.value?.msg)
+        if (system.value) return system
+        const { data, error } = await CommonApi.getSystem()
+        // 接口发生错误时
+        if (error.value) return system
+        await wait(800)
+        if (data.value?.code === 200) {
+            system.value = data.value.data
+        } else {
+            ElMessage.error(data.value?.msg)
+        }
+        return system
     }
-    return system
-  }
 
-  return {
-    system,
-    getSystemInfo,
-  }
+    return {
+        system,
+        getSystemInfo,
+    }
 }
 
 /**
@@ -34,66 +34,66 @@ export const useSystemState = () => {
  * @returns
  */
 export const useUserState = () => {
-  const cookieToken = useCookie<string>('admin_token')
+    const cookieToken = useCookie<string>('admin_token')
 
-  const token = useState<string | null>('token', () => cookieToken.value)
+    const token = useState<string | null>('token', () => cookieToken.value)
 
-  // 设置token
-  const setToken = (val: string) => {
-    token.value = val
-    if (val) cookieToken.value = val
+    // 设置token
+    const setToken = (val: string) => {
+        token.value = val
+        if (val) cookieToken.value = val
 
-    return token
-  }
-
-  const userInfo = useState<AccountApi_userInfoResponse | undefined>('user')
-
-  // 获取用户接口数据
-  const getUserData = async () => {
-    if (!token.value) {
-      // ElMessage.error('请先登录')
-      return userInfo
+        return token
     }
 
-    const { data, error } = await AccountApi.userInfo()
+    const userInfo = useState<AccountApi_userInfoResponse | undefined>('user')
 
-    await wait(800)
+    // 获取用户接口数据
+    const getUserData = async () => {
+        if (!token.value) {
+            // ElMessage.error('请先登录')
+            return userInfo
+        }
 
-    // 接口发生错误时
-    if (error.value) {
-      // await useClearToken()
-      token.value = ''
-      return userInfo
+        const { data, error } = await AccountApi.userInfo()
+
+        await wait(800)
+
+        // 接口发生错误时
+        if (error.value) {
+            // await useClearToken()
+            token.value = ''
+            return userInfo
+        }
+        if (data.value?.code === 200) {
+            userInfo.value = data.value.data
+        } else {
+            userInfo.value = undefined
+        }
+
+        return userInfo
     }
-    if (data.value?.code === 200) {
-      userInfo.value = data.value.data
-    } else {
-      userInfo.value = undefined
-    }
 
-    return userInfo
-  }
-
-  /**
+    /**
    * 获取用户信息
    * @param update boolean value 是否获取最新数据，默认false
    * @returns
    */
-  const getUserInfo = async (update?: boolean) => {
+    const getUserInfo = async (update?: boolean) => {
     // 获取最新数据
-    if (update) return await getUserData()
+        if (update) return await getUserData()
 
-    // 已经有数据了，直接返回
-    if (userInfo.value) return userInfo
+        // 已经有数据了，直接返回
+        if (userInfo.value) return userInfo
 
-    // 啥都没有，重新获取接口数据
-    return await getUserData()
-  }
+        // 啥都没有，重新获取接口数据
+        return await getUserData()
+    }
 
-  return {
-    token,
-    setToken,
-    userInfo,
-    getUserInfo,
-  }
+    return {
+        token,
+        setToken,
+        userInfo,
+        getUserInfo,
+    }
 }

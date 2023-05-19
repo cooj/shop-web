@@ -1,26 +1,26 @@
+<template>
+    <div class="index-box">
+        <Suspense>
+            <HomeMain />
+            <!-- <ClientOnly>
+        </ClientOnly> -->
+            <template #fallback>
+                <div italic op50>
+                    <span animate-pulse>Loading...</span>
+                </div>
+            </template>
+        </Suspense>
+    </div>
+</template>
+
 <script setup lang="ts">
 const online = useOnline()
 const name = ref('张三')
 
 definePageMeta({
-  layout: 'home',
+    layout: 'home',
 })
 </script>
-
-<template>
-  <div class="index-box">
-    <Suspense>
-      <HomeMain />
-      <!-- <ClientOnly>
-        </ClientOnly> -->
-      <template #fallback>
-        <div italic op50>
-          <span animate-pulse>Loading...</span>
-        </div>
-      </template>
-    </Suspense>
-  </div>
-</template>
 
 <style  lang="scss" scoped>
 .index-box {
