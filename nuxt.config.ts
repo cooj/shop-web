@@ -10,19 +10,19 @@ export default defineNuxtConfig({
         '@vite-pwa/nuxt',
         // '@nuxt/devtools',
         '@element-plus/nuxt',
-    // 'nuxt-typed-router',
-    // '@pinia-plugin-persistedstate/nuxt',
+        // 'nuxt-typed-router',
+        // '@pinia-plugin-persistedstate/nuxt',
     ],
     plugins: [
 
     ],
     experimental: {
-    // when using generate, payload js assets included in sw precache manifest
-    // but missing on offline, disabling extraction it until fixed
+        // when using generate, payload js assets included in sw precache manifest
+        // but missing on offline, disabling extraction it until fixed
         payloadExtraction: false,
         inlineSSRStyles: false,
-    // treeshakeClientOnly: false,
-    // renderJsonPayloads: true,
+        // treeshakeClientOnly: false,
+        // renderJsonPayloads: true,
     },
     // css: [
     //   '@unocss/reset/tailwind.css',
@@ -42,12 +42,12 @@ export default defineNuxtConfig({
             routes: ['/'],
             ignore: ['/hi'],
         },
-    // storage: {
-    //   app: {
-    //     driver: 'sessionStorage',
-    //     // driver: localStorageDriver({ base: "app:" }),
-    //   },
-    // },
+        // storage: {
+        //   app: {
+        //     driver: 'sessionStorage',
+        //     // driver: localStorageDriver({ base: "app:" }),
+        //   },
+        // },
     },
     app: {
         head: {
@@ -85,7 +85,7 @@ export default defineNuxtConfig({
         },
     },
     runtimeConfig: {
-    // 仅在服务端serve可以访问
+        // 仅在服务端serve可以访问
         appKey: 'abcd',
         // public里的在服务端serve,客户端client皆可访问
         public: {
@@ -97,7 +97,7 @@ export default defineNuxtConfig({
     devtools: {
         enabled: true,
     },
-    devServer: {
-        port: 3300,
-    },
+    // devServer: {
+    //     port: 3300,
+    // },
 })
