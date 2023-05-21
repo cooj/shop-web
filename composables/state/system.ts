@@ -9,12 +9,13 @@ export const useSystemState = () => {
     const system = useState<CommonApi_GetSystemResponse | undefined>('system')
 
     const getSystemInfo = async (update?: boolean) => {
-    // console.log('system.value :>> ', system.value)
+        // console.log('system.value :>> ', system.value)
         if (system.value) return system
         const { data, error } = await CommonApi.getSystem()
+        // console.log(data.value?.code)
         // 接口发生错误时
         if (error.value) return system
-        await wait(800)
+        // await wait(800)
         if (data.value?.code === 200) {
             system.value = data.value.data
         } else {
@@ -56,8 +57,8 @@ export const useUserState = () => {
         }
 
         const { data, error } = await AccountApi.userInfo()
-
-        await wait(800)
+        console.log(data.value?.code)
+        // await wait(800)
 
         // 接口发生错误时
         if (error.value) {
@@ -80,7 +81,7 @@ export const useUserState = () => {
    * @returns
    */
     const getUserInfo = async (update?: boolean) => {
-    // 获取最新数据
+        // 获取最新数据
         if (update) return await getUserData()
 
         // 已经有数据了，直接返回

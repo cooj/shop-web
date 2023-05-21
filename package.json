@@ -66,14 +66,6 @@
             "eslint --fix"
         ]
     },
-    "lint-staged1": {
-        "*.vue": [
-            "eslint --fix"
-        ],
-        "*.{js,jsx,ts,tsx}": [
-            "eslint --fix"
-        ]
-    },
     "lint-staged": {
         "*.vue": [
             "eslint --fix"
