@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <el-breadcrumb>
             <el-breadcrumb-item>
                 账户管理
@@ -42,7 +42,7 @@
             </el-table-column>
         </el-table>
         <UserAddressModel ref="modelRef" @update="getAddress" />
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -103,7 +103,7 @@ const getAddress = () => {
 }
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

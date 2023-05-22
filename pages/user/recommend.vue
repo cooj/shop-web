@@ -1,26 +1,24 @@
 <template>
-    <div>
+    <LayoutUser>
         <el-breadcrumb>
             <el-breadcrumb-item>
                 账户管理
             </el-breadcrumb-item>
             <el-breadcrumb-item>推荐管理</el-breadcrumb-item>
         </el-breadcrumb>
-    </div>
-    <div class="mt25px w450px">
-        <div style="font-weight: bold">
-            推荐分享
+        <div class="mt25px w450px">
+            <div style="font-weight: bold">
+                推荐分享
+            </div>
+            <el-form class="mt20px" label-position="top">
+                <el-form-item label="复制链接分享给好友，可获得工游豆">
+                    <el-input v-model="defData.shareLink" class="pr12px w70%!" disabled />
+                    <el-button type="primary" class="w30%" @click="onCopy()">
+                        复制地址
+                    </el-button>
+                </el-form-item>
+            </el-form>
         </div>
-        <el-form class="mt20px" label-position="top">
-            <el-form-item label="复制链接分享给好友，可获得工游豆">
-                <el-input v-model="defData.shareLink" class="pr12px w70%!" disabled />
-                <el-button type="primary" class="w30%" @click="onCopy()">
-                    复制地址
-                </el-button>
-            </el-form-item>
-        </el-form>
-    </div>
-    <div>
         <div style="font-weight: bold">
             分享记录
         </div>
@@ -29,7 +27,7 @@
             <el-table-column prop="run_info" label="操作信息" min-width="200px" align="center" />
             <el-table-column prop="add_time" label="添加时间" width="200px" align="center" />
         </el-table>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -82,7 +80,7 @@ const initTableData = async () => {
 initTableData()
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

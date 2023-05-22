@@ -1,6 +1,6 @@
 <!-- 订单列表 -->
 <template>
-    <div>
+    <LayoutUser>
         <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
             <template #pay_type="{ row }">
                 <el-select v-model="row.pay_type" filterable clearable placeholder="">
@@ -91,7 +91,7 @@
                 </template>
             </template>
         </CoTable>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -235,7 +235,7 @@ const onHandleCurrentChange = () => {
 
 initTableData()
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

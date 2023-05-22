@@ -36,88 +36,80 @@
                 </li>
             </ul>
         </div>
-        <client-only>
-            <div ref="floorRef" class="floor-box">
-                <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
-                    <div class="left">
-                        <h3 class="tle">
-                            {{ item.storey_name }}
-                        </h3>
-                        <ul class="class-list">
-                            <li v-for="sub in item.cat_lists" :key="sub.cat_id">
-                                <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
-                                    <el-button round size="small">
-                                        {{ sub.cat_name }}
-                                    </el-button>
-                                </NuxtLink>
-                            </li>
-                        </ul>
-                        <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" :src="item.storey_img" alt="">
-                    </div>
-                    <div class="right">
-                        <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
-                            :class="item.class_lists.length <= 1 ? 'one-tab' : ''">
-                            <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
-                                :name="`a${i}`">
-                                <ul class="goods-list">
-                                    <li v-for="son in sub.goods_lists" :key="son.goods_id">
-                                        <NuxtLink class="link" :to="`/goods/${son.goods_id}`">
-                                            <!-- <div class="im-box">
+        <!-- <client-only></client-only> -->
+        <div ref="floorRef" class="floor-box">
+            <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
+                <div class="left">
+                    <h3 class="tle">
+                        {{ item.storey_name }}
+                    </h3>
+                    <ul class="class-list">
+                        <li v-for="sub in item.cat_lists" :key="sub.cat_id">
+                            <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
+                                <el-button round size="small">
+                                    {{ sub.cat_name }}
+                                </el-button>
+                            </NuxtLink>
+                        </li>
+                    </ul>
+                    <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" :src="item.storey_img" alt="">
+                </div>
+                <div class="right">
+                    <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
+                        :class="item.class_lists.length <= 1 ? 'one-tab' : ''">
+                        <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
+                            :name="`a${i}`">
+                            <ul class="goods-list">
+                                <li v-for="son in sub.goods_lists" :key="son.goods_id">
+                                    <NuxtLink class="link" :to="`/goods/${son.goods_id}`">
+                                        <!-- <div class="im-box">
                         <img :src="son.goods_img" alt="">
                       </div> lazy -->
-                                            <el-image class="w100% pb100%" :src="son.goods_img" loading="lazy">
-                                                <template #error>
-                                                    <div class="image-err">
-                                                        <i class="i-ep-picture" />
-                                                    </div>
-                                                </template>
-                                            </el-image>
-                                            <h3 class="goods-name">
-                                                {{ son.goods_name }}
-                                            </h3>
-                                            <div class="price truncate">
-                                                <span>惊爆价</span>
-                                                <em>￥{{ son.shop_price }}</em>
-                                            </div>
-                                            <el-button text bg type="danger">
-                                                大热卖推荐
-                                            </el-button>
-                                        </NuxtLink>
-                                    </li>
-                                </ul>
-                            </el-tab-pane>
-                        </el-tabs>
-                    </div>
-                    <div class="brand-list">
-                        <NuxtLink v-for="sub in item.brand_lists" :key="sub.brand_id"
-                            :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                            <el-image class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent"
-                                loading="lazy">
-                                <template #error>
-                                    <div class="image-err">
-                                        <i class="i-ep-picture" />
-                                    </div>
-                                </template>
-                            </el-image>
-                        </NuxtLink>
-                    </div>
+                                        <el-image class="w100% pb100%" :src="son.goods_img" loading="lazy">
+                                            <template #error>
+                                                <div class="image-err">
+                                                    <i class="i-ep-picture" />
+                                                </div>
+                                            </template>
+                                        </el-image>
+                                        <h3 class="goods-name">
+                                            {{ son.goods_name }}
+                                        </h3>
+                                        <div class="price truncate">
+                                            <span>惊爆价</span>
+                                            <em>￥{{ son.shop_price }}</em>
+                                        </div>
+                                        <el-button text bg type="danger">
+                                            大热卖推荐
+                                        </el-button>
+                                    </NuxtLink>
+                                </li>
+                            </ul>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+                <div class="brand-list">
+                    <NuxtLink v-for="sub in item.brand_lists" :key="sub.brand_id"
+                        :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
+                        <el-image class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent"
+                            loading="lazy">
+                            <template #error>
+                                <div class="image-err">
+                                    <i class="i-ep-picture" />
+                                </div>
+                            </template>
+                        </el-image>
+                    </NuxtLink>
                 </div>
             </div>
-            <Transition v-if="defData.ready" name="slide">
-                <!-- mode="out-in" -->
-                <div v-show="(!navVisible && floorVisible)" class="floor-nav">
-                    <a v-for="item in floor?.data" :key="item.storey_id" :href="`#fl${item.storey_id}`">
-                        {{ item.storey_name }}
-                    </a>
-                    <a href="#fl1">
-                        仪器仪表
-                    </a>
-                    <a href="#fl2">
-                        办公用品
-                    </a>
-                </div>
-            </Transition>
-        </client-only>
+        </div>
+        <Transition v-if="defData.ready" name="slide">
+            <div v-show="(!navVisible && floorVisible)" class="floor-nav">
+                <a v-for="item in floorList" :key="item.storey_id" :href="`#fl${item.storey_id}`">
+                    {{ item.storey_name }}
+                </a>
+            </div>
+        </Transition>
     </div>
 </template>
 
@@ -140,21 +132,16 @@ const floorRef = ref(null)
 const floorVisible = useElementVisibility(floorRef)
 // const { x, y } = useWindowScroll()
 
-const { data: m } = await useFetch('/api/home')
-
 const { data: floor, pending } = await HomeApi.getFloor()
+const floorList = computed(() => floor.value?.data || [])
+
 // console.log('data :>> ', floor)
 floor.value?.data.forEach((item) => {
     defData.active[item.storey_id] = 'a0'
 })
 const { data: goods } = await HomeApi.getNewGoods()
 // console.log('goods :>> ', goods)
-const goodsList = ref(goods.value?.data.lists)
-
-// console.log(process)
-watch(navVisible, (val) => {
-    // console.log('val :>> ', val)
-})
+const goodsList = computed(() => goods.value?.data.lists || [])
 
 // watch(() => pending.value, () => {
 //   floor.value?.data.forEach((item) => {
@@ -286,8 +273,9 @@ onMounted(async () => {
         z-index: 1;
 
         .tle {
-            font-size: 28px;
-            padding: 30px 10px 20px 20px;
+            font-size: 24px;
+            padding: 25px 10px 20px 20px;
+            font-weight: bold;
         }
     }
 
@@ -364,6 +352,7 @@ onMounted(async () => {
                 height: 100%;
                 padding: 15px;
                 text-align: center;
+                min-height: 290px;
 
                 &:hover {
                     box-shadow: 3px 3px 10px #d8d8d8;

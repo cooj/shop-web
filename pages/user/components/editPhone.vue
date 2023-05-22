@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <div h40px>
             <el-breadcrumb :separator-icon="ArrowRight">
                 <el-breadcrumb-item>
@@ -86,7 +86,7 @@
                 完成
             </div>
         </div>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -224,7 +224,7 @@ const onEditClick = async () => {
 }
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

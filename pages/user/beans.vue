@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <div h40px>
             <el-breadcrumb>
                 <el-breadcrumb-item>
@@ -28,7 +28,7 @@
                 <el-table-column prop="create_at" label="时间" width="200px" align="center" />
             </el-table>
         </div>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -51,7 +51,7 @@ const initTableData = async () => {
 
 initTableData()
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

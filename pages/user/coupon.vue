@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <div h40px>
             <el-breadcrumb>
                 <el-breadcrumb-item>
@@ -11,14 +11,16 @@
         <div>
             <div style="margin:0 0 20px;font-size: large;">
                 我的优惠券
-                <div v-if="defData.MyCouponList.length === 0" style="color: var(--el-color-primary);margin: 8px;font-size: medium;">
+                <div v-if="defData.MyCouponList.length === 0"
+                    style="color: var(--el-color-primary);margin: 8px;font-size: medium;">
                     暂无优惠券，去优惠券中心领取
                 </div>
             </div>
             <el-space wrap>
                 <el-card v-for="item in defData.MyCouponList" :key="item.coupon_id" class="box-card" shadow="hover"
                     :data="defData">
-                    <i class="i-ep-close inline-block" style="float: right;margin: 5px;" @click="delClick(item.coupon_id)" />
+                    <i class="i-ep-close inline-block" style="float: right;margin: 5px;"
+                        @click="delClick(item.coupon_id)" />
                     <div style="font-size: xx-large;font-weight: bold;">
                         ￥{{ item.par_value }}
                     </div>
@@ -75,7 +77,7 @@
                 </el-space>
             </ClientOnly>
         </div>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -147,21 +149,21 @@ const delClick = async (row: any) => {
 }
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>
 
 <style scoped>
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .box-card {
-  width: 280px;
-  height: 150px;
-  color: var(--el-color-primary);
+    width: 280px;
+    height: 150px;
+    color: var(--el-color-primary);
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <ClientOnly>
+    <ClientOnly fallback="">
         <el-dialog v-model="visible" class="co-dialog" v-bind="$attrs" :fullscreen="defData.fullscreen" draggable
             @close="onClose">
             <template #header>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <el-breadcrumb>
             <el-breadcrumb-item>
                 账户管理
@@ -36,7 +36,7 @@
             </el-table-column>
         </el-table>
         <UserInvoiceModel ref="modelRef" @update="onUpdateData" />
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -71,7 +71,7 @@ const onUpdateData = () => {
 
 }
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

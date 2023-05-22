@@ -57,7 +57,6 @@ import HeaderUser from './HeaderUser.vue'
 // import HeaderBanner2 from './HeaderBanner2.vue'
 
 const route = useRoute()
-// console.log('route :>> ', route)
 
 const isIndex = computed(() => {
     return route.path === '/'

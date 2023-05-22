@@ -1,14 +1,13 @@
 <template>
-    <div>
+    <LayoutUser>
         <el-breadcrumb>
             <el-breadcrumb-item>
                 我关注的
             </el-breadcrumb-item>
             <el-breadcrumb-item>浏览历史</el-breadcrumb-item>
         </el-breadcrumb>
-    </div>
-    <ClientOnly>
-        <!-- <div class="table-cart"> -->
+
+        <!-- <ClientOnly></ClientOnly> -->
         <ElTable ref="tableRef" :data="defData.tableData" class="mt25px">
             <el-table-column prop="goods_name" label="商品名称" min-width="180">
                 <template #default="{ row }">
@@ -47,8 +46,7 @@
                 </template>
             </el-table-column>
         </ElTable>
-    <!-- </div> -->
-    </ClientOnly>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -97,7 +95,7 @@ const onRemove = async (row: any) => {
 }
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

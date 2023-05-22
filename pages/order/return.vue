@@ -1,13 +1,13 @@
 <!-- 退货订单 -->
 <template>
-    <div>
+    <LayoutUser>
         退货订单
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

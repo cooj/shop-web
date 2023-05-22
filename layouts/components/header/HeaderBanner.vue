@@ -3,7 +3,7 @@
     <Swiper class="swp-banner" :slides-per-view="1" :centered-slides="true" :navigation="true" :pagination="true"
         :loop="true" :autoplay="{ delay: 6000,
                                   disableOnInteraction: false }" :speed="1500" effect="fade" :modules="modules">
-        <SwiperSlide v-for="item in banner?.data" :key="item.banner_id">
+        <SwiperSlide v-for="item in bannerList" :key="item.banner_id">
             <NuxtLink :to="item.banner_link">
                 <img class="im" :src="item.banner_img" alt="">
             </NuxtLink>
@@ -62,6 +62,7 @@ const modules = [Pagination, Navigation, Autoplay, EffectFade]
 
 // 获取导航
 const { data: banner } = await HomeApi.getBanner()
+const bannerList = computed(() => banner.value?.data || [])
 // console.log('banner :>> ', banner)
 </script>
 

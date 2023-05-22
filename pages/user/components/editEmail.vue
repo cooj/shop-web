@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <div h40px>
             <el-breadcrumb :separator-icon="ArrowRight">
                 <el-breadcrumb-item>
@@ -30,7 +30,7 @@
                 </el-form-item>
             </el-col>
         </el-form>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +64,7 @@ const editPwd = async () => {
 }
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>

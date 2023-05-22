@@ -39,8 +39,8 @@ export default defineNuxtConfig({
         },
         prerender: {
             crawlLinks: false,
-            routes: ['/'],
-            ignore: ['/hi'],
+            // routes: ['/'],
+            // ignore: ['/hi'],
         },
         // storage: {
         //   app: {
@@ -90,8 +90,8 @@ export default defineNuxtConfig({
         // public里的在服务端serve,客户端client皆可访问
         public: {
             baseUrl: process.env.VITE_BASE_URL || '/',
-            // apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
-            apiBase: '',
+            apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
+            // apiBase: process.env.VITE_API_BASE || '',
             otherUrl: process.env.OTHER_URL || 'default_other_url',
         },
     },

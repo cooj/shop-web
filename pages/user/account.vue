@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <div h40px>
             <el-breadcrumb>
                 <el-breadcrumb-item>
@@ -100,7 +100,7 @@
       <i class="ic-baseline-add-home-work block" />
       <i class="i-carbon:battery-low block" /> -->
         </div>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -195,7 +195,7 @@ const sendEmail = async () => {
 }
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 

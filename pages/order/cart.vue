@@ -11,61 +11,60 @@
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>购物车</el-breadcrumb-item>
             </el-breadcrumb>
-            <ClientOnly>
-                <div class="table-cart">
-                    <ElTable ref="tableRef" :data="defData.tableData" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="55" align="center" />
-                        <el-table-column prop="goods_name" label="商品名称" min-width="180">
-                            <template #default="{ row }">
-                                <div class="h50px flex">
-                                    <div class="goods_img">
-                                        <CoImage class="h50px w50px" :src="row.goods_img" />
-                                    </div>
-                                    <div class="pl10px">
-                                        <NuxtLink class="goods_link" :to="`/goods/${row.goods_id}`" target="_blank">
-                                            {{ row.goods_name }}
-                                        </NuxtLink>
-                                    </div>
+            <div class="table-cart">
+                <ElTable ref="tableRef" :data="defData.tableData" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55" align="center" />
+                    <el-table-column prop="goods_name" label="商品名称" min-width="180">
+                        <template #default="{ row }">
+                            <div class="h50px flex">
+                                <div class="goods_img">
+                                    <CoImage class="h50px w50px" :src="row.goods_img" />
                                 </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="goods_code" label="商品型号" width="160" />
-                        <el-table-column prop="goods_spec" label="商品规格" width="160" />
-                        <el-table-column prop="shop_price" label="价格" width="120" align="center" />
-                        <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
-                            <template #default="{ row }">
-                                <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100"
-                                    @change="onChangeNumber(row)" />
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="operate" label="操作" width="100" align="center">
-                            <template #default="{ row }">
-                                <el-button type="primary" link @click="onRemove(row)">
-                                    删除
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </ElTable>
-                </div>
-                <div class="table-cart-count">
-                    <div class="lt">
-                        <el-button type="primary" link @click="onRemove('all')">
-                            删除所选商品
-                        </el-button>
-                        <!-- <el-button type="primary" link>
+                                <div class="pl10px">
+                                    <NuxtLink class="goods_link" :to="`/goods/${row.goods_id}`" target="_blank">
+                                        {{ row.goods_name }}
+                                    </NuxtLink>
+                                </div>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="goods_code" label="商品型号" width="160" />
+                    <el-table-column prop="goods_spec" label="商品规格" width="160" />
+                    <el-table-column prop="shop_price" label="价格" width="120" align="center" />
+                    <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
+                        <template #default="{ row }">
+                            <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100"
+                                @change="onChangeNumber(row)" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="operate" label="操作" width="100" align="center">
+                        <template #default="{ row }">
+                            <el-button type="primary" link @click="onRemove(row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </ElTable>
+            </div>
+            <div class="table-cart-count">
+                <div class="lt">
+                    <el-button type="primary" link @click="onRemove('all')">
+                        删除所选商品
+                    </el-button>
+                    <!-- <el-button type="primary" link>
             继续购物
           </el-button> -->
-                    </div>
-                    <div class="gt">
-                        商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
-                        <el-button class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
-                            @click="onSettle">
-                            结算商品
-                        </el-button>
-                    </div>
-                    <!-- https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000 -->
                 </div>
-            </ClientOnly>
+                <div class="gt">
+                    商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
+                    <el-button class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
+                        @click="onSettle">
+                        结算商品
+                    </el-button>
+                </div>
+                <!-- https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000 -->
+            </div>
+            <!-- <ClientOnly></ClientOnly> -->
         </div>
     </section>
 </template>
@@ -123,11 +122,11 @@ const onRemove = async (row: GoodsTableCartItem | 'all') => {
     } else {
         ids = row.id.toString()
 
-    // // 获取到在tableData对应的下标
-    // const index = defData.tableData.findIndex(item => item.goods_id === row.goods_id)
-    // // console.log('index :>> ', index)
-    // // 删除
-    // defData.tableData.splice(index, 1)
+        // // 获取到在tableData对应的下标
+        // const index = defData.tableData.findIndex(item => item.goods_id === row.goods_id)
+        // // console.log('index :>> ', index)
+        // // 删除
+        // defData.tableData.splice(index, 1)
     }
 
     const { data } = await GoodsApi.delCart({ id: ids }) // 删除选中的商品记录 或者 删除所有购物
@@ -174,36 +173,36 @@ definePageMeta({
 .step-box {}
 
 .table-cart {
-  min-height: 500px;
-  background-color: var(--el-color-white);
+    min-height: 500px;
+    background-color: var(--el-color-white);
 
-  .goods_img {
-    :deep(.image-error) {
-      background-color: var(--el-color-info-light-9);
+    .goods_img {
+        :deep(.image-error) {
+            background-color: var(--el-color-info-light-9);
 
-      i {
-        font-size: 20px;
-      }
+            i {
+                font-size: 20px;
+            }
+        }
     }
-  }
 
-  .goods_link {
-    font-weight: bold;
-    color: var(--el-table-text-color);
+    .goods_link {
+        font-weight: bold;
+        color: var(--el-table-text-color);
 
-    &:hover {
-      color: var(--el-color-primary);
-      text-decoration: underline;
+        &:hover {
+            color: var(--el-color-primary);
+            text-decoration: underline;
+        }
     }
-  }
 }
 
 .table-cart-count {
-  background-color: var(--el-color-white);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-top: 1px solid var(--el-border-color-lighter);
+    background-color: var(--el-color-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-top: 1px solid var(--el-border-color-lighter);
 }
 </style>

@@ -5,8 +5,10 @@
             <!-- <ClientOnly>
         </ClientOnly> -->
             <template #fallback>
-                <div italic op50>
-                    <span animate-pulse>Loading...</span>
+                <div class="container">
+                    <div class="min-h300px" italic op50>
+                        <span animate-pulse>Loading...</span>
+                    </div>
                 </div>
             </template>
         </Suspense>
@@ -24,7 +26,7 @@ definePageMeta({
 
 <style  lang="scss" scoped>
 .index-box {
-  padding-top: 40px;
-  background-color: #f3f3f3;
+    padding-top: 40px;
+    background-color: #f3f3f3;
 }
 </style>

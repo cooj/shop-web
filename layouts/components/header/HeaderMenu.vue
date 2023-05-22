@@ -4,9 +4,9 @@
         <NuxtLink v-for="item in menu?.data" :key="item.nav_id" :to="item.nav_url">
             {{ item.nav_name }}
         </NuxtLink>
-        <NuxtLink to="/order/cart">
+        <!-- <NuxtLink to="/order/cart">
             清仓特卖
-        </NuxtLink>
+        </NuxtLink> -->
     </nav>
 </template>
 

@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
     redirect: {
         path: '/order/list',

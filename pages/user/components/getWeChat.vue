@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LayoutUser>
         <div h40px>
             <el-breadcrumb :separator-icon="ArrowRight">
                 <el-breadcrumb-item>
@@ -17,7 +17,7 @@
         <div class="m50px">
             <iframe id="iframe" class="ml40px h400px w300px" :src="weChat" />
         </div>
-    </div>
+    </LayoutUser>
 </template>
 
 <script setup lang="ts">
@@ -57,7 +57,7 @@ const getOpenId = async () => {
 getOpenId()
 
 definePageMeta({
-    layout: 'user',
+    layout: 'home',
     middleware: 'auth',
 })
 </script>
