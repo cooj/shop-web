@@ -111,10 +111,10 @@ const defData = reactive({
 
 // form表单数据类型
 interface FormSearchData {
-  order_no: ''
-  pay_type: '' | number
-  consignee_name: ''
-  status: ''
+    order_no: ''
+    pay_type: '' | number
+    consignee_name: ''
+    status: ''
 }
 
 const searchData = reactive<BaseFormToolType<FormSearchData>>({
@@ -139,18 +139,18 @@ type TableDataItem = OrderListTableData
 const tableData = reactive<BaseTableDataType<TableDataItem>>({
     data: [],
     tableHeader: [
-    // { property: '', label: '', type: "selection", width: 38, },
-    // { property: 'goods_img', label: '图片', width: 60, align: "center", slot: true },
+        // { property: '', label: '', type: "selection", width: 38, },
+        // { property: 'goods_img', label: '图片', width: 60, align: "center", slot: true },
         { property: 'order_info', label: '订单信息', minWidth: 200, slot: true, className: 'goods-list-row', showOverflowTooltip: false },
         { property: 'order_mount', label: '订单金额', width: 150, align: 'right', slot: true, showOverflowTooltip: false },
         { property: 'consignee_info', label: '收货信息', minWidth: 150, slot: true, showOverflowTooltip: false },
         { property: 'status', label: '订单状态', width: 100, slot: true, align: 'center' },
         { property: 'operate', label: '操作', width: 85, slot: true, align: 'center', showOverflowTooltip: false },
-    // { property: 'market_price', label: '市场价', width: 85, align: 'center' },
+        // { property: 'market_price', label: '市场价', width: 85, align: 'center' },
     ],
     pagination: {
         ...PAGINATION,
-    // total: 0,
+        // total: 0,
     },
 })
 
@@ -190,10 +190,10 @@ const initTableData = async () => {
 
 // table合并行
 interface SpanMethodProps {
-  row: OrderListTableData
-  column: TableColumnCtx<OrderListTableData>
-  rowIndex: number
-  columnIndex: number
+    row: OrderListTableData
+    column: TableColumnCtx<OrderListTableData>
+    rowIndex: number
+    columnIndex: number
 }
 
 const arraySpanMethod = ({
@@ -206,10 +206,10 @@ const arraySpanMethod = ({
         if (columnIndex === 0) {
             return [1, 5]
         }
-    // else if (columnIndex === 1) {
-    //   return [0, 0]
-    // }
-    // return [1, 3]
+        // else if (columnIndex === 1) {
+        //   return [0, 0]
+        // }
+        // return [1, 3]
     }
     // console.log('row :>> ', row);
     // if (rowIndex % 2 === 0) {
@@ -222,7 +222,13 @@ const arraySpanMethod = ({
 }
 
 const setAddressText = (row: OrderApi_GetOrderListItem) => {
-    return strJoin([row.province, row.city, row.area, row.address], '  ')
+    const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
+    if (row.province) arr.push(row.province) // 省份 名称 或 省份id 或 省份名称id 或
+    if (row.city) arr.push(row.city)
+    if (row.area) arr.push(row.area) //
+    if (row.address) arr.push(row.address) //
+
+    return arr.join('  ')
 }
 
 const onSearch = () => {
@@ -242,57 +248,57 @@ definePageMeta({
 
 <style  lang="scss" scoped>
 .table-box {
-  :deep(.el-table) {
-    font-size: 13px;
-    --el-table-row-hover-bg-color: var(--el-color-white);
-  }
-
-  :deep(.el-table__body) {
-
-    .goods-list-row:has(.goods-list) {
-      padding: 0;
-
-      .cell {
-        padding: 0;
-      }
+    :deep(.el-table) {
+        font-size: 13px;
+        --el-table-row-hover-bg-color: var(--el-color-white);
     }
-  }
+
+    :deep(.el-table__body) {
+
+        .goods-list-row:has(.goods-list) {
+            padding: 0;
+
+            .cell {
+                padding: 0;
+            }
+        }
+    }
 }
 
 .goods-list {
-  li {
-    display: flex;
-    padding: 8px 12px;
+    li {
+        display: flex;
+        padding: 8px 12px;
 
-    &+li {
-      border-top: 1px;
-    }
-
-    .text {
-      flex: 1;
-      padding-left: 10px;
-
-      .tle {
-        line-height: 22px;
-        max-height: 44px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        /* 需要显示的行数 */
-        overflow: hidden;
-        word-break: break-all;
-
-        /* 强制英文单词断行 */
-        a {
-          color: #333;
-
-          &:hover {
-            color: var(--el-color-primary);
-          }
+        &+li {
+            border-top: 1px;
         }
 
-      }
+        .text {
+            flex: 1;
+            padding-left: 10px;
+
+            .tle {
+                line-height: 22px;
+                max-height: 44px;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                /* 需要显示的行数 */
+                overflow: hidden;
+                word-break: break-all;
+
+                /* 强制英文单词断行 */
+                a {
+                    color: #333;
+
+                    &:hover {
+                        color: var(--el-color-primary);
+                    }
+                }
+
+            }
+        }
     }
-  }
 }
 </style>

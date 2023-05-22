@@ -23,14 +23,17 @@ const messageConfig = reactive({
 // 获取商城信息
 const useSystem = useSystemState()
 const systemInfo = await useSystem.getSystemInfo()
-const icon = useFavicon()
-if (systemInfo.value?.ico_img) {
-    icon.value = systemInfo.value?.ico_img
-}
+// const icon = useFavicon()
+// if (systemInfo.value?.ico_img) {
+//     icon.value = systemInfo.value?.ico_img
+// }
 useHead({
     title: systemInfo.value?.shop_title,
     meta: [
         { name: 'description', content: systemInfo.value?.shop_describe },
+    ],
+    link: [
+        { rel: 'icon', type: 'image/x-icon', href: systemInfo.value?.ico_img || '' },
     ],
 })
 </script>

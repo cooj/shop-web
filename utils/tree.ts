@@ -6,7 +6,7 @@
  * @param children 子类的键值，默认children
  * @returns any[]
 */
-export function getParentNode<T = any>(classifyList: Array<T>, val: T[keyof T], key = 'id' as keyof T, children = 'children' as keyof T): T[] {
+export function findParentsNode<T = any>(classifyList: Array<T>, val: T[keyof T], key = 'id' as keyof T, children = 'children' as keyof T): T[] {
     const temp: any[] = []
     const forFn = function (arr: any[], id: T[keyof T]) {
         for (let i = 0; i < arr.length; i++) {
