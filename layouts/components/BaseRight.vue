@@ -26,7 +26,7 @@
                 </NuxtLink>
             </li>
             <li>
-                <NuxtLink class="side-item" to="/user/browseHistory">
+                <NuxtLink class="side-item" to="/user/history">
                     <i class="i-ep-list" />
                     <p class="text">
                         浏览历史

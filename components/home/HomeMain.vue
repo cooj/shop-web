@@ -275,7 +275,6 @@ onMounted(async () => {
         .tle {
             font-size: 24px;
             padding: 25px 10px 20px 20px;
-            font-weight: bold;
         }
     }
 
@@ -336,6 +335,7 @@ onMounted(async () => {
         height: 100%;
         display: flex;
         flex-wrap: wrap;
+        min-height: 580px;
 
         li {
             width: 20%;
