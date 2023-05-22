@@ -150,7 +150,8 @@
                         </ul>
                     </div>
                     <div class="goods-right">
-                        <img src="https://www.gdbmro.com/goodsImg/lADPDgtYxBInjCPNAW7M1w_215_366.jpg" alt="">
+                        <!-- <img src="https://www.gdbmro.com/goodsImg/lADPDgtYxBInjCPNAW7M1w_215_366.jpg" alt=""> -->
+                        <img class="outline-1px outline-#e5e7eb outline-solid" src="~/assets/images/gyj-band.png" alt="">
                     </div>
                 </ClientOnly>
             </div>
