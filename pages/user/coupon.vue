@@ -46,36 +46,35 @@
           </el-button> -->
                 </el-card>
             </el-space>
-            <ClientOnly>
-                <div style="margin:20px 0px;font-size: large;">
-                    优惠券中心
-                </div>
-                <el-space wrap>
-                    <el-card v-for="item in defData.CouponList" :key="item.coupon_id" class="box-card" :data="defData"
-                        shadow="hover">
-                        <!-- <div class="card-content"> -->
-                        <div style="font-size: xx-large;font-weight: bold;">
-                            ￥{{ item.par_value }}
-                        </div>
-                        <div style="font-size: 14px;">
-                            活动： {{ item.coupon_name }}
-                        </div>
-                        <div style="font-size: 14px;">
-                            有效期：{{ item.term_time }}
-                        </div>
-                        <div v-if="item.use_coupon === 0">
-                            <el-button type="danger" plain @click="onReceive(item.coupon_id)">
-                                去领取
-                            </el-button>
-                        </div>
-                        <div v-else>
-                            <el-button type="info" plain>
-                                已领取
-                            </el-button>
-                        </div>
-                    </el-card>
-                </el-space>
-            </ClientOnly>
+            <!-- <ClientOnly></ClientOnly> -->
+            <div style="margin:20px 0px;font-size: large;">
+                优惠券中心
+            </div>
+            <el-space wrap>
+                <el-card v-for="item in defData.CouponList" :key="item.coupon_id" class="box-card" :data="defData"
+                    shadow="hover">
+                    <!-- <div class="card-content"> -->
+                    <div style="font-size: xx-large;font-weight: bold;">
+                        ￥{{ item.par_value }}
+                    </div>
+                    <div style="font-size: 14px;">
+                        活动： {{ item.coupon_name }}
+                    </div>
+                    <div style="font-size: 14px;">
+                        有效期：{{ item.term_time }}
+                    </div>
+                    <div v-if="item.use_coupon === 0">
+                        <el-button type="danger" plain @click="onReceive(item.coupon_id)">
+                            去领取
+                        </el-button>
+                    </div>
+                    <div v-else>
+                        <el-button type="info" plain>
+                            已领取
+                        </el-button>
+                    </div>
+                </el-card>
+            </el-space>
         </div>
     </LayoutUser>
 </template>

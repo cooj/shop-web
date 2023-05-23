@@ -4,10 +4,10 @@
             <div class="lt">
                 <span class="line-height-20px">欢迎来到工游记商城!</span>
                 <!-- <ClientOnly></ClientOnly> -->
-                <template v-if="userState.token && defData.username">
+                <template v-if="userState.token && username">
                     <NuxtLink to="/user">
                         <el-button link>
-                            <span>您好！{{ defData.username }}</span>
+                            <span>您好！{{ username }}</span>
                         </el-button>
                     </NuxtLink>
                     <el-button type="danger" link @click="onLoginOut">
@@ -28,9 +28,11 @@
                     </el-button>
                 </NuxtLink>
                 <el-divider direction="vertical" />
-                <el-button link>
-                    <span>注册</span>
-                </el-button>
+                <NuxtLink to="/register">
+                    <el-button link>
+                        <span>注册</span>
+                    </el-button>
+                </NuxtLink>
                 <el-divider direction="vertical" />
                 <el-button link>
                     <span>企业购</span>
@@ -42,7 +44,7 @@
                 </el-button>
                 <el-divider direction="vertical" />
                 <el-button link readonly>
-                    <span>010-56003254568</span>
+                    <span>{{ systemInfo?.sale_tel }}</span>
                 </el-button>
             </div>
         </div>
@@ -51,36 +53,31 @@
 
 <script lang="ts" setup>
 const userState = useUserState()
-const defData = reactive({
-    username: '',
-})
-const initData = async () => {
-    const user = await userState.getUserInfo()
-    console.log('user :>> ', user)
-    if (user.value) {
-        defData.username = user.value.user_name
-    }
-}
+const useSystem = useSystemState()
+
+// 获取商城信息
+const systemInfo = await useSystem.getSystemInfo()
+
+// 用户信息
+const user = await userState.getUserInfo()
+
+const username = computed(() => user.value?.user_name)
 
 // 退出登录
 const onLoginOut = async () => {
     useLoginOut()
 }
-
-onBeforeMount(() => {
-    initData()
-})
 </script>
 
 <style lang="scss" scoped>
 .header-top {
-  .el-button {
-    --el-button-text-color: #fff;
-    --el-font-size-base: 13px;
+    .el-button {
+        --el-button-text-color: #fff;
+        --el-font-size-base: 13px;
 
-    &.el-button--danger {
-      --el-button-text-color: var(--el-color-danger-light-8);
+        &.el-button--danger {
+            --el-button-text-color: var(--el-color-danger-light-8);
+        }
     }
-  }
 }
 </style>

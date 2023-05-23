@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="tle flex items-center text-13px font-bold">
                         <div class="w20px">
-                            <i class="i-ep-service block" />
+                            <i class="block" :class="eleIconChange(item.icon)" />
                         </div>
                         <h6>{{ item.custom_name }}</h6>
                     </div>
@@ -57,161 +57,180 @@ const defData = reactive({
     show: false,
 })
 
+// 设置图标
+const eleIconChange = (icon: string) => {
+    if (!icon.includes('ele-')) return ''
+    const str = icon.split('-')?.[1]
+
+    if (str) {
+        let a = ''
+        const arr = str.split('')
+        arr.forEach((item) => {
+            if (item >= 'A' && item <= 'Z') {
+                a += `-${item.toLowerCase()}`
+            } else {
+                a += item
+            }
+        })
+        return `i-ep${a}`
+    } else {
+        return ''
+    }
+}
+
 // // 获取商品分类
 // const cateList = await goodsState.getGoodsClass()
 // console.log('cateList :>> ', cateList)
 // 获取商品分类
 const { data: cate } = await GoodsApi.getClass()
-const cateList = computed(() => {
-    return cate.value?.data
-})
+const cateList = computed(() => cate.value?.data)
 //
 </script>
 
 <style lang="scss" scoped>
 .goods-class-tle {
-  width: 100%;
-  height: 100%;
-  background: var(--el-color-primary);
-  color: var(--el-color-white);
-  display: flex;
-  align-items: center;
-  padding: 5px 10px;
+    width: 100%;
+    height: 100%;
+    background: var(--el-color-primary);
+    color: var(--el-color-white);
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
 
-  &:hover .goods-class-child {
-    display: block;
-  }
+    &:hover .goods-class-child {
+        display: block;
+    }
 }
 
 .goods-class-child {
-  width: 100%;
-  height: var(--banner-height);
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: var(--el-color-white);
-  color: #333;
-  display: none;
-  // box-shadow: -1px 3px 12px -1px rgba(0, 0, 0, .3);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  padding: 5px 0;
+    width: 100%;
+    height: var(--banner-height);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--el-color-white);
+    color: #333;
+    display: none;
+    // box-shadow: -1px 3px 12px -1px rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    padding: 5px 0;
 
-  .card {
-    --b-border-width: 10px;
-    padding: 5px var(--b-border-width);
-    // background-color: #333;
-    position: relative;
-    z-index: 1;
+    .card {
+        --b-border-width: 10px;
+        padding: 5px var(--b-border-width);
+        // background-color: #333;
+        position: relative;
+        z-index: 1;
 
-    &::after {
-      --b-position-left: 7px;
-      --b-position-top: 0px;
-      content: '';
-      display: block;
-      position: absolute;
-      top: var(--b-position-top);
-      left: var(--b-position-left);
-      width: calc(100% - var(--b-position-left) * 2);
-      height: calc(100% - var(--b-position-top) * 2);
-      // background-color: var(--el-color-info-light-8);
-      z-index: -1;
-      border-radius: 2px;
-    }
-
-    &-link {
-      >a {
-        color: var(--el-text-color-regular);
-
-        &:hover {
-          color: var(--el-color-primary);
+        &::after {
+            --b-position-left: 7px;
+            --b-position-top: 0px;
+            content: '';
+            display: block;
+            position: absolute;
+            top: var(--b-position-top);
+            left: var(--b-position-left);
+            width: calc(100% - var(--b-position-left) * 2);
+            height: calc(100% - var(--b-position-top) * 2);
+            // background-color: var(--el-color-info-light-8);
+            z-index: -1;
+            border-radius: 2px;
         }
-      }
 
-    }
-  }
+        &-link {
+            >a {
+                color: var(--el-text-color-regular);
 
-  li>a {
-    display: flex;
-    align-items: center;
-    // padding: 5px 10px;
-    font-size: 15px;
-    line-height: 48px;
-    padding: 0 10px;
+                &:hover {
+                    color: var(--el-color-primary);
+                }
+            }
 
-    i {
-      margin-right: 5px;
-    }
-  }
-
-  li:hover {
-    .card::after {
-      background-color: var(--el-color-info-light-8);
+        }
     }
 
-    .goods-class-pane {
-      display: block;
+    li>a {
+        display: flex;
+        align-items: center;
+        // padding: 5px 10px;
+        font-size: 15px;
+        line-height: 48px;
+        padding: 0 10px;
+
+        i {
+            margin-right: 5px;
+        }
     }
-  }
+
+    li:hover {
+        .card::after {
+            background-color: var(--el-color-info-light-8);
+        }
+
+        .goods-class-pane {
+            display: block;
+        }
+    }
 }
 
 .goods-class-pane {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  width: var(--banner-width);
-  height: var(--banner-height);
-  background-color: #fff;
-  overflow: auto;
-  display: none;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, .05);
-  padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: var(--banner-width);
+    height: var(--banner-height);
+    background-color: #fff;
+    overflow: auto;
+    display: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .05);
+    padding: 10px;
 
-  dd {
-    display: flex;
-    font-size: 13px;
-    line-height: 22px;
-    --dd-left-width: 100px;
-    padding: 5px 0;
+    dd {
+        display: flex;
+        font-size: 13px;
+        line-height: 22px;
+        --dd-left-width: 100px;
+        padding: 5px 0;
 
-    +dd {
-      border-top: 1px dotted var(--el-border-color);
+        +dd {
+            border-top: 1px dotted var(--el-border-color);
+        }
+
+        .lt {
+            width: var(--dd-left-width);
+            font-weight: bold;
+            padding-left: 4px;
+        }
+
+        .ico {
+            width: 30px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                display: block;
+                width: 1em;
+                height: 1em;
+            }
+        }
+
+        .gt {
+            flex: 1;
+
+            a {
+                display: inline-block;
+                margin-right: 15px;
+                // color: var(--el-text-color-secondary);
+                color: var(--el-text-color-regular);
+            }
+
+        }
+
+        a:hover {
+            color: var(--el-color-primary);
+        }
     }
-
-    .lt {
-      width: var(--dd-left-width);
-      font-weight: bold;
-      padding-left: 4px;
-    }
-
-    .ico {
-      width: 30px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      i {
-        display: block;
-        width: 1em;
-        height: 1em;
-      }
-    }
-
-    .gt {
-      flex: 1;
-
-      a {
-        display: inline-block;
-        margin-right: 15px;
-        // color: var(--el-text-color-secondary);
-        color: var(--el-text-color-regular);
-      }
-
-    }
-
-    a:hover {
-      color: var(--el-color-primary);
-    }
-  }
 }
 </style>

@@ -402,6 +402,9 @@ const onCollect = async () => {
 
 // 立即购买
 const onBuyGoods = () => {
+    if (!goodsInfo.value?.goods_number) {
+        return ElMessage.error('商品库存不足，无法购买！')
+    }
     const param = {
         goods_id: goodsInfo.value!.goods_id,
         goods_number: form.number,
@@ -437,9 +440,6 @@ const onAddCart = async () => {
 
 // 商品分享
 const onShare = async () => {
-    console.log(userState.userInfo.value)
-
-    console.log(userState.userInfo.value?.user_id)
     if (userState.userInfo.value?.user_id) {
         defData.shareLink = `${location.origin}/login/register?id=${userState.userInfo.value?.user_id}`
         if (!defData.shareCode) {

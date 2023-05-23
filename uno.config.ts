@@ -22,6 +22,7 @@ export default defineConfig({
         presetIcons({
             // scale: 1.2,
             scale: 1.1,
+            // autoInstall: true,
         }),
         presetTypography(),
         presetWebFonts({
@@ -31,7 +32,7 @@ export default defineConfig({
             //   mono: 'DM Mono',
             // },
         }),
-    // presetRemToPx(),
+        // presetRemToPx(),
     ],
     transformers: [
         transformerDirectives(),

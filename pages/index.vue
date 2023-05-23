@@ -16,9 +16,6 @@
 </template>
 
 <script setup lang="ts">
-const online = useOnline()
-const name = ref('张三')
-
 definePageMeta({
     layout: 'home',
 })

@@ -44,7 +44,7 @@
                         {{ item.storey_name }}
                     </h3>
                     <ul class="class-list">
-                        <li v-for="sub in item.cat_lists" :key="sub.cat_id">
+                        <li v-for="sub in item.cat_lists.slice(0, 10)" :key="sub.cat_id">
                             <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
                                 <el-button round size="small">
                                     {{ sub.cat_name }}
@@ -60,18 +60,19 @@
                         <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
                             :name="`a${i}`">
                             <ul class="goods-list">
-                                <li v-for="son in sub.goods_lists" :key="son.goods_id">
+                                <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
                                     <NuxtLink class="link" :to="`/goods/${son.goods_id}`">
                                         <!-- <div class="im-box">
                         <img :src="son.goods_img" alt="">
                       </div> lazy -->
-                                        <el-image class="w100% pb100%" :src="son.goods_img" loading="lazy">
+                                        <CoImage class="w100% pb100%" :src="son.goods_img" loading="lazy" />
+                                        <!-- <el-image class="w100% pb100%" :src="son.goods_img" loading="lazy">
                                             <template #error>
                                                 <div class="image-err">
                                                     <i class="i-ep-picture" />
                                                 </div>
                                             </template>
-                                        </el-image>
+                                        </el-image> -->
                                         <h3 class="goods-name">
                                             {{ son.goods_name }}
                                         </h3>
@@ -89,7 +90,7 @@
                     </el-tabs>
                 </div>
                 <div class="brand-list">
-                    <NuxtLink v-for="sub in item.brand_lists" :key="sub.brand_id"
+                    <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
                         <el-image class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent"
                             loading="lazy">
@@ -132,6 +133,7 @@ const floorRef = ref(null)
 const floorVisible = useElementVisibility(floorRef)
 // const { x, y } = useWindowScroll()
 
+// 获取楼层
 const { data: floor, pending } = await HomeApi.getFloor()
 const floorList = computed(() => floor.value?.data || [])
 
@@ -139,20 +141,12 @@ const floorList = computed(() => floor.value?.data || [])
 floor.value?.data.forEach((item) => {
     defData.active[item.storey_id] = 'a0'
 })
+
+// 新品商品
 const { data: goods } = await HomeApi.getNewGoods()
 // console.log('goods :>> ', goods)
-const goodsList = computed(() => goods.value?.data.lists || [])
-
-// watch(() => pending.value, () => {
-//   floor.value?.data.forEach((item) => {
-//     defData.active[item.storey_id] = 'a0'
-//   })
-// }, {
-//   immediate: true,
-// })
-
-// const system = useSystemState()
-// console.log('system.get :>> ', await system.getSystemInfo())
+// 只显示前五个（下标0开始，截取5个）
+const goodsList = computed(() => goods.value?.data.lists.slice(0, 5) || [])
 
 onMounted(async () => {
     await wait(1000)

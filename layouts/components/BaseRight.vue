@@ -65,7 +65,7 @@
     position: fixed;
     right: 0;
     top: 300px;
-    z-index: 1;
+    z-index: 10;
 }
 
 .side-ul {

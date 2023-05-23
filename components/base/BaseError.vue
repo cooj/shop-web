@@ -1,7 +1,7 @@
 <template>
     <div p="x4 y10" text="center #888 dark:gray-200">
         <div mt10px text-72px>
-            <div i-carbon-warning inline-block />
+            <div class="i-carbon-warning inline-block" />
         </div>
         <div class="mb30px text-72px lh-1em -mt20px">
             404
