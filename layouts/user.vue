@@ -15,9 +15,7 @@
         <UserLayout>
             <slot />
         </UserLayout>
-        <div class="mx-auto h0 text-right text-sm opacity-25">
-            [User Layout]
-        </div>
+
         <BaseFooter />
         <BaseRight />
     </div>

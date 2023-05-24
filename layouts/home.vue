@@ -6,10 +6,6 @@
         <BaseHeader />
         <!-- <BaseMenu /> -->
         <slot />
-
-        <div class="mx-auto h0 text-right text-sm opacity-25">
-            [Home Layout]
-        </div>
         <BaseFooter />
         <BaseRight />
     </main>

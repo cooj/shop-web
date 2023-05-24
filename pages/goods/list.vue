@@ -174,6 +174,7 @@
             </el-skeleton>
 
             <template v-if="defData.ready">
+                <!-- <ClientOnly></ClientOnly> -->
                 <div v-if="defData.tableData.length" class="goods-list">
                     <!-- 列表 -->
                     <dl v-if="defData.isList" class="goods-list-dl">
@@ -716,7 +717,7 @@ definePageMeta({
         margin-bottom: 8px;
 
         >a:hover {
-            color:var(--el-color-primary);
+            color: var(--el-color-primary);
             text-decoration: underline;
         }
     }
