@@ -27,7 +27,7 @@
                     <dl>
                         <dd v-for="sub in item.lists" :key="sub.cat_id">
                             <div class="lt">
-                                <NuxtLink :to="`/goods/list?c=${sub.cat_id}`">
+                                <NuxtLink :to="linkGoodsList({ query: { cid: sub.cat_id }, url: true })">
                                     {{ sub.cat_name }}
                                 </NuxtLink>
                             </div>
@@ -35,7 +35,7 @@
                                 <i class="i-ep-arrow-right" />
                             </div>
                             <div class="gt">
-                                <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="`/goods/list?c=${son.cat_id}`">
+                                <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="linkGoodsList({ query: { cid: son.cat_id }, url: true })">
                                     {{ son.cat_name }}
                                 </NuxtLink>
                             </div>
@@ -51,11 +51,6 @@
 import { GoodsApi } from '~/api/goods/list'
 
 // const goodsState = useGoodsState()
-
-const defData = reactive({
-    active: -1,
-    show: false,
-})
 
 // 设置图标
 const eleIconChange = (icon: string) => {

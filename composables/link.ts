@@ -12,18 +12,16 @@ export const linkGoodsList = (params: GoodsListParams): string => {
     if (params.relate) { // 获取
         // console.log('Number.isNaN(Number(query.cid)) :>> ', Number.isNaN(Number(query.cid)))
         // keyword不存在params对象里面时,并且路由里面存在keyword字段时
-        if (!('keyword' in params) && 'keyword' in query) data.keyword = query.keyword
+        if (!('keyword' in params.query) && 'keyword' in query) data.keyword = query.keyword
 
         // c不存在params对象里面时,并且路由里面存在数字类型cid时
-        if (!('cid' in params) && !Number.isNaN(Number(query.cid))) {
+        if (!('cid' in params.query) && !Number.isNaN(Number(query.cid))) {
             data.cid = Number(query.cid)
         }
 
         // c不存在params对象里面时,并且路由里面存在数字类型cid时
-        if (!('bid' in params) && 'bid' in query) data.bid = query.bid
+        if (!('bid' in params.query) && 'bid' in query) data.bid = query.bid
     }
-
-    // console.log('data :>> ', data)
 
     // 返回地址的形式, /goods/list?cid=1
     if (params.url) {
@@ -34,6 +32,7 @@ export const linkGoodsList = (params: GoodsListParams): string => {
             path: url,
             query: data as {},
         })
+
         return ''
     }
 

@@ -1,204 +1,243 @@
 <template>
     <section class="text-14px">
         <div class="container">
-            <el-breadcrumb class="goods-breadcrumb" separator=">">
-                <el-breadcrumb-item :to="{ path: '/' }">
-                    首页
-                </el-breadcrumb-item>
-                <el-breadcrumb-item>物性测试仪器</el-breadcrumb-item>
-                <el-breadcrumb-item>试验机</el-breadcrumb-item>
-                <el-breadcrumb-item>德卡</el-breadcrumb-item>
-            </el-breadcrumb>
-            <el-form size="small">
-                <div class="goods-attr">
-                    <div class="goods-attr-item">
-                        <div title="分类" class="left">
-                            分类
-                        </div>
-                        <div class="right">
-                            <div class="attr-list">
-                                <el-check-tag v-for="item in 10" :key="item" :checked="checked" @change="onChange">
-                                    断路器
-                                </el-check-tag>
+            <!---->
+            <el-skeleton :loading="defData.ready ? false : true" animated>
+                <el-breadcrumb class="goods-breadcrumb">
+                    <el-breadcrumb-item :to="{ path: '/' }">
+                        首页
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item v-for="item in defData.breadcrumbList" :key="item.cat_id">
+                        <NuxtLink :to="linkGoodsList({ query: { cid: item.cat_id }, relate: true, url: true })">
+                            {{ item.cat_name }}
+                        </NuxtLink>
+                    </el-breadcrumb-item>
+                </el-breadcrumb>
+                <el-form size="small">
+                    <div class="goods-attr">
+                        <div v-if="defData.classList.length" class="goods-attr-item">
+                            <div title="分类" class="left">
+                                分类
                             </div>
-                            <el-button class="mx4px my3px" size="small">
-                                展开
-                                <i class="i-ep-arrow-down" />
-                            </el-button>
-                            <el-button class="mx4px my3px" size="small">
-                                收起
-                                <i class="i-ep-arrow-up" />
-                            </el-button>
+                            <div class="right">
+                                <div class="attr-list" :class="defData.showClass ? '' : 'attr-collect'">
+                                    <el-check-tag v-for="item in defData.classList" :key="item.cat_id"
+                                        @change="onChoseClass(item.cat_id)">
+                                        {{ item.cat_name }}
+                                    </el-check-tag>
+                                </div>
+                                <el-button class="mx4px my3px" size="small" @click="toggleClass">
+                                    <template v-if="defData.showClass">
+                                        收起
+                                        <i class="i-ep-arrow-up" />
+                                    </template>
+                                    <template v-else>
+                                        展开
+                                        <i class="i-ep-arrow-down" />
+                                    </template>
+                                </el-button>
+                            </div>
+                        </div>
+                        <div class="goods-attr-item">
+                            <div title="品牌" class="left">
+                                品牌
+                            </div>
+                            <div class="right">
+                                <div class="attr-list" :class="defData.showBrand ? '' : 'attr-collect'">
+                                    <el-check-tag v-for="item in defData.brandList" :key="item.brand_id"
+                                        :checked="item.brand_id === Number(bid) ? true : false"
+                                        @change="onChoseBrand(item.brand_id)">
+                                        {{ item.brand_name }}
+                                    </el-check-tag>
+                                </div>
+                                <el-button class="mx4px my3px" size="small" @click="toggleBrand">
+                                    <template v-if="defData.showBrand">
+                                        收起
+                                        <i class="i-ep-arrow-up" />
+                                    </template>
+                                    <template v-else>
+                                        展开
+                                        <i class="i-ep-arrow-down" />
+                                    </template>
+                                </el-button>
+                            </div>
                         </div>
                     </div>
-                    <div class="goods-attr-item">
-                        <div title="品牌" class="left">
-                            品牌
-                        </div>
-                        <div class="right">
-                            <div class="attr-list">
-                                <el-check-tag v-for="item in 20" :key="item" :checked="checked" @change="onChange">
-                                    百度
-                                </el-check-tag>
-                            </div>
-                            <el-button class="mx4px my3px" size="small">
-                                展开/收起
-                                <i class="i-ep-arrow-up" />
-                            </el-button>
-                        </div>
+                    <div class="goods-opt">
+                        <dl class="goods-opt-dl">
+                            <dd class="goods-opt-item cursor-pointer" :class="defData.optChose === 1 ? 'on' : ''"
+                                @click="onChoseOpt(1)">
+                                默认
+                            </dd>
+                            <dd class="goods-opt-item cursor-pointer" :class="{ on: defData.optChose === 2 }"
+                                @click="onChoseOpt(2)">
+                                销量
+                                <i class="i-ic-baseline-arrow-downward" />
+                            </dd>
+                            <dd class="goods-opt-item cursor-pointer" :class="{ on: defData.optChose === 3 }"
+                                @click="onChoseOpt(3)">
+                                价格
+                                <i v-if="defData.optChose !== 3" class="i-ep-sort" />
+                                <i v-if="defData.optChose === 3 && form.price_sort === 'asc'" class="i-ep-sort-up" />
+                                <i v-if="defData.optChose === 3 && form.price_sort === 'desc'" class="i-ep-sort-down" />
+                            </dd>
+                            <dd class="goods-opt-item checkbox">
+                                <el-checkbox v-model="form.is_stock" label="有库存" @change="onStockChange" />
+                            </dd>
+                            <dd class="goods-opt-item">
+                                <el-input v-model="form.min_price" class="w70px!" size="small" placeholder="最低价"
+                                    clearable />
+                                <span class="mx5px">-</span>
+                                <el-input v-model="form.max_price" class="w70px!" size="small" placeholder="最高价"
+                                    clearable />
+                                <el-button class="ml5px" size="small" @click="onPriceRange">
+                                    搜索
+                                </el-button>
+                            </dd>
+                        </dl>
+                        <dl class="goods-opt-dl">
+                            <dd class="goods-opt-item cursor-pointer" :class="{ show: !defData.isList }"
+                                @click="toggleShowList(false)">
+                                <i class="i-ep-menu" />
+                            </dd>
+                            <dd class="goods-opt-item cursor-pointer" :class="{ show: defData.isList }"
+                                @click="toggleShowList(true)">
+                                <i class="i-ic-baseline-table-rows" />
+                            </dd>
+                            <dd class="goods-opt-item b-0">
+                                共 {{ form.total }} 件相关商品
+                            </dd>
+                        </dl>
                     </div>
-                </div>
-                <div class="goods-opt">
-                    <dl class="goods-opt-dl">
-                        <dd class="goods-opt-item on cursor-pointer">
-                            默认
-                        </dd>
-                        <dd class="goods-opt-item cursor-pointer">
-                            销量
-                            <i class="i-ic-baseline-arrow-downward" />
-                        </dd>
-                        <dd class="goods-opt-item cursor-pointer">
-                            价格
-                            <i class="i-ep-sort" />
-                            <i class="i-ep-sort-up" />
-                            <i class="i-ep-sort-down" />
-                        </dd>
-                        <dd class="goods-opt-item checkbox">
-                            <el-checkbox v-model="form.is_stock" label="有库存" />
-                        </dd>
-                        <dd class="goods-opt-item">
-                            <el-input v-model="form.min_price" class="w70px!" size="small" placeholder="最低价" clearable />
-                            <span class="mx5px">-</span>
-                            <el-input v-model="form.max_price" class="w70px!" size="small" placeholder="最高价" clearable />
-                            <el-button class="ml5px" size="small">
-                                搜索
-                            </el-button>
-                        </dd>
-                    </dl>
-                    <dl class="goods-opt-dl">
-                        <dd class="goods-opt-item cursor-pointer" :class="{ show: !defData.isList }" @click="toggleShowList(false)">
-                            <i class="i-ep-menu" />
-                        </dd>
-                        <dd class="goods-opt-item cursor-pointer" :class="{ show: defData.isList }" @click="toggleShowList(true)">
-                            <i class="i-ic-baseline-table-rows" />
-                        </dd>
-                        <dd class="goods-opt-item b-0">
-                            共 4,694 件相关商品
-                        </dd>
-                    </dl>
-                </div>
-            </el-form>
-            <div class="goods-list">
-                <!-- 列表 -->
-                <dl v-if="defData.isList" class="goods-list-dl">
-                    <dt class="goods-item-s">
-                        <div class="w500px px20px!">
-                            商品信息
-                        </div>
-                        <div class="w180px">
-                            品牌
-                        </div>
-                        <div class="w180px">
-                            型号
-                        </div>
-                        <div class="w150px">
-                            价格
-                        </div>
-                        <div class="flex-1 text-center">
-                            操作
-                        </div>
-                    </dt>
-                    <dd v-for="item in 10" :key="item" class="goods-item-s">
-                        <div class="g-info w500px">
-                            <div class="g-info-left">
-                                <NuxtLink to="/goods/10" target="_blank">
-                                    <div class="lazyload-wrap sku-img-wrap real-image">
-                                        <img src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0979931_01.jpg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1664162899000"
-                                            alt="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个"
-                                            title="FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个" class="">
-                                    </div>
-                                </NuxtLink>
+                </el-form>
+                <template #template>
+                    <div class="goods-breadcrumb">
+                        <el-skeleton-item variant="text" style="width: 30%" />
+                    </div>
+                    <el-form size="small">
+                        <div class="goods-attr">
+                            <div class="goods-attr-item">
+                                <div class="left">
+                                    <el-skeleton-item variant="text" />
+                                </div>
+                                <div class="right items-center">
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="w15%!" />
+                                </div>
                             </div>
-                            <div class="g-info-right">
-                                <div class="name">
-                                    <NuxtLink class="link" to="/goods/10" target="_blank">
-                                        FESTO/费斯托 调压阀 MS2-LR-M5-D6-AR-MPA-B 压力范围0.5~7bar 接口M5 附压力表 1个
+                            <div class="goods-attr-item">
+                                <div class="left">
+                                    <el-skeleton-item variant="text" />
+                                </div>
+                                <div class="right items-center">
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+
+                                    <el-skeleton-item variant="text" class="w15%!" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goods-opt">
+                            <dl class="goods-opt-dl">
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w150px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                            </dl>
+                            <dl class="goods-opt-dl">
+                                <dd class="goods-opt-item w60px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w60px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w150px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                            </dl>
+                        </div>
+                    </el-form>
+                </template>
+            </el-skeleton>
+
+            <template v-if="defData.ready">
+                <div v-if="defData.tableData.length" class="goods-list">
+                    <!-- 列表 -->
+                    <dl v-if="defData.isList" class="goods-list-dl">
+                        <dt class="goods-item-s">
+                            <div class="w500px px20px!">
+                                商品信息
+                            </div>
+                            <div class="w180px">
+                                品牌
+                            </div>
+                            <div class="w180px">
+                                型号
+                            </div>
+                            <div class="w150px">
+                                价格
+                            </div>
+                            <div class="flex-1 text-center">
+                                操作
+                            </div>
+                        </dt>
+                        <dd v-for=" item in defData.tableData" :key="item.goods_id" class="goods-item-s">
+                            <div class="g-info w500px">
+                                <div class="g-info-left">
+                                    <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
+                                        <CoImage class="w80% pb80%" :src="item.goods_img" />
                                     </NuxtLink>
                                 </div>
-                                <div class="tags">
-                                    <el-tag type="success">
-                                        自营
-                                    </el-tag>
-                                    <el-tag class="ml-5px" type="warning">
-                                        热销
-                                    </el-tag>
-                                    <el-tag class="ml-5px" type="danger">
-                                        精选
-                                    </el-tag>
+                                <div class="g-info-right">
+                                    <div class="name">
+                                        <NuxtLink class="link" :to="`/goods/${item.goods_id}`" target="_blank">
+                                            {{ item.goods_name }}
+                                        </NuxtLink>
+                                    </div>
+                                    <div class="tags">
+                                        <el-tag v-if="item.is_new" type="success">
+                                            新品
+                                        </el-tag>
+                                        <el-tag v-if="item.is_hot" class="ml-5px" type="warning">
+                                            热销
+                                        </el-tag>
+                                        <el-tag v-if="item.is_best" class="ml-5px" type="danger">
+                                            精选
+                                        </el-tag>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="g-brand w180px">
-                            FES TO/费斯托
-                        </div>
-                        <div class="g-code w180px">
-                            MS2-LR-M5-D6-AR-MPA-B
-                        </div>
-                        <!-- <div class="tw5 feature">
-              <span>制造商型号：MS2-LR-M5-D6-AR-MPA-B</span><span>销售单位：个</span><span>压力范围：0.5~7bar</span><span>接口：M5</span><span>是否有压力表：是</span>
-            </div>
-            <div class="tw7 deliver-leadTime">
-              <i class="deliver h24" data-v-0a47a9ed="">当日发货</i>
-            </div> -->
-                        <div class="g-price w150px text-center">
-                            <div class="g-price-1">
-                                <i>￥</i><span class="integer">157</span><span class="decimal">.90</span><span class="unit">/个</span>
+                            <div class="g-brand w180px">
+                                <el-tag>{{ item.brand_name }}</el-tag>
                             </div>
-                            <div class="g-price-3">
-                                <i>￥</i><span class="integer">157</span><span class="decimal">.90</span><span class="unit">/个</span>
+                            <div class="g-code w180px">
+                                {{ item.goods_code }}
                             </div>
-                            <div class="g-price-2">
-                                <span class="member-price">
-                                    ￥ ？
-                                </span>
-                                <span class="member-title">
-                                    会员价
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex-1 text-center">
-                            <el-button class="my10px" type="primary">
-                                <i class="i-carbon-shopping-cart" />
-                                <!-- <i class="i-ic-outline-shopping-cart"></i> -->
-                                加入购物车
-                            </el-button>
-                            <br>
-                            <el-button v-if="item % 2" class="focus">
-                                <i class="i-carbon-favorite-filled" />
-                                收藏
-                            </el-button>
-                            <el-button v-else>
-                                <i class="i-carbon-favorite" />
-                                收藏
-                            </el-button>
-                        </div>
-                    </dd>
-                </dl>
-                <!-- 网格 -->
-                <ul v-else class="goods-list-ul">
-                    <li v-for="item in 11" :key="item">
-                        <div class="goods-list-item">
-                            <NuxtLink to="/goods/500" target="_blank">
-                                <img src="https://private.zkh.com/PRODUCT/BIG/BIG_AA0924616_01.jpeg?x-oss-process=style/WEBPCOM_style_350&amp;timestamp=1673973422000"
-                                    alt="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台" class="">
-                            </NuxtLink>
-
-                            <div class="goods-price">
-                                <div class="goods-price-left">
-                                    <i>￥</i><span class="integer">2580</span><span class="decimal">.00</span>
-                                    <span class="unit">/台</span>
+                            <div class="g-price w150px text-center">
+                                <div class="g-price-1">
+                                    <i>￥</i>
+                                    <span>{{ formatNumber(item.shop_price) }}</span>
+                                    <!-- <span class="integer">157</span><span class="decimal">.90</span><span
+                                        class="unit">/个</span> -->
                                 </div>
-                                <div class="goods-price-right">
+                                <!-- <div class="g-price-3">
+                                    <i>￥</i><span class="integer">157</span><span class="decimal">.90</span><span
+                                        class="unit">/个</span>
+                                </div> -->
+                                <div class="g-price-2">
                                     <span class="member-price">
                                         ￥ ？
                                     </span>
@@ -207,86 +246,308 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="goods-name" title="LEEB/里博 布洛维转换手持式里氏硬度计 TH130 1台">
-                                <NuxtLink to="/goods/300" target="_blank">
-                                    LEEB/里博 布洛维转换手持式里氏<em>硬度计</em> TH130 1台 布洛维转换手持式里氏硬度计
-                                </NuxtLink>
-                            </div>
-                            <div class="goods-desc">
-                                <p class="truncate">
-                                    <span>订货编码：AA0924616</span><i class="iconfont copy-icon"></i>
-                                </p>
-                                <p class="truncate">
-                                    <span>制造商型号：TH130</span>
-                                </p>
-                            </div>
-                            <div class="goods-bot flex">
-                                <el-button v-if="item % 2" class="focus">
-                                    <i class="i-carbon-favorite-filled" />
-                                </el-button>
-                                <el-button v-else>
-                                    <i class="i-carbon-favorite" />
-                                </el-button>
-                                <el-button class="flex-1">
+                            <div class="flex-1 text-center">
+                                <el-button class="mb10px" type="primary" @click="onAddCart(item)">
                                     <i class="i-carbon-shopping-cart" />
                                     <!-- <i class="i-ic-outline-shopping-cart"></i> -->
                                     加入购物车
                                 </el-button>
+                                <br>
+                                <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
+                                    <i :class="item.is_collect ? `i-carbon-favorite-filled` : 'i-carbon-favorite'" />
+                                </el-button>
+                                <!-- <el-button v-if="item.goods_id % 2" class="focus">
+                                    <i class="i-carbon-favorite-filled" />
+                                    收藏
+                                </el-button>
+                                <el-button v-else>
+                                    <i class="i-carbon-favorite" />
+                                    收藏
+                                </el-button> -->
                             </div>
-                        </div>
-                    </li>
-                </ul>
-                <!-- <el-table :data="defData.tableData" style="width: 100%">
-          <el-table-column prop="date" label="商品信息" width="180" />
-          <el-table-column prop="name" label="品牌" width="180" />
-          <el-table-column prop="name" label="型号" width="180" />
-          <el-table-column prop="address" label="Address" />
-        </el-table> -->
-            </div>
-            <div class="goods-pagination">
-                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
-                    :page-sizes="defData.pageSizes" background small layout=" prev, pager, next,total, jumper"
-                    :total="defData.total" />
+                        </dd>
+                    </dl>
+                    <!-- 网格 -->
+                    <ul v-else class="goods-list-ul">
+                        <li v-for=" item in defData.tableData " :key="item.goods_id">
+                            <div class="goods-list-item">
+                                <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
+                                    <CoImage class="w100% pb100%" :src="item.goods_img" loading="lazy" />
+                                </NuxtLink>
+
+                                <div class="goods-price">
+                                    <div class="goods-price-left">
+                                        <i>￥</i><span class="integer">{{ formatNumber(item.shop_price) }}</span>
+                                        <!-- <span class="unit">/台</span> -->
+                                    </div>
+                                    <div class="goods-price-right">
+                                        <span class="member-price">
+                                            ￥ ？
+                                        </span>
+                                        <span class="member-title">
+                                            会员价
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="goods-name" :title="item.goods_name">
+                                    <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
+                                        {{ item.goods_name }}
+                                    </NuxtLink>
+                                </div>
+                                <div class="goods-desc">
+                                    <!-- <p class="truncate">
+                                    <span>订货编码：{{item.goods_code}}</span><i class="iconfont copy-icon"></i>
+                                </p> -->
+                                    <p class="truncate">
+                                        <span>商品型号：{{ item.goods_code }}</span>
+                                    </p>
+                                </div>
+                                <div class="goods-bot flex">
+                                    <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
+                                        <i :class="item.is_collect ? `i-carbon-favorite-filled` : 'i-carbon-favorite'" />
+                                    </el-button>
+                                    <!-- v-if="item.is_collect"
+                                    <el-button v-else>
+                                        <i class="i-carbon-favorite" />
+                                    </el-button> -->
+                                    <el-button class="flex-1" @click="onAddCart(item)">
+                                        <i class="i-carbon-shopping-cart" />
+                                        <!-- <i class="i-ic-outline-shopping-cart"></i> -->
+                                        加入购物车
+                                    </el-button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div v-else class="min-h500px flex items-center justify-center">
+                    <p class="text-12px c-#777">
+                        商品不存在或者已经下架！
+                    </p>
+                </div>
+                <div v-if="form.total" class="goods-pagination">
+                    <el-pagination v-model:current-page="form.page" v-model:page-size="form.pageSize"
+                        :page-sizes="form.pageSizes" background small layout="total, prev, pager, next, jumper"
+                        :total="form.total" @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
+                </div>
+            </template>
+            <div v-else class="min-h800px flex items-center justify-center">
+                <p class="text-12px c-#777">
+                    ...
+                </p>
             </div>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-// 定义变量内容
-const dlRefs = ref<HTMLDivElement[]>([])
-const router = useRouter()
+import { GoodsApi } from '~/api/goods/list'
+import { RecordApi } from '~/api/user/record'
 
-const checked = ref(false)
-
-const onChange = (status: boolean) => {
-    checked.value = status
-}
+const userState = useUserState()
 
 const defData = reactive({
+    ready: false,
     isList: false, // 商品显示列表，还是网格
-    breadcrumbList: [],
-    tableData: [] as any[],
-    page: 1,
-    pageSize: 100,
-    pageSizes: [100, 200, 300],
-    total: 401,
+    breadcrumbList: [] as GoodsApi_GetListItemCate[], // 面包屑导航
+    classList: [] as GoodsApi_GetListItemCate[], // 商品分类
+    brandList: [] as GoodsApi_GetListItemBrand[], // 商品品牌
+    tableData: [] as GoodsApi_GetListItem[], // 商品列表
+    showClass: false, // 显示所有分类
+    showBrand: false, // 显示所有品牌
+    optChose: 1, // 1:默认选中状态，2：销量，3：价格，4：品牌，5：颜色，6：位置，7：文献，8：运费，9：
 })
 
 const form = reactive({
     cate_id: [],
     brand_id: [],
+    price_sort: '', // 价格排序方式   'desc' | 'asc'
     is_stock: false, // 是否有库存
     min_price: '', // 最低价
     max_price: '', // 最高价
 
+    page: 1,
+    pageSize: 30,
+    pageSizes: [30, 60, 90],
+    total: 0,
+
 })
+
+const keyword = useRouteQuery('keyword') // 搜索
+const cid = useRouteQuery('cid') // 分类
+const bid = useRouteQuery('bid') // 品牌
+
+// 获取初始数据
+const initTableData = async () => {
+    // 滚动条回到顶部(web端调用)
+    if (process.client) {
+        if (document) document.documentElement.scrollTop = 0
+    }
+    const loadingInstance = ElLoading.service({
+        fullscreen: true,
+        text: '加载中...',
+        background: 'transparent',
+    })
+
+    const params: GoodsApi_GetList = {
+        is_paging: 1,
+        page: form.page,
+        page_size: form.pageSize,
+        keyword: keyword.value?.trim() ?? '', // 关键词或名称匹配的商品列表匹配到这个字符串中的任何一个
+        cat_id: Number(cid.value),
+        brand_id: Number(bid.value), // 品牌id
+    }
+
+    if (!params.keyword) delete params.keyword
+    if (!params.cat_id) delete params.cat_id
+    if (!params.brand_id) delete params.brand_id
+
+    // 销量排序 （desc或asc）
+    if (defData.optChose === 2) params.sale_number = 'desc'
+    // 价格排序 （desc或asc）
+    if (defData.optChose === 3) {
+        params.shop_price = form.price_sort === 'desc' ? 'desc' : 'asc'
+    }
+
+    // 价格范围
+    let price_range = ''
+    if (form.min_price || form.max_price) {
+        if (form.min_price && form.max_price) {
+            price_range = `${form.min_price}-${form.max_price}`
+        } else if (form.min_price) {
+            price_range = `${form.min_price}-${10 ** 8}`
+        } else if (form.max_price) {
+            price_range = `0-${form.max_price}`
+        }
+    }
+    if (price_range) params.price_interval = price_range // 价格范围-范围/范围/总价格/价格范围/
+
+    if (form.is_stock) params.goods_number = 1
+
+    // console.log('params :>> ', params)
+
+    const { data } = await GoodsApi.getList(params)
+    loadingInstance?.close()
+    const dat = data.value!.data
+    defData.breadcrumbList = dat.category.position
+    defData.classList = dat.category.lists
+    defData.brandList = dat.brand
+
+    defData.tableData = dat.goods.lists || []
+    form.total = dat.goods.total || 0
+
+    defData.ready = true
+}
+initTableData()
 
 // 切换商品显示列表
 const toggleShowList = (param: boolean) => {
     if (defData.isList === param) return
     defData.isList = param
 }
+
+// 商品分类展开、收起
+const toggleClass = () => {
+    defData.showClass = !defData.showClass
+}
+// 商品分类展开、收起
+const toggleBrand = () => {
+    defData.showBrand = !defData.showBrand
+}
+
+// 商品分类选中
+const onChoseClass = (id: number) => {
+    linkGoodsList({ query: { cid: id }, relate: true })
+}
+// 商品品牌选中
+const onChoseBrand = (id: number) => {
+    // 品牌已选中时，清空选中状态
+    const brand_id = id === Number(bid.value) ? '' : id
+    linkGoodsList({ query: { bid: brand_id }, relate: true })
+}
+
+// 分页数量点击
+const onHandleSizeChange = async (val: number) => {
+    initTableData()
+}
+
+// 选择销量、价格排序、库存等
+const onChoseOpt = (type: number) => {
+    if (type === 3) { // 价格排序
+        if (defData.optChose === type) {
+            form.price_sort = form.price_sort === 'asc' ? 'desc' : 'asc'
+        }
+        if (!form.price_sort) form.price_sort = 'asc'
+    }
+
+    defData.optChose = type
+
+    nextTick(() => {
+        initTableData()
+    })
+}
+
+// 有无库存
+const onStockChange = () => {
+    initTableData()
+}
+
+// 价格范围
+const onPriceRange = () => {
+    initTableData()
+}
+
+// 商品收藏
+const onAddCollect = async (row: GoodsApi_GetListItem) => {
+    // 用户未登录时
+    if (!userState.userInfo.value?.user_id) {
+        return navigateTo('/login')
+    }
+    // 已经收藏了，取消收藏状态
+    if (row.is_collect) {
+        // 清除收藏
+        const params: RecordApi_Del = {
+            goods_ids: row.goods_id.toString(),
+            type: 1,
+            user_id: userState.userInfo.value.user_id,
+        }
+        const { data } = await RecordApi.del(params)
+        if (data.value?.code === 200) {
+            row.is_collect = 0 // 清除收藏标志位
+        }
+    } else {
+        const params: RecordApi_Add = {
+            goods_id: row.goods_id,
+            type: 1,
+            user_id: userState.userInfo.value.user_id,
+        }
+        const { data } = await RecordApi.add(params)
+        if (data.value?.code === 200) {
+            row.is_collect = 1
+        }
+    }
+}
+
+// 加入购物车
+const onAddCart = async (row: GoodsApi_GetListItem) => {
+    // 用户未登录时，不允许加入购物车页面
+    if (!userState.userInfo.value?.user_id) {
+        // ElMessage.error('请先登录!')
+        return navigateTo('/login')
+    }
+
+    const number = 1 // 默认加1购物车条目
+    const { data } = await GoodsApi.addCart({ goods_id: row.goods_id, goods_number: number })
+    if (data.value?.code === 200) {
+        ElMessage.success('加入购物车成功')
+    } else {
+        ElMessage.error('加入购物车失败')
+    }
+}
+
+watch(() => [keyword.value, cid.value, bid.value], () => {
+    initTableData()
+})
 
 definePageMeta({
     layout: 'home',
@@ -295,263 +556,279 @@ definePageMeta({
 
 <style scoped lang="scss">
 .goods-breadcrumb {
-  padding: 15px 0;
+    padding: 15px 0;
 }
 
 .goods-attr {
 
-  background-color: var(--el-color-white);
-  border: 1px solid var(--el-color-info-light-7);
-  font-size: 14px;
+    background-color: var(--el-color-white);
+    border: 1px solid var(--el-color-info-light-7);
+    font-size: 14px;
 
 }
 
 .goods-attr-item {
-  display: flex;
-  --attr-left-width: 100px;
-  --goods-item-height: 38px;
-
-  +.goods-attr-item {
-    border-top: 1px solid var(--el-color-info-light-7);
-  }
-
-  .left {
-    width: var(--attr-left-width);
-    line-height: var(--goods-item-height);
-    padding: 0 8px;
-    border-right: 1px solid var(--el-color-info-light-7);
-    font-weight: bold;
-  }
-
-  .right {
-    width: calc(100% - var(--attr-left-width));
-    padding: 4px;
     display: flex;
-    flex-wrap: wrap;
+    --attr-left-width: 100px;
+    --goods-item-height: 38px;
 
-    .attr-list {
-      flex: 1;
+    +.goods-attr-item {
+        border-top: 1px solid var(--el-color-info-light-7);
     }
-  }
 
-  :deep(.el-check-tag) {
-    --el-color-info: #555;
-    --el-color-info-light-9: transparent;
-    line-height: 22px;
-    padding: 0 5px;
-    margin: 4px 5px;
-    font-size: 12px;
-    font-weight: normal;
-  }
+    .left {
+        width: var(--attr-left-width);
+        line-height: var(--goods-item-height);
+        padding: 0 8px;
+        border-right: 1px solid var(--el-color-info-light-7);
+        font-weight: bold;
+    }
+
+    .right {
+        width: calc(100% - var(--attr-left-width));
+        padding: 4px;
+        display: flex;
+        flex-wrap: wrap;
+
+        .attr-list {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .attr-collect {
+            height: 30px;
+        }
+    }
+
+    :deep(.el-check-tag) {
+        --el-color-info: #555;
+        --el-color-info-light-9: transparent;
+
+        line-height: 22px;
+        padding: 0 5px;
+        margin: 4px 5px;
+        font-size: 12px;
+        font-weight: normal;
+
+        &:hover {
+            background-color: var(--el-color-primary-light-8);
+            color: var(--el-color-primary);
+        }
+    }
 
 }
 
 .goods-opt {
-  --goods-opt-height: 38px;
-  margin: 15px 0 7px;
-  border: 1px solid var(--el-color-info-light-7);
-  background-color: var(--el-color-white);
-  display: flex;
-  justify-content: space-between;
-  height: var(--goods-opt-height);
-  font-size: 12px;
-
-  .goods-opt-dl {
+    --goods-opt-height: 38px;
+    margin: 15px 0 7px;
+    border: 1px solid var(--el-color-info-light-7);
+    background-color: var(--el-color-white);
     display: flex;
+    justify-content: space-between;
+    height: var(--goods-opt-height);
+    font-size: 12px;
 
-    &:nth-child(2n) {
-      .goods-opt-item {
-        border: 0;
-        border-left: 1px solid var(--el-color-info-light-7);
-      }
-    }
-  }
+    .goods-opt-dl {
+        display: flex;
 
-  .goods-opt-item {
-    padding: 0 20px;
-    line-height: var(--goods-opt-height);
-    border-right: 1px solid var(--el-color-info-light-7);
-    display: flex;
-    align-items: center;
-    color: var(--el-text-color-regular);
-
-    &.on {
-      background-color: var(--el-color-primary);
-      color: var(--el-color-white)
+        &:nth-child(2n) {
+            .goods-opt-item {
+                border: 0;
+                border-left: 1px solid var(--el-color-info-light-7);
+            }
+        }
     }
 
-    &.checkbox {
-      padding: 0;
-
-      :deep(.el-checkbox) {
+    .goods-opt-item {
         padding: 0 20px;
-        height: 100%;
-      }
-    }
+        line-height: var(--goods-opt-height);
+        border-right: 1px solid var(--el-color-info-light-7);
+        display: flex;
+        align-items: center;
+        color: var(--el-text-color-regular);
 
-    &.show {
-      color: var(--el-color-primary);
+        &.on {
+            background-color: var(--el-color-primary);
+            color: var(--el-color-white)
+        }
+
+        &.checkbox {
+            padding: 0;
+
+            :deep(.el-checkbox) {
+                padding: 0 20px;
+                height: 100%;
+            }
+        }
+
+        &.show {
+            color: var(--el-color-primary);
+        }
     }
-  }
 }
 
 .goods-list-ul {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(5, 1fr);
-  padding: 10px 0;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 10px 0;
 }
 
 // 网格
 .goods-list-item {
-  padding: 10px;
-  background-color: var(--el-color-white);
-  border-radius: 2px;
+    padding: 10px;
+    background-color: var(--el-color-white);
+    border-radius: 2px;
 
-  &:hover {
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .12);
-  }
+    &:hover {
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, .12);
+    }
 
-  .goods-price {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 5px;
+    .goods-price {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
 
-    .goods-price-left {
-      font-size: 16px;
-      font-weight: bold;
-      color: var(--el-color-primary);
+        .goods-price-left {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--el-color-primary);
 
-      .unit {
+            .unit {
+                font-size: 14px;
+                color: #666;
+                padding-left: 4px;
+            }
+        }
+    }
+
+    .goods-name {
         font-size: 14px;
-        color: #666;
-        padding-left: 4px;
-      }
+        color: #000;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-height: 20px;
+        height: 40px;
+        overflow: hidden;
+        margin-bottom: 8px;
+
+        >a:hover {
+            color:var(--el-color-primary);
+            text-decoration: underline;
+        }
     }
-  }
 
-  .goods-name {
-    font-size: 14px;
-    color: #000;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-height: 20px;
-    height: 40px;
-    overflow: hidden;
-    margin-bottom: 8px;
-  }
-
-  .goods-desc {
-    font-size: 12px;
-  }
-
-  .goods-bot {
-    .focus {
-      color: var(--el-button-hover-text-color);
-      border-color: var(--el-button-hover-border-color);
-      background-color: var(--el-button-hover-bg-color);
-      outline: 0;
+    .goods-desc {
+        font-size: 12px;
     }
-  }
+
+    .goods-bot {
+        .focus {
+            color: var(--el-button-hover-text-color);
+            border-color: var(--el-button-hover-border-color);
+            background-color: var(--el-button-hover-bg-color);
+            outline: 0;
+        }
+    }
 }
 
 // 列表
 .goods-list-dl {
-  background-color: var(--el-color-white);
+    background-color: var(--el-color-white);
 
-  .goods-item-s {
-    display: flex;
-    padding: 12px 0;
+    .goods-item-s {
+        display: flex;
+        padding: 12px 0;
 
-    +.goods-item-s {
-      border-top: 1px dashed var(--el-color-info-light-7);
-    }
+        +.goods-item-s {
+            border-top: 1px dashed var(--el-color-info-light-7);
+        }
 
-    &>* {
-      padding: 0 8px;
-    }
+        &>* {
+            padding: 0 8px;
+        }
 
-    .g-info {
-      display: flex;
-      --goods-info-img-width: 100px;
+        .g-info {
+            display: flex;
+            --goods-info-img-width: 100px;
 
-      .g-info-left {
-        width: var(--goods-info-img-width);
-      }
-
-      .g-info-right {
-        width: calc(100% - var(--goods-info-img-width));
-        padding: 0 10px;
-
-        .name {
-          height: 48px;
-          margin-bottom: 5px;
-
-          .link {
-            line-height: 24px;
-            max-height: 48px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-
-            &:hover {
-              cursor: pointer;
-              color: var(--el-color-primary);
-              text-decoration: underline;
+            .g-info-left {
+                width: var(--goods-info-img-width);
             }
-          }
+
+            .g-info-right {
+                width: calc(100% - var(--goods-info-img-width));
+                padding: 0 10px;
+
+                .name {
+                    height: 48px;
+                    margin-bottom: 5px;
+
+                    .link {
+                        line-height: 24px;
+                        max-height: 48px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+
+                        &:hover {
+                            cursor: pointer;
+                            color: var(--el-color-primary);
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
         }
-      }
+
+        .g-price {
+            padding: 5px;
+
+            &-1 {
+                color: var(--el-color-primary);
+                font-size: 16px;
+                font-weight: bold;
+
+                .unit {
+                    font-size: 14px;
+                    color: #666;
+                    padding-left: 4px;
+                }
+            }
+
+            &-2 {
+                display: inline-block;
+                border: 1px solid var(--el-color-primary-light-3);
+                padding: 0 2px;
+                font-size: 12px;
+            }
+
+            &-3 {
+                color: #999;
+                text-decoration: line-through;
+                font-size: 12px;
+            }
+
+        }
     }
 
-    .g-price {
-      padding: 5px;
-
-      &-1 {
-        color: var(--el-color-primary);
-        font-size: 16px;
-        font-weight: bold;
-
-        .unit {
-          font-size: 14px;
-          color: #666;
-          padding-left: 4px;
-        }
-      }
-
-      &-2 {
-        display: inline-block;
-        border: 1px solid var(--el-color-primary-light-3);
-        padding: 0 2px;
-        font-size: 12px;
-      }
-
-      &-3 {
-        color: #999;
-        text-decoration: line-through;
-        font-size: 12px;
-      }
-
+    dd.goods-item-s:hover {
+        background-color: #fafafa;
     }
-  }
-
-  dd.goods-item-s:hover {
-    background-color: #fafafa;
-  }
 }
 
 .goods-pagination {
-  padding: 20px 0;
+    padding: 20px 0;
 
-  :deep(.el-pagination) {
-    --el-pagination-button-bg-color: var(--el-color-white);
-    justify-content: center;
-    --el-disabled-bg-color: var(--el-border-color);
-  }
+    :deep(.el-pagination) {
+        --el-pagination-button-bg-color: var(--el-color-white);
+        justify-content: center;
+        --el-disabled-bg-color: var(--el-border-color);
+    }
 }
 </style>
