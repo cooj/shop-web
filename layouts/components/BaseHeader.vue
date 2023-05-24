@@ -28,10 +28,12 @@
                 </div>
                 <div class="cart">
                     <NuxtLink to="/order/cart">
-                        <el-button type="primary" class="min-w150px">
-                            <i class="i-ep-shopping-cart-full mr8px" />
-                            购物车
-                        </el-button>
+                        <el-badge :value="number" class="cart-number">
+                            <el-button type="primary" class="min-w150px">
+                                <i class="i-ep-shopping-cart-full mr8px" />
+                                购物车
+                            </el-button>
+                        </el-badge>
                     </NuxtLink>
 
                     <!-- <el-button>
@@ -49,6 +51,10 @@
 
 <script lang="ts" setup>
 import HeaderIndex from './header/HeaderIndex.vue'
+
+const useCartNumber = useCartNumberState()
+
+const number = await useCartNumber.setCartNumber()
 
 const route = useRoute()
 
@@ -83,46 +89,50 @@ watch(() => route.query.keyword, (val) => {
 <style lang="scss" scoped>
 .header-box {
 
-  background-image: url('~/assets/images/banner-bg.png');
-  background-position: top center;
+    background-image: url('~/assets/images/banner-bg.png');
+    background-position: top center;
+
+    .cart-number {
+        --el-bg-color: #ffa0a0;
+    }
 
 }
 
 .search-box {
 
-  :deep(.el-input) {
-    --el-input-focus-border-color: transparent;
-    // --el-input-border-radius: 10px;
-  }
-
-  // .el-input__wrapper,
-  // .el-input {
-  //   --el-input-border-radius: 10px;
-  // }
-
-  .el-input__wrapper {
-    &.is-focus {
-      box-shadow: none;
+    :deep(.el-input) {
+        --el-input-focus-border-color: transparent;
+        // --el-input-border-radius: 10px;
     }
-  }
 
-  :deep(.el-input-group__append) {
-    overflow: hidden;
-  }
+    // .el-input__wrapper,
+    // .el-input {
+    //   --el-input-border-radius: 10px;
+    // }
 
-  .btn-search {
-    border-color: var(--el-button-bg-color);
-    background-color: var(--el-button-bg-color);
-    color: var(--el-color-white);
-    --el-border-radius-base: 0;
-
-    &:focus,
-    &:hover {
-      color: var(--el-button-hover-text-color);
-      border-color: var(--el-button-hover-border-color);
-      background-color: var(--el-button-hover-bg-color);
-      outline: 0;
+    .el-input__wrapper {
+        &.is-focus {
+            box-shadow: none;
+        }
     }
-  }
+
+    :deep(.el-input-group__append) {
+        overflow: hidden;
+    }
+
+    .btn-search {
+        border-color: var(--el-button-bg-color);
+        background-color: var(--el-button-bg-color);
+        color: var(--el-color-white);
+        --el-border-radius-base: 0;
+
+        &:focus,
+        &:hover {
+            color: var(--el-button-hover-text-color);
+            border-color: var(--el-button-hover-border-color);
+            background-color: var(--el-button-hover-bg-color);
+            outline: 0;
+        }
+    }
 }
 </style>

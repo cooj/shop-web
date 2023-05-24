@@ -13,7 +13,7 @@ export const useGoodsState = () => {
      * @returns
      */
     const getGoodsClass = async () => {
-    // return goodsClassList
+        // return goodsClassList
         if (goodsClassList.value.length) return goodsClassList
         const { data: cate, error } = await GoodsApi.getClass()
         // 接口发生错误时
@@ -31,5 +31,28 @@ export const useGoodsState = () => {
     return {
         goodsClassList,
         getGoodsClass,
+    }
+}
+
+/**
+ * 获取购物车商品数量
+ * @returns
+ */
+export const useCartNumberState = () => {
+    const cartNum = useState('cartNum', () => 0) // 记录购物车数量
+    /**
+     * 获取购物车数量
+     */
+    const setCartNumber = async (update?: boolean) => {
+        const { data } = await GoodsApi.cartNum()
+        if (data.value?.code === 200) {
+            cartNum.value = data.value.data.number || 0 //
+        }
+
+        return cartNum
+    }
+    return {
+        cartNum,
+        setCartNumber,
     }
 }

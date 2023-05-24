@@ -1,5 +1,4 @@
 import { CommonApi } from '~/api/common'
-import { GoodsApi } from '~/api/goods/list'
 import { AccountApi } from '~/api/user/account'
 
 /**
@@ -81,6 +80,8 @@ export const useUserState = () => {
         watch(() => data.value, () => {
             userInfo.value = data.value?.data
         })
+        console.log('userInfo.value :>> ', userInfo.value)
+        // return computed(() => userInfo.value)
         return computed(() => data.value?.data)
 
         // console.log(data.value?.code)
@@ -110,20 +111,12 @@ export const useUserState = () => {
     const getUserInfo = async (update?: boolean) => {
         // 获取最新数据
         if (update) return await getUserData()
-        console.log('userInfo.value :>> ', userInfo.value)
+
         // 已经有数据了，直接返回
         if (token.value && userInfo.value) return userInfo
 
         // 啥都没有，重新获取接口数据
         return await getUserData()
-    }
-
-    const cartNum = useState('cartNum', () => 0) // 记录购物车数量
-    /**
-     * 获取购物车数量
-     */
-    const getCartNumber = async () => {
-        const res = await GoodsApi.cartNum()
     }
 
     return {

@@ -119,7 +119,8 @@
                             <li>
                                 <div class="lt" />
                                 <div class="gt">
-                                    <el-button v-if="goodsInfo?.is_collect" type="primary" text bg size="small">
+                                    <el-button v-if="goodsInfo?.is_collect" type="primary" text bg size="small"
+                                        @click="onCollect">
                                         <i class="i-carbon-favorite-filled mr3px" />
                                         收藏
                                     </el-button>
@@ -263,6 +264,7 @@ import { RecordApi } from '~/api/user/record'
 
 const route = useRoute()
 const userState = useUserState()
+const useCartNumber = useCartNumberState()
 
 const defData = reactive({
     user_id: 0,
@@ -428,6 +430,7 @@ const onAddCart = async () => {
     if (number > 0 && goodsInfo.value?.goods_id) {
         const { data } = await GoodsApi.addCart({ goods_id: goodsInfo.value.goods_id, goods_number: number })
         if (data.value?.code === 200) {
+            useCartNumber.setCartNumber()
             ElMessage.success('加入购物车成功')
             form.number = 1
         } else {
@@ -601,71 +604,72 @@ definePageMeta({
         margin-bottom: 15px;
     }
 
-    .goods-pros {
+}
 
-        >li {
-            font-size: 14px;
-            display: flex;
-            text-align: left;
-            font-weight: normal;
-            // line-height: 24px;
-            line-height: 1.6;
+.goods-pros {
 
-            .lt {
-                width: 80px;
-                padding: 5px 8px;
+>li {
+    font-size: 14px;
+    display: flex;
+    text-align: left;
+    font-weight: normal;
+    // line-height: 24px;
+    line-height: 1.6;
 
-                color: var(--el-text-color-secondary);
-            }
+    .lt {
+        width: 80px;
+        padding: 5px 8px;
 
-            .gt {
-                flex: 1;
-                padding: 5px 8px;
-                color: var(--el-text-color-primary);
-
-                .price1 {
-
-                    b {
-                        font-size: 28px;
-                        color: var(--el-color-primary);
-
-                        span {
-                            font-size: 70%;
-                            font-weight: normal;
-                        }
-                    }
-
-                }
-
-                .price2 {
-                    font-size: 16px;
-                    text-decoration: line-through;
-                    color: var(--el-text-color-secondary);
-                }
-
-                .price3 {
-                    display: inline-flex;
-                    align-items: center;
-                    padding-left: 3px;
-                    border: 1px solid var(--el-color-info);
-                    font-size: 12px;
-                    cursor: pointer;
-
-                    &:hover {
-                        color: var(--el-color-primary);
-                        border-color: var(--el-color-primary);
-                    }
-                }
-            }
-        }
-
-        .buy-item {
-            :deep(.el-button) {
-                --el-font-size-base: 16px;
-            }
-        }
-
+        color: var(--el-text-color-secondary);
     }
+
+    .gt {
+        flex: 1;
+        padding: 5px 8px;
+        color: var(--el-text-color-primary);
+
+        .price1 {
+
+            b {
+                font-size: 28px;
+                color: var(--el-color-primary);
+
+                span {
+                    font-size: 70%;
+                    font-weight: normal;
+                }
+            }
+
+        }
+
+        .price2 {
+            font-size: 16px;
+            text-decoration: line-through;
+            color: var(--el-text-color-secondary);
+        }
+
+        .price3 {
+            display: inline-flex;
+            align-items: center;
+            padding-left: 3px;
+            border: 1px solid var(--el-color-info);
+            font-size: 12px;
+            cursor: pointer;
+
+            &:hover {
+                color: var(--el-color-primary);
+                border-color: var(--el-color-primary);
+            }
+        }
+    }
+}
+
+.buy-item {
+    :deep(.el-button) {
+        --el-font-size-base: 16px;
+    }
+}
+
 }
 
 .goods-cont {

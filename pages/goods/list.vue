@@ -345,7 +345,8 @@
 import { GoodsApi } from '~/api/goods/list'
 import { RecordApi } from '~/api/user/record'
 
-const userState = useUserState()
+const userState = useUserState() // 用户信息
+const useCartNumber = useCartNumberState() // 购物车商品数量
 
 const defData = reactive({
     ready: false,
@@ -540,9 +541,10 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
     const number = 1 // 默认加1购物车条目
     const { data } = await GoodsApi.addCart({ goods_id: row.goods_id, goods_number: number })
     if (data.value?.code === 200) {
+        useCartNumber.setCartNumber() // 更新购物车商品数量
         ElMessage.success('加入购物车成功')
     } else {
-        ElMessage.error('加入购物车失败')
+        ElMessage.error(data.value?.msg || '加入购物车失败')
     }
 }
 
@@ -815,6 +817,13 @@ definePageMeta({
                 font-size: 12px;
             }
 
+        }
+
+        .focus {
+            color: var(--el-button-hover-text-color);
+            border-color: var(--el-button-hover-border-color);
+            background-color: var(--el-button-hover-bg-color);
+            outline: 0;
         }
     }
 

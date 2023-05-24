@@ -110,6 +110,7 @@ import { ElMessage } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
 
 const userState = useUserState()
+const user = await userState.getUserInfo()
 
 const defData = reactive({
     type: 1, // 1个人信息 2修改个人信息
@@ -141,7 +142,7 @@ const rules = reactive<FormRules>({
 
 // 获取用户信息
 const initData = async () => {
-    const user = await userState.getUserInfo()
+    console.log(user.value)
     if (user.value) {
         defData.user_name = user.value.user_name
         defData.email = user.value.email
@@ -194,35 +195,35 @@ const sendEmail = async () => {
     ElMessage.success('激活邮件发送成功')
 }
 
+onBeforeMount(() => {
+    initData()
+})
+
 definePageMeta({
     layout: 'home',
     middleware: 'auth',
-})
-
-onBeforeMount(() => {
-    initData()
 })
 </script>
 
 <style scoped>
 .avatar-upload.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
 }
 
 .avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
+    border-color: var(--el-color-primary);
 }
 
 .el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    text-align: center;
 }
 </style>
