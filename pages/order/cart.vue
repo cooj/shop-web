@@ -62,7 +62,6 @@
                         结算商品
                     </el-button>
                 </div>
-                <!-- https://private.zkh.com/PRODUCT/BIG/BIG_AC2415_02.jpg?x-oss-process=style/common_style_600&timestamp=1675233700000 -->
             </div>
             <!-- <ClientOnly></ClientOnly> -->
         </div>
@@ -75,6 +74,8 @@ import Big from 'big.js'
 import { GoodsApi } from '~/api/goods/list'
 
 type GoodsTableCartItem = GoodsApi_GetCartListResponse['goods_list'][0]
+
+const useCartNumber = useCartNumberState()
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 
@@ -132,6 +133,7 @@ const onRemove = async (row: GoodsTableCartItem | 'all') => {
     const { data } = await GoodsApi.delCart({ id: ids }) // 删除选中的商品记录 或者 删除所有购物
     if (data.value?.code === 200) {
         initTableData() // 重新获取列表数据
+        useCartNumber.setCartNumber() // 更新购物车数量
     } else {
         ElMessage.error(data.value?.msg) // 提示错误消息 或者 显示错误消息 或者 显示
     }
@@ -170,8 +172,6 @@ definePageMeta({
 </script>
 
 <style scoped lang="scss">
-.step-box {}
-
 .table-cart {
     min-height: 500px;
     background-color: var(--el-color-white);
