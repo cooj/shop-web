@@ -1,7 +1,6 @@
 <template>
     <section class="text-14px">
         <div class="container">
-            <!---->
             <el-skeleton :loading="defData.ready ? false : true" animated>
                 <el-breadcrumb class="goods-breadcrumb">
                     <el-breadcrumb-item :to="{ path: '/' }">
@@ -11,6 +10,9 @@
                         <NuxtLink :to="linkGoodsList({ query: { cid: item.cat_id }, relate: true, url: true })">
                             {{ item.cat_name }}
                         </NuxtLink>
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item v-if="brandName">
+                        {{ brandName }}
                     </el-breadcrumb-item>
                 </el-breadcrumb>
                 <el-form size="small">
@@ -110,71 +112,6 @@
                         </dl>
                     </div>
                 </el-form>
-                <template #template>
-                    <div class="goods-breadcrumb">
-                        <el-skeleton-item variant="text" style="width: 30%" />
-                    </div>
-                    <el-form size="small">
-                        <div class="goods-attr">
-                            <div class="goods-attr-item">
-                                <div class="left">
-                                    <el-skeleton-item variant="text" />
-                                </div>
-                                <div class="right items-center">
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="w15%!" />
-                                </div>
-                            </div>
-                            <div class="goods-attr-item">
-                                <div class="left">
-                                    <el-skeleton-item variant="text" />
-                                </div>
-                                <div class="right items-center">
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-
-                                    <el-skeleton-item variant="text" class="w15%!" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="goods-opt">
-                            <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w150px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                            </dl>
-                            <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w60px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w60px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w150px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                            </dl>
-                        </div>
-                    </el-form>
-                </template>
-            </el-skeleton>
-
-            <template v-if="defData.ready">
-                <!-- <ClientOnly></ClientOnly> -->
                 <div v-if="defData.tableData.length" class="goods-list">
                     <!-- 列表 -->
                     <dl v-if="defData.isList" class="goods-list-dl">
@@ -331,12 +268,69 @@
                         :page-sizes="form.pageSizes" background small layout="total, prev, pager, next, jumper"
                         :total="form.total" @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
                 </div>
-            </template>
-            <div v-else class="min-h800px flex items-center justify-center">
-                <p class="text-12px c-#777">
-                    ...
-                </p>
-            </div>
+                <template #template>
+                    <div class="goods-breadcrumb">
+                        <el-skeleton-item variant="text" style="width: 30%" />
+                    </div>
+                    <el-form size="small">
+                        <div class="goods-attr">
+                            <div class="goods-attr-item">
+                                <div class="left">
+                                    <el-skeleton-item variant="text" />
+                                </div>
+                                <div class="right items-center">
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="w15%!" />
+                                </div>
+                            </div>
+                            <div class="goods-attr-item">
+                                <div class="left">
+                                    <el-skeleton-item variant="text" />
+                                </div>
+                                <div class="right items-center">
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+
+                                    <el-skeleton-item variant="text" class="w15%!" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goods-opt">
+                            <dl class="goods-opt-dl">
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w150px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                            </dl>
+                            <dl class="goods-opt-dl">
+                                <dd class="goods-opt-item w60px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w60px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w150px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                            </dl>
+                        </div>
+                    </el-form>
+                    <div class="min-h800px" />
+                </template>
+            </el-skeleton>
         </div>
     </section>
 </template>
@@ -347,6 +341,10 @@ import { RecordApi } from '~/api/user/record'
 
 const userState = useUserState() // 用户信息
 const useCartNumber = useCartNumberState() // 购物车商品数量
+
+const keyword = useRouteQuery('keyword') // 搜索
+const cid = useRouteQuery('cid') // 分类
+const bid = useRouteQuery('bid') // 品牌
 
 const defData = reactive({
     ready: false,
@@ -375,9 +373,13 @@ const form = reactive({
 
 })
 
-const keyword = useRouteQuery('keyword') // 搜索
-const cid = useRouteQuery('cid') // 分类
-const bid = useRouteQuery('bid') // 品牌
+// 取得品牌名称
+const brandName = computed(() => {
+    if (bid.value) {
+        return defData.brandList.find(item => item.brand_id === Number(bid.value))?.brand_name // 品牌名称
+    }
+    return ''
+})
 
 // 获取初始数据
 const initTableData = async () => {

@@ -44,6 +44,8 @@ export const useCartNumberState = () => {
      * 获取购物车数量
      */
     const setCartNumber = async (update?: boolean) => {
+        const token = useUserState().token
+        if (!token.value) return 0
         const { data } = await GoodsApi.cartNum()
         if (data.value?.code === 200) {
             cartNum.value = data.value.data.number || 0 //
