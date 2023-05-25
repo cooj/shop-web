@@ -10,7 +10,7 @@
                         <dl>
                             <dt>{{ item.name }}</dt>
                             <dd v-for="sub in item.children" :key="sub.id">
-                                <NuxtLink :to="`/content/list?id=${sub.id}`">
+                                <NuxtLink :to="`/content/help?id=${sub.id}`">
                                     {{ sub.name }}
                                 </NuxtLink>
                             </dd>
@@ -71,72 +71,81 @@ import { HomeApi } from '~/api/home/home'
 const useSystem = useSystemState()
 const systemInfo = await useSystem.getSystemInfo()
 // console.log('systemInfo :>> ', systemInfo)
+const navList = ref<HomeApi_GetArticleResponse[]>([])
+const initDefaultData = async () => {
+    // 获取底部导航
+    const { data: footer } = await HomeApi.getArticle({ type: 1 })
 
-// 获取底部导航
-const { data: footer } = await HomeApi.getArticle()
-const navList = computed(() => footer.value?.data)
-// console.log('footer :>> ', footer)
+    navList.value = footer.value?.data || []
+}
+
+initDefaultData()
+// const navList = computed(() => footer.value?.data)
+// console.log('footer :>> ', navList)
+// watch(() => footer.value, () => {
+//     console.log('footer.value :>> ', footer.value)
+// })
 </script>
 
 <style lang="scss" scoped>
 .footer-box {
-  color: #fff;
-  padding-top: 50px;
+    color: #fff;
+    padding-top: 50px;
 
-  .top {
-    padding: 10px;
-  }
+    .top {
+        padding: 10px;
+    }
 
-  .mid {
-    padding-bottom: 30px;
-    border-bottom: 1px solid #555;
-    display: flex;
-    justify-content: space-between;
-  }
+    .mid {
+        padding-bottom: 30px;
+        border-bottom: 1px solid #555;
+        display: flex;
+        justify-content: space-between;
+    }
 
-  .footer-bot {
-    font-size: 14px;
-    padding: 15px 0;
-    border-bottom: 5px solid var(--el-color-primary-light-3);
-  }
+    .footer-bot {
+        font-size: 14px;
+        padding: 15px 0;
+        border-bottom: 5px solid var(--el-color-primary-light-3);
+    }
 }
 
 .footer-top {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
 
-  .content {
-    width: 100%;
-    text-align: center;
+    .content {
+        width: 100%;
+        text-align: center;
 
-    :deep(img) {
-      display: inline-block;
+        :deep(img) {
+            display: inline-block;
+        }
     }
-  }
 }
 
 .footer-link {
-  display: flex;
+    display: flex;
 
-  li {
-    width: 130px;
+    li {
+        width: 130px;
 
-    dt {
-      font-weight: bold;
+        dt {
+            font-weight: bold;
+        }
+
+        dd {
+            font-size: 14px;
+            color: #ccc;
+            margin: 5px 0;
+        }
     }
-
-    dd {
-      font-size: 14px;
-      color: #ccc;
-      margin: 5px 0;
-    }
-  }
 }
 
 .footer-right {
-  width: 38%;
-  display: flex;
-  justify-content: space-between;
+    width: 38%;
+    display: flex;
+    justify-content: space-between;
 }
 </style>

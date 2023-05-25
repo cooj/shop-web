@@ -3,32 +3,33 @@
  */
 export const HomeApi = {
     /**
-   * 获取菜单导航
-   * @returns
-   */
+     * 获取菜单导航
+     * @returns
+     */
     getNav: () => useHttp<HomeApi_GetNavResponse[]>('/api/index/nav_lists', '', { method: 'get' }),
 
     /**
-   * 获取轮播图
-   * @returns
-   */
+     * 获取轮播图
+     * @returns
+     */
     getBanner: () => useHttp<HomeApi_GetBannerResponse[]>('/api/index/banner_lists', '', { method: 'get' }),
 
     /**
-   * 获取楼层
-   * @returns
-   */
+     * 获取楼层
+     * @returns
+     */
     getFloor: () => useHttp<HomeApi_GetFloorResponse[]>('/api/index/storey_lists', '', { method: 'get' }),
 
     /**
-   * 精选商品
-   * @returns
-   */
+     * 精选商品
+     * @returns
+     */
     getNewGoods: () => useHttp<HomeApi_GetNewsGoodsResponse>('/api/index/goods_lists', '', { method: 'get' }),
 
     /**
-   * 底部文章导航
-   */
-    getArticle: () => useHttp<HomeApi_GetArticleResponse[]>('/api/index/get_article', '', { method: 'get' }),
+     * 底部文章导航
+     * @param {string} data.type 类型  1底部导航 2文章分类 3视频分类
+     */
+    getArticle: (data: { type: 1 | 2 | 3 }) => useHttp<HomeApi_GetArticleResponse[]>('/api/index/get_article', data, { method: 'post' }),
 
 }

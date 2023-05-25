@@ -1,9 +1,8 @@
+<!-- 文章列表 -->
 <template>
-    <div>
-        <div class="container">
-            文章列表
-        </div>
-    </div>
+    <LayoutContent :type="2">
+        文章列表
+    </LayoutContent>
 </template>
 
 <script>
