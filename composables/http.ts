@@ -1,15 +1,9 @@
-// export const useHttp = () => {
-//   return useState('foo', () => 'bar')
-// }
+import type { UseFetchOptions } from '#app'
 
-// import type { UseFetchOptions } from '#app'
-
-type UseFetchType = typeof useFetch
-type ReqOption = Parameters<UseFetchType>[1]
 // type RequestDataType = '' | (() => void) | Record<string, any>
 // type RequestDataType<T = Record<string, any>> = '' | { (): T } | T
 
-export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqOption) => {
+export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: UseFetchOptions<T>) => {
     const token = useCookie('admin_token')
     const headers = useRequestHeaders(['token']) // as HeadersInit
     // console.log('headers :>> ', headers)
@@ -73,7 +67,7 @@ export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: ReqO
     return useFetch<ResponseDataType<T>>(url, options as any)
 }
 
-export const useHttp2 = <T = any>(url: string, data?: RequestDataType, opt?: ReqOption) => {
+export const useHttp2 = <T = any>(url: string, data?: RequestDataType, opt?: UseFetchOptions<T>) => {
     const token = useCookie('admin_token')
     const headers = useRequestHeaders(['token']) // as HeadersInit
     // console.log('headers :>> ', headers)

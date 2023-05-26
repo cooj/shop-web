@@ -1,11 +1,12 @@
+<!-- 视频中心 -->
 <template>
-    <div class="h50vh">
-        内容中心
-    </div>
+    <LayoutContent :type="2">
+        视频中心
+    </LayoutContent>
 </template>
 
-<script lang="ts" setup>
-
+<script>
+definePageMeta({
+    layout: 'home',
+})
 </script>
-
-<style lang="scss" scoped></style>

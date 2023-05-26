@@ -80,11 +80,6 @@ const initDefaultData = async () => {
 }
 
 initDefaultData()
-// const navList = computed(() => footer.value?.data)
-// console.log('footer :>> ', navList)
-// watch(() => footer.value, () => {
-//     console.log('footer.value :>> ', footer.value)
-// })
 </script>
 
 <style lang="scss" scoped>

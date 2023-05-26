@@ -240,8 +240,6 @@ onMounted(async () => {
     }
 }
 
-.floor-box {}
-
 .floor-item {
     --floor-left-width: 230px;
     display: flex;
