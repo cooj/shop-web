@@ -15,13 +15,7 @@
             <ul class="goods-best-list">
                 <li v-for="item in goodsList" :key="item.goods_id">
                     <NuxtLink class="link" :to="`/goods/${item.goods_id}`">
-                        <el-image class="h150px w150px" :src="item.goods_img" loading="lazy">
-                            <template #error>
-                                <div class="image-err">
-                                    <i class="i-ep-picture" />
-                                </div>
-                            </template>
-                        </el-image>
+                        <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
                         <h3 class="tle">
                             {{ item.goods_name }}
                         </h3>
@@ -62,17 +56,7 @@
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
                                     <NuxtLink class="link" :to="`/goods/${son.goods_id}`">
-                                        <!-- <div class="im-box">
-                        <img :src="son.goods_img" alt="">
-                      </div> lazy -->
                                         <CoImage class="w100% pb100%" :src="son.goods_img" loading="lazy" />
-                                        <!-- <el-image class="w100% pb100%" :src="son.goods_img" loading="lazy">
-                                            <template #error>
-                                                <div class="image-err">
-                                                    <i class="i-ep-picture" />
-                                                </div>
-                                            </template>
-                                        </el-image> -->
                                         <h3 class="goods-name">
                                             {{ son.goods_name }}
                                         </h3>
@@ -92,14 +76,7 @@
                 <div class="brand-list">
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                        <el-image class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent"
-                            loading="lazy">
-                            <template #error>
-                                <div class="image-err">
-                                    <i class="i-ep-picture" />
-                                </div>
-                            </template>
-                        </el-image>
+                        <CoImage class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" />
                     </NuxtLink>
                 </div>
             </div>
@@ -134,7 +111,7 @@ const floorVisible = useElementVisibility(floorRef)
 // const { x, y } = useWindowScroll()
 
 // 获取楼层
-const { data: floor, pending } = await HomeApi.getFloor()
+const { data: floor } = await HomeApi.getFloor()
 const floorList = computed(() => floor.value?.data || [])
 
 // console.log('data :>> ', floor)
@@ -348,22 +325,6 @@ onMounted(async () => {
 
                 &:hover {
                     box-shadow: 3px 3px 10px #d8d8d8;
-                }
-
-                .im-box {
-                    position: relative;
-                    width: 100%;
-                    height: 0;
-                    padding-bottom: 100%;
-
-                    >img {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
                 }
 
                 .goods-name {

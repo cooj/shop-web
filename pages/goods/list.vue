@@ -3,61 +3,61 @@
         <div class="container">
             <el-skeleton :loading="defData.skeleton" animated>
                 <template #template>
-                    <div class="goods-breadcrumb">
-                        <el-skeleton-item variant="text" style="width: 30%" />
+                    <div class="pb10px pt15px">
+                        <el-skeleton-item style="width: 30%" />
                     </div>
                     <el-form size="small">
                         <div class="goods-attr">
                             <div class="goods-attr-item">
                                 <div class="left">
-                                    <el-skeleton-item variant="text" />
+                                    <el-skeleton-item />
                                 </div>
                                 <div class="right items-center">
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="w15%!" />
+                                    <el-skeleton-item class="mr10px w15%!" />
+                                    <el-skeleton-item class="mr10px w10%!" />
+                                    <el-skeleton-item class="mr10px w10%!" />
+                                    <el-skeleton-item class="mr10px w10%!" />
+                                    <el-skeleton-item class="mr10px w15%!" />
+                                    <el-skeleton-item class="w15%!" />
                                 </div>
                             </div>
                             <div class="goods-attr-item">
                                 <div class="left">
-                                    <el-skeleton-item variant="text" />
+                                    <el-skeleton-item />
                                 </div>
                                 <div class="right items-center">
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item class="mr10px w10%!" />
+                                    <el-skeleton-item class="mr10px w15%!" />
+                                    <el-skeleton-item class="mr10px w10%!" />
 
-                                    <el-skeleton-item variant="text" class="w15%!" />
+                                    <el-skeleton-item class="w15%!" />
                                 </div>
                             </div>
                         </div>
                         <div class="goods-opt">
                             <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w100px">
+                                    <el-skeleton-item />
                                 </dd>
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w100px">
+                                    <el-skeleton-item />
                                 </dd>
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w100px">
+                                    <el-skeleton-item />
                                 </dd>
-                                <dd class="goods-opt-item w150px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w150px">
+                                    <el-skeleton-item />
                                 </dd>
                             </dl>
                             <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w60px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w60px">
+                                    <el-skeleton-item />
                                 </dd>
-                                <dd class="goods-opt-item w60px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w60px">
+                                    <el-skeleton-item />
                                 </dd>
-                                <dd class="goods-opt-item w150px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
+                                <dd class="goods-opt-item w150px">
+                                    <el-skeleton-item />
                                 </dd>
                             </dl>
                         </div>
@@ -199,7 +199,7 @@
                             <div class="g-info w500px">
                                 <div class="g-info-left">
                                     <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
-                                        <CoImage class="w80% pb80%" :src="item.goods_img" />
+                                        <CoImage class="w80% pb80%" :src="item.goods_img" style="--co-image-error-size:28px;" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">

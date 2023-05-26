@@ -12,7 +12,7 @@ export const useSystemState = () => {
         // console.log('system.value :>> ', system.value)
         if (system.value) return system
         const { data, error } = await CommonApi.getSystem()
-        // console.log(data.value?.code)
+        console.log(data.value?.code)
         // 接口发生错误时
         if (error.value) return system
         // await wait(800)
@@ -81,7 +81,7 @@ export const useUserState = () => {
         watch(() => data.value, () => {
             userInfo.value = data.value?.data
         })
-        console.log('userInfo.value :>> ', userInfo.value)
+        console.log('userInfo.values :>> ', userInfo.value)
         // return computed(() => userInfo.value)
         return computed(() => data.value?.data)
 

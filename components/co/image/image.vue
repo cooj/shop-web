@@ -16,7 +16,8 @@
 .co-image {
     &-error {
         i {
-            font-size: 36px;
+            // font-size: 36px;
+            font-size: var(--co-image-error-size, 36px);
         }
     }
 }

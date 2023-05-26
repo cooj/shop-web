@@ -83,3 +83,6 @@ export const PAGINATION = {
     page_size: 20, // 每页显示的数量
     page_sizes: [20, 50, 100, 200],
 }
+
+// 是否为客户端 true|false
+export const CLIENT = process.client

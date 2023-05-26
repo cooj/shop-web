@@ -8,11 +8,10 @@
                             {{ comData.title }}
                         </div>
                         <el-divider border-style="dotted" class="m0!" />
-                        <ClientOnly>
-                            <el-menu class="menu-list" :default-active="activeIndex" :default-openeds="openList">
-                                <LayoutContentMenu :list="defData.menuList" :url="comData.url" />
-                            </el-menu>
-                        </ClientOnly>
+                        <el-menu v-if="CLIENT" class="menu-list" :default-active="activeIndex"
+                            :default-openeds="openList">
+                            <LayoutContentMenu :list="defData.menuList" :url="comData.url" />
+                        </el-menu>
                     </el-aside>
                     <el-main class="right min-h500px">
                         <slot />

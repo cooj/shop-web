@@ -68,6 +68,10 @@ const emits = defineEmits<{
     (e: 'update:page', param: Pagination): void
     (e: 'update:table-header', param: TableHeaderType[]): void
 }>()
+// const slots = defineSlots<{
+//     // default(props: { [key: BaseTableDataType['tableHeader'][0]['property']]: string }): any
+//     default(props: { name: BaseTableDataType['tableHeader'][0]['property']; scopes: any }): any
+// }>()
 
 const tableRef = ref<TableInstance>()
 

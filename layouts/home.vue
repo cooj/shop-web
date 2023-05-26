@@ -1,10 +1,7 @@
 <template>
     <main>
-        <ClientOnly>
-            <BaseTop />
-        </ClientOnly>
+        <BaseTop />
         <BaseHeader />
-
         <slot />
         <BaseFooter />
         <BaseRight />

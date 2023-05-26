@@ -10,11 +10,11 @@
                 <div class="search-box relative w50%">
                     <el-input v-model="search.keyword" placeholder="">
                         <template #prepend>
-                            <el-select v-model="search.select" placeholder="" style="width: 115px">
+                            <lazy-el-select v-model="search.select" placeholder="" style="width: 115px">
                                 <el-option label="全部商品" value="1" />
                                 <el-option label="精选商品" value="2" />
                                 <el-option label="特价商品" value="3" />
-                            </el-select>
+                            </lazy-el-select>
                         </template>
                         <template #append>
                             <el-button type="primary" class="btn-search min-w100px" @click="onSearch">

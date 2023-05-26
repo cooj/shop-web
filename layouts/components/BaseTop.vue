@@ -2,7 +2,6 @@
     <section class="header-top bg-#313131 py5px">
         <div class="flex items-center justify-between text-13px text-#fff container">
             <div class="lt flex items-center">
-                <!-- <ClientOnly></ClientOnly> -->
                 <template v-if="userState.token && username">
                     <NuxtLink to="/user">
                         <el-button link>

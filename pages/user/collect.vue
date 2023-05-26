@@ -7,7 +7,6 @@
             <el-breadcrumb-item>我的收藏</el-breadcrumb-item>
         </el-breadcrumb>
 
-        <!-- <ClientOnly></ClientOnly> -->
         <!-- <div class="table-cart"> -->
         <ElTable ref="tableRef" :data="defData.tableData" class="mt25px">
             <el-table-column prop="goods_name" label="商品名称" min-width="180">

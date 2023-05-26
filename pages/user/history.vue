@@ -7,7 +7,6 @@
             <el-breadcrumb-item>浏览历史</el-breadcrumb-item>
         </el-breadcrumb>
 
-        <!-- <ClientOnly></ClientOnly> -->
         <ElTable ref="tableRef" :data="defData.tableData" class="mt25px">
             <el-table-column prop="goods_name" label="商品名称" min-width="180">
                 <template #default="{ row }">

@@ -3,7 +3,7 @@
     <LayoutUser>
         <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
             <template #pay_type="{ row }">
-                <el-select v-model="row.pay_type" filterable clearable placeholder="">
+                <el-select v-model="row.pay_type" clearable filterable placeholder="">
                     <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
                 </el-select>
             </template>
@@ -14,8 +14,8 @@
             </template>
         </CoTableTool>
         <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
-            :data="tableData.data" :span-method="arraySpanMethod" auto-height scrollbar-always-on border
-            @update:page="onHandleCurrentChange">
+            :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
+            scrollbar-always-on border @update:page="onHandleCurrentChange">
             <template #order_info="{ scopes }">
                 <div v-if="scopes.row.index">
                     订单编号：{{ scopes.row.order_info.main_order_no }}
@@ -23,9 +23,7 @@
                 </div>
                 <ul v-else class="goods-list">
                     <li v-for="item in scopes.row.order_info.goods_info" :key="item.goods_id">
-                        <CoImage class="h55px w55px" :src="item.goods_img" />
-                        <!-- <el-image class="w55px h55px"
-              src="https://private.zkh.com/PRODUCT/BIG/BIG_AA4478338_01.jpeg?x-oss-process=style/webp_nowatermark_350&timestamp=1672388932000"></el-image> -->
+                        <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
                         <div class="text">
                             <h3 class="tle">
                                 <NuxtLink :to="`/goods/${item.goods_id}`">
@@ -81,7 +79,7 @@
 
             <template #operate="{ scopes }">
                 <template v-if="!scopes.row.index">
-                    <el-button link type="primary" size="small">
+                    <el-button link type="primary" size="small" @click="onDetail(scopes.row)">
                         查看详情
                     </el-button>
                     <br>
@@ -91,12 +89,18 @@
                 </template>
             </template>
         </CoTable>
+        <Teleport to="body">
+            <LazyOrderDetail ref="orderDetailRef" />
+        </Teleport>
     </LayoutUser>
 </template>
 
 <script setup lang="ts">
 import type { TableColumnCtx } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
+import type { OrderDetail } from '#components'
+
+const orderDetailRef = ref<InstanceType<typeof OrderDetail>>()
 
 const defData = reactive({
     payList: { // 支付类型 1微信 2支付宝 3线下
@@ -221,6 +225,16 @@ const arraySpanMethod = ({
     // }
 }
 
+const setRowClassName = ({
+    row,
+    rowIndex,
+}: {
+    row: OrderListTableData
+    rowIndex: number
+}) => {
+    return row.index ? 'line-text' : ''
+}
+
 const setAddressText = (row: OrderApi_GetOrderListItem) => {
     const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
     if (row.province) arr.push(row.province) // 省份 名称 或 省份id 或 省份名称id 或
@@ -231,6 +245,11 @@ const setAddressText = (row: OrderApi_GetOrderListItem) => {
     return arr.join('  ')
 }
 
+// 查看详情
+const onDetail = (row: OrderListTableData) => {
+    console.log('row :>> ', row)
+}
+// 搜索
 const onSearch = () => {
     initTableData()
 }
@@ -250,7 +269,11 @@ definePageMeta({
 .table-box {
     :deep(.el-table) {
         font-size: 13px;
-        --el-table-row-hover-bg-color: var(--el-color-white);
+
+        // --el-table-row-hover-bg-color: var(--el-color-white);
+        .line-text {
+            background-color: var(--el-table-row-hover-bg-color);
+        }
     }
 
     :deep(.el-table__body) {
