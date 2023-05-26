@@ -1,4 +1,5 @@
 import { GoodsApi } from '~/api/goods/list'
+import { OrderApi } from '~/api/goods/order'
 
 /**
  * 获取用户信息
@@ -45,7 +46,10 @@ export const useCartNumberState = () => {
      */
     const setCartNumber = async (update?: boolean) => {
         const token = useUserState().token
-        if (!token.value) return 0
+        if (!token.value) {
+            cartNum.value = 0
+            return cartNum
+        }
         const { data } = await GoodsApi.cartNum()
         if (data.value?.code === 200) {
             cartNum.value = data.value.data.number || 0 //
@@ -56,5 +60,30 @@ export const useCartNumberState = () => {
     return {
         cartNum,
         setCartNumber,
+    }
+}
+
+/**
+ * 获取支付方式
+ * @returns
+ */
+export const usePayTypeState = () => {
+    const typeList = useState<OrderApi_GetPayTypeResponse[]>('payType', () => []) // 记录购物车数量
+    /**
+     * 获取支付方式
+     */
+    const getPayTypeList = async () => {
+        if (typeList.value.length === 0) return typeList
+        const { data } = await OrderApi.getPayType()
+        // await wait(1000)
+        if (data.value?.code === 200) {
+            typeList.value = data.value.data || [] //
+        }
+
+        return typeList
+    }
+    return {
+        typeList,
+        getPayTypeList,
     }
 }
