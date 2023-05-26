@@ -1,7 +1,70 @@
 <template>
     <section class="text-14px">
         <div class="container">
-            <el-skeleton :loading="defData.ready ? false : true" animated>
+            <el-skeleton :loading="defData.skeleton" animated>
+                <template #template>
+                    <div class="goods-breadcrumb">
+                        <el-skeleton-item variant="text" style="width: 30%" />
+                    </div>
+                    <el-form size="small">
+                        <div class="goods-attr">
+                            <div class="goods-attr-item">
+                                <div class="left">
+                                    <el-skeleton-item variant="text" />
+                                </div>
+                                <div class="right items-center">
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="w15%!" />
+                                </div>
+                            </div>
+                            <div class="goods-attr-item">
+                                <div class="left">
+                                    <el-skeleton-item variant="text" />
+                                </div>
+                                <div class="right items-center">
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
+                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
+
+                                    <el-skeleton-item variant="text" class="w15%!" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goods-opt">
+                            <dl class="goods-opt-dl">
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w100px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w150px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                            </dl>
+                            <dl class="goods-opt-dl">
+                                <dd class="goods-opt-item w60px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w60px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                                <dd class="goods-opt-item w150px cursor-pointer">
+                                    <el-skeleton-item variant="text" />
+                                </dd>
+                            </dl>
+                        </div>
+                    </el-form>
+                    <div class="min-h800px" />
+                </template>
+
                 <el-breadcrumb class="goods-breadcrumb">
                     <el-breadcrumb-item :to="{ path: '/' }">
                         首页
@@ -268,68 +331,6 @@
                         :page-sizes="form.pageSizes" background small layout="total, prev, pager, next, jumper"
                         :total="form.total" @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
                 </div>
-                <template #template>
-                    <div class="goods-breadcrumb">
-                        <el-skeleton-item variant="text" style="width: 30%" />
-                    </div>
-                    <el-form size="small">
-                        <div class="goods-attr">
-                            <div class="goods-attr-item">
-                                <div class="left">
-                                    <el-skeleton-item variant="text" />
-                                </div>
-                                <div class="right items-center">
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="w15%!" />
-                                </div>
-                            </div>
-                            <div class="goods-attr-item">
-                                <div class="left">
-                                    <el-skeleton-item variant="text" />
-                                </div>
-                                <div class="right items-center">
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w15%!" />
-                                    <el-skeleton-item variant="text" class="mr10px w10%!" />
-
-                                    <el-skeleton-item variant="text" class="w15%!" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="goods-opt">
-                            <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w100px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w150px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                            </dl>
-                            <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w60px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w60px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                                <dd class="goods-opt-item w150px cursor-pointer">
-                                    <el-skeleton-item variant="text" />
-                                </dd>
-                            </dl>
-                        </div>
-                    </el-form>
-                    <div class="min-h800px" />
-                </template>
             </el-skeleton>
         </div>
     </section>
@@ -347,7 +348,8 @@ const cid = useRouteQuery('cid') // 分类
 const bid = useRouteQuery('bid') // 品牌
 
 const defData = reactive({
-    ready: false,
+    // ready: false,
+    skeleton: true, // 默认显示骨架屏
     isList: false, // 商品显示列表，还是网格
     breadcrumbList: [] as GoodsApi_GetListItemCate[], // 面包屑导航
     classList: [] as GoodsApi_GetListItemCate[], // 商品分类
@@ -440,7 +442,7 @@ const initTableData = async () => {
     defData.tableData = dat.goods.lists || []
     form.total = dat.goods.total || 0
 
-    defData.ready = true
+    defData.skeleton = false // 关闭骨架屏
 }
 initTableData()
 

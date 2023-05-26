@@ -1,15 +1,45 @@
 <template>
     <section class="goods-detail">
         <div v-if="defData.loading" class="container">
-            <GoodsBreadcrumb class="my15px" :cid="goodsInfo?.cat_id" :name="goodsInfo?.goods_name" />
-            <div class="goods-main">
-                <div class="goods-zoom">
-                    <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
-                    <div v-else class="image-err">
-                        <i class="i-ep-picture" />
+            <el-skeleton :loading="defData.skeleton" animated>
+                <template #template>
+                    <div class="my15px">
+                        <el-skeleton-item variant="text" style="width: 30%" />
                     </div>
-                </div>
-                <ClientOnly>
+                    <div class="goods-main">
+                        <div class="goods-zoom">
+                            <div class="relative w100% pb100%">
+                                <el-skeleton-item variant="image" class="absolute left-0 top-0 h100%! w100%!" />
+                            </div>
+                        </div>
+                        <div class="goods-cen">
+                            <el-skeleton :rows="8" />
+                            <!-- <el-skeleton class="mt15px" /> -->
+                            <div class="my10px flex b-t b-t-dashed pt10px">
+                                <el-skeleton-item class="mr15px py20px w150px!" />
+                                <el-skeleton-item class="mr15px py20px w150px!" />
+                            </div>
+                        </div>
+                        <div class="goods-right">
+                            <el-skeleton-item variant="image" style="width:210px;height:360px" />
+                        </div>
+                    </div>
+                    <div class="goods-cont">
+                        <div class="lt bg-white p15px">
+                            <el-skeleton />
+                        </div>
+                        <div class="gt min-h500px p15px">
+                            <el-skeleton />
+                            <el-skeleton class="mt15px" />
+                        </div>
+                    </div>
+                </template>
+                <GoodsBreadcrumb class="my15px" :cid="goodsInfo?.cat_id" :name="goodsInfo?.goods_name" />
+                <div class="goods-main">
+                    <div class="goods-zoom">
+                        <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
+                        <CoImage v-else class="w100% pb100%" style="--el-color-info-light-9:#fff;" />
+                    </div>
                     <div class="goods-cen">
                         <div class="goods-tle">
                             {{ goodsInfo?.goods_name }}
@@ -151,49 +181,47 @@
                         </ul>
                     </div>
                     <div class="goods-right">
-                        <!-- <img src="https://www.gdbmro.com/goodsImg/lADPDgtYxBInjCPNAW7M1w_215_366.jpg" alt=""> -->
                         <img class="outline-1px outline-#e5e7eb outline-solid" src="~/assets/images/gyj-band.png" alt="">
                     </div>
-                </ClientOnly>
-            </div>
-            <div class="goods-cont">
-                <div class="lt">
-                    <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
-                        <el-tab-pane label="推荐商品" name="1">
-                            <ul class="goods-list">
-                                <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
-                                    <NuxtLink class="pos" :to="`/goods/${item.goods_id}`">
-                                        <img :src="item.goods_img" :alt="item.goods_name" :title="item.goods_name">
-                                    </NuxtLink>
-                                    <div class="tle">
-                                        <NuxtLink :to="`/goods/${item.goods_id}`">
-                                            {{ item.goods_name }}
-                                        </NuxtLink>
-                                    </div>
-                                    <div class="pce">
-                                        <span>￥{{ item.shop_price }}</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </el-tab-pane>
-                    </el-tabs>
                 </div>
-                <div class="gt">
-                    <el-tabs v-model="defData.rightActive" class="goods-gt-tabs">
-                        <el-tab-pane label="商品详情" name="1">
-                            <div v-html="goodsInfo?.goods_desc" />
-                        </el-tab-pane>
-                        <el-tab-pane label="商品问答" name="2">
-                            <ClientOnly>
-                                <el-input v-model="form.question" style="width: 300px;margin-right: 10px;"
-                                    placeholder="输入提问" clearable />
-                                <el-button style="background-color: var(--el-color-primary);color: white;"
-                                    @click="questionClick">
-                                    发送提问
-                                </el-button>
+                <div class="goods-cont">
+                    <div class="lt">
+                        <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
+                            <el-tab-pane label="推荐商品" name="1">
+                                <ul class="goods-list">
+                                    <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
+                                        <NuxtLink class="pos" :to="`/goods/${item.goods_id}`">
+                                            <img :src="item.goods_img" :alt="item.goods_name" :title="item.goods_name">
+                                        </NuxtLink>
+                                        <div class="tle">
+                                            <NuxtLink :to="`/goods/${item.goods_id}`">
+                                                {{ item.goods_name }}
+                                            </NuxtLink>
+                                        </div>
+                                        <div class="pce">
+                                            <span>￥{{ item.shop_price }}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                    <div class="gt">
+                        <el-tabs v-model="defData.rightActive" class="goods-gt-tabs">
+                            <el-tab-pane label="商品详情" name="1">
+                                <div v-html="goodsInfo?.goods_desc" />
+                            </el-tab-pane>
+                            <el-tab-pane label="商品问答" name="2">
+                                <ClientOnly>
+                                    <el-input v-model="form.question" style="width: 300px;margin-right: 10px;"
+                                        placeholder="输入提问" clearable />
+                                    <el-button style="background-color: var(--el-color-primary);color: white;"
+                                        @click="questionClick">
+                                        发送提问
+                                    </el-button>
 
-                                <el-table :data="defData.tableData" style="width: 100%">
-                                    <!-- <el-table-column type="expand">
+                                    <el-table :data="defData.tableData" style="width: 100%">
+                                        <!-- <el-table-column type="expand">
                   <template #default="props">
                     <div m="4">
                       <h3>回答</h3>
@@ -204,18 +232,20 @@
                     </div>
                   </template>
                 </el-table-column> -->
-                                    <el-table-column label="" prop="user_name" />
-                                    <el-table-column label="" prop="content" />
-                                </el-table>
-                                <div class="goods-pagination">
-                                    <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
-                                        small background layout=" prev, pager, next,total, jumper" :total="defData.total" />
-                                </div>
-                            </ClientOnly>
-                        </el-tab-pane>
-                    </el-tabs>
+                                        <el-table-column label="" prop="user_name" />
+                                        <el-table-column label="" prop="content" />
+                                    </el-table>
+                                    <div class="goods-pagination">
+                                        <el-pagination v-model:current-page="defData.page"
+                                            v-model:page-size="defData.pageSize" small background
+                                            layout=" prev, pager, next,total, jumper" :total="defData.total" />
+                                    </div>
+                                </ClientOnly>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
                 </div>
-            </div>
+            </el-skeleton>
         </div>
         <div v-else class="container">
             <div class="no-goods-box">
@@ -265,7 +295,10 @@ import { RecordApi } from '~/api/user/record'
 const route = useRoute()
 const userState = useUserState()
 const useCartNumber = useCartNumberState()
-
+const usePayType = usePayTypeState()
+// 支持的支付方式
+const payTypeList = await usePayType.getPayTypeList()
+console.log('payTypeList :>> ', payTypeList)
 const defData = reactive({
     user_id: 0,
     page: 1,
@@ -279,6 +312,7 @@ const defData = reactive({
     shareCode: '', // 分享二维码
     shareLink: '', // 分享的链接地址
     tableData: [] as InterListApi_getListResponse['lists'],
+    skeleton: true, // 默认形式骨架屏
 })
 // 商品信息
 const goodsData = ref<GoodsApi_GetInfoResponse>()
@@ -323,6 +357,7 @@ const initData = async () => {
                 title: infoData.web_title || infoData.goods_name,
                 meta,
             })
+            defData.skeleton = false // 关闭骨架屏
         } else {
             // ElMessage.error('未获取到商品信息,请检查地址是否正确')
             defData.loading = false
@@ -347,7 +382,7 @@ const interListData = async () => {
     defData.tableData = res.data.value.data.lists
     defData.total = res.data.value.data.total
 }
-interListData()
+// interListData()
 
 // 新增问答
 const questionClick = async () => {
@@ -565,10 +600,6 @@ definePageMeta({
         min-height: var(--goods-img-zoom-width);
         background-color: var(--el-color-white);
 
-        .image-err {
-            background-color: var(--el-color-white);
-        }
-
         :deep(.swiper-box) {
             margin-bottom: 10px;
             --swiper-navigation-sides-offset: 8px;
@@ -608,67 +639,67 @@ definePageMeta({
 
 .goods-pros {
 
->li {
-    font-size: 14px;
-    display: flex;
-    text-align: left;
-    font-weight: normal;
-    // line-height: 24px;
-    line-height: 1.6;
+    >li {
+        font-size: 14px;
+        display: flex;
+        text-align: left;
+        font-weight: normal;
+        // line-height: 24px;
+        line-height: 1.6;
 
-    .lt {
-        width: 80px;
-        padding: 5px 8px;
+        .lt {
+            width: 80px;
+            padding: 5px 8px;
 
-        color: var(--el-text-color-secondary);
-    }
-
-    .gt {
-        flex: 1;
-        padding: 5px 8px;
-        color: var(--el-text-color-primary);
-
-        .price1 {
-
-            b {
-                font-size: 28px;
-                color: var(--el-color-primary);
-
-                span {
-                    font-size: 70%;
-                    font-weight: normal;
-                }
-            }
-
-        }
-
-        .price2 {
-            font-size: 16px;
-            text-decoration: line-through;
             color: var(--el-text-color-secondary);
         }
 
-        .price3 {
-            display: inline-flex;
-            align-items: center;
-            padding-left: 3px;
-            border: 1px solid var(--el-color-info);
-            font-size: 12px;
-            cursor: pointer;
+        .gt {
+            flex: 1;
+            padding: 5px 8px;
+            color: var(--el-text-color-primary);
 
-            &:hover {
-                color: var(--el-color-primary);
-                border-color: var(--el-color-primary);
+            .price1 {
+
+                b {
+                    font-size: 28px;
+                    color: var(--el-color-primary);
+
+                    span {
+                        font-size: 70%;
+                        font-weight: normal;
+                    }
+                }
+
+            }
+
+            .price2 {
+                font-size: 16px;
+                text-decoration: line-through;
+                color: var(--el-text-color-secondary);
+            }
+
+            .price3 {
+                display: inline-flex;
+                align-items: center;
+                padding-left: 3px;
+                border: 1px solid var(--el-color-info);
+                font-size: 12px;
+                cursor: pointer;
+
+                &:hover {
+                    color: var(--el-color-primary);
+                    border-color: var(--el-color-primary);
+                }
             }
         }
     }
-}
 
-.buy-item {
-    :deep(.el-button) {
-        --el-font-size-base: 16px;
+    .buy-item {
+        :deep(.el-button) {
+            --el-font-size-base: 16px;
+        }
     }
-}
 
 }
 
