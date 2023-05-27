@@ -22,8 +22,8 @@
                             </el-button>
                         </template>
                     </el-input>
-                    <div class="absolute left-0 mt3px text-12px">
-                        热门搜索：123,45466,8799,56456
+                    <div v-if="searchHot.length" class="search-hot">
+                        热门搜索：<span v-for="(item) in searchHot" :key="item" @click="onSearchHot(item)">{{ item }}</span>
                     </div>
                 </div>
                 <div class="cart">
@@ -43,7 +43,6 @@
                 </div>
             </div>
         </el-form>
-        <!-- <client-only></client-only> -->
 
         <HeaderIndex />
     </section>
@@ -66,6 +65,11 @@ const search = reactive({
 const useSystem = useSystemState()
 const systemInfo = ref(useSystem.system)
 
+const searchHot = computed(() => {
+    const text = systemInfo.value?.hot ?? ''
+    return text.split(',')
+})
+
 // 搜索
 const onSearch = () => {
     if (search.keyword.trim()) {
@@ -79,6 +83,12 @@ const onSearch = () => {
             query: {},
         })
     }
+}
+
+// 热门
+const onSearchHot = (text: string) => {
+    search.keyword = text
+    onSearch()
 }
 
 watch(() => route.query.keyword, (val) => {
@@ -132,6 +142,24 @@ watch(() => route.query.keyword, (val) => {
             border-color: var(--el-button-hover-border-color);
             background-color: var(--el-button-hover-bg-color);
             outline: 0;
+        }
+    }
+}
+
+.search-hot {
+    font-size: 12px;
+    line-height: 1;
+    position: absolute;
+    left: 0px;
+    margin-top: 5px;
+
+    span {
+        margin-right: 8px;
+        color: var(--el-color-info-light-5);
+        cursor: pointer;
+
+        &:hover {
+            color: var(--el-color-primary-light-3);
         }
     }
 }

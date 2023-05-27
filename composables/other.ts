@@ -1,4 +1,5 @@
 import type { FormInstance } from 'element-plus'
+import { ElLoading } from 'element-plus'
 import Big from 'big.js'
 
 /**
@@ -80,9 +81,24 @@ export const formatNumber = (num: number, scale = 2) => {
 export const PAGINATION = {
     total: 0, // 总条数
     page: 1, // 当前页面
-    page_size: 20, // 每页显示的数量
-    page_sizes: [20, 50, 100, 200],
+    page_size: 10, // 每页显示的数量
+    page_sizes: [10, 20, 30, 50],
 }
 
 // 是否为客户端 true|false
 export const CLIENT = process.client
+
+// 地址信息拼接
+export const setArrayTextName = (row: any[], char = ' ') => {
+    // 去除空值
+    const arr = row.filter(Boolean)
+    return arr.join(char)
+}
+
+export const useElLoading = () => {
+    return ElLoading.service({
+        fullscreen: true,
+        text: '加载中...',
+        background: 'transparent',
+    })
+}

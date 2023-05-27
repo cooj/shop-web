@@ -389,11 +389,8 @@ const initTableData = async () => {
     if (process.client) {
         if (document) document.documentElement.scrollTop = 0
     }
-    const loadingInstance = ElLoading.service({
-        fullscreen: true,
-        text: '加载中...',
-        background: 'transparent',
-    })
+
+    const loading = useElLoading()
 
     const params: GoodsApi_GetList = {
         is_paging: 1,
@@ -433,7 +430,7 @@ const initTableData = async () => {
     // console.log('params :>> ', params)
 
     const { data } = await GoodsApi.getList(params)
-    loadingInstance?.close()
+    loading?.close()
     const dat = data.value!.data
     defData.breadcrumbList = dat.category.position
     defData.classList = dat.category.lists

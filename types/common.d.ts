@@ -76,6 +76,7 @@ declare interface CommonApi_GetSystemResponse {
   ico_img:string; //网站ico图标
   small_logo:string; //小图logo
   seo_keywords:string; // Seo关键词 可以是任意大写字符串 不需要加逗号 或者空
+  hot:string; //热门搜索
 }
 
 
