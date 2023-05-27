@@ -30,7 +30,6 @@
                 </li>
             </ul>
         </div>
-        <!-- <client-only></client-only> -->
         <div ref="floorRef" class="floor-box">
             <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
                 <div class="left">
@@ -76,7 +75,7 @@
                 <div class="brand-list">
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                        <CoImage class="h70px w150px" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" />
+                        <CoImage class="h70px w100%" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" />
                     </NuxtLink>
                 </div>
             </div>
@@ -230,8 +229,10 @@ onMounted(async () => {
         border-left: 10px solid var(--el-color-primary);
         border-right: 10px solid var(--el-color-primary);
         margin-top: 10px;
-        display: flex;
         overflow: hidden;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(8, 1fr);
     }
 
     .left {

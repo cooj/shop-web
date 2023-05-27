@@ -81,6 +81,22 @@
 
 }
 
+// 弹窗遮罩，滚动条
+.el-popup-parent--hidden {
+    .fixed-box {
+        right: 10px!important;
+    }
+}
+/* Firefox */
+@-moz-document url-prefix() {
+    .el-popup-parent--hidden {
+        .fixed-box {
+            right: 8px!important;
+        }
+    }
+}
+
+
 // el-cascader级联选择器
 .el-cascader-menu {
   .el-cascader-node {

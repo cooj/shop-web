@@ -1,7 +1,7 @@
 <template>
     <!-- <div v-if="CLIENT"> -->
-    <el-dialog v-if="CLIENT" v-model="visible" class="co-dialog" v-bind="$attrs" :fullscreen="defData.fullscreen" draggable
-        @close="onClose">
+    <lazy-el-dialog v-if="CLIENT" v-model="visible" class="co-dialog" v-bind="$attrs" :fullscreen="defData.fullscreen"
+        draggable @close="onClose">
         <template #header>
             <span class="el-dialog__title">
                 {{ props.title }}
@@ -22,7 +22,7 @@
                 确 定
             </el-button>
         </template>
-    </el-dialog>
+    </lazy-el-dialog>
     <!-- </div> -->
 </template>
 

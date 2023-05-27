@@ -35,7 +35,8 @@
                                 <i class="i-ep-arrow-right" />
                             </div>
                             <div class="gt">
-                                <NuxtLink v-for="son in sub.children" :key="son.cat_id" :to="linkGoodsList({ query: { cid: son.cat_id }, url: true })">
+                                <NuxtLink v-for="son in sub.children" :key="son.cat_id"
+                                    :to="linkGoodsList({ query: { cid: son.cat_id }, url: true })">
                                     {{ son.cat_name }}
                                 </NuxtLink>
                             </div>
@@ -73,9 +74,6 @@ const eleIconChange = (icon: string) => {
     }
 }
 
-// // 获取商品分类
-// const cateList = await goodsState.getGoodsClass()
-// console.log('cateList :>> ', cateList)
 // 获取商品分类
 const { data: cate } = await GoodsApi.getClass()
 const cateList = computed(() => cate.value?.data)

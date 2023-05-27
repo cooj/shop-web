@@ -120,6 +120,7 @@ const onHandleCurrentChange = (val: number) => {
     defData.time = Date.now()
     emits('update:page', defData.pagination)
     tableRef.value?.setScrollTop(0)
+    document.documentElement.scrollTop = 0
 }
 // 分页数量点击
 const onHandleSizeChange = async (val: number) => {
@@ -132,6 +133,7 @@ const onHandleSizeChange = async (val: number) => {
 
     emits('update:page', defData.pagination)
     tableRef.value?.setScrollTop(0)
+    document.documentElement.scrollTop = 0
 }
 
 const headerList = computed(() => {

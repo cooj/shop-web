@@ -12,7 +12,7 @@ export const useSystemState = () => {
         // console.log('system.value :>> ', system.value)
         if (system.value) return system
         const { data, error } = await CommonApi.getSystem()
-        console.log(data.value?.code)
+        // console.log(data.value?.code)
         // 接口发生错误时
         if (error.value) return system
         // await wait(800)
@@ -35,7 +35,7 @@ export const useSystemState = () => {
  * @returns
  */
 export const useUserState = () => {
-    const cookieToken = useCookie<string>('admin_token')
+    const cookieToken = useCookie<string>('admin_token', { maxAge: 3600 * 24 * 7 })
 
     const token = useState<string | null>('token', () => cookieToken.value)
 
