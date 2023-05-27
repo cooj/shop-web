@@ -112,7 +112,7 @@ declare interface OrderApi_GetInfoResponse {
     "total_number": 10, //总数量
     "pay_type": 3, //类型 1微信 2支付宝 3线下
     "pay_sn": "XS20230412103144876929", //支付流水号
-    "pay_status": 1, //支付状态 0未支付 1已支付 2已取消 3已退款
+    "pay_status": 0 | 1 | 2 | 3, //支付状态 0未支付 1已支付 2已取消 3已退款
     "pay_time": "2023-04-12 10:31:44", //支付时间
     "coupon_price": "0.00", //优惠金额
     "coupon_draw_id": 0, //优惠券id
@@ -164,7 +164,7 @@ declare interface OrderApi_GetPayTypeResponse {
 /**
  * 获取订单列表 - 请求参数
  */
-declare interface OrderApi_GetOrderList {
+declare interface OrderApi_GetOrderList extends ListPage{
     status: number,  // 订单状态 0全部 1待支付 2待发货 3待确认 4已取消
     main_order_no: string // 订单号  M20230424090858907460
     pay_type: number;  // 支付类型 1微信 2支付宝 3线下

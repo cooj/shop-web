@@ -15,16 +15,17 @@
 
 <script lang="ts" setup>
 interface BreadcrumbItemType {
-  id: number
-  name: string
+    id: number
+    name: string
 }
 
 const props = defineProps<{
-  cid?: number | '' // 商品分类id
-  name?: string // 商品名称，如果有商品的话
+    cid?: number | '' // 商品分类id
+    name?: string // 商品名称，如果有商品的话
 }>()
-const goodsState = useGoodsState()
-const goodsClass = await goodsState.getGoodsClass()
+// const goodsState = useGoodsState()
+// const goodsClass = await goodsState.getGoodsClass()
+// console.log('goodsClass :>> ', goodsClass)
 
 // 设置商品导航菜单
 const breadcrumbList = computed(() => {

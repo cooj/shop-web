@@ -160,6 +160,9 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
 
 const initTableData = async () => {
     const params: OrderApi_GetOrderList = {
+        is_paging: 1,
+        page: tableData.pagination.page,
+        page_size: tableData.pagination.page_size,
         status: Number(searchData.data.status),
         main_order_no: searchData.data.order_no,
         pay_type: Number(searchData.data.pay_type),
@@ -167,8 +170,10 @@ const initTableData = async () => {
         start_time: '',
         end_time: '',
     }
+    const loading = useElLoading()
     const { data: res } = await OrderApi.getOrderList(params)
     await wait(500)
+    loading?.close()
     if (res.value?.code === 200) {
         const list: OrderListTableData[] = []
         res.value.data.lists.forEach((item, index) => {
@@ -248,6 +253,7 @@ const setAddressText = (row: OrderApi_GetOrderListItem) => {
 // 查看详情
 const onDetail = (row: OrderListTableData) => {
     console.log('row :>> ', row)
+    orderDetailRef.value?.onOpenDialog(row.order_info)
 }
 // 搜索
 const onSearch = () => {
@@ -289,9 +295,12 @@ definePageMeta({
 }
 
 .goods-list {
+    display: grid;
+    gap: 10px;
+    padding: 8px 12px;
+
     li {
         display: flex;
-        padding: 8px 12px;
 
         &+li {
             border-top: 1px;
