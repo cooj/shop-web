@@ -6,62 +6,62 @@
                     <div class="pb10px pt15px">
                         <el-skeleton-item style="width: 30%" />
                     </div>
-                    <el-form size="small">
-                        <div class="goods-attr">
-                            <div class="goods-attr-item">
-                                <div class="left">
-                                    <el-skeleton-item />
-                                </div>
-                                <div class="right items-center">
-                                    <el-skeleton-item class="mr10px w15%!" />
-                                    <el-skeleton-item class="mr10px w10%!" />
-                                    <el-skeleton-item class="mr10px w10%!" />
-                                    <el-skeleton-item class="mr10px w10%!" />
-                                    <el-skeleton-item class="mr10px w15%!" />
-                                    <el-skeleton-item class="w15%!" />
-                                </div>
+                    <!-- <el-form size="small"> -->
+                    <div class="goods-attr">
+                        <div class="goods-attr-item">
+                            <div class="left">
+                                <el-skeleton-item />
                             </div>
-                            <div class="goods-attr-item">
-                                <div class="left">
-                                    <el-skeleton-item />
-                                </div>
-                                <div class="right items-center">
-                                    <el-skeleton-item class="mr10px w10%!" />
-                                    <el-skeleton-item class="mr10px w15%!" />
-                                    <el-skeleton-item class="mr10px w10%!" />
+                            <div class="right items-center">
+                                <el-skeleton-item class="mr10px w15%!" />
+                                <el-skeleton-item class="mr10px w10%!" />
+                                <el-skeleton-item class="mr10px w10%!" />
+                                <el-skeleton-item class="mr10px w10%!" />
+                                <el-skeleton-item class="mr10px w15%!" />
+                                <el-skeleton-item class="w15%!" />
+                            </div>
+                        </div>
+                        <div class="goods-attr-item">
+                            <div class="left">
+                                <el-skeleton-item />
+                            </div>
+                            <div class="right items-center">
+                                <el-skeleton-item class="mr10px w10%!" />
+                                <el-skeleton-item class="mr10px w15%!" />
+                                <el-skeleton-item class="mr10px w10%!" />
 
-                                    <el-skeleton-item class="w15%!" />
-                                </div>
+                                <el-skeleton-item class="w15%!" />
                             </div>
                         </div>
-                        <div class="goods-opt">
-                            <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w100px">
-                                    <el-skeleton-item />
-                                </dd>
-                                <dd class="goods-opt-item w100px">
-                                    <el-skeleton-item />
-                                </dd>
-                                <dd class="goods-opt-item w100px">
-                                    <el-skeleton-item />
-                                </dd>
-                                <dd class="goods-opt-item w150px">
-                                    <el-skeleton-item />
-                                </dd>
-                            </dl>
-                            <dl class="goods-opt-dl">
-                                <dd class="goods-opt-item w60px">
-                                    <el-skeleton-item />
-                                </dd>
-                                <dd class="goods-opt-item w60px">
-                                    <el-skeleton-item />
-                                </dd>
-                                <dd class="goods-opt-item w150px">
-                                    <el-skeleton-item />
-                                </dd>
-                            </dl>
-                        </div>
-                    </el-form>
+                    </div>
+                    <div class="goods-opt">
+                        <dl class="goods-opt-dl">
+                            <dd class="goods-opt-item w100px">
+                                <el-skeleton-item />
+                            </dd>
+                            <dd class="goods-opt-item w100px">
+                                <el-skeleton-item />
+                            </dd>
+                            <dd class="goods-opt-item w100px">
+                                <el-skeleton-item />
+                            </dd>
+                            <dd class="goods-opt-item w150px">
+                                <el-skeleton-item />
+                            </dd>
+                        </dl>
+                        <dl class="goods-opt-dl">
+                            <dd class="goods-opt-item w60px">
+                                <el-skeleton-item />
+                            </dd>
+                            <dd class="goods-opt-item w60px">
+                                <el-skeleton-item />
+                            </dd>
+                            <dd class="goods-opt-item w150px">
+                                <el-skeleton-item />
+                            </dd>
+                        </dl>
+                    </div>
+                    <!-- </el-form> -->
                     <div class="min-h800px" />
                 </template>
 
@@ -199,7 +199,8 @@
                             <div class="g-info w500px">
                                 <div class="g-info-left">
                                     <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
-                                        <CoImage class="w80% pb80%" :src="item.goods_img" style="--co-image-error-size:28px;" />
+                                        <CoImage class="w80% pb80%" :src="item.goods_img"
+                                            style="--co-image-error-size:28px;" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">
@@ -339,6 +340,10 @@
 <script setup lang="ts">
 import { GoodsApi } from '~/api/goods/list'
 import { RecordApi } from '~/api/user/record'
+
+definePageMeta({
+    layout: 'home',
+})
 
 const userState = useUserState() // 用户信息
 const useCartNumber = useCartNumberState() // 购物车商品数量
@@ -551,10 +556,6 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
 
 watch(() => [keyword.value, cid.value, bid.value], () => {
     initTableData()
-})
-
-definePageMeta({
-    layout: 'home',
 })
 </script>
 

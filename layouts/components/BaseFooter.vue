@@ -6,16 +6,18 @@
             </div>
             <div class="mid">
                 <ul class="footer-link">
-                    <li v-for="item in navList" :key="item.id">
-                        <dl>
-                            <dt>{{ item.name }}</dt>
-                            <dd v-for="sub in item.children" :key="sub.id">
-                                <NuxtLink :to="`/content/help?id=${sub.id}`">
-                                    {{ sub.name }}
-                                </NuxtLink>
-                            </dd>
-                        </dl>
-                    </li>
+                    <lazy-client-only>
+                        <li v-for="item in navList" :key="item.id">
+                            <dl>
+                                <dt>{{ item.name }}</dt>
+                                <dd v-for="sub in item.children" :key="sub.id">
+                                    <NuxtLink :to="`/content/help?id=${sub.id}`">
+                                        {{ sub.name }}
+                                    </NuxtLink>
+                                </dd>
+                            </dl>
+                        </li>
+                    </lazy-client-only>
                 </ul>
                 <div class="footer-right">
                     <div class="footer-logo">
