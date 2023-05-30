@@ -3,6 +3,7 @@
         <template #error>
             <div class="image-err co-image-error">
                 <i class="i-ep-picture" />
+                <!-- <i class="i-ep-picture-filled" /> -->
             </div>
         </template>
     </el-image>

@@ -40,12 +40,6 @@
                         返回顶部
                     </p>
                 </a>
-                <!-- <div class="side-item side-item-top" @click="goBackTop">
-          <i class="i-ic-baseline-arrow-upward" />
-          <p class="text">
-            返回顶部
-          </p>
-        </div> -->
             </li>
         </ul>
     </div>

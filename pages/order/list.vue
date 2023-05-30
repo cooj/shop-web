@@ -1,97 +1,115 @@
 <!-- 订单列表 -->
 <template>
     <LayoutUser>
-        <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
-            <template #pay_type="{ row }">
-                <el-select v-model="row.pay_type" clearable filterable placeholder="">
-                    <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
-                </el-select>
-            </template>
-            <template #status="{ row }">
-                <el-select v-model="row.status" filterable clearable placeholder="">
-                    <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item" :value="index" />
-                </el-select>
-            </template>
-        </CoTableTool>
-        <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
-            :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
-            scrollbar-always-on border @update:page="onHandleCurrentChange">
-            <template #order_info="{ scopes }">
-                <div v-if="scopes.row.index">
-                    订单编号：{{ scopes.row.order_info.main_order_no }}
-                    下单时间：{{ scopes.row.order_info.cerate_time }}
+        <el-skeleton :loading="defData.skeleton" animated>
+            <!-- <template #template>
+                <div class="mb20px flex items-center">
+                    <el-skeleton-item class="mr10px py15px w10%!" />
+                    <el-skeleton-item class="mr20px py15px w20%!" />
+                    <el-skeleton-item class="mr10px py15px w10%!" />
+                    <el-skeleton-item class="mr20px py15px w20%!" />
+                    <el-skeleton-item class="mr15px py15px w10%!" />
+                    <el-skeleton-item class="py15px w10%!" />
                 </div>
-                <ul v-else class="goods-list">
-                    <li v-for="item in scopes.row.order_info.goods_info" :key="item.goods_id">
-                        <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
-                        <div class="text">
-                            <h3 class="tle">
-                                <NuxtLink :to="`/goods/${item.goods_id}`">
-                                    {{ item.goods_name }}
-                                </NuxtLink>
-                            </h3>
-                            <div class="pce text-12px c-#888">
-                                价格：<span class="mr5px">￥{{ item.price }}</span>
-                                数量：<span>{{ item.goods_number }}</span>
+                <div class="min-h500px">
+                    <el-skeleton class="mb20px" />
+                    <el-skeleton :rows="5" />
+                </div>
+            </template> -->
+
+            <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
+                <template #pay_type="{ row }">
+                    <el-select v-model="row.pay_type" clearable filterable placeholder="">
+                        <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
+                    </el-select>
+                </template>
+                <template #status="{ row }">
+                    <el-select v-model="row.status" filterable clearable placeholder="">
+                        <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item" :value="index" />
+                    </el-select>
+                </template>
+            </CoTableTool>
+            <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
+                :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
+                scrollbar-always-on border @update:page="onHandleCurrentChange">
+                <template #order_info="{ scopes }">
+                    <div v-if="scopes.row.index">
+                        订单编号：{{ scopes.row.order_info.main_order_no }}
+                        下单时间：{{ scopes.row.order_info.cerate_time }}
+                    </div>
+                    <ul v-else class="goods-list">
+                        <li v-for="item in scopes.row.order_info.goods_info" :key="item.goods_id">
+                            <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
+                            <div class="text">
+                                <h3 class="tle">
+                                    <NuxtLink :to="`/goods/${item.goods_id}`">
+                                        {{ item.goods_name }}
+                                    </NuxtLink>
+                                </h3>
+                                <div class="pce text-12px c-#888">
+                                    价格：<span class="mr5px">￥{{ item.price }}</span>
+                                    数量：<span>{{ item.goods_number }}</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                </ul>
-            </template>
-            <template #order_mount="{ scopes }">
-                <div v-if="scopes.row.index" />
-                <div v-else class="goods-amount">
-                    <!-- <p>总金额：{{ scopes.row.order_info.total_price }}</p>
+                        </li>
+                    </ul>
+                </template>
+                <template #order_mount="{ scopes }">
+                    <div v-if="scopes.row.index" />
+                    <div v-else class="goods-amount">
+                        <!-- <p>总金额：{{ scopes.row.order_info.total_price }}</p>
           <p>优惠金额：{{ scopes.row.order_info.coupon_price }}</p>
           <p>实付金额(含运费)：¥{{ scopes.row.order_info.meet_price }}</p> -->
-                    ￥{{ scopes.row.order_info.meet_price }}
-                    <br>
-                    <span class="text-12px c-#888">(含运费：0.00)</span>
-                </div>
-            </template>
-            <template #consignee_info="{ scopes }">
-                <div v-if="scopes.row.index" />
-                <div v-else>
-                    <p>
-                        <span class="mr5px">{{ scopes.row.order_info.consignee_name }}</span>
-                        <span>{{ scopes.row.order_info.consignee_phone }}</span>
-                    </p>
-                    <p>{{ setAddressText(scopes.row.order_info) }}</p>
-                </div>
-            </template>
-            <template #status="{ scopes }">
-                <div v-if="scopes.row.index" />
-                <div v-else>
-                    <el-tag v-if="scopes.row.status === 0" type="warning">
-                        待支付
-                    </el-tag>
-                    <el-tag v-else-if="scopes.row.status === 1" type="">
-                        待发货
-                    </el-tag>
-                    <el-tag v-if="scopes.row.status === 2" type="info">
-                        已取消
-                    </el-tag>
-                    <el-tag v-if="scopes.row.status === 3" type="danger">
-                        已退款
-                    </el-tag>
-                </div>
-            </template>
-
-            <template #operate="{ scopes }">
-                <template v-if="!scopes.row.index">
-                    <el-button link type="primary" size="small" @click="onDetail(scopes.row)">
-                        查看详情
-                    </el-button>
-                    <br>
-                    <el-button link type="primary" size="small">
-                        备注
-                    </el-button>
+                        ￥{{ scopes.row.order_info.meet_price }}
+                        <br>
+                        <span class="text-12px c-#888">(含运费：0.00)</span>
+                    </div>
                 </template>
-            </template>
-        </CoTable>
-        <Teleport to="body">
+                <template #consignee_info="{ scopes }">
+                    <div v-if="scopes.row.index" />
+                    <div v-else>
+                        <p>
+                            <span class="mr5px">{{ scopes.row.order_info.consignee_name }}</span>
+                            <span>{{ scopes.row.order_info.consignee_phone }}</span>
+                        </p>
+                        <p>{{ setAddressText(scopes.row.order_info) }}</p>
+                    </div>
+                </template>
+                <template #status="{ scopes }">
+                    <div v-if="scopes.row.index" />
+                    <div v-else class="cur-button">
+                        <el-button :type="setTagType(scopes.row.status).type" :color="setTagType(scopes.row.status).color"
+                            size="small" plain class="pointer-events-none">
+                            {{ setTagType(scopes.row.status).text }}
+                        </el-button>
+                        <div class="mt3px">
+                            <el-button link type="primary" size="small" @click="onDetail(scopes.row)">
+                                订单详情
+                            </el-button>
+                        </div>
+                    </div>
+                </template>
+
+                <template #operate="{ scopes }">
+                    <template v-if="!scopes.row.index">
+                        <!-- 未支付时，才能取消订单 -->
+
+                        <div v-if="scopes.row.status === 1">
+                            <el-button type="warning" size="small" class="mb5px" @click="onPayOrder(scopes.row)">
+                                去付款
+                            </el-button>
+                            <br>
+                            <el-button type="info" size="small" @click="onCancel(scopes.row)">
+                                取消订单
+                            </el-button>
+                        </div>
+                    </template>
+                </template>
+            </CoTable>
+            <!-- <Teleport to="body"> -->
             <LazyOrderDetail ref="orderDetailRef" />
-        </Teleport>
+            <!-- </Teleport> -->
+        </el-skeleton>
     </LayoutUser>
 </template>
 
@@ -103,14 +121,16 @@ import type { OrderDetail } from '#components'
 const orderDetailRef = ref<InstanceType<typeof OrderDetail>>()
 
 const defData = reactive({
+    skeleton: true, // 显示骨架屏
     payList: { // 支付类型 1微信 2支付宝 3线下
         1: '微信',
         2: '支付宝',
         3: '线下',
     },
-    stateList: { // 0全部 1待支付 2待发货 3待确认 4已取消
-        0: '全部', 1: '待支付', 2: '待发货', 3: '待确认', 4: '已取消',
+    stateList: { // 待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
+        1: '待支付', 2: '待发货', 3: '待确认', 4: '配货中', 5: '部分发货', 6: '已确认', 7: '已取消',
     },
+
 })
 
 // form表单数据类型
@@ -149,7 +169,7 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
         { property: 'order_mount', label: '订单金额', width: 150, align: 'right', slot: true, showOverflowTooltip: false },
         { property: 'consignee_info', label: '收货信息', minWidth: 150, slot: true, showOverflowTooltip: false },
         { property: 'status', label: '订单状态', width: 100, slot: true, align: 'center' },
-        { property: 'operate', label: '操作', width: 85, slot: true, align: 'center', showOverflowTooltip: false },
+        { property: 'operate', label: '操作', width: 100, slot: true, align: 'center', showOverflowTooltip: false },
         // { property: 'market_price', label: '市场价', width: 85, align: 'center' },
     ],
     pagination: {
@@ -172,7 +192,8 @@ const initTableData = async () => {
     }
     const loading = useElLoading()
     const { data: res } = await OrderApi.getOrderList(params)
-    await wait(500)
+    // await wait(500)
+    defData.skeleton = false
     loading?.close()
     if (res.value?.code === 200) {
         const list: OrderListTableData[] = []
@@ -183,7 +204,7 @@ const initTableData = async () => {
                 order_mount: Number(item.meet_price), // 订单金额
                 consignee_info: item.consignee_name, // 收货人信息
                 // 物流/支付信息
-                status: item.status, // 订单状态
+                status: item.order_status, // 订单状态
             }
             const obj2: OrderListTableData = {
                 ...obj,
@@ -194,7 +215,7 @@ const initTableData = async () => {
         tableData.data = list
         tableData.pagination.total = res.value.data.total// 总条数 记录数大于10条记录不
     }
-    console.log('res :>> ', res)
+    // console.log('res :>> ', res)
 }
 
 // table合并行
@@ -205,56 +226,121 @@ interface SpanMethodProps {
     columnIndex: number
 }
 
-const arraySpanMethod = ({
-    row,
-    column,
-    rowIndex,
-    columnIndex,
-}: SpanMethodProps) => {
-    if (row.index) {
-        if (columnIndex === 0) {
+const arraySpanMethod = (item: SpanMethodProps) => {
+    if (item.row.index) {
+        if (item.columnIndex === 0) {
             return [1, 5]
         }
-        // else if (columnIndex === 1) {
-        //   return [0, 0]
-        // }
-        // return [1, 3]
     }
-    // console.log('row :>> ', row);
-    // if (rowIndex % 2 === 0) {
-    //   if (columnIndex === 0) {
-    //     return [1, 2]
-    //   } else if (columnIndex === 1) {
-    //     return [0, 0]
-    //   }
-    // }
 }
 
-const setRowClassName = ({
-    row,
-    rowIndex,
-}: {
+const setRowClassName = (item: {
     row: OrderListTableData
     rowIndex: number
 }) => {
-    return row.index ? 'line-text' : ''
+    return item.row.index ? 'line-text' : ''
+}
+
+const setTagType = (row: number) => {
+    const dat = {
+        type: '',
+        color: '',
+        text: '',
+    }
+    // 'primary'| 'success'| 'warning'| 'danger'| 'info'
+    // 1: '待支付', 2: '待发货', 3: '待确认', 4: '配货中', 5: '部分发货', 6: '已确认', 7: '已取消',
+    const lis = {
+        1: {
+            type: '',
+            color: '#ff6c00',
+            text: '待支付',
+        },
+        2: {
+            type: 'primary',
+            color: '',
+            text: '待发货',
+        },
+        3: {
+            type: 'success',
+            color: '',
+            text: '待确认',
+        },
+        4: {
+            type: '',
+            color: '#626aef',
+            text: '配货中',
+        },
+        5: {
+            type: 'warning',
+            color: '',
+            text: '部分发货',
+        },
+        6: {
+            type: 'warning',
+            color: '#ff6c6c',
+            text: '已确认',
+        },
+        7: {
+            type: 'info',
+            color: '',
+            text: '已取消',
+        },
+    }
+    const end = (lis[row as 1] ?? dat) as {
+        type: ''
+        color: string
+        text: string
+    }
+    // console.log(end)
+    return end
 }
 
 const setAddressText = (row: OrderApi_GetOrderListItem) => {
-    const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
-    if (row.province) arr.push(row.province) // 省份 名称 或 省份id 或 省份名称id 或
-    if (row.city) arr.push(row.city)
-    if (row.area) arr.push(row.area) //
-    if (row.address) arr.push(row.address) //
-
-    return arr.join('  ')
+    return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
 
 // 查看详情
 const onDetail = (row: OrderListTableData) => {
-    console.log('row :>> ', row)
     orderDetailRef.value?.onOpenDialog(row.order_info)
 }
+
+/**
+ * 去付款
+ * @param row
+ */
+const onPayOrder = (row: OrderListTableData) => {
+    navigateTo({
+        path: '/order/pay',
+        query: {
+            order_no: row.order_info.main_order_no,
+        },
+    })
+}
+
+/**
+ * 取消订单
+ * @param row
+ */
+const onCancel = async (row: OrderListTableData) => {
+    ElMessageBox.confirm('确定要取消该订单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }).then(async () => {
+        const { data } = await OrderApi.cancelOrder({ main_order_no: row.order_info.main_order_no })
+
+        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+
+        ElMessage.error('操作成功')
+        row.status = 7 // 取消订单状态为已取消中间状态
+    }).catch(() => {
+        // ElMessage({
+        //     type: 'info',
+        //     message: 'Delete canceled',
+        // })
+    })
+}
+
 // 搜索
 const onSearch = () => {
     initTableData()

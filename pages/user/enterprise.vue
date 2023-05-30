@@ -8,28 +8,30 @@
                 <el-breadcrumb-item>企业用户</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div style="margin-bottom: 20px; color: var(--el-color-primary);">
-            认证状态：
-            <span v-if="defData.attest_status === 0">
-                未认证
-            </span>
-            <span v-else-if="defData.attest_status === 1">
-                已认证，（{{ defData.enterprise_name }}）
-            </span>
-            <span v-else-if="defData.attest_status === 2">
-                正在审核中...
-            </span>
-            <span v-else>
-                未通过，请重新提交认证
-            </span>
-        </div>
-        <el-button v-if="defData.attest_status === 0 || defData.attest_status === 3" mb13px type="danger"
-            @click="onOpenDialog">
-            成为企业用户
-        </el-button>
-        <el-image class="h490px w900px" :src="testUrl" />
-        <client-only>
-            <el-dialog v-model="defData.visible" title="成为企业用户" :draggable="true" width="600px" style="text-align: center;">
+        <div v-if="CLIENT">
+            <div style="margin-bottom: 20px; color: var(--el-color-primary);">
+                认证状态：
+                <span v-if="defData.attest_status === 0">
+                    未认证
+                </span>
+                <span v-else-if="defData.attest_status === 1">
+                    已认证，（{{ defData.enterprise_name }}）
+                </span>
+                <span v-else-if="defData.attest_status === 2">
+                    正在审核中...
+                </span>
+                <span v-else>
+                    未通过，请重新提交认证
+                </span>
+            </div>
+            <el-button v-if="defData.attest_status === 0 || defData.attest_status === 3" mb13px type="danger"
+                @click="onOpenDialog">
+                成为企业用户
+            </el-button>
+            <el-image class="h490px w900px" :src="testUrl" />
+
+            <lazy-el-dialog v-model="defData.visible" title="成为企业用户" :draggable="true" width="600px"
+                style="text-align: center;">
                 <el-form ref="formRef" :model="form" :rules="rules" label-width="140px">
                     <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="上传" name="first">
@@ -88,8 +90,8 @@
                         </el-button>
                     </span>
                 </template>
-            </el-dialog>
-        </client-only>
+            </lazy-el-dialog>
+        </div>
     </LayoutUser>
 </template>
 

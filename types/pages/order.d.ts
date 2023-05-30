@@ -185,7 +185,7 @@ declare interface OrderApi_GetOrderListResponse extends ListTotal {
 declare interface OrderApi_GetOrderListItem {
     "order_id": 17, //订单ID
     "main_order_no": "M20230424090858907460", //主订单号
-    "status": 0, //订单状态
+    // "status": 0, //订单状态
     "user_id": 1, //用户id
     "total_price": "4199.04", //总金额
     "total_number": 6, //总数量
@@ -229,7 +229,7 @@ declare interface OrderApi_GetOrderListItem {
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
         "goods_img": ""
     }[]
-
+    "order_status": 2 //订单状态 ：待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
 
 }
 

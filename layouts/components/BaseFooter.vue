@@ -5,18 +5,22 @@
                 <div class="content" v-html="systemInfo?.footer_content" />
             </div>
             <div class="mid">
-                <ul class="footer-link">
-                    <li v-for="item in navList" :key="item.id">
-                        <dl>
-                            <dt>{{ item.name }}</dt>
-                            <dd v-for="sub in item.children" :key="sub.id">
-                                <NuxtLink :to="`/content/help?id=${sub.id}`">
-                                    {{ sub.name }}
-                                </NuxtLink>
-                            </dd>
-                        </dl>
-                    </li>
-                </ul>
+                <!-- TODO [Vue warn]: Hydration node mismatch: - Client vnode: ul - Server rendered DOM: -->
+                <div>
+                    <ul v-if="CLIENT" class="footer-link">
+                        <li v-for="item in navList" :key="item.id">
+                            <dl>
+                                <dt>{{ item.name }}</dt>
+                                <dd v-for="sub in item.children" :key="sub.id">
+                                    <NuxtLink :to="`/content/help?id=${sub.id}`">
+                                        {{ sub.name }}
+                                    </NuxtLink>
+                                </dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="footer-right">
                     <div class="footer-logo">
                         <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
@@ -74,8 +78,8 @@ const systemInfo = await useSystem.getSystemInfo()
 const navList = ref<HomeApi_GetArticleResponse[]>([])
 const initDefaultData = async () => {
     // 获取底部导航
-    const { data: footer } = await HomeApi.getArticle({ type: 1 })
-
+    const { data: footer, error } = await HomeApi.getArticle({ type: 1 })
+    if (error.value) return
     navList.value = footer.value?.data || []
 }
 
