@@ -57,13 +57,7 @@ const { data: address, refresh } = await UserAddressApi.getList() // 获取所�
 
 // 地址信息拼接
 const setAddressText = (row: UserAddressApi_GetListResponse) => {
-    const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
-    if (row.province) arr.push(row.province) // 省份 名称 或 省份id 或 省份名称id 或
-    if (row.city) arr.push(row.city)
-    if (row.area) arr.push(row.area) //
-    if (row.address) arr.push(row.address) //
-
-    return arr.join('  ')
+    return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
 
 // 新增地址

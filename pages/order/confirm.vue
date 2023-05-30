@@ -2,235 +2,247 @@
 <template>
     <section class="text-14px">
         <div class="container">
-            <template v-if="defData.ready">
-                <el-breadcrumb class="py15px">
-                    <el-breadcrumb-item :to="{ path: '/' }">
-                        首页
-                    </el-breadcrumb-item>
-                    <!-- <el-breadcrumb-item :to="{ path: '/order/cart' }">
+            <el-skeleton :loading="defData.skeleton" animated>
+                <template #template>
+                    <div class="pb10px pt15px">
+                        <el-skeleton-item style="width: 30%" />
+                    </div>
+                    <div class="mb20px min-h500px bg-#fff p15px">
+                        <el-skeleton :rows="5" />
+                    </div>
+                </template>
+
+                <template v-if="defData.ready">
+                    <el-breadcrumb class="py15px">
+                        <el-breadcrumb-item :to="{ path: '/' }">
+                            首页
+                        </el-breadcrumb-item>
+                        <!-- <el-breadcrumb-item :to="{ path: '/order/cart' }">
           购物车
         </el-breadcrumb-item> -->
-                    <el-breadcrumb-item>
-                        订单结算
-                    </el-breadcrumb-item>
-                </el-breadcrumb>
+                        <el-breadcrumb-item>
+                            订单结算
+                        </el-breadcrumb-item>
+                    </el-breadcrumb>
 
-                <el-form ref="formRef" :model="form" :rules="rules" label-width="100" label-position="left">
-                    <section class="sec-box">
-                        <div class="tle">
-                            <b>收货地址</b>
-                            <el-button text bg size="small" @click="onAddress(1)">
-                                新增地址
-                            </el-button>
-                        </div>
-                        <el-form-item prop="address_id" label-width="auto">
-                            <el-radio-group v-if="defData.addressList.length" v-model="form.address_id"
-                                class="address-radio">
-                                <el-radio v-for="item in defData.addressList" :key="item.address_id"
-                                    :label="item.address_id">
-                                    <span>{{ setAddressText(item) }}</span>
-                                    <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
-                                    <span class="mx5px">{{ item.phone }}</span>
-                                    <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
-                                </el-radio>
-                            </el-radio-group>
-                            <div v-else class="w100% text-center text-13px c-#666">
-                                暂无收货地址,请点击
-                                <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(1)">新增地址</span>
+                    <el-form ref="formRef" :model="form" :rules="rules" label-width="100" label-position="left">
+                        <section class="sec-box">
+                            <div class="tle">
+                                <b>收货地址</b>
+                                <el-button text bg size="small" @click="onAddress(1)">
+                                    新增地址
+                                </el-button>
                             </div>
-                        </el-form-item>
-                    </section>
-                    <section class="sec-box">
-                        <div class="tle">
-                            <b>发票信息</b>
-                            <el-button text bg size="small" @click="onAddress(2)">
-                                新增地址
-                            </el-button>
-                        </div>
-                        <el-form-item prop="is_invoice" label="是否开发票">
-                            <el-radio-group v-model="form.is_invoice" class="mr15px">
-                                <el-radio :label="1">
-                                    是
-                                </el-radio>
-                                <el-radio :label="0">
-                                    否
-                                </el-radio>
-                            </el-radio-group>
-                            <el-radio-group v-if="form.is_invoice" v-model="form.billType">
-                                <el-radio :label="1" border>
-                                    普通发票
-                                </el-radio>
-                                <el-radio :label="2" border>
-                                    增值税发票
-                                </el-radio>
-                            </el-radio-group>
-                        </el-form-item>
+                            <el-form-item prop="address_id" label-width="auto">
+                                <el-radio-group v-if="defData.addressList.length" v-model="form.address_id"
+                                    class="address-radio">
+                                    <el-radio v-for="item in defData.addressList" :key="item.address_id"
+                                        :label="item.address_id">
+                                        <span>{{ setAddressText(item) }}</span>
+                                        <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                                        <span class="mx5px">{{ item.phone }}</span>
+                                        <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                    </el-radio>
+                                </el-radio-group>
+                                <div v-else class="w100% text-center text-13px c-#666">
+                                    暂无收货地址,请点击
+                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(1)">新增地址</span>
+                                </div>
+                            </el-form-item>
+                        </section>
+                        <section class="sec-box">
+                            <div class="tle">
+                                <b>发票信息</b>
+                                <el-button text bg size="small" @click="onAddress(2)">
+                                    新增地址
+                                </el-button>
+                            </div>
+                            <el-form-item prop="is_invoice" label="是否开发票">
+                                <el-radio-group v-model="form.is_invoice" class="mr15px">
+                                    <el-radio :label="1">
+                                        是
+                                    </el-radio>
+                                    <el-radio :label="0">
+                                        否
+                                    </el-radio>
+                                </el-radio-group>
+                                <el-radio-group v-if="form.is_invoice" v-model="form.billType">
+                                    <el-radio :label="1" border>
+                                        普通发票
+                                    </el-radio>
+                                    <el-radio :label="2" border>
+                                        增值税发票
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item>
 
-                        <el-form-item v-if="form.is_invoice" prop="bill_address_id" label="收票地址">
-                            <el-radio-group v-if="defData.billAddressList.length" v-model="form.bill_address_id"
-                                class="address-radio">
-                                <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
-                                    :label="item.address_id">
-                                    <span>{{ setAddressText(item) }}</span>
-                                    <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
-                                    <span class="mx5px">{{ item.phone }}</span>
-                                    <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
-                                </el-radio>
-                            </el-radio-group>
-                            <div v-else class="w100% text-center text-13px c-#666">
-                                暂无收货地址,请点击
-                                <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(2)">新增地址</span>
+                            <el-form-item v-if="form.is_invoice" prop="bill_address_id" label="收票地址">
+                                <el-radio-group v-if="defData.billAddressList.length" v-model="form.bill_address_id"
+                                    class="address-radio">
+                                    <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
+                                        :label="item.address_id">
+                                        <span>{{ setAddressText(item) }}</span>
+                                        <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                                        <span class="mx5px">{{ item.phone }}</span>
+                                        <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                    </el-radio>
+                                </el-radio-group>
+                                <div v-else class="w100% text-center text-13px c-#666">
+                                    暂无收货地址,请点击
+                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(2)">新增地址</span>
+                                </div>
+                            </el-form-item>
+                        </section>
+                        <section class="sec-box">
+                            <div class="tle">
+                                <b>商品列表</b>
                             </div>
-                        </el-form-item>
-                    </section>
-                    <section class="sec-box">
-                        <div class="tle">
-                            <b>商品列表</b>
-                        </div>
-                        <el-table :data="form.tableData">
-                            <el-table-column prop="goods_name" label="商品名称" min-width="180">
-                                <template #default="{ row }">
-                                    <div class="h50px flex">
-                                        <div class="goods_img">
-                                            <CoImage class="h50px w50px" :src="row.goods_img" />
+                            <el-table :data="form.tableData">
+                                <el-table-column prop="goods_name" label="商品名称" min-width="180">
+                                    <template #default="{ row }">
+                                        <div class="h50px flex">
+                                            <div class="goods_img">
+                                                <CoImage class="h50px w50px" :src="row.goods_img" />
+                                            </div>
+                                            <div class="pl10px">
+                                                <NuxtLink class="goods_link">
+                                                    {{ row.goods_name }}
+                                                </NuxtLink>
+                                            </div>
                                         </div>
-                                        <div class="pl10px">
-                                            <NuxtLink class="goods_link">
-                                                {{ row.goods_name }}
-                                            </NuxtLink>
-                                        </div>
-                                    </div>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="goods_code" label="商品型号" width="160" />
-                            <el-table-column prop="goods_spec" label="商品规格" width="160" />
-                            <el-table-column prop="shop_price" label="价格" width="120" align="center" />
-                            <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
-                                <template #default="{ row }">
-                                    <b>{{ row.goods_number }}</b>
-                                    <!-- <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100" /> -->
-                                </template>
-                            </el-table-column>
-                            <!-- <el-table-column prop="operate" label="操作" width="100" align="center">
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="goods_code" label="商品型号" width="160" />
+                                <el-table-column prop="goods_spec" label="商品规格" width="160" />
+                                <el-table-column prop="shop_price" label="价格" width="120" align="center" />
+                                <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
+                                    <template #default="{ row }">
+                                        <b>{{ row.goods_number }}</b>
+                                        <!-- <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100" /> -->
+                                    </template>
+                                </el-table-column>
+                                <!-- <el-table-column prop="operate" label="操作" width="100" align="center">
                 <template #default="{ row }">
                   <el-button type="primary" link @click="onRemove(row)">
                     删除
                   </el-button>
                 </template>
               </el-table-column> -->
-                        </el-table>
-                    </section>
-                    <section class="sec-box">
-                        <div class="tle">
-                            <b>支付方式</b>
-                        </div>
-                        <div>
-                            <el-form-item prop="payType" label="" label-width="auto">
-                                <el-radio-group v-model="form.payType">
-                                    <el-radio :label="1" border>
-                                        在线支付
+                            </el-table>
+                        </section>
+                        <section class="sec-box">
+                            <div class="tle">
+                                <b>支付方式</b>
+                            </div>
+                            <div>
+                                <el-form-item prop="payType" label="" label-width="auto">
+                                    <el-radio-group v-model="form.payType">
+                                        <el-radio :label="1" border>
+                                            在线支付
+                                        </el-radio>
+                                        <el-radio :label="2" border>
+                                            对公转账
+                                        </el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </div>
+                            <div class="inline-flex items-center">
+                                <span class="inline-flex items-center">
+                                    支持
+                                    <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
+                                    微信
+                                </span>
+                                <span class="ml3px inline-flex items-center">
+                                    <i class="i-ic-baseline-payment mr3px c-#3887ff" />
+                                    在线支付
+                                </span>
+                                <span class="ml3px inline-flex items-center">
+                                    <i class="i-ic-twotone-payments mr3px c-#ff5335" />
+                                    线下转账
+                                </span>
+                            </div>
+                        </section>
+                        <section class="sec-box">
+                            <div class="flex-1">
+                                <div class="tle">
+                                    <b>优惠方式</b>
+                                </div>
+                            </div>
+                            <el-form-item prop="coupon_id" label="优惠券">
+                                <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
+                                    <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id"
+                                        :label="item.coupon_draw_id">
+                                        {{ item.coupon_name }}-减{{ item.par_value }}
                                     </el-radio>
-                                    <el-radio :label="2" border>
-                                        对公转账
+                                    <el-radio :label="0">
+                                        不使用优惠券
                                     </el-radio>
                                 </el-radio-group>
+                                <span v-else class="text-12px c-#888">暂无可用优惠券</span>
                             </el-form-item>
-                        </div>
-                        <div class="inline-flex items-center">
-                            <span class="inline-flex items-center">
-                                支持
-                                <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
-                                微信
-                            </span>
-                            <span class="ml3px inline-flex items-center">
-                                <i class="i-ic-baseline-payment mr3px c-#3887ff" />
-                                在线支付
-                            </span>
-                            <span class="ml3px inline-flex items-center">
-                                <i class="i-ic-twotone-payments mr3px c-#ff5335" />
-                                线下转账
-                            </span>
-                        </div>
-                    </section>
-                    <section class="sec-box">
-                        <div class="flex-1">
-                            <div class="tle">
-                                <b>优惠方式</b>
+                            <el-form-item prop="is_peas" label="工游豆">
+                                <span class="mr10px c-#666">是否使用工游豆</span>
+                                <el-radio-group v-model="form.is_peas" class="mr15px">
+                                    <el-radio :label="1">
+                                        是
+                                    </el-radio>
+                                    <el-radio :label="0">
+                                        否
+                                    </el-radio>
+                                </el-radio-group>
+                                <span v-if="peasNumber.max === 0" class="text-12px c-#999">工游豆可用数量为0</span>
+                                <el-input-number v-if="form.is_peas && peasNumber.max" v-model="form.peas_number"
+                                    :precision="0" :min="peasNumber.min" :max="peasNumber.max" />
+                            </el-form-item>
+                        </section>
+                        <section class="sec-box flex mb0!">
+                            <div class="flex-1">
+                                <el-form-item prop="remark" label="备注信息">
+                                    <el-input v-model="form.remark" maxlength="150" show-word-limit resize="none" :rows="3"
+                                        type="textarea" />
+                                </el-form-item>
                             </div>
-                        </div>
-                        <el-form-item prop="coupon_id" label="优惠券">
-                            <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
-                                <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id"
-                                    :label="item.coupon_draw_id">
-                                    {{ item.coupon_name }}-减{{ item.par_value }}
-                                </el-radio>
-                                <el-radio :label="0">
-                                    不使用优惠券
-                                </el-radio>
-                            </el-radio-group>
-                            <span v-else class="text-12px c-#888">暂无可用优惠券</span>
-                        </el-form-item>
-                        <el-form-item prop="is_peas" label="工游豆">
-                            <span class="mr10px c-#666">是否使用工游豆</span>
-                            <el-radio-group v-model="form.is_peas" class="mr15px">
-                                <el-radio :label="1">
-                                    是
-                                </el-radio>
-                                <el-radio :label="0">
-                                    否
-                                </el-radio>
-                            </el-radio-group>
-                            <span v-if="peasNumber.max === 0" class="text-12px c-#999">工游豆可用数量为0</span>
-                            <el-input-number v-if="form.is_peas && peasNumber.max" v-model="form.peas_number" :precision="0"
-                                :min="peasNumber.min" :max="peasNumber.max" />
-                        </el-form-item>
-                    </section>
-                    <section class="sec-box flex mb0!">
-                        <div class="flex-1">
-                            <el-form-item prop="remark" label="备注信息">
-                                <el-input v-model="form.remark" maxlength="150" show-word-limit resize="none" :rows="3"
-                                    type="textarea" />
-                            </el-form-item>
-                        </div>
-                        <ul class="prefer-ul w300px">
-                            <li>
-                                <span class="item-title">商品总件数：</span><span class="item-text">{{ defData.count_number
-                                }}件</span>
-                            </li>
-                            <!-- <li>
+                            <ul class="prefer-ul w300px">
+                                <li>
+                                    <span class="item-title">商品总件数：</span><span class="item-text">{{ defData.count_number
+                                    }}件</span>
+                                </li>
+                                <!-- <li>
                 <span class="item-title">含危险品：</span><span class="item-text">0件</span>
               </li> -->
-                            <li>
-                                <span class="item-title">商品总金额：</span><span class="item-text">￥{{
-                                    formatNumber(defData.total_price)
-                                }}</span>
-                            </li>
-                            <!-- <li>
+                                <li>
+                                    <span class="item-title">商品总金额：</span><span class="item-text">￥{{
+                                        formatNumber(defData.total_price)
+                                    }}</span>
+                                </li>
+                                <!-- <li>
                 <span class="item-title">税额：</span><span class="item-text">￥30.68</span>
               </li> -->
-                            <li>
-                                <span class="item-title freight-item-wrap">运费<i class="freight-detail-txt">(明细)</i>：</span>
-                                <span class="item-text">￥{{ formatNumber(defData.freight_price) }}</span>
-                            </li>
-                            <li>
-                                <span class="item-title">运费减免：</span><span class="item-text">-￥0.00</span>
-                            </li>
-                            <li>
-                                <span class="item-title">优惠券：</span><span class="item-text">-￥10.00</span>
-                            </li>
-                        </ul>
-                    </section>
-                    <section class="sec-box flex items-center justify-end b-t b-t-#eee">
-                        <b class="mr30px">实付款：<span class="main-color text-24px">¥{{ payMoney }}</span></b>
-                        <el-button type="primary" class="min-w150px" size="large" @click="onSubmit">
-                            <b>提交订单</b>
-                        </el-button>
-                    </section>
-                </el-form>
-            </template>
-            <div v-else class="my15px b-#eee bg-#fff">
-                <BaseError />
-            </div>
+                                <li>
+                                    <span class="item-title freight-item-wrap">运费<i
+                                        class="freight-detail-txt">(明细)</i>：</span>
+                                    <span class="item-text">￥{{ formatNumber(defData.freight_price) }}</span>
+                                </li>
+                                <li>
+                                    <span class="item-title">运费减免：</span><span class="item-text">-￥0.00</span>
+                                </li>
+                                <li>
+                                    <span class="item-title">优惠券：</span><span class="item-text">-￥10.00</span>
+                                </li>
+                            </ul>
+                        </section>
+                        <section class="sec-box flex items-center justify-end b-t b-t-#eee">
+                            <b class="mr30px">实付款：<span class="main-color text-24px">¥{{ payMoney }}</span></b>
+                            <el-button type="primary" class="min-w150px" size="large" @click="onSubmit">
+                                <b>提交订单</b>
+                            </el-button>
+                        </section>
+                    </el-form>
+                </template>
+                <div v-else class="my15px b-#eee bg-#fff">
+                    <BaseError />
+                </div>
+            </el-skeleton>
         </div>
         <UserAddressModel ref="modelRef" @update="getAddress" />
     </section>
@@ -246,6 +258,7 @@ const modelRef = ref<InstanceType<typeof UserAddressModel>>()
 const formRef = ref<FormInstance>()
 
 const defData = reactive({
+    skeleton: true, // 默认打开骨架屏
     type: 1, // 添加收货地址使用 1：收货地址 2：发票地址
     addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     billAddressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
@@ -321,12 +334,14 @@ const initDefaultData = async () => {
     ])
 
     await wait(800)
+    defData.skeleton = false
 
     if (res1 && res1.data.value?.code === 200) {
         const data = res1.data.value?.data
         // 未获取到商品时
         if (data.goods_list.length === 0) {
             defData.ready = false
+
             return
         }
 
@@ -352,13 +367,7 @@ const initDefaultData = async () => {
 
 // 地址信息拼接
 const setAddressText = (row: UserAddressApi_GetListResponse) => {
-    const arr: string[] = [] // 保存地址列表的字符串数组 或 字符串 或 数组
-    if (row.province) arr.push(row.province) // 省份 名称 或 省份id 或 省份名称id 或
-    if (row.city) arr.push(row.city)
-    if (row.area) arr.push(row.area) //
-    if (row.address) arr.push(row.address) //
-
-    return arr.join('  ')
+    return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
 /**
  * 新增地址
