@@ -27,20 +27,10 @@
                             :props="{ value: 'cityName', label: 'cityName' }" class="w100%" clearable filterable />
                     </el-form-item>
                 </el-col>
-
-                <!-- <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
-          <el-form-item prop="city" label="城市：">
-            <el-input v-model="form.city" clearable />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
-          <el-form-item prop="area" label="地区：">
-            <el-input v-model="form.area" clearable />
-          </el-form-item>
-        </el-col>  -->
                 <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
                     <el-form-item prop="address" label="详细地址：">
-                        <el-input v-model="form.data.address" type="textarea" resize="none" :rows="3" maxlength="50" clearable />
+                        <el-input v-model="form.data.address" type="textarea" resize="none" :rows="3" maxlength="50"
+                            clearable />
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -66,7 +56,7 @@ import { CommonApi } from '~/api/common'
 import { UserAddressApi } from '~/api/user/address'
 
 const emits = defineEmits<{
-  (event: 'update', params: UserAddressApi_Edit): void
+    (event: 'update', params: UserAddressApi_Edit): void
 }>()
 const formRef = ref<FormInstance>()
 
@@ -99,13 +89,13 @@ const rules = reactive<FormRules>({
     phone: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
         { required: true, pattern: /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' },
-    // { required: true, pattern: /^(((\d{3,4}-)?[0-9]{7,8})|(1(3|4|5|6|7|8|9)\d{9}))$/, message: '填写正确的手机号格式', trigger: 'blur' },
+        // { required: true, pattern: /^(((\d{3,4}-)?[0-9]{7,8})|(1(3|4|5|6|7|8|9)\d{9}))$/, message: '填写正确的手机号格式', trigger: 'blur' },
     ],
     provinceArr: [
         { required: true, type: 'array', message: '必填项不能为空', trigger: 'blur' },
     ],
     email: [
-    // { required: true, whitespace: true, type: 'email', message: '必填项不能为空', trigger: 'blur' },
+        // { required: true, whitespace: true, type: 'email', message: '必填项不能为空', trigger: 'blur' },
         { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' },
     ],
     address: [

@@ -5,9 +5,8 @@
                 <div class="content" v-html="systemInfo?.footer_content" />
             </div>
             <div class="mid">
-                <!-- TODO [Vue warn]: Hydration node mismatch: - Client vnode: ul - Server rendered DOM: -->
-                <div>
-                    <ul v-if="CLIENT" class="footer-link">
+                <ul class="footer-link">
+                    <lazy-client-only>
                         <li v-for="item in navList" :key="item.id">
                             <dl>
                                 <dt>{{ item.name }}</dt>
@@ -18,9 +17,8 @@
                                 </dd>
                             </dl>
                         </li>
-                    </ul>
-                </div>
-
+                    </lazy-client-only>
+                </ul>
                 <div class="footer-right">
                     <div class="footer-logo">
                         <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
