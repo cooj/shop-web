@@ -81,8 +81,8 @@ export const useUserState = () => {
         watch(() => data.value, () => {
             userInfo.value = data.value?.data
         })
-        console.log('userInfo.values :>> ', userInfo.value)
-        // return computed(() => userInfo.value)
+        // const dat = computed(() => userInfo.value)
+        // console.log('userInfo.values :>> ', data.value?.data)
         return computed(() => data.value?.data)
 
         // console.log(data.value?.code)

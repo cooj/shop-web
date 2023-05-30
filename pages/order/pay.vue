@@ -23,7 +23,7 @@
                         </el-breadcrumb-item>
                     </el-breadcrumb>
                     <div class="mb20px min-h300px bg-#fff p15px">
-                        <el-result v-if="defData.status === 0" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
+                        <el-result v-if="defData.status === 1" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
                             <template #extra>
                                 <div class="mb15px text-13px">
                                     需支付：<span class="mr20px text-24px">￥{{ defData.money }}</span>
@@ -62,7 +62,8 @@
                                 <div ref="alipayRef" class="hidden" v-html="defData.aliData" />
                             </template>
                         </el-result>
-                        <el-result v-else-if="defData.status === 1" icon="success" title="订单支付完成" sub-title="">
+                        <el-result v-else :icon="defData.status === 7 ? 'error' : 'success'"
+                            :title="defData.status === 7 ? '订单已取消' : '订单支付完成'" sub-title="">
                             <template #extra>
                                 <NuxtLink to="/">
                                     <el-button type="primary">
@@ -117,9 +118,9 @@ const initDefaultData = async () => {
     const { data: res } = await OrderApi.getInfo({ main_order_no: order_no.value })
     await wait(500)
     defData.skeleton = false
-    // console.log('res :>> ', res)
+    console.log('res :>> ', res)
     if (res.value?.code === 200) {
-        defData.status = res.value.data.pay_status
+        defData.status = res.value.data.order_status
         defData.money = formatNumber(Number(res.value.data.meet_price) || 0)
     } else {
         ElMessage.error(res.value?.msg)

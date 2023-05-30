@@ -16,20 +16,24 @@
                     <el-skeleton :rows="5" />
                 </div>
             </template> -->
-
-            <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
-                <template #pay_type="{ row }">
-                    <el-select v-model="row.pay_type" clearable filterable placeholder="">
-                        <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
-                    </el-select>
-                </template>
-                <template #status="{ row }">
-                    <el-select v-model="row.status" filterable clearable placeholder="">
-                        <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item" :value="index" />
-                    </el-select>
-                </template>
-            </CoTableTool>
-            <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
+            <LazyClientOnly>
+                <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
+                    <template #pay_type="{ row }">
+                        <el-select v-model="row.pay_type" clearable filterable placeholder="">
+                            <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
+                        </el-select>
+                    </template>
+                    <template #status="{ row }">
+                        <el-select v-model="row.status" filterable clearable placeholder="">
+                            <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item"
+                                :value="index" />
+                        </el-select>
+                    </template>
+                </CoTableTool>
+            </LazyClientOnly>
+            <!-- BUG Uncaught (in promise) TypeError: Cannot read properties of null (reading 'type') -->
+            <!-- <LazyClientOnly> -->
+            <LazyCoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
                 :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
                 scrollbar-always-on border @update:page="onHandleCurrentChange">
                 <template #order_info="{ scopes }">
@@ -105,9 +109,13 @@
                         </div>
                     </template>
                 </template>
-            </CoTable>
+            </LazyCoTable>
+            <!-- </LazyClientOnly> -->
+            <!-- <div v-if="show" /> -->
             <!-- <Teleport to="body"> -->
-            <LazyOrderDetail ref="orderDetailRef" />
+
+            <!-- <LazyOrderDetail ref="orderDetailRef" />
+            <lazy-client-only /> -->
             <!-- </Teleport> -->
         </el-skeleton>
     </LayoutUser>
@@ -116,9 +124,16 @@
 <script setup lang="ts">
 import type { TableColumnCtx } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
-import type { OrderDetail } from '#components'
 
-const orderDetailRef = ref<InstanceType<typeof OrderDetail>>()
+// import type { OrderDetail } from '#components'
+
+definePageMeta({
+    layout: 'home',
+    middleware: 'auth',
+})
+
+// const orderDetailRef = ref<InstanceType<typeof OrderDetail>>()
+const show = ref(false)
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
@@ -301,7 +316,12 @@ const setAddressText = (row: OrderApi_GetOrderListItem) => {
 
 // 查看详情
 const onDetail = (row: OrderListTableData) => {
-    orderDetailRef.value?.onOpenDialog(row.order_info)
+    navigateTo({
+        path: '/order/detail',
+        query: {
+            order_no: row.order_info.main_order_no,
+        },
+    })
 }
 
 /**
@@ -349,12 +369,14 @@ const onSearch = () => {
 const onHandleCurrentChange = () => {
     initTableData()
 }
-
 initTableData()
-definePageMeta({
-    layout: 'home',
-    middleware: 'auth',
-})
+// onBeforeMount(() => {
+//     initTableData()
+//     // console.log('process.client :>> ', process.client)
+//     // if (process.client) {
+//     //     show.value = true
+//     // }
+// })
 </script>
 
 <style  lang="scss" scoped>

@@ -95,10 +95,68 @@ export const setArrayTextName = (row: any[], char = ' ') => {
     return arr.join(char)
 }
 
+/**
+ * 默认全局loading配置
+ * @returns
+ */
 export const useElLoading = () => {
     return ElLoading.service({
         fullscreen: true,
         text: '加载中...',
         background: 'transparent',
     })
+}
+
+export const setOrderStatusType = (row: number) => {
+    const dat = {
+        type: '',
+        color: '',
+        text: '',
+    }
+    // 'primary'| 'success'| 'warning'| 'danger'| 'info'
+    // 1: '待支付', 2: '待发货', 3: '待确认', 4: '配货中', 5: '部分发货', 6: '已确认', 7: '已取消',
+    const lis = {
+        1: {
+            type: '',
+            color: '#ff6c00',
+            text: '待支付',
+        },
+        2: {
+            type: 'primary',
+            color: '',
+            text: '待发货',
+        },
+        3: {
+            type: 'success',
+            color: '',
+            text: '待确认',
+        },
+        4: {
+            type: '',
+            color: '#626aef',
+            text: '配货中',
+        },
+        5: {
+            type: 'warning',
+            color: '',
+            text: '部分发货',
+        },
+        6: {
+            type: 'warning',
+            color: '#ff6c6c',
+            text: '已确认',
+        },
+        7: {
+            type: 'info',
+            color: '',
+            text: '已取消',
+        },
+    }
+    const end = (lis[row as 1] ?? dat) as {
+        type: ''
+        color: string
+        text: string
+    }
+    // console.log(end)
+    return end
 }

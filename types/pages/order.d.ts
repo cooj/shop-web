@@ -149,6 +149,12 @@ declare interface OrderApi_GetInfoResponse {
         "meet_price": "0.00", //实付金额
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
         "goods_img": ""
+    }[],
+    order_status: number,    // 订单状态 
+    status_info: {
+        "text": "提交订单",
+        "time": "2023-05-26 15:14:43",
+        "selected": 1
     }[]
 }
 
@@ -164,7 +170,7 @@ declare interface OrderApi_GetPayTypeResponse {
 /**
  * 获取订单列表 - 请求参数
  */
-declare interface OrderApi_GetOrderList extends ListPage{
+declare interface OrderApi_GetOrderList extends ListPage {
     status: number,  // 订单状态 0全部 1待支付 2待发货 3待确认 4已取消
     main_order_no: string // 订单号  M20230424090858907460
     pay_type: number;  // 支付类型 1微信 2支付宝 3线下
