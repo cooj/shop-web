@@ -16,33 +16,28 @@
                     <el-skeleton :rows="5" />
                 </div>
             </template> -->
-            <LazyClientOnly>
-                <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
-                    <template #pay_type="{ row }">
-                        <el-select v-model="row.pay_type" clearable filterable placeholder="">
-                            <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
-                        </el-select>
-                    </template>
-                    <template #status="{ row }">
-                        <el-select v-model="row.status" filterable clearable placeholder="">
-                            <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item"
-                                :value="index" />
-                        </el-select>
-                    </template>
-                </CoTableTool>
-            </LazyClientOnly>
-            <!-- BUG Uncaught (in promise) TypeError: Cannot read properties of null (reading 'type') -->
-            <!-- <LazyClientOnly> -->
-            <LazyCoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
+            <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
+                <template #pay_type="{ row }">
+                    <el-select v-model="row.pay_type" clearable filterable placeholder="">
+                        <el-option v-for="(item, index) in defData.payList" :key="index" :label="item" :value="index" />
+                    </el-select>
+                </template>
+                <template #status="{ row }">
+                    <el-select v-model="row.status" filterable clearable placeholder="">
+                        <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item" :value="index" />
+                    </el-select>
+                </template>
+            </CoTableTool>
+            <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
                 :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
                 scrollbar-always-on border @update:page="onHandleCurrentChange">
-                <template #order_info="{ scopes }">
+                <template #main_order_no="{ scopes }">
                     <div v-if="scopes.row.index">
-                        订单编号：{{ scopes.row.order_info.main_order_no }}
-                        下单时间：{{ scopes.row.order_info.cerate_time }}
+                        订单编号：{{ scopes.row.main_order_no }}
+                        下单时间：{{ scopes.row.cerate_time }}
                     </div>
                     <ul v-else class="goods-list">
-                        <li v-for="item in scopes.row.order_info.goods_info" :key="item.goods_id">
+                        <li v-for="item in scopes.row.goods_info" :key="item.goods_id">
                             <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
                             <div class="text">
                                 <h3 class="tle">
@@ -58,33 +53,36 @@
                         </li>
                     </ul>
                 </template>
-                <template #order_mount="{ scopes }">
+                <template #meet_price="{ scopes }">
                     <div v-if="scopes.row.index" />
                     <div v-else class="goods-amount">
-                        <!-- <p>总金额：{{ scopes.row.order_info.total_price }}</p>
-          <p>优惠金额：{{ scopes.row.order_info.coupon_price }}</p>
-          <p>实付金额(含运费)：¥{{ scopes.row.order_info.meet_price }}</p> -->
-                        ￥{{ scopes.row.order_info.meet_price }}
+                        <!-- <p>总金额：{{ scopes.row.total_price }}</p>
+          <p>优惠金额：{{ scopes.row.coupon_price }}</p>
+          <p>实付金额(含运费)：¥{{ scopes.row.meet_price }}</p> -->
+                        ￥{{ scopes.row.meet_price }}
                         <br>
                         <span class="text-12px c-#888">(含运费：0.00)</span>
                     </div>
                 </template>
-                <template #consignee_info="{ scopes }">
-                    <div v-if="scopes.row.index" />
+                <template #consignee_name="{ scopes }">
+                    <div v-if="scopes.row.index">
+                        <!--  -->
+                    </div>
                     <div v-else>
                         <p>
-                            <span class="mr5px">{{ scopes.row.order_info.consignee_name }}</span>
-                            <span>{{ scopes.row.order_info.consignee_phone }}</span>
+                            <span class="mr5px">{{ scopes.row.consignee_name }}</span>
+                            <span>{{ scopes.row.consignee_phone }}</span>
                         </p>
-                        <p>{{ setAddressText(scopes.row.order_info) }}</p>
+                        <p>{{ setAddressText(scopes.row) }}</p>
                     </div>
                 </template>
-                <template #status="{ scopes }">
+                <template #order_status="{ scopes }">
                     <div v-if="scopes.row.index" />
                     <div v-else class="cur-button">
-                        <el-button :type="setTagType(scopes.row.status).type" :color="setTagType(scopes.row.status).color"
-                            size="small" plain class="pointer-events-none">
-                            {{ setTagType(scopes.row.status).text }}
+                        <el-button :type="setTagType(scopes.row.order_status).type"
+                            :color="setTagType(scopes.row.order_status).color" size="small" plain
+                            class="pointer-events-none">
+                            {{ setTagType(scopes.row.order_status).text }}
                         </el-button>
                         <div class="mt3px">
                             <el-button link type="primary" size="small" @click="onDetail(scopes.row)">
@@ -97,8 +95,7 @@
                 <template #operate="{ scopes }">
                     <template v-if="!scopes.row.index">
                         <!-- 未支付时，才能取消订单 -->
-
-                        <div v-if="scopes.row.status === 1">
+                        <div v-if="scopes.row.order_status === 1">
                             <el-button type="warning" size="small" class="mb5px" @click="onPayOrder(scopes.row)">
                                 去付款
                             </el-button>
@@ -109,14 +106,7 @@
                         </div>
                     </template>
                 </template>
-            </LazyCoTable>
-            <!-- </LazyClientOnly> -->
-            <!-- <div v-if="show" /> -->
-            <!-- <Teleport to="body"> -->
-
-            <!-- <LazyOrderDetail ref="orderDetailRef" />
-            <lazy-client-only /> -->
-            <!-- </Teleport> -->
+            </CoTable>
         </el-skeleton>
     </LayoutUser>
 </template>
@@ -125,15 +115,10 @@
 import type { TableColumnCtx } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
 
-// import type { OrderDetail } from '#components'
-
 definePageMeta({
     layout: 'home',
     middleware: 'auth',
 })
-
-// const orderDetailRef = ref<InstanceType<typeof OrderDetail>>()
-const show = ref(false)
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
@@ -180,10 +165,10 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
     tableHeader: [
         // { property: '', label: '', type: "selection", width: 38, },
         // { property: 'goods_img', label: '图片', width: 60, align: "center", slot: true },
-        { property: 'order_info', label: '订单信息', minWidth: 200, slot: true, className: 'goods-list-row', showOverflowTooltip: false },
-        { property: 'order_mount', label: '订单金额', width: 150, align: 'right', slot: true, showOverflowTooltip: false },
-        { property: 'consignee_info', label: '收货信息', minWidth: 150, slot: true, showOverflowTooltip: false },
-        { property: 'status', label: '订单状态', width: 100, slot: true, align: 'center' },
+        { property: 'main_order_no', label: '订单信息', minWidth: 200, slot: true, className: 'goods-list-row', showOverflowTooltip: false },
+        { property: 'meet_price', label: '订单金额', width: 150, align: 'right', slot: true, showOverflowTooltip: false },
+        { property: 'consignee_name', label: '收货信息', minWidth: 150, slot: true, showOverflowTooltip: false },
+        { property: 'order_status', label: '订单状态', width: 100, slot: true, align: 'center' },
         { property: 'operate', label: '操作', width: 100, slot: true, align: 'center', showOverflowTooltip: false },
         // { property: 'market_price', label: '市场价', width: 85, align: 'center' },
     ],
@@ -206,20 +191,18 @@ const initTableData = async () => {
         end_time: '',
     }
     const loading = useElLoading()
+
     const { data: res } = await OrderApi.getOrderList(params)
-    // await wait(500)
+    await wait(500)
     defData.skeleton = false
     loading?.close()
+
     if (res.value?.code === 200) {
         const list: OrderListTableData[] = []
         res.value.data.lists.forEach((item, index) => {
             const obj: OrderListTableData = {
+                ...item,
                 index: index + 1, // 序列号
-                order_info: item, // 订单信息（下单时间排序）
-                order_mount: Number(item.meet_price), // 订单金额
-                consignee_info: item.consignee_name, // 收货人信息
-                // 物流/支付信息
-                status: item.order_status, // 订单状态
             }
             const obj2: OrderListTableData = {
                 ...obj,
@@ -319,7 +302,7 @@ const onDetail = (row: OrderListTableData) => {
     navigateTo({
         path: '/order/detail',
         query: {
-            order_no: row.order_info.main_order_no,
+            order_no: row.main_order_no,
         },
     })
 }
@@ -332,7 +315,7 @@ const onPayOrder = (row: OrderListTableData) => {
     navigateTo({
         path: '/order/pay',
         query: {
-            order_no: row.order_info.main_order_no,
+            order_no: row.main_order_no,
         },
     })
 }
@@ -347,12 +330,12 @@ const onCancel = async (row: OrderListTableData) => {
         cancelButtonText: '取消',
         type: 'warning',
     }).then(async () => {
-        const { data } = await OrderApi.cancelOrder({ main_order_no: row.order_info.main_order_no })
+        const { data } = await OrderApi.cancelOrder({ main_order_no: row.main_order_no })
 
         if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
         ElMessage.error('操作成功')
-        row.status = 7 // 取消订单状态为已取消中间状态
+        row.order_status = 7 // 取消订单状态为已取消中间状态
     }).catch(() => {
         // ElMessage({
         //     type: 'info',

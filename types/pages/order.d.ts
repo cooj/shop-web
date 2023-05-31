@@ -235,7 +235,7 @@ declare interface OrderApi_GetOrderListItem {
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
         "goods_img": ""
     }[]
-    "order_status": 2 //订单状态 ：待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
+    "order_status": number //订单状态 ：待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
 
 }
 
@@ -270,11 +270,11 @@ declare interface OrderApi_GetOrderListItem {
 
 
 // 我的订单 - table数据类型
-declare interface OrderListTableData {
+declare interface OrderListTableData  extends OrderApi_GetOrderListItem{
     index: number; // 序列号
-    order_info: OrderApi_GetOrderListResponse["lists"][0]; // 订单信息（下单时间排序）	
-    order_mount: number;//订单金额	
-    consignee_info: any; //收货人信息	
+    // order_info: OrderApi_GetOrderListResponse["lists"][0]; // 订单信息（下单时间排序）	
+    // order_mount: number;//订单金额	
+    // consignee_info: any; //收货人信息	
     // 物流/支付信息	
-    status: number; // 订单状态	
+    // status: number; // 订单状态	
 }
