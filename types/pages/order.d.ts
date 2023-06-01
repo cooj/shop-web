@@ -241,9 +241,50 @@ declare interface OrderApi_GetOrderListItem {
 
 
 
+/**
+ * 退换货管理 -- 退货列表 - 响应数据
+ */
+declare interface OrderReturnApi_ReturnList extends ListTotal {
+    "lists": {
+        "id": 4, //记录ID
+        "refund_no": "XS20230508142742302981", //退换单号
+        "main_order_no": "M20230505143130386350", //订单号
+        "describe": "退货", //问题描述
+        "type": 1, //类型 1退货 2换货
+        "status": 0, //订单状态 0全部 1待支付 2待发货 3待确认 4已取消
+        "logistics_cusmoer": "", //物流公司
+        "logistics_no": "", //快递单号
+        "reply": "", //回复内容
+        "user_id": 57, //用户ID
+        "total_price": "455.00", //退货订单总金额
+        "total_number": 2, //退货订单商品总数量
+        "is_all": 1, //是否全退 1全部 2部分
+        "add_time": "2023-05-08 14:27:42", //添加时间
+        "meet_price": "455.00", //退款金额
+        "meet_money": "455.00", //最终退款金额
+        "admin_id": 0, //操作人id
+        "refund_status": 0, //退款状态 0申请中 1已完成 2已取消
+        "auto_id": 0, //退款操作人ID
+        "auto_time": 0, //退款审核时间
+        "success_time": 0, //退款成功时间
+        "is_sycn": 0,
+        "goods_list": {
+            "id": 4, //记录ID
+            "refund_no": "XS20230508142742302981", //退换单号
+            "main_order_no": "",
+            "goods_id": 1, //商品ID
+            goods_sn: string,    // 商品编号
+            "goods_number": 2, //商品数量
+            "meet_price": "227.50", //商品实付金额
+            "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
+            "goods_img": "" //商品图片
+        }[]
 
 
 
+    }[]
+
+}
 
 
 
@@ -270,11 +311,18 @@ declare interface OrderApi_GetOrderListItem {
 
 
 // 我的订单 - table数据类型
-declare interface OrderListTableData  extends OrderApi_GetOrderListItem{
+declare interface OrderListTableData extends OrderApi_GetOrderListItem {
     index: number; // 序列号
     // order_info: OrderApi_GetOrderListResponse["lists"][0]; // 订单信息（下单时间排序）	
     // order_mount: number;//订单金额	
     // consignee_info: any; //收货人信息	
     // 物流/支付信息	
     // status: number; // 订单状态	
+}
+
+// 订单操作按钮props传值
+declare interface OrderOperatePropsData {
+    order_no: string; //订单号
+    status: number; // 订单状态
+    is_return: 0 | 1   // 是否已退货过
 }

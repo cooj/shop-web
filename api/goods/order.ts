@@ -72,3 +72,25 @@ export const OrderApi = {
     delOrder: (data: { main_order_no: string }) => useHttp('/api/mall_order/del_order', data, { method: 'post' }),
 
 }
+
+/**
+ * 商品退换货对应api
+ */
+export const OrderReturnApi = {
+    /**
+     * 获取可退货商品列表
+     * @param data
+     * @returns
+     */
+    getList: (data?: OrderApi_GetSettleGoods) => useHttp<OrderApi_GetSettleResponse>('/api/mall_refund/get_refund_goods', data, { method: 'post' }),
+
+    /**
+     * 退换货管理 -- 退货列表
+     * @param data
+     * @returns
+     */
+    returnList: () => useHttp<OrderReturnApi_ReturnList>('/api/mall_refund/get_refund_lists', '', { method: 'get' }),
+
+    //
+
+}

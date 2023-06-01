@@ -3,17 +3,17 @@
     <LayoutUser>
         <el-skeleton :loading="defData.skeleton" animated>
             <template #template>
-                <div class="mb20px flex items-center">
-                    <el-skeleton-item class="mr10px py15px w10%!" />
-                    <el-skeleton-item class="mr20px py15px w20%!" />
-                    <el-skeleton-item class="mr10px py15px w10%!" />
-                    <el-skeleton-item class="mr20px py15px w20%!" />
-                    <el-skeleton-item class="mr15px py15px w10%!" />
-                    <el-skeleton-item class="py15px w10%!" />
+                <div class="pb15px">
+                    <el-skeleton-item class="w20%!" />
                 </div>
-                <div class="min-h500px">
-                    <el-skeleton class="mb20px" />
-                    <el-skeleton :rows="5" />
+                <div class="mb20px border-1 p20px">
+                    <el-skeleton />
+                </div>
+                <div class="mb20px border-1 p20px">
+                    <el-skeleton />
+                </div>
+                <div class="min-h300px border-1 p20px">
+                    <el-skeleton />
                 </div>
             </template>
             <el-breadcrumb class="mb20px">
@@ -39,14 +39,9 @@
                     </p>
                 </div>
                 <div class="gt">
-                    <div v-if="orderInfo?.order_status === 1">
-                        <el-button type="warning" class="mb5px" @click="onPayOrder()">
-                            去支付
-                        </el-button>
-                        <el-button type="info" @click="onCancel()">
-                            取消订单
-                        </el-button>
-                    </div>
+                    <OrderOperate class="order-ope"
+                        :data="{ order_no, status: orderInfo!.order_status, is_return: orderInfo!.is_refund }"
+                        @update="updateOrder" />
                 </div>
             </div>
             <div class="mb20px border-1 p20px">
@@ -169,13 +164,8 @@
 <script lang="ts" setup>
 import { OrderApi } from '~/api/goods/order'
 
-definePageMeta({
-    layout: 'home',
-})
-
 // 订单编号
 const order_no = useRouteQuery('order_no')
-console.log(order_no.value)
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
@@ -206,48 +196,26 @@ const initDefaultData = async () => {
 
     const { data } = await OrderApi.getInfo({ main_order_no: order_no.value })
 
-    defData.skeleton = false // 显示加载中.. 或展示加载完成.. 或展示加载失败.. 或展
+    defData.skeleton = false // 显示内容
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
-    console.log('data.value.data :>> ', data.value.data)
+
     orderInfo.value = data.value.data
 
     // defData.ready = true
 }
 
 /**
- * 去付款
- * @param row
+ * 更新订单状态
  */
-const onPayOrder = () => {
-    navigateTo({
-        path: '/order/pay',
-        query: {
-            order_no: order_no.value,
-        },
-    })
-}
-
-/**
- * 取消订单
- * @param row
- */
-const onCancel = async () => {
-    ElMessageBox.confirm('确定要取消该订单吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-    }).then(async () => {
-        const { data } = await OrderApi.cancelOrder({ main_order_no: order_no.value })
-
-        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
-
-        ElMessage.error('操作成功')
-        orderInfo.value!.order_status = 7 // 取消订单状态为已取消中间状态
-    }).catch(() => {
-    })
+const updateOrder = (status: number) => {
+    if (status === 7) initDefaultData()
 }
 
 initDefaultData()
+
+definePageMeta({
+    layout: 'home',
+})
 </script>
 
 <style lang="scss" scoped>
@@ -293,6 +261,16 @@ initDefaultData()
         display: inline-block;
         min-width: 80px;
         color: var(--el-color-primary);
+    }
+}
+
+.order-ope {
+    display: flex;
+
+    :deep(.item-ope) {
+        &+.item-ope {
+            margin-left: 10px;
+        }
     }
 }
 </style>

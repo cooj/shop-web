@@ -2,7 +2,7 @@
 <template>
     <LayoutUser>
         <el-skeleton :loading="defData.skeleton" animated>
-            <!-- <template #template>
+            <template #template>
                 <div class="mb20px flex items-center">
                     <el-skeleton-item class="mr10px py15px w10%!" />
                     <el-skeleton-item class="mr20px py15px w20%!" />
@@ -15,7 +15,7 @@
                     <el-skeleton class="mb20px" />
                     <el-skeleton :rows="5" />
                 </div>
-            </template> -->
+            </template>
             <CoTableTool :data="searchData" inline @submit.prevent="onSearch">
                 <template #pay_type="{ row }">
                     <el-select v-model="row.pay_type" clearable filterable placeholder="">
@@ -94,16 +94,9 @@
 
                 <template #operate="{ scopes }">
                     <template v-if="!scopes.row.index">
-                        <!-- 未支付时，才能取消订单 -->
-                        <div v-if="scopes.row.order_status === 1">
-                            <el-button type="warning" size="small" class="mb5px" @click="onPayOrder(scopes.row)">
-                                去付款
-                            </el-button>
-                            <br>
-                            <el-button type="info" size="small" @click="onCancel(scopes.row)">
-                                取消订单
-                            </el-button>
-                        </div>
+                        <OrderOperate size="small"
+                            :data="{ order_no: scopes.row.main_order_no, status: scopes.row.order_status, is_return: scopes.row.is_refund }"
+                            @update="setTableList" />
                     </template>
                 </template>
             </CoTable>
@@ -307,59 +300,22 @@ const onDetail = (row: OrderListTableData) => {
     })
 }
 
-/**
- * 去付款
- * @param row
- */
-const onPayOrder = (row: OrderListTableData) => {
-    navigateTo({
-        path: '/order/pay',
-        query: {
-            order_no: row.main_order_no,
-        },
-    })
-}
-
-/**
- * 取消订单
- * @param row
- */
-const onCancel = async (row: OrderListTableData) => {
-    ElMessageBox.confirm('确定要取消该订单吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-    }).then(async () => {
-        const { data } = await OrderApi.cancelOrder({ main_order_no: row.main_order_no })
-
-        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
-
-        ElMessage.error('操作成功')
-        row.order_status = 7 // 取消订单状态为已取消中间状态
-    }).catch(() => {
-        // ElMessage({
-        //     type: 'info',
-        //     message: 'Delete canceled',
-        // })
-    })
-}
-
 // 搜索
 const onSearch = () => {
+    tableData.pagination.page = 1
     initTableData()
 }
-
+// 分页切换
 const onHandleCurrentChange = () => {
     initTableData()
 }
+
+//
+const setTableList = (status: number) => {
+    if (status === 7) initTableData()
+}
+
 initTableData()
-// onBeforeMount(() => {
-//     initTableData()
-//     // console.log('process.client :>> ', process.client)
-//     // if (process.client) {
-//     //     show.value = true
-//     // }
-// })
 </script>
 
 <style  lang="scss" scoped>
