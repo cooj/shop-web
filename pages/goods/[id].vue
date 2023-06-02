@@ -52,8 +52,9 @@
                                     </div>
                                     <div class="gt">
                                         <div class="price1">
-                                            <b>￥{{ goodsInfo?.shop_price }}<span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit
-                                            }}</span></b>
+                                            <b>￥{{ goodsInfo?.shop_price }}
+                                                <!-- <span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit}}</span> -->
+                                            </b>
                                             <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
                                         </div>
                                     </div>
@@ -66,6 +67,22 @@
                                             <i class="i-ep-arrow-right inline-block" />
                                         </span>
                                         <span class="text-12px c-#666">会员价</span>
+                                    </div>
+                                </li>
+                                <li class="items-center bg-#f8f8f8 -mt10px">
+                                    <div class="lt" />
+                                    <div class="gt my5px">
+                                        <el-tag v-if="goodsInfo?.is_best" type="" effect="dark" size="small" class="mr5px">
+                                            精选
+                                        </el-tag>
+                                        <el-tag v-if="goodsInfo?.is_new" type="warning" effect="dark" size="small"
+                                            class="mr5px">
+                                            精选
+                                        </el-tag>
+                                        <el-tag v-if="goodsInfo?.is_hot" type="danger" effect="dark" size="small"
+                                            class="mr5px">
+                                            热销
+                                        </el-tag>
                                     </div>
                                 </li>
                                 <li>
@@ -100,7 +117,7 @@
                 0.2170kg
               </div>
             </li> -->
-                                <li>
+                                <!-- <li>
                                     <div class="lt">
                                         库存
                                     </div>
@@ -115,7 +132,7 @@
                                             暂无库存
                                         </p>
                                     </div>
-                                </li>
+                                </li> -->
                                 <li>
                                     <div class="lt">
                                         支付方式
@@ -126,13 +143,14 @@
                                             微信
                                         </el-button>
                                         <el-button text bg size="small" class="cursor-default!">
-                                            <i class="i-ic-baseline-payment mr3px c-#3887ff" />
-                                            在线支付
+                                            <!-- <i class="i-ic-baseline-payment mr3px c-#3887ff" /> -->
+                                            <i class="i-ri-alipay-fill mr3px c-#3887ff" />
+                                            支付宝
                                         </el-button>
-                                        <el-button text bg size="small" class="cursor-default!">
+                                        <!-- <el-button text bg size="small" class="cursor-default!">
                                             <i class="i-ic-twotone-payments mr3px c-#ff5335" />
                                             线下转账
-                                        </el-button>
+                                        </el-button> -->
                                     </div>
                                 </li>
                                 <li class="items-center">
@@ -192,11 +210,11 @@
                                 <el-tab-pane label="推荐商品" name="1">
                                     <ul class="goods-list">
                                         <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
-                                            <NuxtLink class="pos" :to="`/goods/${item.goods_id}`">
-                                                <img :src="item.goods_img" :alt="item.goods_name" :title="item.goods_name">
+                                            <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
+                                                <CoImage :src="item.goods_img" class="w100% pb100%" />
                                             </NuxtLink>
                                             <div class="tle">
-                                                <NuxtLink :to="`/goods/${item.goods_id}`">
+                                                <NuxtLink :to="`/goods/${item.goods_sn}`">
                                                     {{ item.goods_name }}
                                                 </NuxtLink>
                                             </div>
@@ -209,11 +227,12 @@
                             </el-tabs>
                         </div>
                         <div class="gt">
-                            <el-tabs v-model="defData.rightActive" class="goods-gt-tabs">
+                            <el-tabs v-model="defData.rightActive" class="goods-gt-tabs" @tab-change="onRightTabChange">
                                 <el-tab-pane label="商品详情" name="1">
+                                    <!-- TODO 商品详情字段缺少 -->
                                     <div v-html="goodsInfo?.goods_desc" />
                                 </el-tab-pane>
-                                <el-tab-pane label="商品问答" name="2">
+                                <el-tab-pane label="商品问答" name="2" lazy>
                                     <div v-if="CLIENT">
                                         <el-input v-model="form.question" style="width: 300px;margin-right: 10px;"
                                             placeholder="输入提问" clearable />
@@ -251,26 +270,24 @@
                 <div v-else class="no-goods-box">
                     <BaseError />
                 </div>
-            </el-skeleton>
-        </div>
-        <el-dialog v-if="CLIENT" v-model="defData.shareVisible" title="分享给好友" width="450px" draggable>
-            <el-form class="-mt20px" label-position="top">
-                <el-form-item label="链接地址">
-                    <el-input v-model="defData.shareLink" class="pr12px w70%!" disabled />
-                    <el-button type="primary" class="w30%" @click="onCopy('text')">
-                        复制地址
-                    </el-button>
-                </el-form-item>
-                <el-form-item label="二维码">
-                    <div class="flex">
-                        <el-image :src="defData.shareCode" class="mr12px h120px w120px b b-1 b-#eee" />
-                        <el-button type="primary" @click="onDownload">
-                            下载二维码
-                        </el-button>
-                    </div>
-                </el-form-item>
-            </el-form>
-            <!-- <div class="text-center">
+                <el-dialog v-if="CLIENT" v-model="defData.shareVisible" title="分享给好友" width="450px" draggable>
+                    <el-form class="-mt20px" label-position="top">
+                        <el-form-item label="链接地址">
+                            <el-input v-model="defData.shareLink" class="pr12px w70%!" disabled />
+                            <el-button type="primary" class="w30%" @click="onCopy('text')">
+                                复制地址
+                            </el-button>
+                        </el-form-item>
+                        <el-form-item label="二维码">
+                            <div class="flex">
+                                <el-image :src="defData.shareCode" class="mr12px h120px w120px b b-1 b-#eee" />
+                                <el-button type="primary" @click="onDownload">
+                                    下载二维码
+                                </el-button>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                    <!-- <div class="text-center">
           <el-image :src="defData.shareCode" class="h120px w120px -mt20px" />
           <div class="">
             <el-button type="success" text @click="onCopy('text')">
@@ -281,7 +298,9 @@
             </el-button>
           </div>
         </div> -->
-        </el-dialog>
+                </el-dialog>
+            </el-skeleton>
+        </div>
     </section>
 </template>
 
@@ -291,7 +310,6 @@ import { GoodsApi } from '~/api/goods/list'
 import { InterListApi } from '~/api/user/interList'
 import { RecordApi } from '~/api/user/record'
 
-const route = useRoute()
 const userState = useUserState()
 const useCartNumber = useCartNumberState()
 const usePayType = usePayTypeState()
@@ -311,7 +329,8 @@ const defData = reactive({
     shareCode: '', // 分享二维码
     shareLink: '', // 分享的链接地址
     tableData: [] as InterListApi_getListResponse['lists'],
-    skeleton: true, // 默认形式骨架屏
+    skeleton: true, // 默认显示骨架屏
+    goods_id: 0, // 当前的商品id
 })
 // 商品信息
 const goodsData = ref<GoodsApi_GetInfoResponse>()
@@ -322,24 +341,24 @@ const form = reactive({
     number: 1, // 购买数量
     question: '', // 问答列表 提问
 })
-const goods_id = useRouteParam('id')
+const param_id = useRouteParam('id')
 
-const initData = async () => {
-    if (!goods_id.value) return
-    // 正则判断id是否为数字
-    if (!(/^[0-9]+$/.test(goods_id.value))) {
-        defData.loading = false
-        return
-    }
-    const { data } = await GoodsApi.getInfo({ goods_id: Number(goods_id.value) })
+const initGoodsData = async () => {
+    const goods_sn = param_id.value?.trim() ?? ''
+    if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
+
+    const { data, error } = await GoodsApi.getInfo({ goods_sn })
+    if (error.value) return ElMessage.error('网络错误!')
     if (data.value?.code === 200) {
         const dat = data.value.data
         const infoData = dat.goods_info
-        // console.log('dat :>> ', dat)
+
         // if (goods.goods_id === id) {
         if (infoData) {
             goodsData.value = dat
             goodsInfo.value = infoData
+
+            defData.goods_id = infoData.goods_id
 
             // 商品图片
             const imgArr: string[] = infoData.goods_img ? [infoData.goods_img] : []
@@ -348,40 +367,39 @@ const initData = async () => {
             })
             goodsImgList.value = imgArr
 
-            // 设置seo
-            const meta = []
-            if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
-            if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
-            useHead({
-                title: infoData.web_title || infoData.goods_name,
-                meta,
-            })
+            // TODO 商品seo字段缺少
+            // // 设置seo
+            // const meta = []
+            // if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
+            // if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
+            // useHead({
+            //     title: infoData.web_title || infoData.goods_name,
+            //     meta,
+            // })
             defData.skeleton = false // 关闭骨架屏
         } else {
-            // ElMessage.error('未获取到商品信息,请检查地址是否正确')
+            ElMessage.error('未获取到商品信息,请检查地址是否正确')
             defData.loading = false
             // navigateTo('/404')
         }
     } else {
-        //
+        ElMessage.error('未获取到商品信息,请检查地址是否正确')
     }
 }
-initData()
 
 // 问答列表 获取数据
-const interListData = async () => {
+const initQuestionData = async () => {
     const param: InterListApi_getList = {
         is_paging: 1,
         page: defData.page,
         pagesize: defData.pageSize,
-        goods_id: Number(route.params.id),
+        goods_id: defData.goods_id,
     }
     const res = await InterListApi.getList(param)
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
     defData.tableData = res.data.value.data.lists
     defData.total = res.data.value.data.total
 }
-// interListData()
 
 // 新增问答
 const questionClick = async () => {
@@ -393,7 +411,7 @@ const questionClick = async () => {
         return
     }
     const info: InterListApi_addList = {
-        goods_id: Number(route.params.id),
+        goods_id: defData.goods_id,
         user_id: defData.user_id,
         type: 1,
         q_id: 0,
@@ -425,7 +443,7 @@ const onCollect = async () => {
         }
     } else {
         const params: RecordApi_Add = {
-            goods_id: goodsInfo.value!.goods_id,
+            goods_id: defData.goods_id,
             type: 1,
             user_id: userState.userInfo.value.user_id,
         }
@@ -438,11 +456,8 @@ const onCollect = async () => {
 
 // 立即购买
 const onBuyGoods = () => {
-    if (!goodsInfo.value?.goods_number) {
-        return ElMessage.error('商品库存不足，无法购买！')
-    }
     const param = {
-        goods_id: goodsInfo.value!.goods_id,
+        goods_id: defData.goods_id,
         goods_number: form.number,
     }
 
@@ -562,21 +577,32 @@ const onApprove = () => {
     }
 }
 
+/**
+ * 商品详情区域tab切换
+ */
+const onRightTabChange = async () => {
+    if (defData.rightActive === '2') {
+        initQuestionData()
+    }
+}
+
 // 添加商品浏览历史
 const onHistory = async () => {
     // 只在客户端时执行
     if (!process.client) return
     // 进入页面2秒后加入历史记录中
     await wait(2000)
-    if (userState.userInfo.value?.user_id) {
+    if (userState.userInfo.value?.user_id && defData.goods_id) {
         const params: RecordApi_Add = {
             user_id: userState.userInfo.value.user_id,
-            goods_id: goodsInfo.value!.goods_id,
+            goods_id: defData.goods_id,
             type: 2,
         }
         await RecordApi.add(params)
     }
 }
+
+initGoodsData()
 
 onMounted(() => {
     onHistory()

@@ -71,11 +71,11 @@ declare interface GoodsApi_GetListItem {
     "brand_id": 1,
     "cat_name": "按键寿命试验机",
     "brand_name": "红钐",
-    "is_collect": 1|0     // 是否被您所在店铺收藏 0=否 1=是
+    "is_collect": 1 | 0     // 是否被您所在店铺收藏 0=否 1=是
 }
 // 商品分类
 declare interface GoodsApi_GetListItemCate {
-    cat_id: 1, 
+    cat_id: 1,
     cat_name: '物性测试仪器'
 }
 // 商品品牌
@@ -118,6 +118,7 @@ declare interface GoodsApi_GetInfoResponse {
     }[], //相册列表
     "link_lists": {
         "goods_id": 49, //id
+        "goods_sn": string, //id
         "goods_name": "红钐 可勃取样器 HSZ-KBQ", //名称
         "goods_img": "", //主图
         "shop_price": "0.00" //本店价
@@ -125,44 +126,20 @@ declare interface GoodsApi_GetInfoResponse {
 }
 
 declare interface GoodsApi_GoodsInfoData {
-    "goods_id": 45, //id
-    "goods_abbr": "xxx笔记本777", //简介
-    "goods_name": "艾斯瑞 xxx笔记本777 mac-book max xxxxxx", //名称
-    "goods_code": "mac-book max", //型号
-    "goods_sn": "AA00045", //编码
-    "cat_id": 2, //分类id
-    "brand_id": 2, //品牌id
-    "purchase_price": "0.00", //进价
-    "market_price": "5999.00", //市场价
-    "shop_price": "5199.00", //本店价
-    "sale_number": 10000, //销量
-    "goods_img": "https://images.yumishe.cn/20220625/202206250259163738.jpg", //主图
-    "goods_desc": "", //描述
-    "goods_spec": "", //规格
-    "goods_weight": "2.00", //重量
-    "weight_unit": "kg", //重量单位
-    "unit": "台", //单位
-    "goods_number": number, //库存    111
-    "warn_number": 1, //库存警告数
+    "goods_id": 1, //商品id
+    "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
+    "goods_img": "", //商品主图
+    "goods_sn": "AA00001", //商品编号
+    "goods_code": "HSL-TA4", //商品型号
+    "shop_price": "10.00", //本店价
     "is_best": 0, //是否精品
-    "is_new": 0, //是否新品
-    "is_hot": 0, //是否热品
-    "is_sale": 1, //上下架
-    "is_collect": 0 | 1, // 是否已加入收藏    1是0否    
-    "keywords": "", //关键字
-    "title": "xxxxxx", //副标题
-    "type_id": 0, //类型id
-    "on_sale_time": 0, //上架时间
-    "down_sale_time": 0, //下架时间
-    "add_time": 1671094476, //发布时间
-    "update_time": 1682233072, //更新时间
-    "salesman_id": 9, //负责人id
-    "is_delete": 0, //是否回收站
-    "peas_num": 10, //赠送工游豆数量
-    "peas_amount": "20", //工游豆购买金额
-    "web_keywords": "xxx", //页面关键字
-    "web_title": "yyy", //页面标题
-    "web_desc": "zzz", //页面描述
+    "is_new": 1, //是否新品
+    "is_hot": 0, //是否热销
+    "cat_id": 1322, //分类id
+    "brand_id": 1, //品牌id
+    "is_collect": 0|1, //是否收藏 1是 0否
+    "coupon_list": [] //优惠券
+    goods_desc:string
 }
 
 

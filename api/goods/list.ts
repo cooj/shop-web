@@ -18,7 +18,7 @@ export const GoodsApi = {
      * 获取商品信息
      * @returns
      */
-    getInfo: (data: { goods_id: number }) => useHttp<GoodsApi_GetInfoResponse>('/api/goods_detail/index', data, { method: 'post' }),
+    getInfo: (data: { goods_sn: string }) => useHttp<GoodsApi_GetInfoResponse>('/api/goods_detail/index', data, { method: 'post' }),
 
     /**
      * 获取购物车商品
