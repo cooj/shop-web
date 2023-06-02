@@ -3,9 +3,9 @@
     <Swiper class="swp-banner" :slides-per-view="1" :centered-slides="true" :navigation="true" :pagination="true"
         :loop="true" :autoplay="{ delay: 6000,
                                   disableOnInteraction: false }" :speed="1500" effect="fade" :modules="modules">
-        <SwiperSlide v-for="item in bannerList" :key="item.banner_id">
-            <NuxtLink :to="item.banner_link">
-                <img class="im" :src="item.banner_img" alt="">
+        <SwiperSlide v-for="item in bannerList" :key="item.ad_id">
+            <NuxtLink :to="item.ad_link">
+                <img class="im" :src="item.ad_img" alt="">
             </NuxtLink>
         </SwiperSlide>
     </Swiper>
@@ -61,9 +61,22 @@ const modules = [Pagination, Navigation, Autoplay, EffectFade]
 // })
 
 // 获取导航
-const { data: banner } = await HomeApi.getBanner()
-const bannerList = computed(() => banner.value?.data || [])
-// console.log('banner :>> ', banner)
+const { data: banner } = await HomeApi.getBanner({ position_id: 1 })
+const bannerList = computed(() => {
+    //     "start_time": 1678334400, //开始时间
+    // "end_time": 1685246400, //结束时间
+    const _list = banner.value?.data.lists.filter((item) => {
+        const nowTime = new Date().getTime() // 当前时间的毫秒数
+        // php时间戳为10位
+        const start = !!(nowTime > item.start_time * 1000 && nowTime < item.end_time * 1000) // 开始和结束时间是否在当前时间范围内 （比如
+        if (item.enabled && start) {
+            return true
+        } else {
+            return false
+        }
+    })
+    return _list || []
+})
 </script>
 
 <style lang="scss" scoped>

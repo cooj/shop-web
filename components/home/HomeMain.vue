@@ -14,7 +14,7 @@
             </div>
             <ul class="goods-best-list">
                 <li v-for="item in goodsList" :key="item.goods_id">
-                    <NuxtLink class="link" :to="`/goods/${item.goods_id}`">
+                    <NuxtLink class="link" :to="`/goods/${item.goods_sn}`">
                         <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
                         <h3 class="tle">
                             {{ item.goods_name }}
@@ -31,7 +31,7 @@
             </ul>
         </div>
         <div ref="floorRef" class="floor-box">
-            <div v-for="item in floor?.data" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
+            <div v-for="(item, index) in floorList" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
                 <div class="left">
                     <h3 class="tle">
                         {{ item.storey_name }}
@@ -51,10 +51,10 @@
                     <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
                         :class="item.class_lists.length <= 1 ? 'one-tab' : ''">
                         <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
-                            :name="`a${i}`">
+                            :name="`${index}-${i}`" lazy>
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
-                                    <NuxtLink class="link" :to="`/goods/${son.goods_id}`">
+                                    <NuxtLink class="link" :to="`/goods/${son.goods_sn}`">
                                         <CoImage class="w100% pb100%" :src="son.goods_img" loading="lazy" />
                                         <h3 class="goods-name">
                                             {{ son.goods_name }}
@@ -113,14 +113,13 @@ const floorVisible = useElementVisibility(floorRef)
 const { data: floor } = await HomeApi.getFloor()
 const floorList = computed(() => floor.value?.data || [])
 
-// console.log('data :>> ', floor)
-floor.value?.data.forEach((item) => {
-    defData.active[item.storey_id] = 'a0'
+floor.value?.data.forEach((item, index) => {
+    defData.active[item.storey_id] = `${index}-0`
 })
 
 // 新品商品
 const { data: goods } = await HomeApi.getNewGoods()
-// console.log('goods :>> ', goods)
+
 // 只显示前五个（下标0开始，截取5个）
 const goodsList = computed(() => goods.value?.data.lists.slice(0, 5) || [])
 
@@ -301,44 +300,45 @@ onMounted(async () => {
         }
     }
 
-    .goods-list {
-        height: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        min-height: 580px;
+}
 
-        li {
-            width: 20%;
-            height: 50%;
-            border-top: 2px solid var(--m-body-bg-color);
-            border-right: 2px solid var(--m-body-bg-color);
+.goods-list {
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 580px;
 
-            &:nth-child(5n) {
-                border-right: 0;
+    li {
+        width: 20%;
+        height: 50%;
+        border-top: 2px solid var(--m-body-bg-color);
+        border-right: 2px solid var(--m-body-bg-color);
+
+        &:nth-child(5n) {
+            border-right: 0;
+        }
+
+        a {
+            display: block;
+            height: 100%;
+            padding: 15px;
+            text-align: center;
+            min-height: 290px;
+
+            &:hover {
+                box-shadow: 3px 3px 10px #d8d8d8;
             }
 
-            a {
-                display: block;
-                height: 100%;
-                padding: 15px;
-                text-align: center;
-                min-height: 290px;
+            .goods-name {
+                height: 40px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                font-size: 14px;
+                line-height: 20px;
 
-                &:hover {
-                    box-shadow: 3px 3px 10px #d8d8d8;
-                }
-
-                .goods-name {
-                    height: 40px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    font-size: 14px;
-                    line-height: 20px;
-
-                }
             }
         }
     }

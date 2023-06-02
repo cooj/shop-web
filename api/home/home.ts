@@ -10,9 +10,10 @@ export const HomeApi = {
 
     /**
      * 获取轮播图
+     * @param {number} data.position_id 广告图位置
      * @returns
      */
-    getBanner: () => useHttp<HomeApi_GetBannerResponse[]>('/api/index/banner_lists', '', { method: 'get' }),
+    getBanner: (data: { position_id: number }) => useHttp<HomeApi_GetBannerResponse>('/api/index/banner_lists', data, { method: 'post' }),
 
     /**
      * 获取楼层
