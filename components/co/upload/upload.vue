@@ -16,9 +16,9 @@
                 </el-button>
             </template>
         </el-upload>
-        <el-upload v-else v-model:file-list="defData.uploadList" :class="{ 'co-upload-hide': defData.hideUpload }" action="/"
-            list-type="picture-card" :limit="props.limit" :on-change="onImgChange" :auto-upload="false" :accept="props.accept"
-            :multiple="props.multiple">
+        <el-upload v-else v-model:file-list="defData.uploadList" :class="{ 'co-upload-hide': defData.hideUpload }"
+            action="/" list-type="picture-card" :limit="props.limit" :on-change="onImgChange" :auto-upload="false"
+            :accept="props.accept" :multiple="props.multiple">
             <i class="i-ep-plus block" />
             <template #file="{ file }">
                 <div>
@@ -46,8 +46,8 @@ import { computed, reactive, watch } from 'vue'
 import { CommonApi } from '@/api/common'
 
 interface AllFileList {
-  url: string // 服务器文件地址
-  blob: string // 服务器文件地址或者是本地blob地址
+    url: string // 服务器文件地址
+    blob: string // 服务器文件地址或者是本地blob地址
 }
 
 const props = defineProps({
@@ -77,7 +77,7 @@ const props = defineProps({
     },
 })
 const emits = defineEmits<{
-  (e: 'update:modelValue', param: string): void
+    (e: 'update:modelValue', param: string): void
 }>()
 
 const defData = reactive({
@@ -198,49 +198,58 @@ defineExpose({
 
 <style lang="scss" scoped>
 .co-upload-hide {
-  :deep() {
-    .el-upload {
-      display: none;
+    :deep() {
+        .el-upload {
+            display: none;
+        }
     }
-  }
 }
 
 .co-upload {
-  &.limit1 {
-    :deep(.el-upload-list--picture-card) {
+    &.limit1 {
+        :deep(.el-upload-list--picture-card) {
 
-      display: block;
+            display: block;
 
-      .el-upload-list__item {
-        margin: 0;
-        display: flex;
-      }
-    }
-  }
-
-  :deep() {
-    .el-icon--close-tip {
-      display: none !important;
-    }
-
-    .el-upload-list__item.is-success:focus .el-upload-list__item-status-label,
-    .el-upload-list__item.is-success:hover .el-upload-list__item-status-label {
-      display: inline-flex;
-      opacity: 1;
-    }
-
-    .co-upload-text {
-
-      .el-upload-list--text {
-        margin: 0;
-
-        .el-upload-list__item {
-          margin: 0;
+            .el-upload-list__item {
+                margin: 0;
+                display: flex;
+            }
         }
-      }
-
     }
 
-  }
+    :deep() {
+
+        .el-upload--picture-card {
+            --el-upload-picture-card-size: 100px;
+        }
+
+        .el-upload-list--picture-card {
+            --el-upload-list-picture-card-size: 100px;
+        }
+
+        .el-icon--close-tip {
+            display: none !important;
+        }
+
+        .el-upload-list__item.is-success:focus .el-upload-list__item-status-label,
+        .el-upload-list__item.is-success:hover .el-upload-list__item-status-label {
+            display: inline-flex;
+            opacity: 1;
+        }
+
+        .co-upload-text {
+
+            .el-upload-list--text {
+                margin: 0;
+
+                .el-upload-list__item {
+                    margin: 0;
+                }
+            }
+
+        }
+
+    }
 }
 </style>
