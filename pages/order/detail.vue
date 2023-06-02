@@ -17,13 +17,9 @@
                 </div>
             </template>
             <el-breadcrumb class="mb20px">
-                <el-breadcrumb-item to="/order/list">
-                    个人中心
+                <el-breadcrumb-item v-for="item in breadcrumbData" :key="item.id" :to="item.href">
+                    {{ item.text }}
                 </el-breadcrumb-item>
-                <el-breadcrumb-item to="/order/list">
-                    我的订单
-                </el-breadcrumb-item>
-                <el-breadcrumb-item>订单详情</el-breadcrumb-item>
             </el-breadcrumb>
             <div class="order-top mb20px border-1 p20px">
                 <div class="lt">
@@ -164,12 +160,31 @@
 <script lang="ts" setup>
 import { OrderApi } from '~/api/goods/order'
 
+const router = useRouter()
+
+const backRoute = ref(router.options.history.state.back as string)
+
 // 订单编号
 const order_no = useRouteQuery('order_no')
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
 
+})
+
+// 面包屑导航
+const breadcrumbData = computed(() => {
+    const _list = [
+        { text: '个人中心', href: '/order/list', id: 1 },
+        { text: '我的订单', href: '/order/list', id: 2 },
+        { text: '订单详情', href: '', id: 3 },
+    ]
+
+    if (backRoute.value?.includes('/order/return')) {
+        _list[1].text = '退换货订单'
+        _list[1].href = '/order/return' // 回跳到指定页面的操作页面,不传递参数的情况下，
+    }
+    return _list
 })
 
 // 订单信息
@@ -195,7 +210,7 @@ const initDefaultData = async () => {
     // if (defData.ready) return false
 
     const { data } = await OrderApi.getInfo({ main_order_no: order_no.value })
-
+    await wait(100)
     defData.skeleton = false // 显示内容
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 

@@ -8,6 +8,9 @@
                     <el-skeleton :rows="5" />
                 </div>
             </template>
+            <!-- <el-button type="primary" class="mb20px" @click="onAdd">
+                添加退货
+            </el-button> -->
             <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
                 :data="tableData.data" auto-height scrollbar-always-on border @update:page="onHandleCurrentChange">
                 <template #main_order_no="{ scopes }">
@@ -26,7 +29,7 @@
                                 </h3>
                                 <div class="pce text-12px c-#888">
                                     价格：<span class="mr5px">￥{{ item.meet_price }}</span>
-                                    数量：<span>{{ item.goods_number }}</span>
+                                    退换数量：<span class="c-#f00">{{ item.goods_number }}</span>
                                 </div>
                             </div>
                         </li>
@@ -85,17 +88,22 @@
                     </el-button>
                 </template>
             </CoTable>
+
+            <OrderReturnModel ref="modelRef" />
         </el-skeleton>
     </LayoutUser>
 </template>
 
 <script setup lang="ts">
 import { OrderReturnApi } from '~/api/goods/order'
+import { OrderReturnModel } from '#components'
 
 definePageMeta({
     layout: 'home',
     middleware: 'auth',
 })
+
+const modelRef = ref<InstanceType<typeof OrderReturnModel>>()
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
@@ -105,15 +113,10 @@ type TableDataItem = OrderReturnApi_ReturnList['lists'][0]
 const tableData = reactive<BaseTableDataType<TableDataItem>>({
     data: [],
     tableHeader: [
-        // { property: '', label: '', type: "selection", width: 38, },
-        // { property: 'goods_img', label: '图片', width: 60, align: "center", slot: true },
         { property: 'main_order_no', label: '订单信息', minWidth: 200, slot: true, className: 'goods-list-row', showOverflowTooltip: false },
-        // { property: 'add_time', label: '申请时间', width: 150 },
         { property: 'type', label: '退换信息', minWidth: 150, slot: true, showOverflowTooltip: false },
-        // { property: 'reply', label: '回复信息', minWidth: 150, slot: true, showOverflowTooltip: false },
         { property: 'refund_status', label: '状态', width: 100, slot: true, align: 'center' },
         { property: 'operate', label: '操作', width: 100, slot: true, align: 'center', showOverflowTooltip: false },
-        // { property: 'market_price', label: '市场价', width: 85, align: 'center' },
     ],
     pagination: {
         ...PAGINATION,
@@ -163,7 +166,7 @@ const initTableData = async () => {
  * 查看退换信息
  */
 const onReturnDetail = (row: TableDataItem) => {
-
+    modelRef.value?.onOpenDialog({ row })
 }
 
 /**

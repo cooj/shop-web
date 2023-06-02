@@ -82,7 +82,7 @@ export const OrderReturnApi = {
      * @param data
      * @returns
      */
-    getList: (data?: OrderApi_GetSettleGoods) => useHttp<OrderApi_GetSettleResponse>('/api/mall_refund/get_refund_goods', data, { method: 'post' }),
+    getList: (data: { main_order_no: string }) => useHttp<OrderReturnApi_GetListResponse[]>('/api/mall_refund/get_refund_goods', data, { method: 'post' }),
 
     /**
      * 退换货管理 -- 退货列表
@@ -91,6 +91,18 @@ export const OrderReturnApi = {
      */
     returnList: () => useHttp<OrderReturnApi_ReturnList>('/api/mall_refund/get_refund_lists', '', { method: 'get' }),
 
-    //
+    /**
+     * 退换货管理 -- 添加退货
+     * @param data
+     * @returns
+     */
+    add: (data: OrderReturnApi_Add) => useHttp('/api/mall_refund/set_refund', data, { method: 'post' }),
+
+    /**
+     * 退换货管理 -- 退货详情
+     * @param data
+     * @returns
+     */
+    info: (data: { refund_no: string }) => useHttp<OrderReturnApi_InfoResponse>('/api/mall_refund/get_refund_info', data, { method: 'post' }),
 
 }

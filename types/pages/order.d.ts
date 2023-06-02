@@ -240,6 +240,22 @@ declare interface OrderApi_GetOrderListItem {
 }
 
 
+/**
+ * 获取可退货商品列表 - 响应数据
+ */
+declare interface OrderReturnApi_GetListResponse {
+    "id": number,       // 33
+    "goods_id": number, // 1
+    "goods_number": number,
+    "meet_price": string,
+    "goods_name": string,       // "红钐 按键寿命试验机 HSL-TA4 四工位"
+    "goods_img": string,
+    "goods_sn": string,     // "AA00001"
+
+    return_number?: number,  // 退换商品数量
+
+}
+
 
 /**
  * 退换货管理 -- 退货列表 - 响应数据
@@ -286,6 +302,62 @@ declare interface OrderReturnApi_ReturnList extends ListTotal {
 
 }
 
+/**
+ * 退换货管理 -- 添加退货 - 响应数据
+ */
+declare interface OrderReturnApi_Add {
+    goods_info: string;//     商品信息 [{"goods_id":3,"price":"11.52","goods_number":4,"meet_price":"0.00"}]
+    type: 1 | 2,// 类型 1退货 2换货
+    describe: string, // 问题描述
+    main_order_no: string,// 订单号    M20230412102104894540
+    img_url: string,// 上传图片
+}
+
+/**
+ * 退换货管理 -- 退货详情 - 响应数据
+ */
+declare interface OrderReturnApi_InfoResponse {
+    "refund_info": {
+        "id": 4, //记录ID
+        "refund_no": "XS20230508142742302981", //退换单号
+        "order_no": "M20230505143130386350", //订单号
+        "describe": "退货", //问题描述
+        "type": 1, //类型 1退货 2换货
+        "status": 0, //订单状态 0全部 1待支付 2待发货 3待确认 4已取消
+        "logistics_cusmoer": "", //物流公司
+        "logistics_no": "", //快递单号
+        "reply": "", //回复内容
+        "user_id": 57, //用户ID
+        "total_price": "455.00", //订单总金额
+        "total_number": 2, //退货订单商品总数量
+        "is_all": 1, //是否全退 1全部 2部分
+        "add_time": "2023-05-08 14:27:42", //添加时间
+        "meet_price": "455.00", //实付单价
+        "meet_money": "455.00", //最终退款金额
+        "admin_id": 0, //操作人id
+        "refund_status": 0 | 1 | 2, //退货状态 //退款状态 0申请中 1已完成 2已取消
+        "auto_id": 0, //退款操作人ID
+        "auto_time": 0, //退款审核时间
+        "success_time": 0 //退款成功时间
+    },
+    "goods_list": {
+        "id": 4, //记录ID
+        "refund_no": "XS20230508142742302981", //退换单号
+        "goods_id": 1, //商品ID
+        "goods_number": 2, //商品数量
+        "meet_price": "227.50", //实付金额
+        "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
+        "goods_img": "" //商品图片
+        goods_sn: string
+    }[],
+    "refund_log": {
+        "content": "操作备注：会员发起了退货/退款:退货", //信息
+        "img_url": "", //上传图片
+        "create_time": "2023-05-08 14:27:42", //操作时间
+        "user_id": 57, //用户ID
+        "author": "会员" //操作者
+    }[]
+}
 
 
 
@@ -325,4 +397,11 @@ declare interface OrderOperatePropsData {
     order_no: string; //订单号
     status: number; // 订单状态
     is_return: 0 | 1   // 是否已退货过
+}
+
+
+// 订单退换货onOpenDialog传值
+declare interface OrderReturnOpen {
+    row?: OrderReturnApi_ReturnList['lists'][0],  // 退货记录信息
+    order_no?: string, // 订单编号
 }
