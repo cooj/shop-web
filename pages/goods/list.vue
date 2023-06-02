@@ -6,7 +6,6 @@
                     <div class="pb10px pt15px">
                         <el-skeleton-item style="width: 30%" />
                     </div>
-                    <!-- <el-form size="small"> -->
                     <div class="goods-attr">
                         <div class="goods-attr-item">
                             <div class="left">
@@ -61,7 +60,6 @@
                             </dd>
                         </dl>
                     </div>
-                    <!-- </el-form> -->
                     <div class="min-h800px" />
                 </template>
 
@@ -198,14 +196,14 @@
                         <dd v-for=" item in defData.tableData" :key="item.goods_id" class="goods-item-s">
                             <div class="g-info w500px">
                                 <div class="g-info-left">
-                                    <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
+                                    <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                         <CoImage class="w80% pb80%" :src="item.goods_img"
                                             style="--co-image-error-size:28px;" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">
                                     <div class="name">
-                                        <NuxtLink class="link" :to="`/goods/${item.goods_id}`" target="_blank">
+                                        <NuxtLink class="link" :to="`/goods/${item.goods_sn}`" target="_blank">
                                             {{ item.goods_name }}
                                         </NuxtLink>
                                     </div>
@@ -273,10 +271,9 @@
                     <ul v-else class="goods-list-ul">
                         <li v-for=" item in defData.tableData " :key="item.goods_id">
                             <div class="goods-list-item">
-                                <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
+                                <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                     <CoImage class="w100% pb100%" :src="item.goods_img" loading="lazy" />
                                 </NuxtLink>
-
                                 <div class="goods-price">
                                     <div class="goods-price-left">
                                         <i>￥</i><span class="integer">{{ formatNumber(item.shop_price) }}</span>
@@ -292,7 +289,7 @@
                                     </div>
                                 </div>
                                 <div class="goods-name" :title="item.goods_name">
-                                    <NuxtLink :to="`/goods/${item.goods_id}`" target="_blank">
+                                    <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                         {{ item.goods_name }}
                                     </NuxtLink>
                                 </div>
@@ -446,7 +443,6 @@ const initTableData = async () => {
 
     defData.skeleton = false // 关闭骨架屏
 }
-initTableData()
 
 // 切换商品显示列表
 const toggleShowList = (param: boolean) => {
@@ -475,7 +471,7 @@ const onChoseBrand = (id: number) => {
 }
 
 // 分页数量点击
-const onHandleSizeChange = async (val: number) => {
+const onHandleSizeChange = () => {
     initTableData()
 }
 
@@ -553,6 +549,8 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
         ElMessage.error(data.value?.msg || '加入购物车失败')
     }
 }
+
+initTableData()
 
 watch(() => [keyword.value, cid.value, bid.value], () => {
     initTableData()

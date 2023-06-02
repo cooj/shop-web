@@ -59,6 +59,7 @@ declare interface GoodsApi_GetListResponse {
 
 // 商品数据
 declare interface GoodsApi_GetListItem {
+    goods_sn:string,     // 品牌编号  AA00256 
     "goods_id": 1,
     "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位",
     "goods_img": "",
@@ -96,6 +97,7 @@ declare interface GoodsApi_GetCartListResponse {
         "id": 4, //记录ID
         "user_id": 1, //用户ID
         "goods_id": 3, //商品id
+        goods_sn:string, // 商品编号
         "goods_number": number, //数量    4
         "create_time": "2023-03-30 14:17:36", //添加时间
         "goods_name": "红钐 按键寿命试验机 HSL-TA3 三工位", //商品名称

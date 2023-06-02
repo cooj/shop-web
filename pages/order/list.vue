@@ -41,7 +41,7 @@
                             <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
                             <div class="text">
                                 <h3 class="tle">
-                                    <NuxtLink :to="`/goods/${item.goods_id}`">
+                                    <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                         {{ item.goods_name }}
                                     </NuxtLink>
                                 </h3>

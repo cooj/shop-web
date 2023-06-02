@@ -16,7 +16,7 @@
                             <el-image class="h50px w50px" :src="row.goods_img" />
                         </div>
                         <div class="pl10px">
-                            <NuxtLink :to="`/goods/${row.goods_id}`">
+                            <NuxtLink :to="`/goods/${row.goods_sn}`" target="_blank">
                                 {{ row.goods_name }}
                             </NuxtLink>
                         </div>
