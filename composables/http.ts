@@ -132,3 +132,43 @@ export const useHttp2 = <T = any>(url: string, data?: RequestDataType, opt?: Use
 }
 
 // const { data: users, pending, refresh, error } = await http<{ name: string }>('/a')
+
+/**
+ * 异步处理error、loading
+ * @param promise
+ * @returns
+ */
+export default function useCustomFetch<T = any>(promise: Promise<T>) {
+    const data = ref()
+    const error = ref()
+    const isLoading = ref(false)
+
+    async function fetchData() {
+        isLoading.value = true
+        // promise().then((result) => {
+        //     data.value = result
+        //     error.value = undefined
+        // }).catch((err) => {
+        //     data.value = undefined
+        //     error.value = err
+        // }).finally(() => {
+        //     isLoading.value = false
+        // })
+
+        try {
+            // const response = await fetch('https://randomuser.me/api/?results=3')
+            // const { results: users } = await response.json()
+            // data.value = users
+
+            data.value = await promise()
+            error.value = undefined
+        } catch (err) {
+            data.value = undefined
+            error.value = err
+        }
+        isLoading.value = false
+    }
+    fetchData()
+
+    return { isLoading, error, data }
+}
