@@ -92,16 +92,26 @@
                     </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item>
-                    <NuxtLink to="/user/components/editEmail">
+                    <div @click="defData.visible = true">
                         修改
-                    </NuxtLink>
+                    </div>
                 </el-descriptions-item>
             </el-descriptions>
-            <!-- <i class="i-ep-apple block" />
-      <i class="ic-baseline-add-home-work block" />
-      <i class="i-carbon:battery-low block" /> -->
         </div>
     </LayoutUser>
+
+    <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="修改邮箱" width="680px"
+        @close="onClose" @cancel="onClose" @confirm="editPwd">
+        <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px">
+            <el-row>
+                <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                    <el-form-item prop="email" label="邮箱">
+                        <el-input v-model="form.email" placeholder="请输入邮箱" />
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+    </CoDialog>
 </template>
 
 <script setup lang="ts">
@@ -122,6 +132,8 @@ const defData = reactive({
     openid: '',
     nickname: '',
     email_status: 0,
+    visible: false,
+    btnLoading: false,
 })
 
 const formRef = ref<FormInstance>()
@@ -140,6 +152,9 @@ const rules = reactive<FormRules>({
     user_name: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
         { min: 2, max: 16, message: '最少2个,最多16个字符', trigger: 'blur' }],
+    email: [
+        { required: true, pattern: /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/, message: '填写正确的邮箱格式', trigger: 'blur' },
+    ],
 })
 
 // 获取用户信息
@@ -196,7 +211,27 @@ const sendEmail = async () => {
     const res = await AccountApi.sendEmail(data)
     form.loading = false
     if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
-    ElMessage.success('激活邮件发送成功')
+    ElMessage.success('发送成功，请前往邮箱激活')
+}
+
+// 修改邮箱
+const editPwd = async () => {
+    const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
+    if (!isRun) return
+    const data: AccountApi_editEmail = {
+        email: form.email,
+    }
+    const { data: res } = await AccountApi.editEmail(data)
+    if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+    ElMessage.success('修改成功')
+    defData.email = form.email
+    defData.visible = false
+}
+
+// 关闭弹窗
+const onClose = () => {
+    defData.visible = false
+    formRef.value?.resetFields()
 }
 
 onBeforeMount(() => {
