@@ -75,22 +75,28 @@ initTableData()
 
 // 删除
 const onRemove = async (row: any) => {
-    const user = await userState.getUserInfo()
-    if (user.value) {
-        const data: RecordApi_Del = {
-            type: 2,
-            user_id: user.value.user_id,
-            goods_ids: row.goods_id,
-        }
+    ElMessageBox.confirm('确定要删除该订单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }).then(async () => {
+        const user = await userState.getUserInfo()
+        if (user.value) {
+            const data: RecordApi_Del = {
+                type: 2,
+                user_id: user.value.user_id,
+                goods_ids: row.goods_id,
+            }
 
-        const res = await RecordApi.del(data)
-        if (res.data.value?.code !== 200) {
-            ElMessage.error(res.data.value?.msg)
-            return false
+            const res = await RecordApi.del(data)
+            if (res.data.value?.code !== 200) {
+                ElMessage.error(res.data.value?.msg)
+                return false
+            }
+            ElMessage.success('删除成功')
+            initTableData() // 重新加载列表
         }
-        ElMessage.success('删除成功')
-        initTableData() // 重新加载列表
-    }
+    })
 }
 
 definePageMeta({
