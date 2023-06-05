@@ -145,7 +145,7 @@ NowPhone()
 const getSmsCodeClick = async () => {
     if (!form.phone) ElMessage.error('请先输入手机号码')
     const data: LoginApi_validateCode = {
-        type: 3,
+        type: 4,
         phone: form.phone,
     }
     const { data: res } = await LoginApi.validateCode(data)
@@ -191,7 +191,7 @@ const onClick = async () => {
 const getNewCodeClick = async () => {
     if (!form.new_phone) ElMessage.error('请先输入手机号码')
     const data: LoginApi_validateCode = {
-        type: 3,
+        type: 4,
         phone: form.new_phone,
     }
     const { data: res } = await LoginApi.validateCode(data)

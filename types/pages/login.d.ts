@@ -25,7 +25,7 @@ declare interface LoginApi_LoginResponse {
  */
 declare interface LoginApi_validateCode {
     phone: string //手机号
-    type: 1 | 2 | 3 //类型：1注册 2登录 3找回
+    type: 1 | 2 | 3 | 4//类型：1注册 2登录 3找回 4修改手机号
 }
 
 /**
