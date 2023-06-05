@@ -41,11 +41,6 @@
                                 </el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item>
-                            <el-button class="mt-20px w400px" @click="onClick">
-                                供应商入驻
-                            </el-button>
-                        </el-form-item>
                     </el-form>
                 </div>
             </div>
