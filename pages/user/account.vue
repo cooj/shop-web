@@ -86,7 +86,8 @@
                 </el-descriptions-item>
                 <el-descriptions-item label="绑定邮箱：">
                     {{ defData.email ? '您已绑定邮箱' : '暂未绑定' }}{{ defData.email }}
-                    <el-button v-if="defData.email && defData.email_status === 0" @click="sendEmail">
+                    <el-button v-if="defData.email && defData.email_status === 0" :loading="form.loading"
+                        @click="sendEmail">
                         去激活
                     </el-button>
                 </el-descriptions-item>
@@ -131,6 +132,7 @@ const form = reactive({
     headImgUrl: '',
     confirm_password: '',
     password: '',
+    loading: false,
 })
 
 // 规则
@@ -187,10 +189,12 @@ const delWeChat = async () => {
 
 // 发送激活邮件
 const sendEmail = async () => {
+    form.loading = true
     const data: AccountApi_sendEmail = {
         email: defData.email,
     }
     const res = await AccountApi.sendEmail(data)
+    form.loading = false
     if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
     ElMessage.success('激活邮件发送成功')
 }

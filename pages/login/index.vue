@@ -48,7 +48,8 @@
                 </el-form-item>
                 <el-form-item v-else prop="validate_code">
                     <el-col :span="15">
-                        <el-input v-model.trim="form.validate_code" type="text" placeholder="请输入短信验证码" clearable tabindex="3" />
+                        <el-input v-model.trim="form.validate_code" type="text" placeholder="请输入短信验证码" clearable
+                            tabindex="3" />
                     </el-col>
                     <el-col :span="1" />
                     <el-col :span="8">
@@ -143,7 +144,7 @@ const onClick = async () => {
 
     const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
     if (!isRun) return
-
+    form.loading = true
     if (defData.type === 1) { // 账号登录
         const data: LoginApi_Login = {
             type: 1,
@@ -152,6 +153,7 @@ const onClick = async () => {
 
         }
         const { data: res } = await LoginApi.Login(data)
+        form.loading = false
         if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
         ElMessage.success('登录成功')
         userState.setToken(res.value.data.token)
@@ -163,6 +165,7 @@ const onClick = async () => {
             validate_code: form.validate_code,
         }
         const { data: res } = await LoginApi.Login(data)
+        form.loading = false
         if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
         ElMessage.success('登录成功')
         userState.setToken(res.value.data.token)
@@ -246,48 +249,48 @@ getOpenId()
 
 <style lang="scss" scoped>
 body {
-  margin: 0;
+    margin: 0;
 }
 
 .center {
-  width: 100%;
-  height: 700px;
-  background-image: url('assets/images/login-bg.png');
-  background-size: cover;
-  // background-repeat: no-repeat;
-  background-position: center;
+    width: 100%;
+    height: 700px;
+    background-image: url('assets/images/login-bg.png');
+    background-size: cover;
+    // background-repeat: no-repeat;
+    background-position: center;
 }
 
 .login {
-  width: 390px;
-  height: 400px;
-  background-color: rgb(255, 255, 255);
-  border-radius: 5px;
-  margin-top: -115px;
+    width: 390px;
+    height: 400px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    margin-top: -115px;
 }
 
 .title {
-  font-size: large;
-  text-align: center;
-  height: 70px;
-  padding-top: 20px;
-  color: #000;
+    font-size: large;
+    text-align: center;
+    height: 70px;
+    padding-top: 20px;
+    color: #000;
 }
 
 .el-row {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .el-row:last-child {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .el-col {
-  border-radius: 4px;
+    border-radius: 4px;
 }
 
 .grid-content {
-  border-radius: 4px;
-  min-height: 36px;
+    border-radius: 4px;
+    min-height: 36px;
 }
 </style>
