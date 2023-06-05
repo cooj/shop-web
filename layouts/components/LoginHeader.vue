@@ -1,7 +1,9 @@
 <template>
     <div class="h100px bg-#313131">
         <div class="container">
-            <img pt3 src="@/assets/images/shop-logo2.png" alt="">
+            <NuxtLink to="/">
+                <img pt3 src="@/assets/images/shop-logo2.png" alt="">
+            </NuxtLink>
         </div>
     </div>
 </template>
@@ -11,7 +13,7 @@
 
 <style scoped>
 .login {
-  float: right;
-  color: white;
+    float: right;
+    color: white;
 }
 </style>
