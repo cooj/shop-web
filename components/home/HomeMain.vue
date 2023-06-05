@@ -54,7 +54,7 @@
                             :name="`${index}-${i}`" lazy>
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
-                                    <NuxtLink class="link" :to="`/goods/${son.goods_sn}`">
+                                    <NuxtLink class="link" :to="`/goods/${son.goods_sn}`" target="_blank">
                                         <CoImage class="w100% pb100%" :src="son.goods_img" loading="lazy" />
                                         <h3 class="goods-name">
                                             {{ son.goods_name }}
