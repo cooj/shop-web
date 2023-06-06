@@ -54,7 +54,7 @@
                             <div class="tle">
                                 <b>发票信息</b>
                                 <el-button text bg size="small" @click="onAddress(2)">
-                                    新增地址
+                                    新增发票
                                 </el-button>
                             </div>
                             <el-form-item prop="is_invoice" label="是否开发票">
@@ -245,6 +245,7 @@
             </el-skeleton>
         </div>
         <UserAddressModel ref="modelRef" @update="getAddress" />
+        <UserInvoiceModel ref="InvoiceRef" @update="getAddress" />
     </section>
 </template>
 
@@ -252,9 +253,11 @@
 import type { FormInstance, FormRules } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
 import { UserAddressApi } from '~/api/user/address'
-import { UserAddressModel } from '#components'
+import { UserAddressModel, UserInvoiceModel } from '#components'
 
 const modelRef = ref<InstanceType<typeof UserAddressModel>>()
+const InvoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
+
 const formRef = ref<FormInstance>()
 
 const defData = reactive({
@@ -375,7 +378,11 @@ const setAddressText = (row: UserAddressApi_GetListResponse) => {
  */
 const onAddress = (type: 1 | 2) => {
     defData.type = type
-    modelRef.value?.onOpenDialog()
+    if (type === 1) {
+        modelRef.value?.onOpenDialog()
+    } else {
+        InvoiceRef.value?.onOpenDialog()
+    }
 }
 // 获取地址
 const getAddress = (params: UserAddressApi_Edit) => {
@@ -396,7 +403,6 @@ const getAddress = (params: UserAddressApi_Edit) => {
         defData.billAddressList.unshift(data)
         defData.addressList.push(data)
     }
-
     console.log('defData.addressList :>> ', defData.addressList)
 }
 
