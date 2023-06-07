@@ -18,7 +18,7 @@ declare interface InterListApi_getListResponse {
     "goods_id": number, //商品id
     "user_id": number, //用户id
     "type": 1 | 2, //类型 1问 2答
-    "q_id": string | number, //回答提问的id，type为2填写，type为1默认0
+    "q_id": number, //回答提问的id，type为2填写，type为1默认0
     "content": string, //内容
     "add_time": string, //添加时间
     "is_show": 1, //是否显示 0否 1是
@@ -34,7 +34,7 @@ declare interface InterListApi_getListChildren {
   "goods_id": number, // 商品id
   "user_id": number, // 用户id
   "type": 1 | 2, // 类型 1问 2答
-  "q_id": string | number, //回答提问的id，type为2填写，type为1默认0
+  "q_id": number, //回答提问的id，type为2填写，type为1默认0
   "content": string, //内容
   "add_time": string,//添加时间
   "is_show": 0 | 1, //是否显示 0否 1是
@@ -49,7 +49,7 @@ declare interface InterListApi_getUserList {
   is_paging: number //是否分页 1：分页，0：不分页
   page: number //分页页码，数字类型
   page_size: number //每页数量
-  user_id:number 
+  user_id: number
   type?: 1 | 2 //问答列表
 }
 
@@ -62,10 +62,10 @@ declare interface InterListApi_getUserListResponse {
     "goods_id": number, //商品id
     "user_id": number, //用户id
     "type": 1 | 2, //类型 1问 2答
-    "q_id": string | number, //回答提问的id，type为2填写，type为1默认0
+    "q_id": number, //回答提问的id，type为2填写，type为1默认0
     "content": string, //内容
     "add_time": string, //添加时间
-    "is_show": 1, //是否显示 0否 1是
+    "is_show": 1 | 0, //是否显示 0否 1是
     "goods_name": string, //商品名称
     "user_name": string, //用户名称
     "answer_lists": InterListApi_getUserListChildren[]
@@ -78,7 +78,7 @@ declare interface InterListApi_getUserListChildren {
   "goods_id": number, // 商品id
   "user_id": number, // 用户id
   "type": 1 | 2, // 类型 1问 2答
-  "q_id": string | number, //回答提问的id，type为2填写，type为1默认0
+  "q_id": number, //回答提问的id，type为2填写，type为1默认0
   "content": string, //内容
   "add_time": string,//添加时间
   "is_show": 0 | 1, //是否显示 0否 1是
@@ -90,8 +90,7 @@ declare interface InterListApi_getUserListChildren {
  */
 declare interface InterListApi_addList {
   goods_id: number //商品id
-  user_id: number //用户id
   type: 1 | 2 //类型 1问 2答
-  q_id: string | number //回答提问的id，type为2填写，type为1默认0
+  q_id: number //回答提问的id，type为2填写，type为1默认0
   content: string //内容
 }
