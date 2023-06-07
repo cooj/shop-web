@@ -17,7 +17,7 @@
                 </el-button>
             </div>
         </template>
-        <div v-if="orderStatus === 1 || orderStatus === 6" class="item-ope">
+        <div v-if="orderStatus === 3 || orderStatus === 6" class="item-ope">
             <el-button type="primary" :link="props.link" :size="props.size" @click="onReturn()">
                 退换申请
             </el-button>

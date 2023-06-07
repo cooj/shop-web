@@ -36,11 +36,14 @@ export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: UseF
     // console.log('options.baseURL :>> ', options.baseURL);
     // console.log('options :>> ', options)
     // 发送请求出错
-    options.onRequestError = () => {
-        console.error('请求出错，请重试！')
+    options.onRequestError = (error) => {
+        console.log(error)
+        // console.error('请求出错，请重试！')
+        ElMessage.error('服务器内部错误')
     }
     // 发送请求出错
     options.onResponseError = ({ response }) => {
+        // console.log('response :>> ', response)
         switch (response.status) {
             case 400:
                 console.error('参数错误')
