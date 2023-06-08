@@ -252,24 +252,22 @@
                                         </el-button>
 
                                         <el-table :data="defData.tableData" style="width: 100%">
-                                            <!-- <el-table-column type="expand">
-                  <template #default="props">
-                    <div m="4">
-                      <h3>回答</h3>
-                      <el-table :data="props.row.family">
-                        <el-table-column label="用户" prop="user_name" />
-                        <el-table-column label="内容" prop="content" />
-                      </el-table>
-                    </div>
-                  </template>
-                </el-table-column> -->
                                             <el-table-column label="" prop="user_name" />
                                             <el-table-column label="" prop="content" />
+                                            <el-table-column fixed="right" label="" width="120">
+                                                <template #default="scopes">
+                                                    <el-button link type="primary" size="small"
+                                                        @click="onAnswer(scopes.row)">
+                                                        查看回答
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
                                         </el-table>
-                                        <div class="goods-pagination">
+                                        <div class="goods-pagination" mt15px>
                                             <el-pagination v-model:current-page="defData.page"
-                                                v-model:page-size="defData.pageSize" small background
-                                                layout=" prev, pager, next,total, jumper" :total="defData.total" />
+                                                v-model:page-size="defData.pageSize" small
+                                                background layout=" prev, pager, next,total, jumper" :total="defData.total"
+                                                @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
                                         </div>
                                     </div>
                                 </el-tab-pane>
@@ -312,14 +310,33 @@
             </el-skeleton>
         </div>
     </section>
+
+    <el-dialog v-model="defData.visible" auto-height width="680px" :draggable="true" @close="onClose">
+        <el-form ref="formRef" :model="form" inline>
+            <el-form-item prop="content">
+                <el-input v-model="form.answer" style="width: 300px" placeholder="请输入回答" clearable />
+            </el-form-item>
+            <el-form-item>
+                <el-button style="background-color: var(--el-color-primary);color: white;" @click="answerClick">
+                    发送回答
+                </el-button>
+            </el-form-item>
+        </el-form>
+        <el-table :data="form.answerList" style="width: 100%">
+            <el-table-column label="" prop="user_name" />
+            <el-table-column label="" prop="content" />
+        </el-table>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import QRCode from 'qrcode'
 import { GoodsApi } from '~/api/goods/list'
 import { InterListApi } from '~/api/user/interList'
 import { RecordApi } from '~/api/user/record'
 
+const formRef = ref<FormInstance>()
 const userState = useUserState()
 const useCartNumber = useCartNumberState()
 const usePayType = usePayTypeState()
@@ -329,8 +346,9 @@ console.log('payTypeList :>> ', payTypeList)
 const defData = reactive({
     user_id: 0,
     page: 1,
-    total: 10,
+    total: 0,
     pageSize: 10,
+    // pageSizes: [10, 20, 30],
     leftActive: '1',
     rightActive: '1',
     loading: true,
@@ -341,6 +359,9 @@ const defData = reactive({
     tableData: [] as InterListApi_getListResponse['lists'],
     skeleton: true, // 默认显示骨架屏
     goods_id: 0, // 当前的商品id
+    visible: false,
+    btnLoading: false,
+
 })
 // 商品信息
 const goodsData = ref<GoodsApi_GetInfoResponse>()
@@ -350,6 +371,10 @@ const goodsImgList = ref<string[]>([])
 const form = reactive({
     number: 1, // 购买数量
     question: '', // 问答列表 提问
+    answer: '', // 问答列表 回答
+    user_id: '',
+    question_id: 0,
+    answerList: [],
 })
 const param_id = useRouteParam('id')
 
@@ -410,27 +435,58 @@ const initQuestionData = async () => {
     defData.tableData = res.data.value.data.lists
     defData.total = res.data.value.data.total
 }
+// 分页数量点击
+const onHandleSizeChange = () => {
+    initQuestionData()
+}
 
 // 新增问答
 const questionClick = async () => {
-    if (!form.question) return ElMessage.error('请先输入')
-    const user = await userState.getUserInfo()
-    if (user.value) {
-        defData.user_id = user.value.user_id
-    } else {
-        return
-    }
+    if (!form.question) return ElMessage.error('请先输入提问')
     const info: InterListApi_addList = {
         goods_id: defData.goods_id,
-        user_id: defData.user_id,
         type: 1,
         q_id: 0,
         content: form.question,
     }
-    const { data: inter } = await InterListApi.addList(info)
-    if (inter.value?.code !== 200) return ElMessage.error(inter.value?.msg)
-    ElMessage.success('成功')
+    const { data, error } = await InterListApi.addList(info)
+    if (error.value) return
+    if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+    initQuestionData()
+    ElMessage.success('提问成功')
     form.question = ''
+}
+
+// 打开回答弹窗
+const onAnswer = async (row: any) => {
+    defData.visible = true
+    form.user_id = row.user_id
+    form.question_id = row.question_id
+    form.answerList = row.answer_lists
+}
+
+// 回答
+const answerClick = async () => {
+    if (!form.answer) return ElMessage.error('请输入回答')
+    const info: InterListApi_addList = {
+        goods_id: defData.goods_id,
+        type: 2,
+        q_id: form.question_id,
+        content: form.answer,
+    }
+    const { data, error } = await InterListApi.addList(info)
+    if (error.value) return
+    if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+    initQuestionData()
+    defData.visible = false
+    ElMessage.success('回答成功')
+    form.answer = ''
+}
+
+// 关闭弹窗
+const onClose = () => {
+    defData.visible = false
+    formRef.value?.resetFields()
 }
 
 // 商品收藏
