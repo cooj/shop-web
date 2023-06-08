@@ -59,7 +59,7 @@ declare interface GoodsApi_GetListResponse {
 
 // 商品数据
 declare interface GoodsApi_GetListItem {
-    goods_sn:string,     // 品牌编号  AA00256 
+    goods_sn: string,     // 品牌编号  AA00256 
     "goods_id": 1,
     "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位",
     "goods_img": "",
@@ -97,7 +97,7 @@ declare interface GoodsApi_GetCartListResponse {
         "id": 4, //记录ID
         "user_id": 1, //用户ID
         "goods_id": 3, //商品id
-        goods_sn:string, // 商品编号
+        goods_sn: string, // 商品编号
         "goods_number": number, //数量    4
         "create_time": "2023-03-30 14:17:36", //添加时间
         "goods_name": "红钐 按键寿命试验机 HSL-TA3 三工位", //商品名称
@@ -139,9 +139,18 @@ declare interface GoodsApi_GoodsInfoData {
     "is_hot": 0, //是否热销
     "cat_id": 1322, //分类id
     "brand_id": 1, //品牌id
-    "is_collect": 0|1, //是否收藏 1是 0否
-    "coupon_list": [] //优惠券
-    goods_desc:string
+    "is_collect": 0 | 1, //是否收藏 1是 0否
+    goods_desc: string,
+    web_title: string,   // seo标题
+    web_keywords: string,   // seo关键字
+    web_desc: string,   // seo描述
+    "coupon_list": {
+        "coupon_id": 26,
+        "coupon_name": "618大促销",
+        "par_value": "10.00",
+        "is_threshold": 1,
+        "lowest": 1
+    }[] //优惠券
 }
 
 

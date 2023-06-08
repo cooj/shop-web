@@ -69,6 +69,16 @@
                                         <span class="text-12px c-#666">会员价</span>
                                     </div>
                                 </li>
+                                <li v-if="goodsInfo?.coupon_list.length" class="bg-#f8f8f8">
+                                    <div class="lt">
+                                        优惠券
+                                    </div>
+                                    <div class="gt con-list">
+                                        <div v-for="item in goodsInfo?.coupon_list" :key="item.coupon_id" class="con-pane">
+                                            {{ item.coupon_name }}立减{{ item.par_value }}元
+                                        </div>
+                                    </div>
+                                </li>
                                 <li class="items-center bg-#f8f8f8 -mt10px">
                                     <div class="lt" />
                                     <div class="gt my5px">
@@ -352,7 +362,7 @@ const initGoodsData = async () => {
     if (data.value?.code === 200) {
         const dat = data.value.data
         const infoData = dat.goods_info
-
+        console.log(infoData)
         // if (goods.goods_id === id) {
         if (infoData) {
             goodsData.value = dat
@@ -368,14 +378,14 @@ const initGoodsData = async () => {
             goodsImgList.value = imgArr
 
             // TODO 商品seo字段缺少
-            // // 设置seo
-            // const meta = []
-            // if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
-            // if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
-            // useHead({
-            //     title: infoData.web_title || infoData.goods_name,
-            //     meta,
-            // })
+            // 设置seo
+            const meta = []
+            if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
+            if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
+            useHead({
+                title: infoData.web_title || infoData.goods_name,
+                meta,
+            })
             defData.skeleton = false // 关闭骨架屏
         } else {
             ElMessage.error('未获取到商品信息,请检查地址是否正确')
@@ -834,5 +844,49 @@ definePageMeta({
     align-items: center;
     justify-content: center;
     font-size: 14px;
+}
+
+.con-list {
+    .con-pane {
+        position: relative;
+        overflow: hidden;
+        padding: 0 7px;
+        font-size: 12px;
+        line-height: 18px;
+        display: inline-block;
+        margin-right: 5px;
+        color: var(--el-color-primary);
+        border-top: 1px solid var(--el-color-primary);
+        border-bottom: 1px solid var(--el-color-primary);
+        transform: scale(0.95);
+
+        &::after,
+        &::before {
+            content: '';
+            --co-wavy-width: 3px;
+            width: 100%;
+            height: var(--co-wavy-width);
+            background: linear-gradient(135deg, transparent, transparent 45%, var(--el-color-primary), transparent 55%),
+                linear-gradient(45deg, transparent, transparent 45%, var(--el-color-primary), transparent 55%);
+            background-size: calc(var(--co-wavy-width) * 2) calc(var(--co-wavy-width) * 2);
+            background-repeat: repeat-x, repeat-x;
+            transform: rotateZ(90deg);
+            transform-origin: left;
+        }
+
+        &::before {
+            position: absolute;
+            top: -4px;
+            left: 2px;
+        }
+
+        &::after {
+            position: absolute;
+            bottom: -1px;
+            right: 2px;
+            transform-origin: right;
+        }
+    }
+
 }
 </style>
