@@ -504,7 +504,7 @@ const onPriceRange = () => {
 // 商品收藏
 const onAddCollect = async (row: GoodsApi_GetListItem) => {
     // 用户未登录时
-    if (!userState.userInfo.value?.user_id) {
+    if (!userState.token.value) {
         return navigateTo('/login')
     }
     // 已经收藏了，取消收藏状态
@@ -513,7 +513,6 @@ const onAddCollect = async (row: GoodsApi_GetListItem) => {
         const params: RecordApi_Del = {
             goods_ids: row.goods_id.toString(),
             type: 1,
-            user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.del(params)
         if (data.value?.code === 200) {
@@ -523,7 +522,6 @@ const onAddCollect = async (row: GoodsApi_GetListItem) => {
         const params: RecordApi_Add = {
             goods_id: row.goods_id,
             type: 1,
-            user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.add(params)
         if (data.value?.code === 200) {
@@ -535,7 +533,7 @@ const onAddCollect = async (row: GoodsApi_GetListItem) => {
 // 加入购物车
 const onAddCart = async (row: GoodsApi_GetListItem) => {
     // 用户未登录时，不允许加入购物车页面
-    if (!userState.userInfo.value?.user_id) {
+    if (!userState.token.value) {
         // ElMessage.error('请先登录!')
         return navigateTo('/login')
     }

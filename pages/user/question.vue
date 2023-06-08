@@ -42,7 +42,6 @@ const defData = reactive({
     activeName: 'first',
     pageSize: 18,
     tableData: [] as InterListApi_getUserListResponse['lists'],
-    user_id: 1,
 })
 
 const initTableData = async () => {

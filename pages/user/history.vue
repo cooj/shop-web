@@ -63,7 +63,6 @@ const initTableData = async () => {
     const user = await userState.getUserInfo()
     if (user.value) {
         const data: RecordApi_GetList = {
-            user_id: user.value.user_id,
             type: 2,
         }
         const res = await RecordApi.getList(data)
@@ -84,7 +83,6 @@ const onRemove = async (row: any) => {
         if (user.value) {
             const data: RecordApi_Del = {
                 type: 2,
-                // user_id: user.value.user_id,
                 goods_ids: row.goods_id,
             }
 
