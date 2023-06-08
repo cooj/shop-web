@@ -77,7 +77,6 @@ import { userAddressState } from '~/composables/state/address'
 
 const emits = defineEmits(['update'])
 const formRef = ref<FormInstance>()
-const userState = useUserState()
 const userAddress = userAddressState()
 
 const defData = reactive({
@@ -98,7 +97,7 @@ const form = reactive({
         logon_addr: '', // 注册地址
         bank: '', // 开户银行
         bank_account: '', // 开户账号
-        user_id: '', // 用户id
+        // user_id: '', // 用户id
         address_id: '', // 添加收票地址返回ID
     },
 })
@@ -161,27 +160,25 @@ const onClose = () => {
 const onConfirm = async () => {
     const isRun = await useFormVerify(formRef.value)
     if (!isRun) return false
-    const user = await userState.getUserInfo()
-    if (user.value) {
-        const params: UserInvoiceApi_Add = {
-            enterprise_name: form.data.enterprise_name.trim(),
-            enterprise_email: form.data.enterprise_email.trim(),
-            type: form.data.type as 1 | 2 | 3,
-            tax_no: form.data.tax_no.trim(),
-            logon_tel: form.data.logon_tel,
-            logon_addr: form.data.logon_addr.trim(),
-            bank: form.data.bank.trim(),
-            bank_account: form.data.bank_account.trim(),
-            user_id: user.value.user_id,
-            address_id: form.data.address_id,
-        }
-        // console.log('params :>> ', params)
-        const { data: res } = await UserInvoiceApi.add(params)
-        if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
-        ElMessage.success('新增成功')
-        emits('update')
-        onClose()
+
+    const params: UserInvoiceApi_Add = {
+        enterprise_name: form.data.enterprise_name.trim(),
+        enterprise_email: form.data.enterprise_email.trim(),
+        type: form.data.type as 1 | 2 | 3,
+        tax_no: form.data.tax_no.trim(),
+        logon_tel: form.data.logon_tel,
+        logon_addr: form.data.logon_addr.trim(),
+        bank: form.data.bank.trim(),
+        bank_account: form.data.bank_account.trim(),
+        // user_id: user.value.user_id,
+        address_id: form.data.address_id,
     }
+    // console.log('params :>> ', params)
+    const { data: res } = await UserInvoiceApi.add(params)
+    if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+    ElMessage.success('新增成功')
+    emits('update')
+    onClose()
 }
 
 defineExpose({

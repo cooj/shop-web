@@ -49,7 +49,7 @@ declare interface InterListApi_getUserList {
   is_paging: number //是否分页 1：分页，0：不分页
   page: number //分页页码，数字类型
   page_size: number //每页数量
-  user_id: number
+  // user_id: number
   type?: 1 | 2 //问答列表
 }
 

@@ -84,7 +84,7 @@ const onRemove = async (row: any) => {
         if (user.value) {
             const data: RecordApi_Del = {
                 type: 2,
-                user_id: user.value.user_id,
+                // user_id: user.value.user_id,
                 goods_ids: row.goods_id,
             }
 

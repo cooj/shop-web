@@ -14,7 +14,7 @@ declare interface UserAddressApi_GetListResponse {
   "address": string, //详细     "楼村75号"
   "is_default":  0 | 1, //是否默认 0不是  1是
   "is_bill_address":  0 | 1, //是否发票地址：0否，1是
-  "user_id": number //用户id
+  // "user_id": number //用户id
 }
 
 

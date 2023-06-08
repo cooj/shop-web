@@ -36,7 +36,6 @@
 <script setup lang="ts">
 import { InterListApi } from '~/api/user/interList'
 
-const userState = useUserState()
 const defData = reactive({
     page: 1,
     total: 10,
@@ -47,15 +46,10 @@ const defData = reactive({
 })
 
 const initTableData = async () => {
-    const user = await userState.getUserInfo()
-    if (user.value) {
-        defData.user_id = user.value.user_id
-    }
     const data: InterListApi_getUserList = {
         is_paging: 1,
         page: defData.page,
         page_size: defData.pageSize,
-        user_id: defData.user_id,
     }
     const { data: res } = await InterListApi.getUserList(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)

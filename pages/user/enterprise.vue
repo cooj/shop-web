@@ -192,7 +192,7 @@ const onSubmit = async () => {
         enterprise_address: form.enterprise_address,
         enterprise_remark: form.enterprise_remark,
         enterprise_file: form.enterprise_file,
-        user_id: Number(defData.user_id),
+        // user_id: Number(defData.user_id),
     }
     const { data: res } = await EnterpriseApi.attest(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
