@@ -73,10 +73,10 @@
                                     <div class="lt">
                                         优惠券
                                     </div>
-                                    <div class="gt con-list">
-                                        <div v-for="item in goodsInfo?.coupon_list" :key="item.coupon_id" class="con-pane">
+                                    <div class="gt">
+                                        <GoodsCoupon v-for="item in goodsInfo?.coupon_list" :key="item.coupon_id">
                                             {{ item.coupon_name }}立减{{ item.par_value }}元
-                                        </div>
+                                        </GoodsCoupon>
                                     </div>
                                 </li>
                                 <li class="items-center bg-#f8f8f8 -mt10px">
@@ -265,8 +265,8 @@
                                         </el-table>
                                         <div class="goods-pagination" mt15px>
                                             <el-pagination v-model:current-page="defData.page"
-                                                v-model:page-size="defData.pageSize" small
-                                                background layout=" prev, pager, next,total, jumper" :total="defData.total"
+                                                v-model:page-size="defData.pageSize" small background
+                                                layout=" prev, pager, next,total, jumper" :total="defData.total"
                                                 @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
                                         </div>
                                     </div>
@@ -900,49 +900,5 @@ definePageMeta({
     align-items: center;
     justify-content: center;
     font-size: 14px;
-}
-
-.con-list {
-    .con-pane {
-        position: relative;
-        overflow: hidden;
-        padding: 0 7px;
-        font-size: 12px;
-        line-height: 18px;
-        display: inline-block;
-        margin-right: 5px;
-        color: var(--el-color-primary);
-        border-top: 1px solid var(--el-color-primary);
-        border-bottom: 1px solid var(--el-color-primary);
-        transform: scale(0.95);
-
-        &::after,
-        &::before {
-            content: '';
-            --co-wavy-width: 3px;
-            width: 100%;
-            height: var(--co-wavy-width);
-            background: linear-gradient(135deg, transparent, transparent 45%, var(--el-color-primary), transparent 55%),
-                linear-gradient(45deg, transparent, transparent 45%, var(--el-color-primary), transparent 55%);
-            background-size: calc(var(--co-wavy-width) * 2) calc(var(--co-wavy-width) * 2);
-            background-repeat: repeat-x, repeat-x;
-            transform: rotateZ(90deg);
-            transform-origin: left;
-        }
-
-        &::before {
-            position: absolute;
-            top: -4px;
-            left: 2px;
-        }
-
-        &::after {
-            position: absolute;
-            bottom: -1px;
-            right: 2px;
-            transform-origin: right;
-        }
-    }
-
 }
 </style>
