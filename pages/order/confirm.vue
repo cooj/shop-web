@@ -100,12 +100,10 @@
                             <el-table :data="form.tableData">
                                 <el-table-column prop="goods_name" label="商品名称" min-width="180">
                                     <template #default="{ row }">
-                                        <div class="h50px flex">
-                                            <div class="goods_img">
-                                                <CoImage class="h50px w50px" :src="row.goods_img" />
-                                            </div>
+                                        <div class="flex">
+                                            <CoImage class="h50px w50px" :src="row.goods_img" />
                                             <div class="pl10px">
-                                                <NuxtLink class="goods_link">
+                                                <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                                     {{ row.goods_name }}
                                                 </NuxtLink>
                                             </div>
@@ -146,7 +144,10 @@
                                     </el-radio-group>
                                 </el-form-item>
                             </div>
-                            <div class="inline-flex items-center">
+                            <div class="text-12px c-#888 -mt5px">
+                                支持微信、支付宝在线支付
+                            </div>
+                            <!-- <div class="inline-flex items-center">
                                 <span class="inline-flex items-center">
                                     支持
                                     <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
@@ -160,7 +161,7 @@
                                     <i class="i-ic-twotone-payments mr3px c-#ff5335" />
                                     线下转账
                                 </span>
-                            </div>
+                            </div> -->
                         </section>
                         <section class="sec-box">
                             <div class="flex-1">
@@ -219,15 +220,14 @@
                 <span class="item-title">税额：</span><span class="item-text">￥30.68</span>
               </li> -->
                                 <li>
-                                    <span class="item-title freight-item-wrap">运费<i
-                                        class="freight-detail-txt">(明细)</i>：</span>
+                                    <span class="item-title">运费<i>(明细)</i>：</span>
                                     <span class="item-text">￥{{ formatNumber(defData.freight_price) }}</span>
                                 </li>
                                 <li>
                                     <span class="item-title">运费减免：</span><span class="item-text">-￥0.00</span>
                                 </li>
                                 <li>
-                                    <span class="item-title">优惠券：</span><span class="item-text">-￥10.00</span>
+                                    <span class="item-title">优惠券：</span><span class="item-text">-￥0.00</span>
                                 </li>
                             </ul>
                         </section>
@@ -476,6 +476,12 @@ definePageMeta({
         }
     }
 
+    :deep(.el-table) {
+        .cell {
+            font-size: 13px;
+        }
+    }
+
 }
 
 .address-radio {
@@ -508,6 +514,14 @@ definePageMeta({
     .item-text {
         display: inline-block;
         min-width: 90px;
+        color: var(--el-color-primary);
+    }
+}
+
+.goods-link {
+    font-size: 14px;
+
+    &:hover {
         color: var(--el-color-primary);
     }
 }

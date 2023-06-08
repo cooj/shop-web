@@ -27,18 +27,21 @@
                         <el-option v-for="(item, index) in defData.stateList" :key="index" :label="item" :value="index" />
                     </el-select>
                 </template>
+                <template #time="{ row }">
+                    <CoDatePicker v-model="row.time" />
+                </template>
             </CoTableTool>
             <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
                 :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
                 scrollbar-always-on border @update:page="onHandleCurrentChange">
                 <template #main_order_no="{ scopes }">
                     <div v-if="scopes.row.index">
-                        订单编号：{{ scopes.row.main_order_no }}
-                        下单时间：{{ scopes.row.cerate_time }}
+                        订单编号：<span class="mr5px c-#000">{{ scopes.row.main_order_no }}</span>
+                        下单时间：<span>{{ scopes.row.cerate_time }}</span>
                     </div>
                     <ul v-else class="goods-list">
                         <li v-for="item in scopes.row.goods_info" :key="item.goods_id">
-                            <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
+                            <CoImage class="h50px w50px" :src="item.goods_img" style="--co-image-error-size:24px;" />
                             <div class="text">
                                 <h3 class="tle">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
@@ -59,9 +62,21 @@
                         <!-- <p>总金额：{{ scopes.row.total_price }}</p>
           <p>优惠金额：{{ scopes.row.coupon_price }}</p>
           <p>实付金额(含运费)：¥{{ scopes.row.meet_price }}</p> -->
-                        ￥{{ scopes.row.meet_price }}
+                        <span class="c-#000">￥{{ scopes.row.meet_price }}</span>
                         <br>
                         <span class="text-12px c-#888">(含运费：0.00)</span>
+                        <br>
+                        <p class="b-t-1 text-12px">
+                            <span v-if="scopes.row.pay_type === 1">
+                                支付宝支付
+                            </span>
+                            <span v-else-if="scopes.row.pay_type === 2">
+                                微信支付
+                            </span>
+                            <span v-if="scopes.row.pay_type === 3">
+                                线下支付
+                            </span>
+                        </p>
                     </div>
                 </template>
                 <template #consignee_name="{ scopes }">
@@ -81,7 +96,7 @@
                     <div v-else class="cur-button">
                         <el-button :type="setTagType(scopes.row.order_status).type"
                             :color="setTagType(scopes.row.order_status).color" size="small" plain
-                            class="pointer-events-none">
+                            class="pointer-events-none op-60">
                             {{ setTagType(scopes.row.order_status).text }}
                         </el-button>
                         <div class="mt3px">
@@ -132,6 +147,7 @@ interface FormSearchData {
     pay_type: '' | number
     consignee_name: ''
     status: ''
+    time: ['', '']
 }
 
 const searchData = reactive<BaseFormToolType<FormSearchData>>({
@@ -140,12 +156,15 @@ const searchData = reactive<BaseFormToolType<FormSearchData>>({
         pay_type: '',
         consignee_name: '',
         status: '',
+        time: ['', ''],
     },
     config: [
         { itemProp: { label: '订单编号', prop: 'order_no' }, placeholder: '请输入订单编号', width: '180' },
         { itemProp: { label: '收件人', prop: 'consignee_name' }, placeholder: '请输入收件人名称', width: '160' },
         { itemProp: { label: '支付类型', prop: 'pay_type' }, slot: true, placeholder: '', width: '120' },
         { itemProp: { label: '状态', prop: 'status' }, slot: true, placeholder: '', width: '130' },
+        { itemProp: { label: '下单时间', prop: 'time' }, slot: true, placeholder: '', width: '360' },
+
     ],
     hideBtn: false,
     // showAll: true,
@@ -183,10 +202,16 @@ const initTableData = async () => {
         start_time: '',
         end_time: '',
     }
+
+    if (searchData.data.time?.[0]) {
+        params.start_time = searchData.data.time[0] ?? ''
+        params.end_time = searchData.data.time[1] ?? ''
+    }
+
     const loading = useElLoading()
 
     const { data: res } = await OrderApi.getOrderList(params)
-    await wait(500)
+    await wait(300)
     defData.skeleton = false
     loading?.close()
 
@@ -203,6 +228,7 @@ const initTableData = async () => {
             }
             list.push(...[obj, obj2])
         })
+        console.log('list :>> ', list)
         tableData.data = list
         tableData.pagination.total = res.value.data.total// 总条数 记录数大于10条记录不
     }

@@ -99,7 +99,7 @@ const onCancel = async () => {
 
         if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
-        ElMessage.error('操作成功')
+        ElMessage.success('操作成功')
         emits('update', 7) // 取消订单状态为已取消中间状态
     }).catch(() => {
         // ElMessage({
@@ -116,7 +116,7 @@ const onConfirm = async () => {
     const { data } = await OrderApi.confirmOrder({ main_order_no: props.data.order_no })
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
-    ElMessage.error('操作成功')
+    ElMessage.success('操作成功')
 }
 
 /**
@@ -146,7 +146,7 @@ const onDel = () => {
 
         if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
-        ElMessage.error('操作成功')
+        ElMessage.success('操作成功')
         emits('update', 7) // 取消订单状态为已取消中间状态
     }).catch(() => {
         // ElMessage({
