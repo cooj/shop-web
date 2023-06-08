@@ -11,13 +11,15 @@
                     <div style="font-size: xx-large;margin: 40px;text-align: center;">
                         欢迎您注册工游记
                     </div>
-                    <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px" size="large">
+                    <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px"
+                        size="large">
                         <el-form-item prop="phone" label="手机号码：">
                             <el-input v-model="form.phone" placeholder="请输入手机号" />
                         </el-form-item>
                         <el-form-item prop="validate_code" label="验证码：">
                             <el-col :span="15">
-                                <el-input v-model.trim="form.validate_code" type="text" placeholder="请输入短信验证码" clearable tabindex="3" />
+                                <el-input v-model.trim="form.validate_code" type="text" placeholder="请输入短信验证码" clearable
+                                    tabindex="3" />
                             </el-col>
                             <el-col :span="1" />
                             <el-col :span="8">
@@ -35,17 +37,30 @@
                             </el-button>
                         </el-form-item>
                         <el-form-item>
-                            <el-radio-group v-model="form.radio">
-                                <el-radio :label="3">
-                                    我已阅读并同意《工游记网站服务协议》《工游记隐私政策》
-                                </el-radio>
-                            </el-radio-group>
+                            <el-checkbox v-model="form.agree" label="我已阅读并同意" />
+                            <el-button type="text" style="padding-left:0px" @click="openWeb">
+                                《工游记网站服务协议》
+                            </el-button>
+                            <el-button type="text" style="padding-left:110px" @click="openPolicy">
+                                《工游记隐私政策》
+                            </el-button>
                         </el-form-item>
                     </el-form>
                 </div>
             </div>
         </div>
     </div>
+    <client-only>
+        <el-dialog v-model="defData.visible" auto-height width="680px" :draggable="true" :title="comData.title"
+            @close="onClose">
+            <div v-if="defData.type === 1">
+                <p v-html="defData.agreement" />
+            </div>
+            <div v-else>
+                <p v-html="defData.policy" />
+            </div>
+        </el-dialog>
+    </client-only>
 </template>
 
 <script setup lang="ts">
@@ -58,19 +73,34 @@ definePageMeta({
     layout: 'login',
 })
 
+// 获取商城信息
+const useSystem = useSystemState()
+const infoData = async () => {
+    const systemInfo = await useSystem.getSystemInfo()
+    defData.policy = systemInfo.value.policy
+    defData.agreement = systemInfo.value.agreement
+}
+infoData()
+
 const defData = reactive({
     time: 0, // 验证码倒计时时间
     sendCode: true, // true：发送验证码 false:倒计时
+    type: 1, // 1：工游记网站服务协议，2：工游记隐私政策
+    agreement: '', // 工游记网站服务协议
+    policy: '', // 工游记隐私政策
 })
 
-// const list = [{ id: 1, name: 'aa' }, { id: 2, name: 'aaa' }]
-// const newList = list.map((item) => {
-//   const arr = queryClass(item.id)
-//   return {
-//     ...item,
-//     children: arr,
-//   }
-// })
+const comData = computed(() => {
+    let dat = {
+        title: '工游记网站服务协议',
+    }
+    if (defData.type === 2) {
+        dat = {
+            title: '工游记隐私政策',
+        }
+    }
+    return dat
+})
 
 const formRef = ref<FormInstance>()
 
@@ -78,7 +108,7 @@ const form = reactive({
     validate_code: '',
     password: '',
     phone: '',
-    radio: 3,
+    agree: false,
     // loading: true,
 })
 
@@ -91,6 +121,20 @@ const rules = reactive<FormRules>({
     ],
 })
 
+// 打开网站服务协议
+const openWeb = async () => {
+    defData.type = 1
+    defData.visible = true
+}
+// 打开网站服务协议
+const openPolicy = async () => {
+    defData.type = 2
+    defData.visible = true
+}
+// 关闭弹窗
+const onClose = () => {
+    defData.visible = false
+}
 // 获取短信验证码
 const getCodeClick = async () => {
     if (!form.phone) ElMessage.error('请先输入手机号码')
@@ -117,6 +161,7 @@ const getCodeClick = async () => {
 const onClick = async () => {
     const isRun = await formRef.value?.validate((valid, _fields) => !!valid)
     if (!isRun) return
+    if (form.agree === false) return ElMessage.error('请阅读并同意《工游记网站服务协议》《工游记隐私政策》')
     const data: LoginApi_Login = {
         type: 3,
         phone: form.phone,
