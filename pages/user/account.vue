@@ -159,7 +159,6 @@ const rules = reactive<FormRules>({
 
 // 获取用户信息
 const initData = async () => {
-    console.log(user.value)
     if (user.value) {
         defData.user_name = user.value.user_name
         defData.email = user.value.email

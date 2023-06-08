@@ -53,43 +53,34 @@ import { ElTable } from 'element-plus'
 import { RecordApi } from '~/api/user/record'
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
-const userState = useUserState()
 
 const defData = reactive({
     tableData: [] as RecordApi_GetListResponse[],
 })
 
 const initTableData = async () => {
-    const user = await userState.getUserInfo()
-    if (user.value) {
-        const data: RecordApi_GetList = {
-            user_id: user.value.user_id,
-            type: 1,
-        }
-        const res = await RecordApi.getList(data)
-        if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-        defData.tableData = res.data.value?.data
+    const data: RecordApi_GetList = {
+        type: 1,
     }
+    const res = await RecordApi.getList(data)
+    if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
+    defData.tableData = res.data.value?.data
 }
 initTableData()
 
 const onRemove = async (row: any) => {
-    const user = await userState.getUserInfo()
-    if (user.value) {
-        const data: RecordApi_Del = {
-            type: 1,
-            user_id: user.value.user_id,
-            goods_ids: row.goods_id,
-        }
-
-        const res = await RecordApi.del(data)
-        if (res.data.value?.code !== 200) {
-            ElMessage.error(res.data.value?.msg)
-            return false
-        }
-        ElMessage.success('删除成功')
-        initTableData() // 重新加载列表
+    const data: RecordApi_Del = {
+        type: 1,
+        goods_ids: row.goods_id,
     }
+
+    const res = await RecordApi.del(data)
+    if (res.data.value?.code !== 200) {
+        ElMessage.error(res.data.value?.msg)
+        return false
+    }
+    ElMessage.success('删除成功')
+    initTableData() // 重新加载列表
 }
 
 definePageMeta({
