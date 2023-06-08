@@ -69,6 +69,16 @@
                                         <span class="text-12px c-#666">会员价</span>
                                     </div>
                                 </li>
+                                <li v-if="goodsInfo?.coupon_list.length" class="bg-#f8f8f8">
+                                    <div class="lt">
+                                        优惠券
+                                    </div>
+                                    <div class="gt">
+                                        <GoodsCoupon v-for="item in goodsInfo?.coupon_list" :key="item.coupon_id">
+                                            {{ item.coupon_name }}立减{{ item.par_value }}元
+                                        </GoodsCoupon>
+                                    </div>
+                                </li>
                                 <li class="items-center bg-#f8f8f8 -mt10px">
                                     <div class="lt" />
                                     <div class="gt my5px">
@@ -255,8 +265,8 @@
                                         </el-table>
                                         <div class="goods-pagination" mt15px>
                                             <el-pagination v-model:current-page="defData.page"
-                                                v-model:page-size="defData.pageSize" small
-                                                background layout=" prev, pager, next,total, jumper" :total="defData.total"
+                                                v-model:page-size="defData.pageSize" small background
+                                                layout=" prev, pager, next,total, jumper" :total="defData.total"
                                                 @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
                                         </div>
                                     </div>
@@ -377,7 +387,7 @@ const initGoodsData = async () => {
     if (data.value?.code === 200) {
         const dat = data.value.data
         const infoData = dat.goods_info
-
+        console.log(infoData)
         // if (goods.goods_id === id) {
         if (infoData) {
             goodsData.value = dat
@@ -393,14 +403,14 @@ const initGoodsData = async () => {
             goodsImgList.value = imgArr
 
             // TODO 商品seo字段缺少
-            // // 设置seo
-            // const meta = []
-            // if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
-            // if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
-            // useHead({
-            //     title: infoData.web_title || infoData.goods_name,
-            //     meta,
-            // })
+            // 设置seo
+            const meta = []
+            if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
+            if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
+            useHead({
+                title: infoData.web_title || infoData.goods_name,
+                meta,
+            })
             defData.skeleton = false // 关闭骨架屏
         } else {
             ElMessage.error('未获取到商品信息,请检查地址是否正确')
