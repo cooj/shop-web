@@ -69,12 +69,12 @@
                                         <span class="text-12px c-#666">会员价</span>
                                     </div>
                                 </li>
-                                <li v-if="goodsInfo?.coupon_list.length" class="bg-#f8f8f8">
+                                <li v-if="goodsInfo?.coupon_list?.length" class="bg-#f8f8f8">
                                     <div class="lt">
                                         优惠券
                                     </div>
                                     <div class="gt">
-                                        <GoodsCoupon v-for="item in goodsInfo?.coupon_list" :key="item.coupon_id">
+                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
                                             {{ item.coupon_name }}立减{{ item.par_value }}元
                                         </GoodsCoupon>
                                     </div>
