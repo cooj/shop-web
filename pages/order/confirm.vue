@@ -66,31 +66,29 @@
                                         否
                                     </el-radio>
                                 </el-radio-group>
-                                <el-radio-group v-if="form.is_invoice" v-model="form.billType">
-                                    <el-radio :label="1" border>
-                                        普通发票
-                                    </el-radio>
-                                    <el-radio :label="2" border>
-                                        增值税发票
-                                    </el-radio>
-                                </el-radio-group>
                             </el-form-item>
-
-                            <el-form-item v-if="form.is_invoice" prop="bill_address_id" label="收票地址">
-                                <el-radio-group v-if="defData.billAddressList.length" v-model="form.bill_address_id"
-                                    class="address-radio">
-                                    <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
-                                        :label="item.address_id">
-                                        <span>{{ setAddressText(item) }}</span>
-                                        <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
-                                        <span class="mx5px">{{ item.phone }}</span>
-                                        <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
-                                    </el-radio>
+                            <el-form-item v-if="form.is_invoice" prop="is_invoice" label="" label-width="auto">
+                                <el-radio-group v-model="form.invoice_id" class="address-radio">
+                                    <el-tabs v-model="form.billType" tab-position="left" class="radio-tabs">
+                                        <el-tab-pane label="增值税发票" :name="1">
+                                            <!-- <el-radio :label="1" border>
+                                                普通发票
+                                            </el-radio> -->
+                                            <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
+                                                :label="item.address_id">
+                                                <span>{{ setAddressText(item) }}</span>
+                                                <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                                                <span class="mx5px">{{ item.phone }}</span>
+                                                <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                            </el-radio>
+                                        </el-tab-pane>
+                                        <el-tab-pane label="普通发票">
+                                            <el-radio :label="2" border>
+                                                增值税发票
+                                            </el-radio>
+                                        </el-tab-pane>
+                                    </el-tabs>
                                 </el-radio-group>
-                                <div v-else class="w100% text-center text-13px c-#666">
-                                    暂无收货地址,请点击
-                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(2)">新增地址</span>
-                                </div>
                             </el-form-item>
                         </section>
                         <section class="sec-box">
@@ -181,8 +179,11 @@
                                 </el-radio-group>
                                 <span v-else class="text-12px c-#888">暂无可用优惠券</span>
                             </el-form-item>
-                            <el-form-item prop="is_peas" label="工游豆">
-                                <span class="mr10px c-#666">是否使用工游豆</span>
+                            <el-form-item prop="is_peas" label="是否使用工游豆" label-width="auto">
+                                <!-- <template #label>
+                                    是否使用工游豆
+                                </template> -->
+                                <!-- <span class="mr10px c-#666">是否使用工游豆</span> -->
                                 <el-radio-group v-model="form.is_peas" class="mr15px">
                                     <el-radio :label="1">
                                         是
@@ -194,6 +195,10 @@
                                 <span v-if="peasNumber.max === 0" class="text-12px c-#999">工游豆可用数量为0</span>
                                 <el-input-number v-if="form.is_peas && peasNumber.max" v-model="form.peas_number"
                                     :precision="0" :min="peasNumber.min" :max="peasNumber.max" />
+                                <p class="ml10px text-12px c-#999">
+                                    本单可用工游豆数量：<span class="mr10px c-#000">{{ defData.total_peas }}</span>
+                                    我的工游豆：<span class="c-#000">{{ defData.user_peas }}</span>
+                                </p>
                             </el-form-item>
                         </section>
                         <section class="sec-box flex mb0!">
@@ -254,6 +259,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
 import { UserAddressApi } from '~/api/user/address'
 import { UserAddressModel, UserInvoiceModel } from '#components'
+import { UserInvoiceApi } from '~/api/user/invoice'
 
 const modelRef = ref<InstanceType<typeof UserAddressModel>>()
 const InvoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
@@ -266,6 +272,9 @@ const defData = reactive({
     addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     billAddressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     ready: true, // 页面正确
+
+    invoiceList1: [] as UserInvoiceApi_getList[], // 增值税单发票列表
+    invoiceList2: [] as UserInvoiceApi_getList[], // 普通发票列表
 
     couponList: [] as OrderApi_GetSettleResponse['coupon_list'], // 优惠券列表
     count_number: 0, // 商品总数量
@@ -283,6 +292,7 @@ const form = reactive({
     bill_address_id: '' as '' | number, // 发票地址
 
     is_invoice: 1, // 是否开发票 1：是 0：否 （默认1）
+    invoice_id: '' as '' | number, // 发票id
 
     coupon_id: '' as '' | number, // 使用的优惠券编号或编号列表（可选）
     is_peas: 1, // 是否使用工游豆 1：是 0：否 (默认为1)
@@ -329,11 +339,12 @@ const initDefaultData = async () => {
     }
 
     // 获取结算商品信息、用户地址
-    const [res1, res2] = await Promise.all([
+    const [res1, res2, res3] = await Promise.all([
         type === 1
             ? OrderApi.getSettleCart({ cart_id: cart_id.value })
             : (type === 2 ? OrderApi.getSettleGoods({ goods_id: Number(goods_id.value), goods_number: num }) : undefined),
         UserAddressApi.getList(),
+        UserInvoiceApi.getList(),
     ])
 
     await wait(800)
@@ -365,6 +376,12 @@ const initDefaultData = async () => {
         const data = res2.data.value?.data
         defData.addressList = data
         defData.billAddressList = data
+    }
+
+    if (res3 && res3.data.value?.code === 200) {
+        const data = res3.data.value?.data
+        defData.invoiceList1 = data.filter(item => item.type === 1)
+        defData.invoiceList2 = data.filter(item => item.type === 2)
     }
 }
 
@@ -508,6 +525,13 @@ definePageMeta({
             font-weight: bold;
             border-color: var(--el-color-danger-light-7);
         }
+    }
+}
+.radio-tabs{
+    --el-tabs-header-height: 28px;
+    display: flex;
+    :deep(.el-tabs__header.is-left){
+        height: auto;
     }
 }
 
