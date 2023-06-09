@@ -1,5 +1,10 @@
 <template>
     <div class="order-operate">
+        <div v-if="!props.data.bill_status && orderStatus !== 7" class="item-ope">
+            <el-button type="" :link="props.link" :size="props.size" class="mb3px" @click="onInvoice()">
+                申请发票
+            </el-button>
+        </div>
         <div v-if="orderStatus === 1" class="item-ope">
             <el-button type="warning" :link="props.link" :size="props.size" class="mb3px" @click="onPayOrder()">
                 去付款
@@ -154,6 +159,13 @@ const onDel = () => {
         //     message: 'Delete canceled',
         // })
     })
+}
+
+/**
+ * 申请发票
+ */
+const onInvoice = () => {
+    ElMessage.warning('申请发票')
 }
 </script>
 

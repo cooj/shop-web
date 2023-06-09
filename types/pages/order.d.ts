@@ -397,6 +397,7 @@ declare interface OrderOperatePropsData {
     order_no: string; //订单号
     status: number; // 订单状态
     is_return: 0 | 1   // 是否已退货过
+    bill_status:0|1,    // 是否开票
 }
 
 

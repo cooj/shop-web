@@ -110,7 +110,7 @@
                 <template #operate="{ scopes }">
                     <template v-if="!scopes.row.index">
                         <OrderOperate size="small" link
-                            :data="{ order_no: scopes.row.main_order_no, status: scopes.row.order_status, is_return: scopes.row.is_refund }"
+                            :data="{ order_no: scopes.row.main_order_no, status: scopes.row.order_status, bill_status: scopes.row.bill_status, is_return: scopes.row.is_refund }"
                             @update="setTableList" />
                     </template>
                 </template>
