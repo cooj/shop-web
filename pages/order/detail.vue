@@ -36,7 +36,7 @@
                 </div>
                 <div class="gt">
                     <OrderOperate class="order-ope"
-                        :data="{ order_no, status: orderInfo!.order_status, is_return: orderInfo!.is_refund }"
+                        :data="{ order_no, status: orderInfo!.order_status, bill_status: orderInfo!.bill_status, is_return: orderInfo!.is_refund }"
                         @update="updateOrder" />
                 </div>
             </div>

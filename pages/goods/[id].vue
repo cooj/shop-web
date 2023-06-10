@@ -157,10 +157,10 @@
                                             <i class="i-ri-alipay-fill mr3px c-#3887ff" />
                                             支付宝
                                         </el-button>
-                                        <!-- <el-button text bg size="small" class="cursor-default!">
+                                        <el-button text bg size="small" class="cursor-default!">
                                             <i class="i-ic-twotone-payments mr3px c-#ff5335" />
                                             线下转账
-                                        </el-button> -->
+                                        </el-button>
                                     </div>
                                 </li>
                                 <li class="items-center">

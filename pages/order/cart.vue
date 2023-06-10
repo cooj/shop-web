@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElTable } from 'element-plus'
+import type { TableInstance } from 'element-plus'
 import Big from 'big.js'
 import { GoodsApi } from '~/api/goods/list'
 
@@ -76,7 +76,7 @@ type GoodsTableCartItem = GoodsApi_GetCartListResponse['goods_list'][0]
 
 const useCartNumber = useCartNumberState()
 
-const tableRef = ref<InstanceType<typeof ElTable>>()
+const tableRef = ref<TableInstance>()
 
 const defData = reactive({
     url: '',

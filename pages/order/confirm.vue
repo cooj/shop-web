@@ -5,31 +5,23 @@
             <el-skeleton :loading="defData.skeleton" animated>
                 <template #template>
                     <div class="pb10px pt15px">
-                        <el-skeleton-item style="width: 30%" />
+                        <el-skeleton-item class="w30%!" />
                     </div>
                     <div class="mb20px min-h500px bg-#fff p15px">
                         <el-skeleton :rows="5" />
                     </div>
                 </template>
-
                 <template v-if="defData.ready">
                     <el-breadcrumb class="py15px">
-                        <el-breadcrumb-item :to="{ path: '/' }">
-                            首页
-                        </el-breadcrumb-item>
-                        <!-- <el-breadcrumb-item :to="{ path: '/order/cart' }">
-          购物车
-        </el-breadcrumb-item> -->
-                        <el-breadcrumb-item>
-                            订单结算
+                        <el-breadcrumb-item v-for="item in breadcrumbData" :key="item.id" :to="item.href">
+                            {{ item.text }}
                         </el-breadcrumb-item>
                     </el-breadcrumb>
-
                     <el-form ref="formRef" :model="form" :rules="rules" label-width="100" label-position="left">
                         <section class="sec-box">
                             <div class="tle">
                                 <b>收货地址</b>
-                                <el-button text bg size="small" @click="onAddress(1)">
+                                <el-button text bg size="small" @click="onAddressInvoice(1)">
                                     新增地址
                                 </el-button>
                             </div>
@@ -46,14 +38,14 @@
                                 </el-radio-group>
                                 <div v-else class="w100% text-center text-13px c-#666">
                                     暂无收货地址,请点击
-                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(1)">新增地址</span>
+                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddressInvoice(1)">新增地址</span>
                                 </div>
                             </el-form-item>
                         </section>
                         <section class="sec-box">
                             <div class="tle">
                                 <b>发票信息</b>
-                                <el-button text bg size="small" @click="onAddress(2)">
+                                <el-button text bg size="small" @click="onAddressInvoice(2)">
                                     新增发票
                                 </el-button>
                             </div>
@@ -98,8 +90,8 @@
                             <el-table :data="form.tableData">
                                 <el-table-column prop="goods_name" label="商品名称" min-width="180">
                                     <template #default="{ row }">
-                                        <div class="flex">
-                                            <CoImage class="h50px w50px" :src="row.goods_img" />
+                                        <div class="flex items-center">
+                                            <CoImage class="h50px w50px" :src="row.goods_img" :icon-size="20" />
                                             <div class="pl10px">
                                                 <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                                     {{ row.goods_name }}
@@ -117,13 +109,6 @@
                                         <!-- <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100" /> -->
                                     </template>
                                 </el-table-column>
-                                <!-- <el-table-column prop="operate" label="操作" width="100" align="center">
-                <template #default="{ row }">
-                  <el-button type="primary" link @click="onRemove(row)">
-                    删除
-                  </el-button>
-                </template>
-              </el-table-column> -->
                             </el-table>
                         </section>
                         <section class="sec-box">
@@ -192,7 +177,6 @@
                                         否
                                     </el-radio>
                                 </el-radio-group>
-                                <span v-if="peasNumber.max === 0" class="text-12px c-#999">工游豆可用数量为0</span>
                                 <el-input-number v-if="form.is_peas && peasNumber.max" v-model="form.peas_number"
                                     :precision="0" :min="peasNumber.min" :max="peasNumber.max" />
                                 <p class="ml10px text-12px c-#999">
@@ -213,9 +197,6 @@
                                     <span class="item-title">商品总件数：</span><span class="item-text">{{ defData.count_number
                                     }}件</span>
                                 </li>
-                                <!-- <li>
-                <span class="item-title">含危险品：</span><span class="item-text">0件</span>
-              </li> -->
                                 <li>
                                     <span class="item-title">商品总金额：</span><span class="item-text">￥{{
                                         formatNumber(defData.total_price)
@@ -250,7 +231,7 @@
             </el-skeleton>
         </div>
         <UserAddressModel ref="modelRef" @update="getAddress" />
-        <UserInvoiceModel ref="InvoiceRef" @update="getAddress" />
+        <UserInvoiceModel ref="invoiceRef" @update="getInvoice" />
     </section>
 </template>
 
@@ -261,9 +242,11 @@ import { UserAddressApi } from '~/api/user/address'
 import { UserAddressModel, UserInvoiceModel } from '#components'
 import { UserInvoiceApi } from '~/api/user/invoice'
 
-const modelRef = ref<InstanceType<typeof UserAddressModel>>()
-const InvoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
+const router = useRouter()
+const backRoute = ref(router.options.history.state.back as string)
 
+const modelRef = ref<InstanceType<typeof UserAddressModel>>()
+const invoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
 const formRef = ref<FormInstance>()
 
 const defData = reactive({
@@ -272,6 +255,8 @@ const defData = reactive({
     addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     billAddressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     ready: true, // 页面正确
+
+    invoiceList: [] as UserInvoiceApi_getList[], // 所有发票列表
 
     invoiceList1: [] as UserInvoiceApi_getList[], // 增值税单发票列表
     invoiceList2: [] as UserInvoiceApi_getList[], // 普通发票列表
@@ -301,13 +286,23 @@ const form = reactive({
 })
 
 const rules = reactive<FormRules>({
-    name: [
-        { required: true, message: 'Please input Activity name', trigger: 'blur' },
-        { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
-    ],
     address_id: [{ required: true, message: '请设置收货地址', trigger: 'change' }],
     bill_address_id: [{ required: true, message: '请设置发票收货地址', trigger: 'change' }],
+    invoice_id: [{ required: true, message: '请选择发票', trigger: 'change' }],
+})
 
+// 面包屑导航
+const breadcrumbData = computed(() => {
+    const _list = [
+        { text: '首页', href: '/', id: 1 },
+        { text: '购物车', href: '/order/cart', id: 2 },
+        { text: '订单结算', href: '', id: 3 },
+    ]
+    // 不是从购物车进入时，删除进入购物车那项
+    if (!backRoute.value?.includes('/order/cart')) {
+        _list.splice(1, 1)
+    }
+    return _list
 })
 
 // 工游豆可用最大最小数量
@@ -352,10 +347,10 @@ const initDefaultData = async () => {
 
     if (res1 && res1.data.value?.code === 200) {
         const data = res1.data.value?.data
+        console.log('data :>> ', data)
         // 未获取到商品时
         if (data.goods_list.length === 0) {
             defData.ready = false
-
             return
         }
 
@@ -380,6 +375,7 @@ const initDefaultData = async () => {
 
     if (res3 && res3.data.value?.code === 200) {
         const data = res3.data.value?.data
+        defData.invoiceList = data
         defData.invoiceList1 = data.filter(item => item.type === 1)
         defData.invoiceList2 = data.filter(item => item.type === 2)
     }
@@ -390,15 +386,15 @@ const setAddressText = (row: UserAddressApi_GetListResponse) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
 /**
- * 新增地址
- * @param type 1：收货地址 2：发票地址
+ * 新增地址、新增发票
+ * @param type 1：收货地址 2：发票
  */
-const onAddress = (type: 1 | 2) => {
+const onAddressInvoice = (type: 1 | 2) => {
     defData.type = type
     if (type === 1) {
         modelRef.value?.onOpenDialog()
     } else {
-        InvoiceRef.value?.onOpenDialog()
+        invoiceRef.value?.onOpenDialog()
     }
 }
 // 获取地址
@@ -421,6 +417,13 @@ const getAddress = (params: UserAddressApi_Edit) => {
         defData.addressList.push(data)
     }
     console.log('defData.addressList :>> ', defData.addressList)
+}
+
+/**
+ * 获取新增的发票数据
+ */
+const getInvoice = (params: any) => {
+    console.log('params :>> ', params)
 }
 
 // 提交订单
@@ -455,6 +458,11 @@ const onSubmit = async () => {
         bank_account: '',
         zip_code: '',
         address: '',
+    }
+
+    // 进行开票
+    if (params.bill_status) {
+        //
     }
 
     console.log('params :>> ', params)
@@ -527,10 +535,12 @@ definePageMeta({
         }
     }
 }
-.radio-tabs{
+
+.radio-tabs {
     --el-tabs-header-height: 28px;
     display: flex;
-    :deep(.el-tabs__header.is-left){
+
+    :deep(.el-tabs__header.is-left) {
         height: auto;
     }
 }
