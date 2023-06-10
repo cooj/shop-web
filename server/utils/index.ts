@@ -2,11 +2,17 @@ import type { H3Event } from 'h3'
 import { getCookie, getHeaders, getMethod, getQuery, readBody } from 'h3'
 
 //
-export const useServerFetch = async <T = unknown>(event: H3Event, url: string) => {
+export const useServerFetch = async <T = unknown>(event: H3Event, url: string, param?: any) => {
     const runtimeConfig = useRuntimeConfig()
     const baseURL = runtimeConfig.public.apiBase || ''
     const method = getMethod(event)
-    const params = getQuery(event)
+    const defaultParams = getQuery(event)
+    const params = method === 'GET' && param ? { ...defaultParams, ...param } : defaultParams
+    let body = method === 'GET' ? undefined : await readBody(event)
+    console.log('body :>> ', body)
+    if (body && param) {
+        body = { ...body, ...param }
+    }
 
     const headers = getHeaders(event)
     // const authorization = headers.Authorization || getCookie(event, 'auth._token.local')
@@ -15,8 +21,8 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string) =
     //     headers.token = token
     // }
     console.log(baseURL)
-    const body = method === 'GET' ? undefined : await readBody(event)
-
+    console.log(params,
+        body)
     return $fetch<T>(url, {
         headers: {
             'Content-Type': headers['content-type'] as string,

@@ -156,9 +156,32 @@ declare interface OrderApi_GetInfoResponse {
         "time": "2023-05-26 15:14:43",
         "selected": 1
     }[],
-    end_time?:number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
+    end_time?: number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
 
 }
+
+
+/**
+ * 获取线下转账信息 - 响应数据
+ */
+declare interface OrderApi_PayOrderResponse {
+    main_order_no: 'S20230610093801317546',
+    amount: '109.00',
+    end_time: 1687657081,
+    bank_info: {
+        name: '深圳工游记集团有限公司12465646123',
+        company_name: '深圳工游记集团有限公司12465646123',
+        bank_account: '4564641454785385761234',
+        bank_name: '深圳农商银行',
+        bank_cnaps: '4564641454785385761234',
+        notes: '55555',
+        duty: '4564641454785385761234',
+        phone: '15766875587',
+        address: '广东省深圳市光明去一片光明',
+    },
+    day_num: '15',
+}
+
 
 
 declare interface OrderApi_GetPayTypeResponse {
@@ -238,7 +261,7 @@ declare interface OrderApi_GetOrderListItem {
         "goods_img": ""
     }[]
     "order_status": number //订单状态 ：待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
-    end_time?:number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
+    end_time?: number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
 }
 
 
@@ -366,6 +389,20 @@ declare interface OrderReturnApi_InfoResponse {
 
 
 
+/**
+ * 获取订单详情信息
+ */
+
+interface OrderDetailInfoData {
+    info: OrderApi_GetInfoResponse,      // 订单信息
+    pay?: OrderApi_PayOrderResponse,          // 支付信息(线下支付)
+    code?:number,
+    msg?:string,
+}
+
+
+
+
 
 
 
@@ -399,7 +436,7 @@ declare interface OrderOperatePropsData {
     order_no: string; //订单号
     status: number; // 订单状态
     is_return: 0 | 1   // 是否已退货过
-    bill_status:0|1,    // 是否开票
+    bill_status: 0 | 1,    // 是否开票
 }
 
 
@@ -408,3 +445,8 @@ declare interface OrderReturnOpen {
     row?: OrderReturnApi_ReturnList['lists'][0],  // 退货记录信息
     order_no?: string, // 订单编号
 }
+
+
+
+
+
