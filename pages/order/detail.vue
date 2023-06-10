@@ -32,6 +32,8 @@
                     </span>
                     <p v-if="orderInfo?.order_status === 1" class="mt10px">
                         您的订单已提交成功，请尽快完成付款哦！
+                        <el-countdown title="" format="[剩余]DD[天]HH[时]mm[分]ss[秒]" :value="setEndTime()"
+                            value-style="font-size:13px;" @finish="onFinish()" />
                     </p>
                 </div>
                 <div class="gt">
@@ -209,14 +211,32 @@ const stepSelect = computed(() => {
 const initDefaultData = async () => {
     // if (defData.ready) return false
 
-    const { data } = await OrderApi.getInfo({ main_order_no: order_no.value })
+    const { data, error } = await OrderApi.getInfo({ main_order_no: order_no.value })
+
     await wait(100)
+    if (error.value) return
+    // console.log(data)
     defData.skeleton = false // 显示内容
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
     orderInfo.value = data.value.data
 
     // defData.ready = true
+}
+
+/**
+ * 设置倒计时结束的时间
+ */
+const setEndTime = () => {
+    if (!orderInfo.value?.end_time) return 0
+    return orderInfo.value.end_time * 1000
+}
+
+/**
+ * 倒计时结束事件（清除倒计时，订单设置为已取消）
+ */
+const onFinish = () => {
+    orderInfo.value!.order_status = 7
 }
 
 /**

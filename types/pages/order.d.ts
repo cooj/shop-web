@@ -155,7 +155,9 @@ declare interface OrderApi_GetInfoResponse {
         "text": "提交订单",
         "time": "2023-05-26 15:14:43",
         "selected": 1
-    }[]
+    }[],
+    end_time?:number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
+
 }
 
 
@@ -236,7 +238,7 @@ declare interface OrderApi_GetOrderListItem {
         "goods_img": ""
     }[]
     "order_status": number //订单状态 ：待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
-
+    end_time?:number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
 }
 
 

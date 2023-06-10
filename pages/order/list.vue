@@ -35,9 +35,16 @@
                 :data="tableData.data" :row-class-name="setRowClassName" :span-method="arraySpanMethod" auto-height
                 scrollbar-always-on border @update:page="onHandleCurrentChange">
                 <template #main_order_no="{ scopes }">
-                    <div v-if="scopes.row.index">
-                        订单编号：<span class="mr5px c-#000">{{ scopes.row.main_order_no }}</span>
-                        下单时间：<span>{{ scopes.row.cerate_time }}</span>
+                    <div v-if="scopes.row.index" class="flex justify-between">
+                        <div>
+                            订单编号：<span class="mr5px c-#000">{{ scopes.row.main_order_no }}</span>
+                            下单时间：<span>{{ scopes.row.cerate_time }}</span>
+                        </div>
+                        <div v-if="scopes.row.pay_type === 3 && scopes.row.order_status !== 7" class="flex items-center">
+                            <i class="i-ep-clock mr3px" />
+                            <el-countdown title="" format="[倒计时 剩余]DD[天]HH[时]mm[分]ss[秒]" :value="setEndTime(scopes.row)"
+                                value-style="font-size:13px;" @finish="onFinish(scopes.row)" />
+                        </div>
                     </div>
                     <ul v-else class="goods-list">
                         <li v-for="item in scopes.row.goods_info" :key="item.goods_id">
@@ -204,6 +211,7 @@ const initTableData = async () => {
     }
 
     if (searchData.data.time?.[0]) {
+        params.srte_time = searchData.data.time[0] ?? ''
         params.start_time = searchData.data.time[0] ?? ''
         params.end_time = searchData.data.time[1] ?? ''
     }
@@ -228,11 +236,9 @@ const initTableData = async () => {
             }
             list.push(...[obj, obj2])
         })
-        console.log('list :>> ', list)
         tableData.data = list
-        tableData.pagination.total = res.value.data.total// 总条数 记录数大于10条记录不
+        tableData.pagination.total = res.value.data.total // 总条数
     }
-    // console.log('res :>> ', res)
 }
 
 // table合并行
@@ -314,6 +320,27 @@ const setTagType = (row: number) => {
 
 const setAddressText = (row: OrderApi_GetOrderListItem) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
+}
+
+/**
+ * 设置倒计时结束的时间
+ */
+const setEndTime = (row: OrderApi_GetOrderListItem) => {
+    if (!row.end_time) return 0
+    // const endTime = row.end_time * 1000 // 结算时间时间戳
+    return row.end_time * 1000
+    // return Date.now() + 1000 * 10
+}
+
+/**
+ * 倒计时结束事件（清除倒计时，订单设置为已取消）
+ */
+const onFinish = (row: OrderApi_GetOrderListItem) => {
+    tableData.data.forEach((item) => {
+        if (item.main_order_no === row.main_order_no) {
+            item.order_status = 7
+        }
+    })
 }
 
 // 查看详情
