@@ -41,14 +41,14 @@
                             下单时间：<span>{{ scopes.row.cerate_time }}</span>
                         </div>
                         <div v-if="scopes.row.pay_type === 3 && scopes.row.order_status !== 7" class="flex items-center">
-                            <i class="i-ep-clock mr3px" />
+                            <i class="i-ep-clock mr3px mt2px" />
                             <el-countdown title="" format="[倒计时 剩余]DD[天]HH[时]mm[分]ss[秒]" :value="setEndTime(scopes.row)"
                                 value-style="font-size:13px;" @finish="onFinish(scopes.row)" />
                         </div>
                     </div>
                     <ul v-else class="goods-list">
                         <li v-for="item in scopes.row.goods_info" :key="item.goods_id">
-                            <CoImage class="h50px w50px" :src="item.goods_img" style="--co-image-error-size:24px;" />
+                            <CoImage class="h50px w50px" :src="item.goods_img" :icon-size="24" />
                             <div class="text">
                                 <h3 class="tle">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
@@ -69,10 +69,12 @@
                         <!-- <p>总金额：{{ scopes.row.total_price }}</p>
           <p>优惠金额：{{ scopes.row.coupon_price }}</p>
           <p>实付金额(含运费)：¥{{ scopes.row.meet_price }}</p> -->
-                        <span class="c-#000">￥{{ scopes.row.meet_price }}</span>
-                        <br>
-                        <span class="text-12px c-#888">(含运费：0.00)</span>
-                        <br>
+                        <p class="text-12px">
+                            优惠金额：-{{ setPreferMoney(scopes.row) }}
+                        </p>
+                        <p class="c-#000">
+                            实付金额: <span class="c-#f00">￥{{ scopes.row.meet_price }}</span>
+                        </p>
                         <p class="b-t-1 text-12px">
                             <span v-if="scopes.row.pay_type === 1">
                                 支付宝支付
@@ -80,8 +82,11 @@
                             <span v-else-if="scopes.row.pay_type === 2">
                                 微信支付
                             </span>
-                            <span v-if="scopes.row.pay_type === 3">
+                            <span v-else-if="scopes.row.pay_type === 3">
                                 线下支付
+                            </span>
+                            <span v-else>
+                                --
                             </span>
                         </p>
                     </div>
@@ -320,6 +325,12 @@ const setTagType = (row: number) => {
 
 const setAddressText = (row: OrderApi_GetOrderListItem) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
+}
+
+// 设置优惠金额
+const setPreferMoney = (row: OrderApi_GetOrderListItem) => {
+    const num = Number(row.total_price) - Number(row.meet_price)
+    return formatNumber(num > 0 ? num : 0) // 输出金额格式化的字符串
 }
 
 /**

@@ -177,7 +177,7 @@
                     <!-- 列表 -->
                     <dl v-if="defData.isList" class="goods-list-dl">
                         <dt class="goods-item-s">
-                            <div class="w500px px20px!">
+                            <div class="w450px px20px!">
                                 商品信息
                             </div>
                             <div class="w180px">
@@ -194,11 +194,10 @@
                             </div>
                         </dt>
                         <dd v-for=" item in defData.tableData" :key="item.goods_id" class="goods-item-s">
-                            <div class="g-info w500px">
+                            <div class="g-info w450px">
                                 <div class="g-info-left">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
-                                        <CoImage class="w80% pb80%" :src="item.goods_img"
-                                            style="--co-image-error-size:28px;" />
+                                        <CoImage class="w80% pb80%" :src="item.goods_img" :icon-size="28" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">
@@ -247,15 +246,15 @@
                                 </div>
                             </div>
                             <div class="flex-1 text-center">
-                                <el-button class="mb10px" type="primary" @click="onAddCart(item)">
+                                <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
+                                    <i :class="item.is_collect ? `i-carbon-favorite-filled` : 'i-carbon-favorite'" />
+                                </el-button>
+                                <el-button type="primary" @click="onAddCart(item)">
                                     <i class="i-carbon-shopping-cart" />
                                     <!-- <i class="i-ic-outline-shopping-cart"></i> -->
                                     加入购物车
                                 </el-button>
-                                <br>
-                                <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
-                                    <i :class="item.is_collect ? `i-carbon-favorite-filled` : 'i-carbon-favorite'" />
-                                </el-button>
+                                <!-- <br> -->
                                 <!-- <el-button v-if="item.goods_id % 2" class="focus">
                                     <i class="i-carbon-favorite-filled" />
                                     收藏
@@ -392,8 +391,6 @@ const initTableData = async () => {
         if (document) document.documentElement.scrollTop = 0
     }
 
-    const loading = useElLoading()
-
     const params: GoodsApi_GetList = {
         is_paging: 1,
         page: form.page,
@@ -430,7 +427,7 @@ const initTableData = async () => {
     if (form.is_stock) params.goods_number = 1
 
     // console.log('params :>> ', params)
-
+    const loading = useElLoading()
     const { data } = await GoodsApi.getList(params)
     loading?.close()
     const dat = data.value!.data
@@ -752,41 +749,6 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
             padding: 0 8px;
         }
 
-        .g-info {
-            display: flex;
-            --goods-info-img-width: 100px;
-
-            .g-info-left {
-                width: var(--goods-info-img-width);
-            }
-
-            .g-info-right {
-                width: calc(100% - var(--goods-info-img-width));
-                padding: 0 10px;
-
-                .name {
-                    height: 48px;
-                    margin-bottom: 5px;
-
-                    .link {
-                        line-height: 24px;
-                        max-height: 48px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        display: -webkit-box;
-                        -webkit-line-clamp: 2;
-                        -webkit-box-orient: vertical;
-
-                        &:hover {
-                            cursor: pointer;
-                            color: var(--el-color-primary);
-                            text-decoration: underline;
-                        }
-                    }
-                }
-            }
-        }
-
         .g-price {
             padding: 5px;
 
@@ -827,6 +789,42 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
 
     dd.goods-item-s:hover {
         background-color: #fafafa;
+    }
+}
+
+.g-info {
+    display: flex;
+    --goods-info-img-width: 100px;
+
+    .g-info-left {
+        width: var(--goods-info-img-width);
+    }
+
+    .g-info-right {
+        width: calc(100% - var(--goods-info-img-width));
+        padding: 0 10px;
+
+        .name {
+            // height: 48px;
+            max-height: 48px;
+            margin-bottom: 5px;
+
+            .link {
+                line-height: 24px;
+                max-height: 48px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+
+                &:hover {
+                    cursor: pointer;
+                    color: var(--el-color-primary);
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }
 

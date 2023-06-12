@@ -60,6 +60,25 @@
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item v-if="form.is_invoice" prop="is_invoice" label="" label-width="auto">
+                                <!-- <pre>
+                                    {
+                                "type": 1,
+                                "header": "工业品",
+                                "enterprise_name": "八戒公司",
+                                "enterprise_email": "123456@qq.com",
+                                "tax_no": "88888888",
+                                "logon_addr": "深圳市光明区云智科技园18楼",
+                                "logon_tel": "0755-1234567",
+                                "bank": "工商银行",
+                                "bank_account": "",
+                                "verify_status": 1,
+                                "express_name": "顺丰",
+                                "express_no": "sf123456789",
+                                "failed_remark": "合格",
+                                "order_no": "",
+                                "is_send": 1
+                                }
+                                </pre> -->
                                 <el-radio-group v-model="form.invoice_id" class="address-radio">
                                     <el-tabs v-model="form.billType" tab-position="left" class="radio-tabs">
                                         <el-tab-pane label="增值税发票" :name="1">

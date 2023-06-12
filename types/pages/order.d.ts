@@ -110,7 +110,7 @@ declare interface OrderApi_GetInfoResponse {
     "user_id": 1, //用户id
     "total_price": "107.52", //总金额
     "total_number": 10, //总数量
-    "pay_type": 3, //类型 1微信 2支付宝 3线下
+    "pay_type": 0|1|2|3, //类型 1微信 2支付宝 3线下
     "pay_sn": "XS20230412103144876929", //支付流水号
     "pay_status": 0 | 1 | 2 | 3, //支付状态 0未支付 1已支付 2已取消 3已退款
     "pay_time": "2023-04-12 10:31:44", //支付时间
