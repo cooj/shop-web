@@ -9,7 +9,7 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string, p
     const defaultParams = getQuery(event)
     const params = method === 'GET' && param ? { ...defaultParams, ...param } : defaultParams
     let body = method === 'GET' ? undefined : await readBody(event)
-    console.log('body :>> ', body)
+
     if (body && param) {
         body = { ...body, ...param }
     }
@@ -21,8 +21,6 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string, p
     //     headers.token = token
     // }
     console.log(baseURL)
-    console.log(params,
-        body)
     return $fetch<T>(url, {
         headers: {
             'Content-Type': headers['content-type'] as string,

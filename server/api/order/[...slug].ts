@@ -16,22 +16,9 @@ router.use('/info', defineEventHandler(async (event) => {
             })
             return { code: 200, info: res.data, pay: dat.data }
         }
+        return { code: 200, info: res.data }
     }
     return res
-    //
-    try {
-        const a = await useServerFetch<any>(event, '/api/index/get_article_info')
-        console.log(a)
-        return a
-    } catch (error) {
-        console.log('45467978787', error)
-        // throw new Error(error)
-        // return error
-        throw createError({
-            statusCode: 500,
-            message: '服务器错误',
-        })
-    }
 }))
 
 export default useBase('/api/order', router.handler)
