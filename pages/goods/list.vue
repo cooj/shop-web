@@ -358,7 +358,7 @@ const defData = reactive({
     tableData: [] as GoodsApi_GetListItem[], // 商品列表
     showClass: false, // 显示所有分类
     showBrand: false, // 显示所有品牌
-    optChose: 1, // 1:默认选中状态，2：销量，3：价格，4：品牌，5：颜色，6：位置，7：文献，8：运费，9：
+    optChose: 1, // 1:默认选中状态，2：销量，3：价格
 })
 
 const form = reactive({

@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <div ref="goodsBestRef" class="goods-best">
+        <div ref="goodsBestRef" />
+        <div v-if="goodsList.length" class="goods-best">
             <div class="goods-best-tle">
                 <div class="lt">
                     新品优选<sub>明星产品，趋势热销</sub>
@@ -136,6 +137,7 @@ onMounted(async () => {
 .goods-best {
     background-color: var(--el-color-white);
     padding: 20px;
+    margin-bottom:30px;
 }
 
 .goods-best-tle {
@@ -213,7 +215,7 @@ onMounted(async () => {
     --floor-left-width: 230px;
     display: flex;
     flex-wrap: wrap;
-    margin: 30px 0;
+    margin-bottom: 30px;
 
     .brand-list {
         width: 100%;
