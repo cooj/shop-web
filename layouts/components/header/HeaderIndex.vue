@@ -27,7 +27,7 @@
         <div v-if="isIndex && defData.activeList.length" class="market">
             <div class="grid container">
                 <NuxtLink v-for="item in defData.activeList" :key="item.ad_id" :to="item.ad_link" target="_blank">
-                    <CoImage class="block h150px w100%" :src="item.ad_img" fit="cover" />
+                    <CoImage class="h150px w100% block!" :src="item.ad_img" fit="cover" />
                 </NuxtLink>
             </div>
         </div>
