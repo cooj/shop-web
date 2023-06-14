@@ -4,17 +4,17 @@
             <el-breadcrumb-item>
                 账户管理
             </el-breadcrumb-item>
-            <el-breadcrumb-item>发票管理</el-breadcrumb-item>
+            <el-breadcrumb-item>抬头管理</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="my15px">
             <el-button type="primary" @click="onAdd">
-                新增发票
+                新增发票抬头
             </el-button>
         </div>
         <el-table :data="defData.tableData" border>
             <el-table-column prop="enterprise_name" label="企业名称" min-width="150" show-overflow-tooltip />
             <el-table-column prop="enterprise_email" label="企业邮箱" width="175" show-overflow-tooltip />
-            <el-table-column prop="header" label="发票抬头" width="85" show-overflow-tooltip />
+            <el-table-column prop="header" label="发票抬头" width="150" show-overflow-tooltip />
             <el-table-column prop="tax_no" label="纳税人识别号" width="110" show-overflow-tooltip />
             <el-table-column prop="type" label="发票类型" width="120" align="center" show-overflow-tooltip>
                 <template #default="{ row }">
@@ -33,31 +33,24 @@
             <el-table-column prop="logon_tel" label="注册电话" width="120" show-overflow-tooltip />
             <el-table-column prop="bank" label="开户银行" min-width="150" show-overflow-tooltip />
             <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="enterprise_name" label="快递名称" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="express_no" label="快递编号" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="failed_remark" label="未通过原因" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="order_no" label="订单号" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="is_send" label="是否发送" min-width="90" show-overflow-tooltip>
+            <el-table-column prop="is_default" label="是否默认" width="83" show-overflow-tooltip fixed="right">
                 <template #default="{ row }">
-                    <el-tag v-if="row.is_send" type="success">
+                    <el-tag v-if="row.is_default" type="success" @click="onDefault(row)">
                         是
                     </el-tag>
-                    <el-tag v-else type="danger">
+                    <el-tag v-else type="danger" @click="onDefault(row)">
                         否
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="verify_status" fixed="right" label="审核状态" width="90" align="center" show-overflow-tooltip>
+            <el-table-column prop="operate" label="操作" width="100" align="center" show-overflow-tooltip fixed="right">
                 <template #default="{ row }">
-                    <el-tag v-if="row.verify_status === 0" type="success">
-                        未审核
-                    </el-tag>
-                    <el-tag v-else-if="row.verify_status === 1" type="danger">
-                        审核通过
-                    </el-tag>
-                    <el-tag v-else type="danger">
-                        审核不通过
-                    </el-tag>
+                    <el-button type="primary" link size="small" @click="onEdit(row)">
+                        修改
+                    </el-button>
+                    <el-button type="primary" link size="small" @click="onDel(row)">
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -71,12 +64,50 @@ import { UserInvoiceApi } from '~/api/user/invoice'
 
 const modelRef = ref<InstanceType<typeof UserInvoiceModel>>()
 const defData = reactive({
-    tableData: [] as UserInvoiceApi_getList[],
+    tableData: [] as UserInvoiceApi_getListResponse['data'],
 })
 
 // 新增
 const onAdd = async () => {
     modelRef.value?.onOpenDialog()
+}
+// 修改发票
+const onEdit = (row: UserInvoiceApi_getListResponse) => { // 选择的发票row对象
+    modelRef.value?.onOpenDialog(row)
+}
+
+// 删除发票
+const onDel = (row: UserInvoiceApi_getListResponse) => { // 选择发票的row对象
+    if (!row.bill_header_id) return false
+    ElMessageBox.confirm('此操作将永久删除该条内容，是否继续?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        buttonSize: 'default',
+    }).then(async () => {
+        const { data: del } = await UserInvoiceApi.del({
+            bill_header_id: row.bill_header_id,
+        })
+        if (del.value?.code !== 200) {
+            ElMessage.error(del.value?.msg)
+            return false
+        }
+        ElMessage.success('删除成功')
+        getInvoice()
+    }).catch(() => { })
+}
+
+// 是否默认
+const onDefault = async (row: UserInvoiceApi_getListResponse) => {
+    const { data: def } = await UserInvoiceApi.default({
+        bill_header_id: row.bill_header_id,
+    })
+    if (def.value?.code !== 200) {
+        ElMessage.error(def.value?.msg)
+        return false
+    }
+    ElMessage.success('更改成功')
+    getInvoice()
 }
 
 // 更新列表

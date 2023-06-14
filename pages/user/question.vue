@@ -28,7 +28,7 @@
         </el-table>
         <div class="goods-pagination">
             <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
-                layout=" prev, pager, next,total, jumper" :total="defData.total" />
+                layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
         </div>
     </LayoutUser>
 </template>
@@ -56,6 +56,11 @@ const initTableData = async () => {
     defData.total = res.value.data.total
 }
 initTableData()
+
+// 分页数量点击
+const onHandleSizeChange = () => {
+    initTableData()
+}
 
 definePageMeta({
     layout: 'home',
