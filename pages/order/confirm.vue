@@ -46,7 +46,7 @@
                             <div class="tle">
                                 <b>发票信息</b>
                                 <el-button text bg size="small" @click="onAddressInvoice(2)">
-                                    新增发票
+                                    新增发票抬头
                                 </el-button>
                             </div>
                             <el-form-item prop="is_invoice" label="是否开发票">
