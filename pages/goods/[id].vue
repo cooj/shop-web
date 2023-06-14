@@ -501,7 +501,7 @@ const onCollect = async () => {
         const params: RecordApi_Del = {
             goods_ids: goodsInfo.value.goods_id.toString(),
             type: 1,
-            user_id: userState.userInfo.value.user_id,
+            // user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.del(params)
         if (data.value?.code === 200) {
@@ -511,7 +511,7 @@ const onCollect = async () => {
         const params: RecordApi_Add = {
             goods_id: defData.goods_id,
             type: 1,
-            user_id: userState.userInfo.value.user_id,
+            // user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.add(params)
         if (data.value?.code === 200) {
@@ -660,7 +660,7 @@ const onHistory = async () => {
     await wait(2000)
     if (userState.userInfo.value?.user_id && defData.goods_id) {
         const params: RecordApi_Add = {
-            user_id: userState.userInfo.value.user_id,
+            // user_id: userState.userInfo.value.user_id,
             goods_id: defData.goods_id,
             type: 2,
         }

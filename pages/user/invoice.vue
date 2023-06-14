@@ -4,11 +4,11 @@
             <el-breadcrumb-item>
                 账户管理
             </el-breadcrumb-item>
-            <el-breadcrumb-item>发票管理</el-breadcrumb-item>
+            <el-breadcrumb-item>抬头管理</el-breadcrumb-item>
         </el-breadcrumb>
         <div class="my15px">
             <el-button type="primary" @click="onAdd">
-                新增发票
+                新增发票抬头
             </el-button>
         </div>
         <el-table :data="defData.tableData" border>
@@ -29,12 +29,12 @@
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
+            <!-- <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
             <el-table-column prop="logon_tel" label="注册电话" width="120" show-overflow-tooltip />
             <el-table-column prop="bank" label="开户银行" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="enterprise_name" label="快递名称" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="express_no" label="快递编号" min-width="150" show-overflow-tooltip />
+            <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip /> -->
+            <!-- <el-table-column prop="enterprise_name" label="快递名称" min-width="150" show-overflow-tooltip /> -->
+            <!-- <el-table-column prop="express_no" label="快递编号" min-width="150" show-overflow-tooltip />
             <el-table-column prop="failed_remark" label="未通过原因" min-width="150" show-overflow-tooltip />
             <el-table-column prop="order_no" label="订单号" min-width="150" show-overflow-tooltip />
             <el-table-column prop="is_send" label="是否发送" min-width="90" show-overflow-tooltip>
@@ -59,7 +59,7 @@
                         审核不通过
                     </el-tag>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         <UserInvoiceModel ref="modelRef" @update="getInvoice" />
     </LayoutUser>

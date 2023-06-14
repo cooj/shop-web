@@ -1,5 +1,5 @@
 /**
- * 发票管理Api
+ * 抬头管理Api
  */
 export const UserInvoiceApi = {
 

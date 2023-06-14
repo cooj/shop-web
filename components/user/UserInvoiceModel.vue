@@ -1,7 +1,7 @@
 <!-- 新增发票 -->
 <template>
     <!-- auto-height -->
-    <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="新增发票" width="680px"
+    <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="新增发票抬头" width="680px"
         @close="onClose" @cancel="onClose" @confirm="onConfirm">
         <el-form ref="formRef" :model="form.data" :label-width="130" :rules="rules">
             <el-row>
@@ -57,14 +57,12 @@
                     </el-form-item>
                 </el-col>
                 <el-form-item prop="address_id" label="收票地址：">
-                    <el-select v-model="form.data.address_id" class="w250px" clearable filterable placeholder="请选择收票地址">
-                        <el-option v-for="item in defData.AddressList" :key="item.address_id"
-                            :label="item.province + item.city + item.area + item.address" :value="item.address_id" />
-                    </el-select>
-                    <NuxtLink v-if="defData.AddressList.length === 0" to="/user/address">
-                        <span style="color: red;margin-left: 10px;">去添加地址</span>
-                    </NuxtLink>
+                    <el-cascader v-model="form.data.address_id" :options="defData.addressList"
+                        :props="{ value: 'cityName', label: 'cityName' }" class="w100%" clearable filterable />
                 </el-form-item>
+                <!-- <NuxtLink v-if="defData.AddressList.length === 0" to="/user/address">
+                        <span style="color: red;margin-left: 10px;">去添加地址</span>
+                    </NuxtLink> -->
             </el-row>
         </el-form>
     </CoDialog>
@@ -72,18 +70,17 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
+import { CommonApi } from '~/api/common'
 import { UserInvoiceApi } from '~/api/user/invoice'
-import { userAddressState } from '~/composables/state/address'
 
 const emits = defineEmits(['update'])
 const formRef = ref<FormInstance>()
-const userAddress = userAddressState()
 
 const defData = reactive({
     visible: false, // 是否显示窗口，默认为false。
     ready: false, // 内容是否加载完成
     btnLoading: false,
-    AddressList: [] as UserAddressApi_GetListResponse[],
+    addressList: [] as CommonApi_GetAllRegionItem[],
 })
 
 // 表单数据
@@ -129,18 +126,21 @@ const rules = reactive<FormRules>({
     bank_account: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
     ],
-    // address_id: [
-    //     { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
-    // ],
+    address_id: [
+        { required: true, type: 'array', message: '必填项不能为空', trigger: 'blur' },
+    ],
 })
 
 // 初始化数据
 const initDefaultData = async () => {
-    if (defData.ready) return
-    const [res1] = await Promise.all([
-        userAddress.getAddressInfo(),
-    ])
-    defData.AddressList = res1.value
+    if (defData.ready) return false
+    const { data } = await CommonApi.getAllRegion()
+    if (data.value?.code === 200) {
+        defData.addressList = data.value.data
+    } else {
+        ElMessage.error(data.value?.msg) // 提示信息或页面加载不当会引发任何内容。
+    }
+
     defData.ready = true
 }
 initDefaultData()

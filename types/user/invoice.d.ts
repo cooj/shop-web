@@ -1,5 +1,5 @@
 /**
- * 发票管理 -- 列表 响应参数
+ * 抬头管理 -- 列表 响应参数
  */
 declare interface UserInvoiceApi_getList {
     "type": 1 | 2 | 3, //类型 1：增值税专用发票，2：普通发票， 3：电子普通发票
@@ -20,7 +20,7 @@ declare interface UserInvoiceApi_getList {
 }
 
 /**
- * 发票管理 --新增 请求参数
+ * 抬头管理 --新增 请求参数
  */
 declare interface UserInvoiceApi_Add {
     address_id: string; //添加收票地址返回ID

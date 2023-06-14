@@ -83,7 +83,7 @@
         </li>
         <li>
             <NuxtLink to="/user/Invoice">
-                发票管理
+                抬头管理
             </NuxtLink>
         </li>
         <li>
