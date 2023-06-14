@@ -64,7 +64,7 @@ import { UserInvoiceApi } from '~/api/user/invoice'
 
 const modelRef = ref<InstanceType<typeof UserInvoiceModel>>()
 const defData = reactive({
-    tableData: [] as UserInvoiceApi_getListResponse['data'],
+    tableData: [] as UserInvoiceApi_getListResponse[],
 })
 
 // 新增

@@ -10,19 +10,17 @@ declare interface UserInvoiceApi_getList {
  * 抬头管理 -- 列表 响应参数
  */
 declare interface UserInvoiceApi_getListResponse {
-    "data": {
-        "bill_header_id": number
-        "type": 1 | 2 | 3, //类型 1：增值税专用发票，2：普通发票， 3：电子普通发票
-        "header": string, //发票抬头
-        "enterprise_name": string, //企业名称
-        "enterprise_email": string, //企业邮箱
-        "tax_no": string, //纳税人识别号
-        "logon_addr": string, //注册地址
-        "logon_tel": string, //注册电话
-        "bank": string, //开户银行
-        "bank_account": string, //开户账户
-        "is_default": 0 | 1 //是否默认 0不是 1是
-    }
+    "bill_header_id": number
+    "type": 1 | 2 | 3, //类型 1：增值税专用发票，2：普通发票， 3：电子普通发票
+    "header": string, //发票抬头
+    "enterprise_name": string, //企业名称
+    "enterprise_email": string, //企业邮箱
+    "tax_no": string, //纳税人识别号
+    "logon_addr": string, //注册地址
+    "logon_tel": string, //注册电话
+    "bank": string, //开户银行
+    "bank_account": string, //开户账户
+    "is_default": 0 | 1 //是否默认 0不是 1是
 }
 
 /**

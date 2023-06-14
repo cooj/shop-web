@@ -84,7 +84,7 @@ const defData = reactive({
 const form = reactive({
     data: {
         enterprise_name: '', // 企业名称
-        type: 1 | 2 | 3, // 类型1：增值税专用发票 2：普通发票 3：电子普通发票
+        type: '' as '' | 1 | 2 | 3, // 类型1：增值税专用发票 2：普通发票 3：电子普通发票
         enterprise_email: '', // 企业邮箱
         tax_no: '', // 纳税人识别号
         logon_tel: '', // 注册电话
@@ -92,7 +92,7 @@ const form = reactive({
         bank: '', // 开户银行
         bank_account: '', // 开户账号
 
-        bill_header_id: '',
+        bill_header_id: '' as '' | number,
     },
 })
 
@@ -203,10 +203,14 @@ const onConfirm = async () => {
     if (defData.type === 1) { // 新增
         defData.btnLoading = true
         const { data: res } = await UserInvoiceApi.add(params)
+        console.log(res)
         defData.btnLoading = false
         if (res.value?.code === 200) {
             ElMessage.success('添加成功')
-            emits('update')
+            emits('update', {
+                ...params,
+                bill_header_id: res.value.data.bill_header_id || 0,
+            })
             onClose()
         } else {
             ElMessage.error(res.value?.msg)
@@ -214,7 +218,7 @@ const onConfirm = async () => {
     } else if (defData.type === 2) { // 修改
         const edit: UserInvoiceApi_Edit = {
             ...params,
-            bill_header_id: form.data.bill_header_id,
+            bill_header_id: Number(form.data.bill_header_id),
         }
         defData.btnLoading = true
         const { data } = await UserInvoiceApi.edit(edit)
