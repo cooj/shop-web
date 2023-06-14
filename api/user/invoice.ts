@@ -7,7 +7,7 @@ export const UserInvoiceApi = {
      * 发票抬头 - 列表
      * @returns
      */
-    getList: (data: UserInvoiceApi_getList) => useHttp<UserInvoiceApi_getListResponse>('/api/mall_user/bill_header_lists', data, { method: 'post' }),
+    getList: (data?: UserInvoiceApi_getList) => useHttp<UserInvoiceApi_getListResponse[]>('/api/mall_user/bill_header_lists', data, { method: 'post' }),
 
     /**
      * 发票抬头 - 新增
