@@ -49,7 +49,7 @@
                     <ul v-else class="goods-list">
                         <li v-for="item in scopes.row.goods_info" :key="item.goods_id">
                             <CoImage class="h50px w50px" :src="item.goods_img" :icon-size="24" />
-                            <div class="text">
+                            <div class="flex-1 pl10px">
                                 <h3 class="tle">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                         {{ item.goods_name }}
@@ -76,18 +76,10 @@
                             实付金额: <span class="c-#f00">￥{{ scopes.row.meet_price }}</span>
                         </p>
                         <p class="b-t-1 text-12px">
-                            <span v-if="scopes.row.pay_type === 1">
-                                支付宝支付
-                            </span>
-                            <span v-else-if="scopes.row.pay_type === 2">
-                                微信支付
-                            </span>
-                            <span v-else-if="scopes.row.pay_type === 3">
-                                线下支付
-                            </span>
-                            <span v-else>
-                                --
-                            </span>
+                            <span v-if="scopes.row.pay_type === 1">微信支付</span>
+                            <span v-else-if="scopes.row.pay_type === 2">支付宝支付</span>
+                            <span v-else-if="scopes.row.pay_type === 3">线下支付</span>
+                            <span v-else>--</span>
                         </p>
                     </div>
                 </template>
@@ -223,27 +215,28 @@ const initTableData = async () => {
 
     const loading = useElLoading()
 
-    const { data: res } = await OrderApi.getOrderList(params)
+    const { data: res, error } = await OrderApi.getOrderList(params)
     await wait(300)
-    defData.skeleton = false
     loading?.close()
+    if (error.value) return
+    defData.skeleton = false
 
-    if (res.value?.code === 200) {
-        const list: OrderListTableData[] = []
-        res.value.data.lists.forEach((item, index) => {
-            const obj: OrderListTableData = {
-                ...item,
-                index: index + 1, // 序列号
-            }
-            const obj2: OrderListTableData = {
-                ...obj,
-                index: 0,
-            }
-            list.push(...[obj, obj2])
-        })
-        tableData.data = list
-        tableData.pagination.total = res.value.data.total // 总条数
-    }
+    if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+
+    const list: OrderListTableData[] = []
+    res.value.data.lists.forEach((item, index) => {
+        const obj: OrderListTableData = {
+            ...item,
+            index: index + 1, // 序列号
+        }
+        const obj2: OrderListTableData = {
+            ...obj,
+            index: 0,
+        }
+        list.push(...[obj, obj2])
+    })
+    tableData.data = list
+    tableData.pagination.total = res.value.data.total // 总条数
 }
 
 // table合并行
@@ -338,9 +331,7 @@ const setPreferMoney = (row: OrderApi_GetOrderListItem) => {
  */
 const setEndTime = (row: OrderApi_GetOrderListItem) => {
     if (!row.end_time) return 0
-    // const endTime = row.end_time * 1000 // 结算时间时间戳
     return row.end_time * 1000
-    // return Date.now() + 1000 * 10
 }
 
 /**
@@ -417,31 +408,28 @@ initTableData()
             border-top: 1px;
         }
 
-        .text {
-            flex: 1;
-            padding-left: 10px;
+    }
 
-            .tle {
-                line-height: 22px;
-                max-height: 44px;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 2;
-                /* 需要显示的行数 */
-                overflow: hidden;
-                word-break: break-all;
+    .tle {
+        line-height: 22px;
+        max-height: 44px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        /* 需要显示的行数 */
+        overflow: hidden;
+        word-break: break-all;
 
-                /* 强制英文单词断行 */
-                a {
-                    color: #333;
+        /* 强制英文单词断行 */
+        a {
+            color: #333;
 
-                    &:hover {
-                        color: var(--el-color-primary);
-                    }
-                }
-
+            &:hover {
+                color: var(--el-color-primary);
             }
         }
+
     }
+
 }
 </style>

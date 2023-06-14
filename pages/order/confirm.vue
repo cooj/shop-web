@@ -45,7 +45,7 @@
                         <section class="sec-box">
                             <div class="tle">
                                 <b>发票信息</b>
-                                <el-button text bg size="small" @click="onAddressInvoice(2)">
+                                <el-button text bg size="small" @click="onAddressInvoice(3)">
                                     新增发票
                                 </el-button>
                             </div>
@@ -85,7 +85,7 @@
                                             <!-- <el-radio :label="1" border>
                                                 普通发票
                                             </el-radio> -->
-                                            <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
+                                            <el-radio v-for="item in defData.addressList" :key="item.address_id"
                                                 :label="item.address_id">
                                                 <span>{{ setAddressText(item) }}</span>
                                                 <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
@@ -100,6 +100,23 @@
                                         </el-tab-pane>
                                     </el-tabs>
                                 </el-radio-group>
+                            </el-form-item>
+
+                            <el-form-item v-if="form.is_invoice" prop="bill_address_id" label="收票地址">
+                                <el-radio-group v-if="defData.addressList.length" v-model="form.bill_address_id"
+                                    class="address-radio">
+                                    <el-radio v-for="item in defData.addressList" :key="item.address_id"
+                                        :label="item.address_id">
+                                        <span>{{ setAddressText(item) }}</span>
+                                        <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                                        <span class="mx5px">{{ item.phone }}</span>
+                                        <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                    </el-radio>
+                                </el-radio-group>
+                                <div v-else class="w100% text-center text-13px c-#666">
+                                    暂无收货地址,请点击
+                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddressInvoice(2)">新增地址</span>
+                                </div>
                             </el-form-item>
                         </section>
                         <section class="sec-box">
@@ -125,7 +142,6 @@
                                 <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
                                     <template #default="{ row }">
                                         <b>{{ row.goods_number }}</b>
-                                        <!-- <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100" /> -->
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -229,22 +245,25 @@
                                     <span class="item-text">￥{{ formatNumber(defData.freight_price) }}</span>
                                 </li>
                                 <li>
-                                    <span class="item-title">运费减免：</span><span class="item-text">-￥0.00</span>
+                                    <span class="item-title">运费减免：</span>
+                                    <span class="item-text">-￥0.00</span>
                                 </li>
                                 <li>
-                                    <span class="item-title">优惠券：</span><span class="item-text">-￥0.00</span>
+                                    <span class="item-title">优惠金额：</span>
+                                    <span class="item-text">-￥{{ formatNumber(preferMoney) }}</span>
                                 </li>
                             </ul>
                         </section>
                         <section class="sec-box flex items-center justify-end b-t b-t-#eee">
-                            <b class="mr30px">实付款：<span class="main-color text-24px">¥{{ payMoney }}</span></b>
+                            <b class="mr30px">实付款：<span class="main-color text-24px">¥{{ formatNumber(payMoney)
+                            }}</span></b>
                             <el-button type="primary" class="min-w150px" size="large" @click="onSubmit">
                                 <b>提交订单</b>
                             </el-button>
                         </section>
                     </el-form>
                 </template>
-                <div v-else class="my15px b-#eee bg-#fff">
+                <div v-else class="my15px min-h400px b-#eee bg-#fff">
                     <BaseError />
                 </div>
             </el-skeleton>
@@ -272,7 +291,6 @@ const defData = reactive({
     skeleton: true, // 默认打开骨架屏
     type: 1, // 添加收货地址使用 1：收货地址 2：发票地址
     addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
-    billAddressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     ready: true, // 页面正确
 
     invoiceList: [] as UserInvoiceApi_getList[], // 所有发票列表
@@ -331,6 +349,12 @@ const peasNumber = computed(() => {
     return { min, max }
 })
 
+// 优惠金额
+const preferMoney = computed(() => {
+    return 0
+})
+
+// 需支付金额
 const payMoney = computed(() => {
     return defData.total_price + defData.freight_price
 })
@@ -351,6 +375,11 @@ const initDefaultData = async () => {
     } else if (goods_id.value && numReg.test(goods_id.value)) {
         type = 2
     }
+    if (!type) {
+        defData.skeleton = false
+        defData.ready = false
+        return
+    }
 
     // 获取结算商品信息、用户地址
     const [res1, res2, res3] = await Promise.all([
@@ -368,10 +397,7 @@ const initDefaultData = async () => {
         const data = res1.data.value?.data
         console.log('data :>> ', data)
         // 未获取到商品时
-        if (data.goods_list.length === 0) {
-            defData.ready = false
-            return
-        }
+        if (!data.goods_list.length) return defData.ready = false
 
         form.tableData = data.goods_list
         defData.couponList = data.coupon_list
@@ -382,14 +408,12 @@ const initDefaultData = async () => {
         defData.user_peas = data.user_peas
         defData.freight_price = data.freight_price
     } else {
-        defData.ready = false
-        return
+        return defData.ready = false
     }
 
     if (res2 && res2.data.value?.code === 200) {
         const data = res2.data.value?.data
         defData.addressList = data
-        defData.billAddressList = data
     }
 
     if (res3 && res3.data.value?.code === 200) {
@@ -404,38 +428,34 @@ const initDefaultData = async () => {
 const setAddressText = (row: UserAddressApi_GetListResponse) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
+
 /**
  * 新增地址、新增发票
- * @param type 1：收货地址 2：发票
+ * @param type 1：收货地址 2：发票地址，3、新增发票
  */
-const onAddressInvoice = (type: 1 | 2) => {
+const onAddressInvoice = (type: 1 | 2 | 3) => {
     defData.type = type
-    if (type === 1) {
+    if (type === 1 || type === 2) {
         modelRef.value?.onOpenDialog()
     } else {
         invoiceRef.value?.onOpenDialog()
     }
 }
-// 获取地址
+
+// 新增地址处理
 const getAddress = (params: UserAddressApi_Edit) => {
+    if (!params.address_id) return
+    const dat = {
+        ...params,
+        user_id: 0,
+    }
+    defData.addressList.push(dat)
+
     if (defData.type === 1) {
         form.address_id = params.address_id
-        const data = {
-            ...params,
-            user_id: 0,
-        }
-        defData.addressList.unshift(data)
-        defData.billAddressList.push(data)
     } else if (defData.type === 2) {
         form.bill_address_id = params.address_id
-        const data = {
-            ...params,
-            user_id: 0,
-        }
-        defData.billAddressList.unshift(data)
-        defData.addressList.push(data)
     }
-    console.log('defData.addressList :>> ', defData.addressList)
 }
 
 /**

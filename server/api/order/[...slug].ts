@@ -48,7 +48,19 @@ router.use('/info', defineEventHandler(async (event) => {
  * 订单确认
  */
 router.use('/confirm', defineEventHandler(async (event) => {
-    return { event }
+    const method = getMethod(event)
+    const params = method === 'GET' ? getQuery(event) : await readBody(event)
+    let data: OrderApi_GetSettleResponse | undefined
+    if (params.cart_id) {
+        const res = await useServerFetch<OrderApi_GetSettleResponse>(event, '/api/mall/settle_goods', { cart_id: params.cart_id })
+        if (res.code !== 200) return { code: res.code, msg: res.msg }
+        data = res.data
+    } else if (params.goods_id) {
+        //
+    }
+    console.log(params)
+
+    return { code: 1 }
     // 获取订单信息
     // const res = await useServerFetch<OrderApi_GetInfoResponse>(event, '/api/mall_order/order_details')
     // console.log(res)
