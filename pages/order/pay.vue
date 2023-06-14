@@ -15,15 +15,75 @@
                         <el-breadcrumb-item :to="{ path: '/' }">
                             首页
                         </el-breadcrumb-item>
-                        <!-- <el-breadcrumb-item :to="{ path: '/order/cart' }">
-                        购物车
-                    </el-breadcrumb-item> -->
                         <el-breadcrumb-item>
                             订单支付
                         </el-breadcrumb-item>
                     </el-breadcrumb>
                     <div class="mb20px min-h300px bg-#fff p15px">
-                        <el-result v-if="defData.status === 1" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
+                        <div v-if="defData.orderInfo?.pay_type === 3 && !defData.countDown.flag" class="flex p5px">
+                            <div class="flex-1">
+                                <div class="pay-ready text-center">
+                                    <el-alert type="success" show-icon :closable="false" center>
+                                        <div class="text-16px -mt5px">
+                                            订单已提交成功，请您及时付款，我们将尽快为您安排发货!
+                                        </div>
+                                    </el-alert>
+                                    <div class="my20px flex items-center justify-center">
+                                        <span class="mr5px">订单编号: </span>
+                                        <el-text type="primary">
+                                            {{ order_no }}
+                                        </el-text>
+                                        <span class="ml20px">订单金额: </span>
+                                        <b class="text-20px c-#f00">￥{{ defData.orderInfo?.meet_price }}</b>
+                                    </div>
+                                    <div class="pay-countdown mb30px">
+                                        (请在<span>{{ defData.countDown.day }}</span>天
+                                        <span>{{ defData.countDown.hour }}</span>小时
+                                        <span>{{ defData.countDown.minute }}</span>分
+                                        <span>{{ defData.countDown.second }}</span>秒 内完成付款，否则订单将自动取消! )
+                                    </div>
+                                    <div>
+                                        <NuxtLink to="/goods/list">
+                                            <el-button class="min-w70px" type="primary" size="large">
+                                                继续购物
+                                            </el-button>
+                                        </NuxtLink>
+                                        <NuxtLink to="/order/list" class="ml10px">
+                                            <el-button class="min-w70px" type="primary" size="large" plain>
+                                                我的订单
+                                            </el-button>
+                                        </NuxtLink>
+                                    </div>
+                                </div>
+                            </div>
+                            <el-descriptions class="ml20px w40%" title="银行账号信息" :column="1" border>
+                                <el-descriptions-item label="公司名称">
+                                    <b>{{ defData.payInfo?.bank_info.company_name }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="银行账号">
+                                    <b>{{ defData.payInfo?.bank_info.bank_account }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="开户银行">
+                                    <b>{{ defData.payInfo?.bank_info.bank_name }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="银联号(CNAPS)">
+                                    <b>{{ defData.payInfo?.bank_info.bank_cnaps }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="用途/备注/摘要">
+                                    <b>{{ defData.payInfo?.bank_info.notes }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="税号">
+                                    <b>{{ defData.payInfo?.bank_info.duty }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="电话">
+                                    <b>{{ defData.payInfo?.bank_info.phone }}</b>
+                                </el-descriptions-item>
+                                <el-descriptions-item label="地址">
+                                    <b>{{ defData.payInfo?.bank_info.address }}</b>
+                                </el-descriptions-item>
+                            </el-descriptions>
+                        </div>
+                        <el-result v-else-if="payStatus === 1" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
                             <template #extra>
                                 <div class="mb15px text-13px">
                                     需支付：<span class="mr20px text-24px">￥{{ defData.money }}</span>
@@ -62,8 +122,8 @@
                                 <div ref="alipayRef" class="hidden" v-html="defData.aliData" />
                             </template>
                         </el-result>
-                        <el-result v-else :icon="defData.status === 7 ? 'error' : 'success'"
-                            :title="defData.status === 7 ? '订单已取消' : '订单支付完成'" sub-title="">
+                        <el-result v-else :icon="payStatus === 7 ? 'error' : 'success'"
+                            :title="payStatus === 7 ? '订单已取消' : '订单支付完成'" sub-title="">
                             <template #extra>
                                 <NuxtLink to="/">
                                     <el-button type="primary">
@@ -77,6 +137,7 @@
                                 </NuxtLink>
                             </template>
                         </el-result>
+                        <!-- pay_type -->
                     </div>
                 </div>
                 <div v-else class="my15px b-#eee bg-#fff">
@@ -98,6 +159,16 @@ const defData = reactive({
     status: -1, // 支付状态 0未支付 1已支付 2已取消 3已退款
     aliData: '', // 支付宝返回的form表单代码
     money: '', // 支付金额
+    orderInfo: {} as OrderApi_GetInfoResponse | undefined, // 订单信息
+    payInfo: {} as OrderApi_PayOrderResponse | undefined, // 支付信息(线下支付)
+
+    countDown: { // 倒计时
+        day: '', // 天
+        hour: '', // 时
+        minute: '', // 分
+        second: '', // 秒
+        flag: false,
+    },
 })
 
 const form = reactive({
@@ -109,23 +180,54 @@ const order_no = computed(() => {
     return useRouteQuery('out_trade_no').value || useRouteQuery('order_no').value
 })
 
+// 支付状态
+const payStatus = computed(() => defData.orderInfo?.order_status)
+
 const initDefaultData = async () => {
     if (!order_no.value) {
         defData.ready = false
         defData.skeleton = false
         return
     }
-    const { data: res } = await OrderApi.getInfo({ main_order_no: order_no.value })
+
+    // const { data: res0 } = await OrderApi.payOrder({ main_order_no: order_no.value, pay_type: 3 })
+
+    // console.log('res0: ', res0);
+    // return
+
+    const { data: ax, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
+        method: 'post',
+        body: { main_order_no: order_no.value },
+    })
+
+    // 线下支付
+    if (ax.value?.pay) {
+        defData.payInfo = ax.value.pay
+        setCountDown()
+    }
     await wait(500)
     defData.skeleton = false
-    console.log('res :>> ', res)
-    if (res.value?.code === 200) {
-        defData.status = res.value.data.order_status
-        defData.money = formatNumber(Number(res.value.data.meet_price) || 0)
-    } else {
-        ElMessage.error(res.value?.msg)
+    if (error.value) return
+    if (ax.value?.code !== 200) {
+        ElMessage.error(ax.value?.msg)
         return defData.ready = false
     }
+
+    defData.status = ax.value!.info.order_status
+    defData.money = formatNumber(Number(ax.value?.info.meet_price) || 0)
+    defData.orderInfo = ax.value!.info
+
+    // const { data: res } = await OrderApi.getInfo({ main_order_no: order_no.value })
+    // await wait(500)
+    // defData.skeleton = false
+    // console.log('res :>> ', res)
+    // if (res.value?.code === 200) {
+    //     defData.status = res.value.data.order_status
+    //     defData.money = formatNumber(Number(res.value.data.meet_price) || 0)
+    // } else {
+    //     ElMessage.error(res.value?.msg)
+    //     return defData.ready = false
+    // }
 }
 
 // 支付
@@ -158,7 +260,58 @@ const onPayment = async () => {
     }
 }
 
+/**
+ * 设置倒计时
+ */
+const setCountDown = () => {
+    if (!defData.payInfo?.end_time) return
+    const timestamp = defData.payInfo.end_time
+    const timer = setInterval(() => {
+        const nowTime = new Date()
+        const endTime = new Date(timestamp * 1000)
+        const t = endTime.getTime() - nowTime.getTime()
+        if (t > 0) {
+            const d = Math.floor(t / 86400000)
+            const h = Math.floor((t / 3600000) % 24)
+            const m = Math.floor((t / 60000) % 60)
+            const s = Math.floor((t / 1000) % 60)
+            const hh = h < 10 ? `0${h}` : h
+            const mm = m < 10 ? `0${m}` : m
+            const ss = s < 10 ? `0${s}` : s
+
+            defData.countDown.day = d.toString()
+            defData.countDown.hour = hh.toString()
+            defData.countDown.minute = mm.toString()
+            defData.countDown.second = ss.toString()
+
+            // const format = `(请在<span>${d}</span>天<span>${hh}</span>小时<span>${mm}</span>分<span>${ss}</span>秒 内完成付款，否则订单将自动取消! )`
+            // if (d > 0) {
+            //     format = `${d}天${hh}小时${mm}分${ss}秒`
+            // }
+            // if (d <= 0 && Number(hh) > 0) {
+            //     format = `${hh}小时${mm}分${ss}秒`
+            // }
+            // if (d <= 0 && Number(hh) <= 0) {
+            //     format = `${mm}分${ss}秒`
+            // }
+        } else {
+            // 关闭倒计时，
+            clearInterval(timer)
+            defData.countDown.flag = true
+            // defData.orderInfo!.order_status=7
+        }
+    }, 1000)
+}
+// 定时器没过1秒参数减1
+// Time() {
+// setInterval(() => {
+// this.seconds -= 1
+// this.countDown()
+// }, 1000)
+// },
+
 initDefaultData()
+
 definePageMeta({
     layout: 'home',
     middleware: 'auth',
@@ -175,6 +328,32 @@ definePageMeta({
         // width: 150px;
         text-align: center;
         margin: 0 10px;
+    }
+}
+
+.pay-ready {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: var(--el-color-danger-light-9);
+    border-radius: var(--el-border-radius-base);
+    font-size: 14px;
+
+    :deep(.el-alert) {
+        background-color: var(--el-color-primary-light-9);
+    }
+}
+
+.pay-countdown {
+    color: var(--el-text-color-regular);
+
+    >span {
+        display: inline-block;
+        min-width: 30px;
+        text-align: center;
+        color: var(--el-color-primary);
     }
 }
 </style>

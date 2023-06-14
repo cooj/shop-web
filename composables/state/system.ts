@@ -35,7 +35,7 @@ export const useSystemState = () => {
  * @returns
  */
 export const useUserState = () => {
-    const cookieToken = useCookie<string>('admin_token', { maxAge: 3600 * 24 * 2 })
+    const cookieToken = useCookie<string>('admin_token', { maxAge: 3600 * 24 * 5 })
 
     const token = useState<string | null>('token', () => cookieToken.value)
 

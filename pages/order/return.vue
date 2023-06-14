@@ -20,7 +20,7 @@
                     </div>
                     <ul class="goods-list">
                         <li v-for="item in scopes.row.goods_list" :key="item.goods_id">
-                            <CoImage class="h55px w55px" :src="item.goods_img" style="--co-image-error-size:24px;" />
+                            <CoImage class="h50px w50px" :src="item.goods_img" :icon-size="24" />
                             <div class="text">
                                 <h3 class="tle">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
@@ -120,7 +120,6 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
     ],
     pagination: {
         ...PAGINATION,
-        // total: 0,
     },
 })
 
@@ -139,23 +138,11 @@ const initTableData = async () => {
     const loading = useElLoading()
 
     const { data: res } = await OrderReturnApi.returnList()
-    await wait(1500)
+    await wait(100)
     defData.skeleton = false
     loading?.close()
 
     if (res.value?.code === 200) {
-        // const list: OrderListTableData[] = []
-        // res.value.data.lists.forEach((item, index) => {
-        //     const obj: OrderListTableData = {
-        //         ...item,
-        //         index: index + 1, // 序列号
-        //     }
-        //     const obj2: OrderListTableData = {
-        //         ...obj,
-        //         index: 0,
-        //     }
-        //     list.push(...[obj, obj2])
-        // })
         tableData.data = res.value.data.lists
         tableData.pagination.total = res.value.data.total// 总条数 记录数大于10条记录不
     }

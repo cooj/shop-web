@@ -69,12 +69,12 @@
                                         <span class="text-12px c-#666">会员价</span>
                                     </div>
                                 </li>
-                                <li v-if="goodsInfo?.coupon_list.length" class="bg-#f8f8f8">
+                                <li v-if="goodsInfo?.coupon_list?.length" class="bg-#f8f8f8">
                                     <div class="lt">
                                         优惠券
                                     </div>
                                     <div class="gt">
-                                        <GoodsCoupon v-for="item in goodsInfo?.coupon_list" :key="item.coupon_id">
+                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
                                             {{ item.coupon_name }}立减{{ item.par_value }}元
                                         </GoodsCoupon>
                                     </div>
@@ -157,10 +157,10 @@
                                             <i class="i-ri-alipay-fill mr3px c-#3887ff" />
                                             支付宝
                                         </el-button>
-                                        <!-- <el-button text bg size="small" class="cursor-default!">
+                                        <el-button text bg size="small" class="cursor-default!">
                                             <i class="i-ic-twotone-payments mr3px c-#ff5335" />
                                             线下转账
-                                        </el-button> -->
+                                        </el-button>
                                     </div>
                                 </li>
                                 <li class="items-center">
@@ -239,7 +239,6 @@
                         <div class="gt">
                             <el-tabs v-model="defData.rightActive" class="goods-gt-tabs" @tab-change="onRightTabChange">
                                 <el-tab-pane label="商品详情" name="1">
-                                    <!-- TODO 商品详情字段缺少 -->
                                     <div v-html="goodsInfo?.goods_desc" />
                                 </el-tab-pane>
                                 <el-tab-pane label="商品问答" name="2" lazy>
@@ -342,9 +341,9 @@ const useCartNumber = useCartNumberState()
 const usePayType = usePayTypeState()
 // 支持的支付方式
 const payTypeList = await usePayType.getPayTypeList()
-console.log('payTypeList :>> ', payTypeList)
+// console.log('payTypeList :>> ', payTypeList)
 const defData = reactive({
-    user_id: 0,
+    user_id: userState.userInfo.value?.user_id || 0,
     page: 1,
     total: 0,
     pageSize: 10,
@@ -402,7 +401,6 @@ const initGoodsData = async () => {
             })
             goodsImgList.value = imgArr
 
-            // TODO 商品seo字段缺少
             // 设置seo
             const meta = []
             if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
@@ -411,6 +409,7 @@ const initGoodsData = async () => {
                 title: infoData.web_title || infoData.goods_name,
                 meta,
             })
+            await wait(200)
             defData.skeleton = false // 关闭骨架屏
         } else {
             ElMessage.error('未获取到商品信息,请检查地址是否正确')
@@ -492,7 +491,7 @@ const onClose = () => {
 // 商品收藏
 const onCollect = async () => {
     // 用户未登录时
-    if (!userState.userInfo.value?.user_id) {
+    if (!userState.token.value) {
         return navigateTo('/login')
     }
     // 已经收藏了，取消收藏状态
@@ -501,7 +500,6 @@ const onCollect = async () => {
         const params: RecordApi_Del = {
             goods_ids: goodsInfo.value.goods_id.toString(),
             type: 1,
-            // user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.del(params)
         if (data.value?.code === 200) {
@@ -511,7 +509,6 @@ const onCollect = async () => {
         const params: RecordApi_Add = {
             goods_id: defData.goods_id,
             type: 1,
-            // user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.add(params)
         if (data.value?.code === 200) {
@@ -536,7 +533,7 @@ const onBuyGoods = () => {
 // 加入购物车
 const onAddCart = async () => {
     // 用户未登录时，不允许加入购物车页面
-    if (!userState.userInfo.value?.user_id) {
+    if (!userState.token.value) {
         ElMessage.error('请先登录!')
         return navigateTo('/login')
     }
@@ -558,8 +555,8 @@ const onAddCart = async () => {
 
 // 商品分享
 const onShare = async () => {
-    if (userState.userInfo.value?.user_id) {
-        defData.shareLink = `${location.origin}/login/register?id=${userState.userInfo.value?.user_id}`
+    if (defData.user_id) {
+        defData.shareLink = `${location.origin}/login/register?id=${defData.user_id}`
         if (!defData.shareCode) {
             defData.shareCode = await QRCode.toDataURL(defData.shareLink)
         }
@@ -636,7 +633,7 @@ const onDownload = () => {
 
 // 认证企业会员
 const onApprove = () => {
-    if (userState.userInfo.value?.user_id) {
+    if (defData.user_id) {
         navigateTo('/login')
     } else {
         // 转到企业认证页面
@@ -658,9 +655,8 @@ const onHistory = async () => {
     if (!process.client) return
     // 进入页面2秒后加入历史记录中
     await wait(2000)
-    if (userState.userInfo.value?.user_id && defData.goods_id) {
+    if (defData.user_id && defData.goods_id) {
         const params: RecordApi_Add = {
-            // user_id: userState.userInfo.value.user_id,
             goods_id: defData.goods_id,
             type: 2,
         }

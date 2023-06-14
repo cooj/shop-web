@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { ElPagination, ElTable, ElTableColumn } from 'element-plus'
+import { ElPagination, ElTableColumn } from 'element-plus'
 
 // 分页
 type Pagination = BaseTableDataType['pagination']

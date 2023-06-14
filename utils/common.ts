@@ -50,7 +50,7 @@ export const formatTime = (num: number | string | Date = new Date().getTime(), f
             date = new Date(num)
         }
     } else if (types(num) === 'string') {
-        if (!isNaN(Number(num))) {
+        if (!Number.isNaN(Number(num))) {
             num = Number(num)
         }
         date = new Date(num)

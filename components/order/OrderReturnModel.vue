@@ -4,13 +4,16 @@
     <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden :title="comData.title"
         width="800px" @close="onClose" @cancel="onClose" @confirm="onConfirm">
         <el-form ref="formRef" :model="form.data" :label-width="130" :rules="rules">
-            <el-row>
+            <el-row v-if="defData.type === 1">
                 <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                     <el-form-item prop="order_no" label="订单编号:">
                         <b>{{ form.data.order_no }}</b>
                     </el-form-item>
                 </el-col>
             </el-row>
+            <div v-if="defData.type === 2" class="mb5px -mt10px">
+                订单编号: <b>{{ form.data.order_no }}</b>
+            </div>
             <el-table :data="defData.tableData" class="return-table mb15px" border
                 @selection-change="handleSelectionChange">
                 <el-table-column v-if="defData.type === 1" type="selection" width="50" align="center" />
@@ -35,6 +38,15 @@
                         <el-input-number v-if="defData.type === 1" v-model="row.return_number" :min="1"
                             :max="row.goods_number" class="w100%!" />
                         <span v-else>{{ row.goods_number }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="商品总金额" width="150" property="total" align="center">
+                    <template #default="{ row }">
+                        <!-- <el-input-number v-if="defData.type === 1" v-model="row.return_number" :min="1"
+                            :max="row.goods_number" class="w100%!" /> -->
+                        <span>
+                            {{ formatNumber(row.return_number * row.meet_price) }}
+                        </span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -116,13 +128,13 @@
                 </div>
                 <el-table :data="defData.billData.refund_log" size="small" border @selection-change="handleSelectionChange">
                     <el-table-column label="操作者" width="120" property="author" show-overflow-tooltip />
-                    <el-table-column label="时间" width="160" property="create_time" show-overflow-tooltip />
                     <el-table-column label="信息" min-width="160" property="content" show-overflow-tooltip />
-                    <el-table-column label="图片" width="80" property="img_url" align="center" show-overflow-tooltip>
+                    <el-table-column label="时间" width="160" property="create_time" show-overflow-tooltip />
+                    <!-- <el-table-column label="图片" width="80" property="img_url" align="center" show-overflow-tooltip>
                         <template #default="{ row }">
-                            <CoImage :src="row.img_url" class="h40px w40px vertical-bottom" style="--co-image-error-size:18px;" />
+                            <CoImage :src="row.img_url" class="h40px w40px vertical-bottom" :icon-size="18" />
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                 </el-table>
             </template>
         </el-form>

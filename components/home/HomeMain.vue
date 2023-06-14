@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <div ref="goodsBestRef" class="goods-best">
+        <div ref="goodsBestRef" />
+        <div v-if="goodsList.length" class="goods-best">
             <div class="goods-best-tle">
                 <div class="lt">
                     新品优选<sub>明星产品，趋势热销</sub>
@@ -12,23 +13,21 @@
                     </el-button>
                 </NuxtLink>
             </div>
-            <ul class="goods-best-list">
-                <li v-for="item in goodsList" :key="item.goods_id">
-                    <NuxtLink class="link" :to="`/goods/${item.goods_sn}`">
-                        <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
-                        <h3 class="tle">
-                            {{ item.goods_name }}
-                        </h3>
-                        <div class="price">
-                            <span>惊爆价</span>
-                            <em>￥{{ item.shop_price }}</em>
-                        </div>
-                        <el-button text bg type="danger">
-                            大热卖推荐
-                        </el-button>
-                    </NuxtLink>
-                </li>
-            </ul>
+            <div class="goods-best-list">
+                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="link" :to="`/goods/${item.goods_sn}`">
+                    <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
+                    <h3 class="tle">
+                        {{ item.goods_name }}
+                    </h3>
+                    <div class="price">
+                        <span>惊爆价</span>
+                        <em>￥{{ item.shop_price }}</em>
+                    </div>
+                    <el-button text bg type="danger">
+                        大热卖推荐
+                    </el-button>
+                </NuxtLink>
+            </div>
         </div>
         <div ref="floorRef" class="floor-box">
             <div v-for="(item, index) in floorList" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
@@ -138,6 +137,7 @@ onMounted(async () => {
 .goods-best {
     background-color: var(--el-color-white);
     padding: 20px;
+    margin-bottom:30px;
 }
 
 .goods-best-tle {
@@ -159,13 +159,9 @@ onMounted(async () => {
 }
 
 .goods-best-list {
-    display: flex;
-    flex-wrap: wrap;
-
-    >li {
-        width: 20%;
-        padding: 10px;
-    }
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(5, 1fr);
 
     .link {
         display: block;
@@ -219,7 +215,7 @@ onMounted(async () => {
     --floor-left-width: 230px;
     display: flex;
     flex-wrap: wrap;
-    margin: 30px 0;
+    margin-bottom: 30px;
 
     .brand-list {
         width: 100%;

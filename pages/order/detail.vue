@@ -25,18 +25,20 @@
                 <div class="lt">
                     <span class="mr20px">订单号：<b>{{ order_no }}</b></span>
                     <span>订单状态：
-                        <lazy-el-text class="font-bold" size="large" :type="orderState.type"
+                        <el-text class="font-bold" size="large" :type="orderState.type"
                             :style="`color: ${orderState.color};`">
                             {{ orderState.text }}
-                        </lazy-el-text>
+                        </el-text>
                     </span>
-                    <p v-if="orderInfo?.order_status === 1" class="mt10px">
+                    <div v-if="orderInfo?.order_status === 1" class="mt10px">
                         您的订单已提交成功，请尽快完成付款哦！
-                    </p>
+                        <el-countdown title="" format="[剩余]DD[天]HH[时]mm[分]ss[秒]" :value="setEndTime()"
+                            value-style="font-size:13px;" @finish="onFinish()" />
+                    </div>
                 </div>
                 <div class="gt">
                     <OrderOperate class="order-ope"
-                        :data="{ order_no, status: orderInfo!.order_status, is_return: orderInfo!.is_refund }"
+                        :data="{ order_no, status: orderInfo!.order_status, bill_status: orderInfo!.bill_status, is_return: orderInfo!.is_refund }"
                         @update="updateOrder" />
                 </div>
             </div>
@@ -48,9 +50,6 @@
                     <lazy-el-steps class="step-box" :active="stepSelect" finish-status="success">
                         <el-step v-for="(item, index) in orderInfo?.status_info" :key="index" :title="item.text"
                             :description="item.time" />
-                        <!-- <el-step title="付款成功" description="2023-05-26 14:30:43" />
-                    <el-step title="已发货" description="2023-05-26 14:30:43" />
-                    <el-step title="确认收货" description="2023-05-26 14:30:43" /> -->
                     </lazy-el-steps>
                 </div>
             </div>
@@ -74,9 +73,8 @@
                             收货信息：
                         </div>
                         <div class="gt">
-                            <lazy-el-text>
-                                {{ addressText }}
-                            </lazy-el-text>
+                            <div>{{ orderInfo?.consignee_name }}&emsp;{{ orderInfo?.consignee_phone }}</div>
+                            <el-text> {{ addressText }} </el-text>
                             <span class="ml8px text-12px c-#999"> 收货信息有误？请立即联系客服修改</span>
                         </div>
                     </li>
@@ -101,7 +99,10 @@
                             支付方式：
                         </div>
                         <div class="gt">
-                            在线支付
+                            <span v-if="orderInfo?.pay_type === 1">支付宝支付</span>
+                            <span v-else-if="orderInfo?.pay_type === 2"> 微信支付 </span>
+                            <span v-else-if="orderInfo?.pay_type === 3"> 线下支付 </span>
+                            <span v-else> --</span>
                         </div>
                     </li>
                 </ul>
@@ -110,16 +111,13 @@
                 <div class="tle mb10px text-15px font-600 c-#222">
                     商品信息
                 </div>
-                <!-- <LazyClientOnly> -->
                 <el-table :data="orderInfo?.goods_list" border>
                     <el-table-column prop="goods_name" label="商品名称" min-width="180">
                         <template #default="{ row }">
-                            <div class="h50px flex">
-                                <div class="goods_img">
-                                    <CoImage class="h50px w50px" :src="row.goods_img" />
-                                </div>
+                            <div class="h50px flex items-center">
+                                <CoImage class="h50px w50px" :src="row.goods_img" />
                                 <div class="pl10px">
-                                    <NuxtLink class="goods_link">
+                                    <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                         {{ row.goods_name }}
                                     </NuxtLink>
                                 </div>
@@ -141,17 +139,14 @@
                     </el-table-column>
                 </el-table>
                 <div class="count-money">
-                    <p>商品总价 ：<span class="count-money-text"><del>￥{{ orderInfo?.total_price }}</del></span></p>
-                    <p>折扣价格 ：<span class="count-money-text">￥{{ orderInfo?.total_price }}</span> </p>
-                    <p>优惠金额 ：<span class="count-money-text">-￥{{ orderInfo?.coupon_price }}</span></p>
+                    <p>商品总价 ：<span class="count-money-text">￥{{ orderInfo?.total_price }}</span> </p>
+                    <p>优惠金额 ：<span class="count-money-text">-￥{{ formatNumber(setPreferMoney) }}</span></p>
                     <p>运费 ：<span class="count-money-text">+￥{{ orderInfo?.freight_price }}</span></p>
                     <p>
-                        实收金额：<el-text type="primary" class="count-money-text font-bold" style="--el-font-size-base:18px;">
-                            ￥{{ orderInfo?.meet_price }}
-                        </el-text>
+                        实付金额：<span class="count-money-text color-primary text-18px font-bold">￥{{ orderInfo?.meet_price
+                        }}</span>
                     </p>
                 </div>
-                <!-- </LazyClientOnly> -->
             </div>
         </el-skeleton>
     </LayoutUser>
@@ -205,18 +200,42 @@ const stepSelect = computed(() => {
     return step
 })
 
+// 优惠金额
+const setPreferMoney = computed(() => {
+    const num = Number(orderInfo.value?.total_price || 0) - Number(orderInfo.value?.meet_price || 0)
+    return num >= 0 ? num : 0
+})
+
 // 获取初始信息
 const initDefaultData = async () => {
     // if (defData.ready) return false
 
-    const { data } = await OrderApi.getInfo({ main_order_no: order_no.value })
+    const { data, error } = await OrderApi.getInfo({ main_order_no: order_no.value })
+
     await wait(100)
+    if (error.value) return
+    // console.log(data)
     defData.skeleton = false // 显示内容
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
     orderInfo.value = data.value.data
 
     // defData.ready = true
+}
+
+/**
+ * 设置倒计时结束的时间
+ */
+const setEndTime = () => {
+    if (!orderInfo.value?.end_time) return 0
+    return orderInfo.value.end_time * 1000
+}
+
+/**
+ * 倒计时结束事件（清除倒计时，订单设置为已取消）
+ */
+const onFinish = () => {
+    orderInfo.value!.order_status = 7
 }
 
 /**
@@ -270,11 +289,11 @@ definePageMeta({
 .count-money {
     text-align: right;
     font-size: 13px;
-    margin-top: 5px;
+    margin-top: 8px;
 
-    &-text {
+    .count-money-text {
         display: inline-block;
-        min-width: 80px;
+        min-width: 100px;
         color: var(--el-color-primary);
     }
 }
@@ -286,6 +305,12 @@ definePageMeta({
         &+.item-ope {
             margin-left: 10px;
         }
+    }
+}
+
+.goods-link {
+    &:hover {
+        color: var(--el-color-primary);
     }
 }
 </style>

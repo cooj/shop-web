@@ -5,31 +5,23 @@
             <el-skeleton :loading="defData.skeleton" animated>
                 <template #template>
                     <div class="pb10px pt15px">
-                        <el-skeleton-item style="width: 30%" />
+                        <el-skeleton-item class="w30%!" />
                     </div>
                     <div class="mb20px min-h500px bg-#fff p15px">
                         <el-skeleton :rows="5" />
                     </div>
                 </template>
-
                 <template v-if="defData.ready">
                     <el-breadcrumb class="py15px">
-                        <el-breadcrumb-item :to="{ path: '/' }">
-                            首页
-                        </el-breadcrumb-item>
-                        <!-- <el-breadcrumb-item :to="{ path: '/order/cart' }">
-          购物车
-        </el-breadcrumb-item> -->
-                        <el-breadcrumb-item>
-                            订单结算
+                        <el-breadcrumb-item v-for="item in breadcrumbData" :key="item.id" :to="item.href">
+                            {{ item.text }}
                         </el-breadcrumb-item>
                     </el-breadcrumb>
-
                     <el-form ref="formRef" :model="form" :rules="rules" label-width="100" label-position="left">
                         <section class="sec-box">
                             <div class="tle">
                                 <b>收货地址</b>
-                                <el-button text bg size="small" @click="onAddress(1)">
+                                <el-button text bg size="small" @click="onAddressInvoice(1)">
                                     新增地址
                                 </el-button>
                             </div>
@@ -46,14 +38,14 @@
                                 </el-radio-group>
                                 <div v-else class="w100% text-center text-13px c-#666">
                                     暂无收货地址,请点击
-                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(1)">新增地址</span>
+                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddressInvoice(1)">新增地址</span>
                                 </div>
                             </el-form-item>
                         </section>
                         <section class="sec-box">
                             <div class="tle">
                                 <b>发票信息</b>
-                                <el-button text bg size="small" @click="onAddress(2)">
+                                <el-button text bg size="small" @click="onAddressInvoice(2)">
                                     新增发票
                                 </el-button>
                             </div>
@@ -66,31 +58,48 @@
                                         否
                                     </el-radio>
                                 </el-radio-group>
-                                <el-radio-group v-if="form.is_invoice" v-model="form.billType">
-                                    <el-radio :label="1" border>
-                                        普通发票
-                                    </el-radio>
-                                    <el-radio :label="2" border>
-                                        增值税发票
-                                    </el-radio>
-                                </el-radio-group>
                             </el-form-item>
-
-                            <el-form-item v-if="form.is_invoice" prop="bill_address_id" label="收票地址">
-                                <el-radio-group v-if="defData.billAddressList.length" v-model="form.bill_address_id"
-                                    class="address-radio">
-                                    <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
-                                        :label="item.address_id">
-                                        <span>{{ setAddressText(item) }}</span>
-                                        <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
-                                        <span class="mx5px">{{ item.phone }}</span>
-                                        <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
-                                    </el-radio>
+                            <el-form-item v-if="form.is_invoice" prop="is_invoice" label="" label-width="auto">
+                                <!-- <pre>
+                                    {
+                                "type": 1,
+                                "header": "工业品",
+                                "enterprise_name": "八戒公司",
+                                "enterprise_email": "123456@qq.com",
+                                "tax_no": "88888888",
+                                "logon_addr": "深圳市光明区云智科技园18楼",
+                                "logon_tel": "0755-1234567",
+                                "bank": "工商银行",
+                                "bank_account": "",
+                                "verify_status": 1,
+                                "express_name": "顺丰",
+                                "express_no": "sf123456789",
+                                "failed_remark": "合格",
+                                "order_no": "",
+                                "is_send": 1
+                                }
+                                </pre> -->
+                                <el-radio-group v-model="form.invoice_id" class="address-radio">
+                                    <el-tabs v-model="form.billType" tab-position="left" class="radio-tabs">
+                                        <el-tab-pane label="增值税发票" :name="1">
+                                            <!-- <el-radio :label="1" border>
+                                                普通发票
+                                            </el-radio> -->
+                                            <el-radio v-for="item in defData.billAddressList" :key="item.address_id"
+                                                :label="item.address_id">
+                                                <span>{{ setAddressText(item) }}</span>
+                                                <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
+                                                <span class="mx5px">{{ item.phone }}</span>
+                                                <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                            </el-radio>
+                                        </el-tab-pane>
+                                        <el-tab-pane label="普通发票">
+                                            <el-radio :label="2" border>
+                                                增值税发票
+                                            </el-radio>
+                                        </el-tab-pane>
+                                    </el-tabs>
                                 </el-radio-group>
-                                <div v-else class="w100% text-center text-13px c-#666">
-                                    暂无收货地址,请点击
-                                    <span class="cursor-pointer hover:c-#d7231e" @click="onAddress(2)">新增地址</span>
-                                </div>
                             </el-form-item>
                         </section>
                         <section class="sec-box">
@@ -100,8 +109,8 @@
                             <el-table :data="form.tableData">
                                 <el-table-column prop="goods_name" label="商品名称" min-width="180">
                                     <template #default="{ row }">
-                                        <div class="flex">
-                                            <CoImage class="h50px w50px" :src="row.goods_img" />
+                                        <div class="flex items-center">
+                                            <CoImage class="h50px w50px" :src="row.goods_img" :icon-size="20" />
                                             <div class="pl10px">
                                                 <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                                     {{ row.goods_name }}
@@ -119,13 +128,6 @@
                                         <!-- <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100" /> -->
                                     </template>
                                 </el-table-column>
-                                <!-- <el-table-column prop="operate" label="操作" width="100" align="center">
-                <template #default="{ row }">
-                  <el-button type="primary" link @click="onRemove(row)">
-                    删除
-                  </el-button>
-                </template>
-              </el-table-column> -->
                             </el-table>
                         </section>
                         <section class="sec-box">
@@ -181,8 +183,11 @@
                                 </el-radio-group>
                                 <span v-else class="text-12px c-#888">暂无可用优惠券</span>
                             </el-form-item>
-                            <el-form-item prop="is_peas" label="工游豆">
-                                <span class="mr10px c-#666">是否使用工游豆</span>
+                            <el-form-item prop="is_peas" label="是否使用工游豆" label-width="auto">
+                                <!-- <template #label>
+                                    是否使用工游豆
+                                </template> -->
+                                <!-- <span class="mr10px c-#666">是否使用工游豆</span> -->
                                 <el-radio-group v-model="form.is_peas" class="mr15px">
                                     <el-radio :label="1">
                                         是
@@ -191,9 +196,12 @@
                                         否
                                     </el-radio>
                                 </el-radio-group>
-                                <span v-if="peasNumber.max === 0" class="text-12px c-#999">工游豆可用数量为0</span>
                                 <el-input-number v-if="form.is_peas && peasNumber.max" v-model="form.peas_number"
                                     :precision="0" :min="peasNumber.min" :max="peasNumber.max" />
+                                <p class="ml10px text-12px c-#999">
+                                    本单可用工游豆数量：<span class="mr10px c-#000">{{ defData.total_peas }}</span>
+                                    我的工游豆：<span class="c-#000">{{ defData.user_peas }}</span>
+                                </p>
                             </el-form-item>
                         </section>
                         <section class="sec-box flex mb0!">
@@ -208,9 +216,6 @@
                                     <span class="item-title">商品总件数：</span><span class="item-text">{{ defData.count_number
                                     }}件</span>
                                 </li>
-                                <!-- <li>
-                <span class="item-title">含危险品：</span><span class="item-text">0件</span>
-              </li> -->
                                 <li>
                                     <span class="item-title">商品总金额：</span><span class="item-text">￥{{
                                         formatNumber(defData.total_price)
@@ -245,7 +250,7 @@
             </el-skeleton>
         </div>
         <UserAddressModel ref="modelRef" @update="getAddress" />
-        <UserInvoiceModel ref="InvoiceRef" @update="getAddress" />
+        <UserInvoiceModel ref="invoiceRef" @update="getInvoice" />
     </section>
 </template>
 
@@ -254,10 +259,13 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { OrderApi } from '~/api/goods/order'
 import { UserAddressApi } from '~/api/user/address'
 import { UserAddressModel, UserInvoiceModel } from '#components'
+import { UserInvoiceApi } from '~/api/user/invoice'
+
+const router = useRouter()
+const backRoute = ref(router.options.history.state.back as string)
 
 const modelRef = ref<InstanceType<typeof UserAddressModel>>()
-const InvoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
-
+const invoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
 const formRef = ref<FormInstance>()
 
 const defData = reactive({
@@ -266,6 +274,11 @@ const defData = reactive({
     addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     billAddressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     ready: true, // 页面正确
+
+    invoiceList: [] as UserInvoiceApi_getList[], // 所有发票列表
+
+    invoiceList1: [] as UserInvoiceApi_getList[], // 增值税单发票列表
+    invoiceList2: [] as UserInvoiceApi_getList[], // 普通发票列表
 
     couponList: [] as OrderApi_GetSettleResponse['coupon_list'], // 优惠券列表
     count_number: 0, // 商品总数量
@@ -283,6 +296,7 @@ const form = reactive({
     bill_address_id: '' as '' | number, // 发票地址
 
     is_invoice: 1, // 是否开发票 1：是 0：否 （默认1）
+    invoice_id: '' as '' | number, // 发票id
 
     coupon_id: '' as '' | number, // 使用的优惠券编号或编号列表（可选）
     is_peas: 1, // 是否使用工游豆 1：是 0：否 (默认为1)
@@ -291,13 +305,23 @@ const form = reactive({
 })
 
 const rules = reactive<FormRules>({
-    name: [
-        { required: true, message: 'Please input Activity name', trigger: 'blur' },
-        { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
-    ],
     address_id: [{ required: true, message: '请设置收货地址', trigger: 'change' }],
     bill_address_id: [{ required: true, message: '请设置发票收货地址', trigger: 'change' }],
+    invoice_id: [{ required: true, message: '请选择发票', trigger: 'change' }],
+})
 
+// 面包屑导航
+const breadcrumbData = computed(() => {
+    const _list = [
+        { text: '首页', href: '/', id: 1 },
+        { text: '购物车', href: '/order/cart', id: 2 },
+        { text: '订单结算', href: '', id: 3 },
+    ]
+    // 不是从购物车进入时，删除进入购物车那项
+    if (!backRoute.value?.includes('/order/cart')) {
+        _list.splice(1, 1)
+    }
+    return _list
 })
 
 // 工游豆可用最大最小数量
@@ -329,11 +353,12 @@ const initDefaultData = async () => {
     }
 
     // 获取结算商品信息、用户地址
-    const [res1, res2] = await Promise.all([
+    const [res1, res2, res3] = await Promise.all([
         type === 1
             ? OrderApi.getSettleCart({ cart_id: cart_id.value })
             : (type === 2 ? OrderApi.getSettleGoods({ goods_id: Number(goods_id.value), goods_number: num }) : undefined),
         UserAddressApi.getList(),
+        UserInvoiceApi.getList(),
     ])
 
     await wait(800)
@@ -341,10 +366,10 @@ const initDefaultData = async () => {
 
     if (res1 && res1.data.value?.code === 200) {
         const data = res1.data.value?.data
+        console.log('data :>> ', data)
         // 未获取到商品时
         if (data.goods_list.length === 0) {
             defData.ready = false
-
             return
         }
 
@@ -366,6 +391,13 @@ const initDefaultData = async () => {
         defData.addressList = data
         defData.billAddressList = data
     }
+
+    if (res3 && res3.data.value?.code === 200) {
+        const data = res3.data.value?.data
+        defData.invoiceList = data
+        defData.invoiceList1 = data.filter(item => item.type === 1)
+        defData.invoiceList2 = data.filter(item => item.type === 2)
+    }
 }
 
 // 地址信息拼接
@@ -373,15 +405,15 @@ const setAddressText = (row: UserAddressApi_GetListResponse) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
 /**
- * 新增地址
- * @param type 1：收货地址 2：发票地址
+ * 新增地址、新增发票
+ * @param type 1：收货地址 2：发票
  */
-const onAddress = (type: 1 | 2) => {
+const onAddressInvoice = (type: 1 | 2) => {
     defData.type = type
     if (type === 1) {
         modelRef.value?.onOpenDialog()
     } else {
-        InvoiceRef.value?.onOpenDialog()
+        invoiceRef.value?.onOpenDialog()
     }
 }
 // 获取地址
@@ -404,6 +436,13 @@ const getAddress = (params: UserAddressApi_Edit) => {
         defData.addressList.push(data)
     }
     console.log('defData.addressList :>> ', defData.addressList)
+}
+
+/**
+ * 获取新增的发票数据
+ */
+const getInvoice = (params: any) => {
+    console.log('params :>> ', params)
 }
 
 // 提交订单
@@ -440,9 +479,15 @@ const onSubmit = async () => {
         address: '',
     }
 
+    // 进行开票
+    if (params.bill_status) {
+        //
+    }
+
     console.log('params :>> ', params)
 
     const { data: res } = await OrderApi.confirmSettle(params)
+
     if (res.value?.code === 200) {
         ElMessage.success('提交成功')
 
@@ -508,6 +553,15 @@ definePageMeta({
             font-weight: bold;
             border-color: var(--el-color-danger-light-7);
         }
+    }
+}
+
+.radio-tabs {
+    --el-tabs-header-height: 28px;
+    display: flex;
+
+    :deep(.el-tabs__header.is-left) {
+        height: auto;
     }
 }
 

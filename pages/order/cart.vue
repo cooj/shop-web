@@ -16,9 +16,9 @@
                     <el-table-column type="selection" width="55" align="center" />
                     <el-table-column prop="goods_name" label="商品名称" min-width="180">
                         <template #default="{ row }">
-                            <div class="h50px flex">
+                            <div class="h50px flex items-center">
                                 <div class="goods_img">
-                                    <CoImage class="h50px w50px" :src="row.goods_img" />
+                                    <CoImage class="h50px w50px" :src="row.goods_img" :icon-size="20" />
                                 </div>
                                 <div class="pl10px">
                                     <NuxtLink class="goods_link" :to="`/goods/${row.goods_sn}`" target="_blank">
@@ -39,7 +39,7 @@
                     </el-table-column>
                     <el-table-column prop="operate" label="操作" width="100" align="center">
                         <template #default="{ row }">
-                            <el-button type="primary" link @click="onRemove(row)">
+                            <el-button type="primary" size="small" link @click="onRemove(row)">
                                 删除
                             </el-button>
                         </template>
@@ -57,8 +57,8 @@
                 </div>
                 <div class="gt">
                     商品总价（未包含运费）： <b class="main-color text-20px">{{ countMoney }}</b> 元
-                    <el-button class="ml5px" type="primary" :disabled="defData.selectData.length ? false : true"
-                        @click="onSettle">
+                    <el-button class="ml5px tracking-2px" type="primary"
+                        :disabled="defData.selectData.length ? false : true" @click="onSettle">
                         结算商品
                     </el-button>
                 </div>
@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElTable } from 'element-plus'
+import type { TableInstance } from 'element-plus'
 import Big from 'big.js'
 import { GoodsApi } from '~/api/goods/list'
 
@@ -76,7 +76,7 @@ type GoodsTableCartItem = GoodsApi_GetCartListResponse['goods_list'][0]
 
 const useCartNumber = useCartNumberState()
 
-const tableRef = ref<InstanceType<typeof ElTable>>()
+const tableRef = ref<TableInstance>()
 
 const defData = reactive({
     url: '',

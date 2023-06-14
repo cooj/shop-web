@@ -177,7 +177,7 @@
                     <!-- 列表 -->
                     <dl v-if="defData.isList" class="goods-list-dl">
                         <dt class="goods-item-s">
-                            <div class="w500px px20px!">
+                            <div class="w450px px20px!">
                                 商品信息
                             </div>
                             <div class="w180px">
@@ -194,11 +194,10 @@
                             </div>
                         </dt>
                         <dd v-for=" item in defData.tableData" :key="item.goods_id" class="goods-item-s">
-                            <div class="g-info w500px">
+                            <div class="g-info w450px">
                                 <div class="g-info-left">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
-                                        <CoImage class="w80% pb80%" :src="item.goods_img"
-                                            style="--co-image-error-size:28px;" />
+                                        <CoImage class="w80% pb80%" :src="item.goods_img" :icon-size="28" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">
@@ -247,15 +246,15 @@
                                 </div>
                             </div>
                             <div class="flex-1 text-center">
-                                <el-button class="mb10px" type="primary" @click="onAddCart(item)">
+                                <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
+                                    <i :class="item.is_collect ? `i-carbon-favorite-filled` : 'i-carbon-favorite'" />
+                                </el-button>
+                                <el-button type="primary" @click="onAddCart(item)">
                                     <i class="i-carbon-shopping-cart" />
                                     <!-- <i class="i-ic-outline-shopping-cart"></i> -->
                                     加入购物车
                                 </el-button>
-                                <br>
-                                <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
-                                    <i :class="item.is_collect ? `i-carbon-favorite-filled` : 'i-carbon-favorite'" />
-                                </el-button>
+                                <!-- <br> -->
                                 <!-- <el-button v-if="item.goods_id % 2" class="focus">
                                     <i class="i-carbon-favorite-filled" />
                                     收藏
@@ -359,7 +358,7 @@ const defData = reactive({
     tableData: [] as GoodsApi_GetListItem[], // 商品列表
     showClass: false, // 显示所有分类
     showBrand: false, // 显示所有品牌
-    optChose: 1, // 1:默认选中状态，2：销量，3：价格，4：品牌，5：颜色，6：位置，7：文献，8：运费，9：
+    optChose: 1, // 1:默认选中状态，2：销量，3：价格
 })
 
 const form = reactive({
@@ -391,8 +390,6 @@ const initTableData = async () => {
     if (process.client) {
         if (document) document.documentElement.scrollTop = 0
     }
-
-    const loading = useElLoading()
 
     const params: GoodsApi_GetList = {
         is_paging: 1,
@@ -430,7 +427,7 @@ const initTableData = async () => {
     if (form.is_stock) params.goods_number = 1
 
     // console.log('params :>> ', params)
-
+    const loading = useElLoading()
     const { data } = await GoodsApi.getList(params)
     loading?.close()
     const dat = data.value!.data
@@ -504,7 +501,7 @@ const onPriceRange = () => {
 // 商品收藏
 const onAddCollect = async (row: GoodsApi_GetListItem) => {
     // 用户未登录时
-    if (!userState.userInfo.value?.user_id) {
+    if (!userState.token.value) {
         return navigateTo('/login')
     }
     // 已经收藏了，取消收藏状态
@@ -513,7 +510,6 @@ const onAddCollect = async (row: GoodsApi_GetListItem) => {
         const params: RecordApi_Del = {
             goods_ids: row.goods_id.toString(),
             type: 1,
-            user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.del(params)
         if (data.value?.code === 200) {
@@ -523,7 +519,6 @@ const onAddCollect = async (row: GoodsApi_GetListItem) => {
         const params: RecordApi_Add = {
             goods_id: row.goods_id,
             type: 1,
-            user_id: userState.userInfo.value.user_id,
         }
         const { data } = await RecordApi.add(params)
         if (data.value?.code === 200) {
@@ -535,7 +530,7 @@ const onAddCollect = async (row: GoodsApi_GetListItem) => {
 // 加入购物车
 const onAddCart = async (row: GoodsApi_GetListItem) => {
     // 用户未登录时，不允许加入购物车页面
-    if (!userState.userInfo.value?.user_id) {
+    if (!userState.token.value) {
         // ElMessage.error('请先登录!')
         return navigateTo('/login')
     }
@@ -754,41 +749,6 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
             padding: 0 8px;
         }
 
-        .g-info {
-            display: flex;
-            --goods-info-img-width: 100px;
-
-            .g-info-left {
-                width: var(--goods-info-img-width);
-            }
-
-            .g-info-right {
-                width: calc(100% - var(--goods-info-img-width));
-                padding: 0 10px;
-
-                .name {
-                    height: 48px;
-                    margin-bottom: 5px;
-
-                    .link {
-                        line-height: 24px;
-                        max-height: 48px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        display: -webkit-box;
-                        -webkit-line-clamp: 2;
-                        -webkit-box-orient: vertical;
-
-                        &:hover {
-                            cursor: pointer;
-                            color: var(--el-color-primary);
-                            text-decoration: underline;
-                        }
-                    }
-                }
-            }
-        }
-
         .g-price {
             padding: 5px;
 
@@ -829,6 +789,42 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
 
     dd.goods-item-s:hover {
         background-color: #fafafa;
+    }
+}
+
+.g-info {
+    display: flex;
+    --goods-info-img-width: 100px;
+
+    .g-info-left {
+        width: var(--goods-info-img-width);
+    }
+
+    .g-info-right {
+        width: calc(100% - var(--goods-info-img-width));
+        padding: 0 10px;
+
+        .name {
+            // height: 48px;
+            max-height: 48px;
+            margin-bottom: 5px;
+
+            .link {
+                line-height: 24px;
+                max-height: 48px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+
+                &:hover {
+                    cursor: pointer;
+                    color: var(--el-color-primary);
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }
 

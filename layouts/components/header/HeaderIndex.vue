@@ -27,7 +27,7 @@
         <div v-if="isIndex && defData.activeList.length" class="market">
             <div class="grid container">
                 <NuxtLink v-for="item in defData.activeList" :key="item.ad_id" :to="item.ad_link" target="_blank">
-                    <CoImage class="h150px w100%" :src="item.ad_img" />
+                    <CoImage class="block h150px w100%" :src="item.ad_img" fit="cover" />
                 </NuxtLink>
             </div>
         </div>
@@ -57,7 +57,7 @@ const defData = reactive({
 const getActiveList = async () => {
     // 获取活动广告
     const { data: banner } = await HomeApi.getBanner({ position_id: 3 })
-    console.log('banner :>> ', banner)
+
     //     "start_time": 1678334400, //开始时间
     // "end_time": 1685246400, //结束时间
     const _list = banner.value?.data.lists.filter((item) => {

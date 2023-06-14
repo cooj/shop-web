@@ -16,11 +16,12 @@
     font-size: 12px;
     line-height: 18px;
     display: inline-block;
-    margin-right: 5px;
+    // margin-right: 5px;
     color: var(--el-color-primary);
     border-top: 1px solid var(--el-color-primary);
     border-bottom: 1px solid var(--el-color-primary);
-    transform: scale(0.95);
+    transform: scale(0.9);
+    transform-origin: left;
 
     &::after,
     &::before {
