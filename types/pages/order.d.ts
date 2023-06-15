@@ -71,21 +71,22 @@ declare interface OrderApi_GetSettleResponse {
 declare interface OrderApi_ConfirmSettle {
     is_peas: number;     // 是否使用工游豆 1是 0否      示例值:0
     goods_peas: number;     // 工游豆数量      示例值:0
+
     address_id: number;     // 地址ID      示例值:5
     coupon_draw_id: number;     // 优惠券id（无传0）      示例值:0
     remarks: string;     // 备注      示例值:测试平摊金额
     bill_status: number;     // 是否开票 0否 1是  以下字段=1是填      示例值:0
-    type: string;     // 发票类型 1：增值税专用发票，2：普通发票      示例值:
+    type: string | 1 | 2 | 3;     // 发票类型 1：增值税专用发票，2：普通发票      示例值:
     header: string;     // 抬头      示例值:
     tax_no: string;     // 税号      示例值:
-    bill_name: string;     // 发票人姓名  type=2填      示例值:
-    bill_tel: string;     // 发票人电话  type=2填      示例值:
-    logon_tel: string;     // 注册电话  type=2填      示例值:
-    identifier: string;     // 纳税人识别号  type=2填      示例值:
-    bank: string;     // 开户银行  type=2填      示例值:
-    bank_account: string;     // 开户账号  type=2填      示例值:
-    zip_code: string;     // 邮编  type=2填      示例值:
-    address: string;     // 地址  type=2填      示例值:
+    enterprise_name: string;     // Text企业名称 
+    enterprise_email: string;    // 是 Text企业邮箱
+
+    logon_addr: string;  // 是 Text注册地址type=1填 
+    logon_tel: string;  // 是 Text注册电话type=1填 
+    bank: string; // 是 Text开户银行type=1填 
+    bank_account: string; // 是 Text开户账号type=1填
+    bill_address_id:number|''; // 发票收货地址
 }
 
 
@@ -110,7 +111,7 @@ declare interface OrderApi_GetInfoResponse {
     "user_id": 1, //用户id
     "total_price": "107.52", //总金额
     "total_number": 10, //总数量
-    "pay_type": 0|1|2|3, //类型 1微信 2支付宝 3线下
+    "pay_type": 0 | 1 | 2 | 3, //类型 1微信 2支付宝 3线下
     "pay_sn": "XS20230412103144876929", //支付流水号
     "pay_status": 0 | 1 | 2 | 3, //支付状态 0未支付 1已支付 2已取消 3已退款
     "pay_time": "2023-04-12 10:31:44", //支付时间
@@ -396,8 +397,8 @@ declare interface OrderReturnApi_InfoResponse {
 interface OrderDetailInfoData {
     info: OrderApi_GetInfoResponse,      // 订单信息
     pay?: OrderApi_PayOrderResponse,          // 支付信息(线下支付)
-    code?:number,
-    msg?:string,
+    code?: number,
+    msg?: string,
 }
 
 

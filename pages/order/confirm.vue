@@ -59,46 +59,36 @@
                                     </el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item v-if="form.is_invoice" prop="is_invoice" label="" label-width="auto">
-                                <!-- <pre>
-                                    {
-                                "type": 1,
-                                "header": "工业品",
-                                "enterprise_name": "八戒公司",
-                                "enterprise_email": "123456@qq.com",
-                                "tax_no": "88888888",
-                                "logon_addr": "深圳市光明区云智科技园18楼",
-                                "logon_tel": "0755-1234567",
-                                "bank": "工商银行",
-                                "bank_account": "",
-                                "verify_status": 1,
-                                "express_name": "顺丰",
-                                "express_no": "sf123456789",
-                                "failed_remark": "合格",
-                                "order_no": "",
-                                "is_send": 1
-                                }
-                                </pre> -->
-                                <el-radio-group v-model="form.invoice_id" class="address-radio">
-                                    <el-tabs v-model="form.billType" tab-position="left" class="radio-tabs">
-                                        <el-tab-pane label="增值税发票" :name="1">
-                                            <!-- <el-radio :label="1" border>
-                                                普通发票
-                                            </el-radio> -->
-                                            <el-radio v-for="item in defData.addressList" :key="item.address_id"
-                                                :label="item.address_id">
-                                                <span>{{ setAddressText(item) }}</span>
-                                                <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
-                                                <span class="mx5px">{{ item.phone }}</span>
-                                                <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
-                                            </el-radio>
-                                        </el-tab-pane>
-                                        <el-tab-pane label="普通发票">
-                                            <el-radio :label="2" border>
+                            <el-form-item v-if="form.is_invoice" prop="invoice_id" label="" label-width="auto">
+                                <el-radio-group v-model="form.invoice_id" class="address-radio bill">
+                                    <div class="grid grid-cols-2 w100% b-1">
+                                        <div>
+                                            <h4 class="b-b-1 p5px text-center text-14px">
                                                 增值税发票
-                                            </el-radio>
-                                        </el-tab-pane>
-                                    </el-tabs>
+                                            </h4>
+                                            <div class="p5px">
+                                                <el-radio v-for="item in invoiceList1" :key="item.bill_header_id"
+                                                    :label="item.bill_header_id">
+                                                    <span>抬头：{{ item.header }}</span>
+                                                    <span class="mx10px opacity90">email：{{ item.enterprise_email }} </span>
+                                                    <!-- <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em> -->
+                                                </el-radio>
+                                            </div>
+                                        </div>
+                                        <div class="b-l-1">
+                                            <h4 class="b-b-1 p5px text-center text-14px">
+                                                普通发票
+                                            </h4>
+                                            <div class="p5px">
+                                                <el-radio v-for="item in invoiceList2" :key="item.bill_header_id"
+                                                    :label="item.bill_header_id">
+                                                    <span>抬头：{{ item.header }}</span>
+                                                    <span class="mx10px opacity90">email：{{ item.enterprise_email }} </span>
+                                                    <!-- <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em> -->
+                                                </el-radio>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </el-radio-group>
                             </el-form-item>
 
@@ -293,10 +283,7 @@ const defData = reactive({
     addressList: [] as UserAddressApi_GetListResponse[], // 用户地址列表
     ready: true, // 页面正确
 
-    invoiceList: [] as UserInvoiceApi_getList[], // 所有发票列表
-
-    invoiceList1: [] as UserInvoiceApi_getList[], // 增值税单发票列表
-    invoiceList2: [] as UserInvoiceApi_getList[], // 普通发票列表
+    invoiceList: [] as UserInvoiceApi_getListResponse[], // 所有发票列表
 
     couponList: [] as OrderApi_GetSettleResponse['coupon_list'], // 优惠券列表
     count_number: 0, // 商品总数量
@@ -308,7 +295,7 @@ const defData = reactive({
 
 const form = reactive({
     tableData: [] as OrderApi_GetSettleResponse['goods_list'],
-    billType: 1, // 发票类型
+
     payType: 1, // 支付方式 1-在线，  2：对公转账
     address_id: '' as '' | number, // 地址id
     bill_address_id: '' as '' | number, // 发票地址
@@ -327,6 +314,11 @@ const rules = reactive<FormRules>({
     bill_address_id: [{ required: true, message: '请设置发票收货地址', trigger: 'change' }],
     invoice_id: [{ required: true, message: '请选择发票', trigger: 'change' }],
 })
+
+// 增值税发票
+const invoiceList1 = computed(() => defData.invoiceList.filter(item => item.type === 1))
+// 普通发票
+const invoiceList2 = computed(() => defData.invoiceList.filter(item => item.type === 2))
 
 // 面包屑导航
 const breadcrumbData = computed(() => {
@@ -419,8 +411,6 @@ const initDefaultData = async () => {
     if (res3 && res3.data.value?.code === 200) {
         const data = res3.data.value?.data
         defData.invoiceList = data
-        defData.invoiceList1 = data.filter(item => item.type === 1)
-        defData.invoiceList2 = data.filter(item => item.type === 2)
     }
 }
 
@@ -461,8 +451,16 @@ const getAddress = (params: UserAddressApi_Edit) => {
 /**
  * 获取新增的发票数据
  */
-const getInvoice = (params: any) => {
-    console.log('params :>> ', params)
+const getInvoice = (params: UserInvoiceApi_Edit) => {
+    if (!params) return
+
+    defData.invoiceList.push({
+        ...params,
+        header: params.enterprise_name,
+        is_default: 0,
+    })
+
+    form.invoice_id = params.bill_header_id
 }
 
 // 提交订单
@@ -485,27 +483,48 @@ const onSubmit = async () => {
         address_id: Number(form.address_id),
         coupon_draw_id: form.coupon_id || 0,
         remarks: form.remark,
-        bill_status: 0,
+        bill_status: form.is_invoice ? 1 : 0, // 是否开票
         type: '',
         header: '',
         tax_no: '',
-        bill_name: '',
-        bill_tel: '',
+        enterprise_name: '',
+        enterprise_email: '',
         logon_tel: '',
-        identifier: '',
+        logon_addr: '',
         bank: '',
         bank_account: '',
-        zip_code: '',
-        address: '',
+        bill_address_id: '',
     }
 
     // 进行开票
     if (params.bill_status) {
+        const invoice = defData.invoiceList.find(item => item.bill_header_id === form.invoice_id)
+
+        if (invoice) {
+            params.bill_address_id = form.bill_address_id
+            params.type = invoice.type
+            params.header = invoice.header
+            params.tax_no = invoice.tax_no
+            params.enterprise_name = invoice.enterprise_name
+            params.enterprise_email = invoice.enterprise_email
+
+            if (invoice.type === 1) {
+                params.logon_tel = invoice.logon_tel
+                params.logon_addr = invoice.logon_addr
+                params.bank = invoice.bank
+                params.bank_account = invoice.bank_account
+            }
+        }
         //
     }
 
-    console.log('params :>> ', params)
-
+    // const resp = await useFetch('/api/test', {
+    //     method: 'post',
+    //     body: params,
+    // })
+    // console.log(resp)
+    // console.log('params :>> ', params)
+    // return
     const { data: res } = await OrderApi.confirmSettle(params)
 
     if (res.value?.code === 200) {
@@ -574,14 +593,11 @@ definePageMeta({
             border-color: var(--el-color-danger-light-7);
         }
     }
-}
 
-.radio-tabs {
-    --el-tabs-header-height: 28px;
-    display: flex;
-
-    :deep(.el-tabs__header.is-left) {
-        height: auto;
+    &.bill {
+        .el-radio {
+            display: flex;
+        }
     }
 }
 
