@@ -60,6 +60,12 @@
                 <el-button link>
                     <span>帮助中心</span>
                 </el-button>
+                <el-divider direction="vertical" />
+                <NuxtLink to="/sale">
+                    <el-button link>
+                        <span>售后中心</span>
+                    </el-button>
+                </NuxtLink>
                 <!-- <el-divider direction="vertical" />
                 <el-button link>
                     <i class="i-ep-shopping-cart-full" />

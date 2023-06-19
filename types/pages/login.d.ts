@@ -24,8 +24,8 @@ declare interface LoginApi_LoginResponse {
  * 登录页--短信验证码登录 发送短信验证码 请求数据
  */
 declare interface LoginApi_validateCode {
-    phone: string //手机号
-    type: 1 | 2 | 3 | 4//类型：1注册 2登录 3找回 4修改手机号
+    phone: string //手机号 
+    type: 1 | 2 | 3 | 4 | 5 | 6//类型：1注册 2登录 3找回 4修改手机号 5审核通知(前端不能使用) 6其他短信验证码
 }
 
 /**
@@ -49,7 +49,7 @@ declare interface LoginApi_submitIdeResponse {
  * 找回密码--验证码 响应数据
  */
 declare interface LoginApi_getCodeResponse {
-[x: string]: any
+    [x: string]: any
     "session_id": string //会话id
     "validate_code": string //验证码
 }
@@ -83,7 +83,7 @@ declare interface LoginApi_GetWeChatResponse {
     "style": "black",
     "href": "",
     "url": "https://open.weixin.qq.com/connect/qrconnect?appid=wx4847f76d5c8781e5&redirect_uri=http%3A%2F%2Fscdev.goyojo.com%2Findex.html&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect",
-    "result":string,
+    "result": string,
 }
 
 /**
@@ -91,13 +91,13 @@ declare interface LoginApi_GetWeChatResponse {
  */
 declare interface LoginApi_getOpenid {
     code: string
-    user_id?:number //用户ID（跳个人中心页传）
+    user_id?: number //用户ID（跳个人中心页传）
 }
 /**
  * 微信获取openID 响应参数
  */
 declare interface LoginApi_getOpenidResponse {
-    "openid_info":{
+    "openid_info": {
         "openid": "oF3PcsnsrMiJzEwalZZbAfWQpxCI",
         "nickname": "NICKNAME",
         "sex": "1",

@@ -1,4 +1,4 @@
-<!-- 新增发票 -->
+<!-- 新增、修改发票 -->
 <template>
     <!-- auto-height -->
     <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden :title="comData.title"
@@ -155,7 +155,6 @@ initDefaultData()
 const onOpenDialog = (row?: UserInvoiceApi_getListResponse) => {
     if (row) { // 修改
         defData.type = 2
-        console.log('row :>> ', row)
         form.data.bill_header_id = row.bill_header_id
         form.data.enterprise_name = row.enterprise_name
         form.data.enterprise_email = row.enterprise_email
@@ -164,6 +163,7 @@ const onOpenDialog = (row?: UserInvoiceApi_getListResponse) => {
         form.data.logon_tel = row.logon_tel
         form.data.logon_addr = row.logon_addr
         form.data.bank_account = row.bank_account
+        form.data.bank = row.bank
     } else {
         defData.type = 1
         form.data.enterprise_name = ''
@@ -199,11 +199,9 @@ const onConfirm = async () => {
         bank: form.data.bank.trim(),
         bank_account: form.data.bank_account.trim(),
     }
-    // console.log('params :>> ', params)
     if (defData.type === 1) { // 新增
         defData.btnLoading = true
         const { data: res } = await UserInvoiceApi.add(params)
-        console.log(res)
         defData.btnLoading = false
         if (res.value?.code === 200) {
             ElMessage.success('添加成功')

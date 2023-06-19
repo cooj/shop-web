@@ -40,7 +40,7 @@ const defData = reactive({
     page: 1,
     total: 10,
     activeName: 'first',
-    pageSize: 18,
+    pageSize: 11,
     tableData: [] as InterListApi_getUserListResponse['lists'],
 })
 

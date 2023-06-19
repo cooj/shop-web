@@ -96,6 +96,11 @@
                                     推荐管理
                                 </NuxtLink>
                             </dd>
+                            <dd>
+                                <NuxtLink to="/user/leaveWord">
+                                    我的留言
+                                </NuxtLink>
+                            </dd>
                         </dl>
                     </div>
                 </el-aside>

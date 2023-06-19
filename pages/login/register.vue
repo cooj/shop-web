@@ -77,8 +77,10 @@ definePageMeta({
 const useSystem = useSystemState()
 const infoData = async () => {
     const systemInfo = await useSystem.getSystemInfo()
-    defData.policy = systemInfo.value.policy
-    defData.agreement = systemInfo.value.agreement
+    if (systemInfo.value) {
+        defData.policy = systemInfo.value.policy
+        defData.agreement = systemInfo.value.agreement
+    }
 }
 infoData()
 
@@ -88,6 +90,7 @@ const defData = reactive({
     type: 1, // 1：工游记网站服务协议，2：工游记隐私政策
     agreement: '', // 工游记网站服务协议
     policy: '', // 工游记隐私政策
+    visible: false, //
 })
 
 const comData = computed(() => {
