@@ -2,15 +2,15 @@
  * 登录 请求数据
  */
 declare interface LoginApi_Login {
-    type?: 1 | 2 | 3 //类型：1账户登录 2验证码登录3注册
-    phone?: string //手机号
+    type: 1 | 2 | 3 | 4 //类型：1账户登录 2验证码登录 3注册 4微信扫码绑定手机号
+    phone: string //手机号(都传)
     password?: string //密码（类型为1传）
-    validate_code?: string //验证码 （类型为2，3传）
-    nickname?: string //微信昵称（类型为2传）
-    openid?: string //微信openid(类型为2传)
-    unionid?: string //微信unionid(类型为2传)
-    headimgurl?: string //微信头像（类型为2传）
-    share_id?: number //推荐人id （类型为3传）
+    validate_code?: string //验证码 （类型为2，3，4传）
+    nickname?: string //微信昵称（类型为4传）
+    openid?: string //微信openid(类型为4传)
+    unionid?: string //微信unionid(类型为4传)
+    headimgurl?: string //微信头像（类型为4传）
+    share_id?: number //推荐人id （类型为2，3，4传）
 }
 
 /**

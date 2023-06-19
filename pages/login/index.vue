@@ -85,12 +85,15 @@
                     </NuxtLink>
                 </el-col>
                 <el-col :span="2" />
-                <el-col :span="4">
-                    <div class="mt-2">
-                        第三方：
+                <el-col :span="10">
+                    <div class="mt-5px flex items-center">
+                        <span class="mr5px">第三方：</span>
+                        <!-- <i class="i-ic-baseline-wechat cursor-pointer text-24px c-#2ec100" @click="weChatLogin" /> -->
+                        <div class="we-chart cursor-pointer" @click="weChatLogin">
+                            <i class="i-ic-baseline-wechat text-24px c-#fff" />
+                        </div>
                     </div>
                 </el-col>
-                <el-image class="h40px w50px" :src="url" @click="weChatLogin" />
             </el-row>
         </div>
     </div>
@@ -204,7 +207,6 @@ const getCodeClick = async () => {
 }
 
 // 微信扫码登录
-const url = 'https://img.sj33.cn/uploads/allimg/201402/7-140223103130591.png'
 const weChat = ref()
 const weChatLogin = async () => {
     const data: LoginApi_getChat = {
@@ -231,7 +233,7 @@ const getOpenId = async () => {
     } else { // 未注册用户
         defData.type = 3
         const info: LoginApi_Login = {
-            type: 3,
+            type: 4,
             phone: form.phone,
             validate_code: form.validate_code,
             nickname: codeId.value?.data.openid_info.nickname,
@@ -292,5 +294,17 @@ body {
 .grid-content {
     border-radius: 4px;
     min-height: 36px;
+}
+
+.we-chart {
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    --un-bg-opacity: 1;
+    background-color: rgba(46, 193, 0, var(--un-bg-opacity));
+
 }
 </style>

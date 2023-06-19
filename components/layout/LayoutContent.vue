@@ -79,7 +79,7 @@ const openList = computed(() => {
     return defData.menuList.filter(item => item.children?.length > 0).map(opt => opt.id.toString())
 })
 
-// 初始化默认数据，
+// 初始化默认数据
 const initDefaultData = async () => {
     // console.log('type :>> ', type)
     // 有数据时不请求接口

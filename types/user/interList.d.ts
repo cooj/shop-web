@@ -60,6 +60,7 @@ declare interface InterListApi_getUserListResponse {
   "lists": {
     "question_id": number, //问答id
     "goods_id": number, //商品id
+    "goods_sn": string, //商品编号
     "user_id": number, //用户id
     "type": 1 | 2, //类型 1问 2答
     "q_id": number, //回答提问的id，type为2填写，type为1默认0

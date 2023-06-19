@@ -1,62 +1,72 @@
 <template>
     <LayoutUser>
-        <el-breadcrumb>
-            <el-breadcrumb-item>
-                账户管理
-            </el-breadcrumb-item>
-            <el-breadcrumb-item>我的留言</el-breadcrumb-item>
-        </el-breadcrumb>
-        <div class="my15px">
-            <el-button type="primary" @click="defData.visible = true">
-                新增留言
-            </el-button>
-        </div>
-        <el-table :data="defData.tableData" border>
-            <el-table-column prop="type" label="类型" width="120" align="center" show-overflow-tooltip>
-                <template #default="{ row }">
-                    <el-tag v-if="row.type === 1">
-                        建议
-                    </el-tag>
-                    <el-tag v-else-if="row.type === 2">
-                        投诉
-                    </el-tag>
-                    <el-tag v-else-if="row.type === 3">
-                        商品
-                    </el-tag>
-                    <el-tag v-else-if="row.type === 4">
-                        其他
-                    </el-tag>
-                    <el-tag v-else-if="row.type === 5">
-                        店铺投诉
-                    </el-tag>
-                    <el-tag v-else>
-                        订单问题
-                    </el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="content" label="留言内容" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="add_time" label="留言时间" width="180" show-overflow-tooltip align="center">
-                <template #default="scopes">
-                    {{ formatTime(scopes.row.add_time) }}
-                </template>
-            </el-table-column>
-            <el-table-column prop="is_reply" label="是否回复" width="83" show-overflow-tooltip>
-                <template #default="{ row }">
-                    <el-tag v-if="row.is_reply" type="success">
-                        是
-                    </el-tag>
-                    <el-tag v-else type="danger">
-                        否
-                    </el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="reply_content" label="回复内容" width="175" show-overflow-tooltip />
-            <el-table-column prop="reply_time" label="回复时间" width="180" show-overflow-tooltip align="center">
-                <template #default="scopes">
-                    {{ scopes.row.reply_time ? formatTime(scopes.row.reply_time) : '' }}
-                </template>
-            </el-table-column>
-        </el-table>
+        <el-skeleton :loading="defData.skeleton" animated>
+            <template #template>
+                <div class="pb20px">
+                    <el-skeleton-item class="w20%!" />
+                </div>
+                <div class="min-h500px">
+                    <el-skeleton :rows="5" />
+                </div>
+            </template>
+            <el-breadcrumb>
+                <el-breadcrumb-item>
+                    账户管理
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>我的留言</el-breadcrumb-item>
+            </el-breadcrumb>
+            <div class="my15px">
+                <el-button type="primary" @click="defData.visible = true">
+                    新增留言
+                </el-button>
+            </div>
+            <el-table :data="defData.tableData" border>
+                <el-table-column prop="type" label="类型" width="120" align="center" show-overflow-tooltip>
+                    <template #default="{ row }">
+                        <el-tag v-if="row.type === 1">
+                            建议
+                        </el-tag>
+                        <el-tag v-else-if="row.type === 2">
+                            投诉
+                        </el-tag>
+                        <el-tag v-else-if="row.type === 3">
+                            商品
+                        </el-tag>
+                        <el-tag v-else-if="row.type === 4">
+                            其他
+                        </el-tag>
+                        <el-tag v-else-if="row.type === 5">
+                            店铺投诉
+                        </el-tag>
+                        <el-tag v-else>
+                            订单问题
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="content" label="留言内容" min-width="150" show-overflow-tooltip />
+                <el-table-column prop="add_time" label="留言时间" width="180" show-overflow-tooltip align="center">
+                    <template #default="scopes">
+                        {{ formatTime(scopes.row.add_time) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="is_reply" label="是否回复" width="83" show-overflow-tooltip>
+                    <template #default="{ row }">
+                        <el-tag v-if="row.is_reply" type="success">
+                            是
+                        </el-tag>
+                        <el-tag v-else type="danger">
+                            否
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="reply_content" label="回复内容" width="175" show-overflow-tooltip />
+                <el-table-column prop="reply_time" label="回复时间" width="180" show-overflow-tooltip align="center">
+                    <template #default="scopes">
+                        {{ scopes.row.reply_time ? formatTime(scopes.row.reply_time) : '' }}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-skeleton>
     </LayoutUser>
 
     <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="新增留言" width="680px"
@@ -80,6 +90,7 @@ import { LeaveWordApi } from '~/api/user/leaveWord'
 
 const defData = reactive({
     tableData: [] as LeaveWordApi_GetListResponse[],
+    skeleton: true,
     typeList: [
         {
             value: 1,
@@ -125,6 +136,7 @@ const rules = reactive<FormRules>({
 
 const initTableData = async () => {
     const res = await LeaveWordApi.getList()
+    defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
 
     defData.tableData = res.data.value.data
