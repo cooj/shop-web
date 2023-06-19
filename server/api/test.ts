@@ -6,7 +6,7 @@ import { useServerFetch } from '../utils'
 export default defineEventHandler(async (event) => {
     // const res = ''
     try {
-        const res = await useServerFetch<any>(event, '/api/mall/get_user_info')
+        const res = await useServerFetch<any>(event, '/api/mall/set_order')
         console.log(res)
 
         return res

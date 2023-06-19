@@ -32,8 +32,8 @@
                     </span>
                     <div v-if="orderInfo?.order_status === 1" class="mt10px">
                         您的订单已提交成功，请尽快完成付款哦！
-                        <el-countdown title="" format="[剩余]DD[天]HH[时]mm[分]ss[秒]" :value="setEndTime()"
-                            value-style="font-size:13px;" @finish="onFinish()" />
+                        <el-countdown v-if="orderInfo?.pay_type === 3" format="[剩余]DD[天]HH[时]mm[分]ss[秒]"
+                            :value="setEndTime()" value-style="font-size:13px;" @finish="onFinish()" />
                     </div>
                 </div>
                 <div class="gt">
@@ -91,7 +91,8 @@
                             配送方式：
                         </div>
                         <div class="gt">
-                            默认快递
+                            <!-- TODO 默认快递 -->
+                            --
                         </div>
                     </li>
                     <li>
@@ -99,10 +100,10 @@
                             支付方式：
                         </div>
                         <div class="gt">
-                            <span v-if="orderInfo?.pay_type === 1">支付宝支付</span>
-                            <span v-else-if="orderInfo?.pay_type === 2"> 微信支付 </span>
-                            <span v-else-if="orderInfo?.pay_type === 3"> 线下支付 </span>
-                            <span v-else> --</span>
+                            <span v-if="orderInfo?.pay_type === 1">微信支付</span>
+                            <span v-else-if="orderInfo?.pay_type === 2">支付宝支付</span>
+                            <span v-else-if="orderInfo?.pay_type === 3" class="color-warning">线下支付</span>
+                            <span v-else>--</span>
                         </div>
                     </li>
                 </ul>
@@ -156,7 +157,6 @@
 import { OrderApi } from '~/api/goods/order'
 
 const router = useRouter()
-
 const backRoute = ref(router.options.history.state.back as string)
 
 // 订单编号
@@ -185,9 +185,11 @@ const breadcrumbData = computed(() => {
 // 订单信息
 const orderInfo = ref<OrderApi_GetInfoResponse>()
 
+// 订单状态
 const orderState = computed(() => {
     return setOrderStatusType(orderInfo.value?.order_status || 0)
 })
+// 收货地址
 const addressText = computed(() => {
     return setArrayTextName([orderInfo.value?.province, orderInfo.value?.city, orderInfo.value?.area, orderInfo.value?.address], ' ')
 })
@@ -214,7 +216,7 @@ const initDefaultData = async () => {
 
     await wait(100)
     if (error.value) return
-    // console.log(data)
+
     defData.skeleton = false // 显示内容
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
@@ -263,7 +265,7 @@ definePageMeta({
 }
 
 .bane-item {
-    padding: 10px;
+    padding: 20px;
     background: var(--el-fill-color-light);
     border-radius: 4px;
 }

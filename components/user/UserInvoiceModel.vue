@@ -18,7 +18,7 @@
                 </el-col>
                 <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                     <el-form-item prop="type" label="发票类型：">
-                        <el-radio-group v-model="form.data.type" class="ml-4">
+                        <el-radio-group v-model="form.data.type">
                             <el-radio :label="1" border>
                                 增值税专用发票
                             </el-radio>
@@ -32,30 +32,32 @@
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
-                    <el-form-item v-if="form.data.type === 1" prop="tax_no" label="纳税人识别号：">
+                    <el-form-item prop="tax_no" label="纳税人识别号：">
                         <el-input v-model="form.data.tax_no" placeholder="请输入纳税人识别号" maxlength="20" clearable />
                     </el-form-item>
                 </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item v-if="form.data.type === 1" prop="logon_tel" label="注册电话：">
-                        <el-input v-model="form.data.logon_tel" placeholder="请输入注册电话" maxlength="20" clearable />
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
-                    <el-form-item v-if="form.data.type === 1" prop="logon_addr" label="注册地址：">
-                        <el-input v-model="form.data.logon_addr" placeholder="请输入注册地址" maxlength="20" clearable />
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
-                    <el-form-item v-if="form.data.type === 1" prop="bank" label="开户银行：">
-                        <el-input v-model="form.data.bank" placeholder="请输入开户银行" maxlength="20" clearable />
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
-                    <el-form-item v-if="form.data.type === 1" prop="bank_account" label="开户账号：">
-                        <el-input v-model="form.data.bank_account" placeholder="请输入开户账号" maxlength="20" clearable />
-                    </el-form-item>
-                </el-col>
+                <template v-if="form.data.type === 1">
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                        <el-form-item prop="logon_tel" label="注册电话：">
+                            <el-input v-model="form.data.logon_tel" placeholder="请输入注册电话" maxlength="20" clearable />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
+                        <el-form-item prop="logon_addr" label="注册地址：">
+                            <el-input v-model="form.data.logon_addr" placeholder="请输入注册地址" maxlength="100" clearable />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
+                        <el-form-item prop="bank" label="开户银行：">
+                            <el-input v-model="form.data.bank" placeholder="请输入开户银行" maxlength="20" clearable />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
+                        <el-form-item prop="bank_account" label="开户账号：">
+                            <el-input v-model="form.data.bank_account" placeholder="请输入开户账号" maxlength="20" clearable />
+                        </el-form-item>
+                    </el-col>
+                </template>
             </el-row>
         </el-form>
     </CoDialog>
@@ -63,7 +65,6 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
-import { CommonApi } from '~/api/common'
 import { UserInvoiceApi } from '~/api/user/invoice'
 
 const emits = defineEmits<{
@@ -75,7 +76,6 @@ const defData = reactive({
     visible: false, // 是否显示窗口，默认为false。
     ready: false, // 内容是否加载完成
     btnLoading: false,
-    addressList: [] as CommonApi_GetAllRegionItem[],
     type: 1, // 1：新增，2：修改
 
 })
@@ -140,16 +140,9 @@ const rules = reactive<FormRules>({
 // 初始化数据
 const initDefaultData = async () => {
     if (defData.ready) return false
-    const { data } = await CommonApi.getAllRegion()
-    if (data.value?.code === 200) {
-        defData.addressList = data.value.data
-    } else {
-        ElMessage.error(data.value?.msg) // 提示信息或页面加载不当会引发任何内容。
-    }
 
     defData.ready = true
 }
-initDefaultData()
 
 // 打开弹窗
 const onOpenDialog = (row?: UserInvoiceApi_getListResponse) => {
@@ -202,12 +195,13 @@ const onConfirm = async () => {
     if (defData.type === 1) { // 新增
         defData.btnLoading = true
         const { data: res } = await UserInvoiceApi.add(params)
+        // console.log(res)
         defData.btnLoading = false
         if (res.value?.code === 200) {
             ElMessage.success('添加成功')
             emits('update', {
                 ...params,
-                bill_header_id: res.value.data.bill_header_id || 0,
+                bill_header_id: res.value?.data?.bill_header_id || Date.now(),
             })
             onClose()
         } else {

@@ -11,6 +11,12 @@
             <!-- <el-button type="primary" class="mb20px" @click="onAdd">
                 添加退货
             </el-button> -->
+            <el-breadcrumb class="mb15px">
+                <el-breadcrumb-item>
+                    订单中心
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>退换货订单</el-breadcrumb-item>
+            </el-breadcrumb>
             <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" class="table-box"
                 :data="tableData.data" auto-height scrollbar-always-on border @update:page="onHandleCurrentChange">
                 <template #main_order_no="{ scopes }">
@@ -21,7 +27,7 @@
                     <ul class="goods-list">
                         <li v-for="item in scopes.row.goods_list" :key="item.goods_id">
                             <CoImage class="h50px w50px" :src="item.goods_img" :icon-size="24" />
-                            <div class="text">
+                            <div class="flex-1 pl10px">
                                 <h3 class="tle">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                         {{ item.goods_name }}
@@ -137,16 +143,16 @@ const initTableData = async () => {
     // }
     const loading = useElLoading()
 
-    const { data: res } = await OrderReturnApi.returnList()
+    const { data: res, error } = await OrderReturnApi.returnList()
     await wait(100)
-    defData.skeleton = false
     loading?.close()
+    if (error.value) return
+    defData.skeleton = false
 
     if (res.value?.code === 200) {
         tableData.data = res.value.data.lists
         tableData.pagination.total = res.value.data.total// 总条数 记录数大于10条记录不
     }
-    console.log('res :>> ', res)
 }
 
 /**
@@ -196,33 +202,28 @@ initTableData()
         &+li {
             border-top: 1px;
         }
+    }
 
-        .text {
-            flex: 1;
-            padding-left: 10px;
+    .tle {
+        font-weight: bold;
+        line-height: 22px;
+        max-height: 44px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        /* 需要显示的行数 */
+        overflow: hidden;
+        word-break: break-all;
 
-            .tle {
-                font-weight: bold;
-                line-height: 22px;
-                max-height: 44px;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 2;
-                /* 需要显示的行数 */
-                overflow: hidden;
-                word-break: break-all;
+        /* 强制英文单词断行 */
+        a {
+            color: var(--el-text-color-regular);
 
-                /* 强制英文单词断行 */
-                a {
-                    color: var(--el-text-color-regular);
-
-                    &:hover {
-                        color: var(--el-color-primary);
-                    }
-                }
-
+            &:hover {
+                color: var(--el-color-primary);
             }
         }
+
     }
 }
 </style>

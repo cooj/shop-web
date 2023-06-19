@@ -23,7 +23,7 @@
                         <div v-if="defData.orderInfo?.pay_type === 3 && !defData.countDown.flag" class="flex p5px">
                             <div class="flex-1">
                                 <div class="pay-ready text-center">
-                                    <el-alert type="success" show-icon :closable="false" center>
+                                    <el-alert type="success" :closable="false" center show-icon>
                                         <div class="text-16px -mt5px">
                                             订单已提交成功，请您及时付款，我们将尽快为您安排发货!
                                         </div>
@@ -87,10 +87,7 @@
                             <template #extra>
                                 <div class="mb15px text-13px">
                                     需支付：<span class="mr20px text-24px">￥{{ defData.money }}</span>
-                                    <span>
-                                        您的订单号：
-                                        <el-text type="primary">{{ order_no }}</el-text>
-                                    </span>
+                                    您的订单号：<span class="color-primary">{{ order_no }}</span>
                                 </div>
                                 <div class="radio-box mb20px">
                                     <el-radio-group v-model="form.payType">
@@ -108,15 +105,9 @@
                                                 支付宝 -->
                                             </el-radio>
                                         </div>
-                                        <!-- <div class="radio-item">
-                                            <el-radio :label="3" border>
-                                                <i class="i-ic-twotone-payments mr3px inline-block v-text-top c-#ff5335" />
-                                                线下转账
-                                            </el-radio>
-                                        </div> -->
                                     </el-radio-group>
                                 </div>
-                                <el-button type="primary" size="large" @click="onPayment">
+                                <el-button type="primary" size="large" :loading="defData.submit" @click="onPayment">
                                     立即支付
                                 </el-button>
                                 <div ref="alipayRef" class="hidden" v-html="defData.aliData" />
@@ -169,6 +160,7 @@ const defData = reactive({
         second: '', // 秒
         flag: false,
     },
+    submit: false,
 })
 
 const form = reactive({
@@ -190,32 +182,27 @@ const initDefaultData = async () => {
         return
     }
 
-    // const { data: res0 } = await OrderApi.payOrder({ main_order_no: order_no.value, pay_type: 3 })
-
-    // console.log('res0: ', res0);
-    // return
-
-    const { data: ax, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
+    const { data: res, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
         method: 'post',
         body: { main_order_no: order_no.value },
     })
 
     // 线下支付
-    if (ax.value?.pay) {
-        defData.payInfo = ax.value.pay
+    if (res.value?.pay) {
+        defData.payInfo = res.value.pay
         setCountDown()
     }
     await wait(500)
     defData.skeleton = false
     if (error.value) return
-    if (ax.value?.code !== 200) {
-        ElMessage.error(ax.value?.msg)
+    if (res.value?.code !== 200) {
+        ElMessage.error(res.value?.msg)
         return defData.ready = false
     }
 
-    defData.status = ax.value!.info.order_status
-    defData.money = formatNumber(Number(ax.value?.info.meet_price) || 0)
-    defData.orderInfo = ax.value!.info
+    defData.status = res.value!.info.order_status
+    defData.money = formatNumber(Number(res.value?.info.meet_price) || 0)
+    defData.orderInfo = res.value!.info
 
     // const { data: res } = await OrderApi.getInfo({ main_order_no: order_no.value })
     // await wait(500)
@@ -234,30 +221,30 @@ const initDefaultData = async () => {
 const onPayment = async () => {
     if (!order_no.value) return
     if (!form.payType) return ElMessage.error('请选择支付方式')// 验证选择的支付方式是否选择了支付方式
-
-    const { data: res } = await OrderApi.payOrder({ main_order_no: order_no.value, pay_type: form.payType })
-    // console.log(error)
+    defData.submit = true
+    const { data: res, error } = await OrderApi.payOrder({ main_order_no: order_no.value, pay_type: form.payType })
+    defData.submit = false
+    if (error.value) return
     // console.log('res :>> ', res)
-    if (res.value?.code === 200) {
-        if (form.payType === 2) {
-            defData.aliData = res.value?.data
-            nextTick(() => {
-                const form = alipayRef.value?.firstElementChild as HTMLFormElement
-                form.setAttribute('target', '_blank')
-                form.submit()
-            })
-            // const aliPaySubmit = document.getElementById('alipaySubmit')
-            // if (aliPaySubmit) document.body.removeChild(aliPaySubmit)// 删除动态创建的按钮元素，防止隐藏按钮造成的
-            // const div = document.createElement('div')
-            // div.id = 'aliPaySubmit'
-            // div.innerHTML = res.value?.data
-            // document.body.appendChild(div)
-            // const form = div.firstElementChild as HTMLFormElement
-            // form.setAttribute('target', '_blank')
-            // form.submit()
-        }
-        if (form.payType === 3) defData.status = 1
+    if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+    if (form.payType === 2) { // 支付宝支付
+        defData.aliData = res.value?.data
+        nextTick(() => {
+            const form = alipayRef.value?.firstElementChild as HTMLFormElement
+            form.setAttribute('target', '_blank')
+            form.submit()
+        })
+        // const aliPaySubmit = document.getElementById('alipaySubmit')
+        // if (aliPaySubmit) document.body.removeChild(aliPaySubmit)// 删除动态创建的按钮元素，防止隐藏按钮造成的
+        // const div = document.createElement('div')
+        // div.id = 'aliPaySubmit'
+        // div.innerHTML = res.value?.data
+        // document.body.appendChild(div)
+        // const form = div.firstElementChild as HTMLFormElement
+        // form.setAttribute('target', '_blank')
+        // form.submit()
     }
+    if (form.payType === 3) defData.status = 1
 }
 
 /**
@@ -302,13 +289,6 @@ const setCountDown = () => {
         }
     }, 1000)
 }
-// 定时器没过1秒参数减1
-// Time() {
-// setInterval(() => {
-// this.seconds -= 1
-// this.countDown()
-// }, 1000)
-// },
 
 initDefaultData()
 
