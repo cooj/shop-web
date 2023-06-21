@@ -71,6 +71,7 @@ declare interface OrderApi_GetSettleResponse {
 declare interface OrderApi_ConfirmSettle {
     is_peas: number;     // 是否使用工游豆 1是 0否      示例值:0
     goods_peas: number;     // 工游豆数量      示例值:0
+    pay_type:1|2;   // 支付类型1线上支付 2对公
 
     address_id: number;     // 地址ID      示例值:5
     coupon_draw_id: number;     // 优惠券id（无传0）      示例值:0
@@ -277,8 +278,12 @@ declare interface OrderReturnApi_GetListResponse {
     "goods_name": string,       // "红钐 按键寿命试验机 HSL-TA4 四工位"
     "goods_img": string,
     "goods_sn": string,     // "AA00001"
+    main_order_no:string,   // 主订单号
+    order_no:string;    // 商品订单号
 
     return_number?: number,  // 退换商品数量
+
+
 
 }
 

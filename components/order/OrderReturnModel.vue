@@ -259,6 +259,9 @@ const onOpenDialog = async (params: OrderReturnOpen) => {
                 goods_name: item.goods_name,
                 goods_img: item.goods_img,
                 goods_sn: item.goods_sn,
+                // TODO 这两编号有使用就要改正确的
+                main_order_no: form.data.order_no,
+                order_no: '',
             }
             return opt
         })
@@ -280,11 +283,14 @@ const onConfirm = async () => {
         const isRun = await useFormVerify(formRef.value)
         if (!isRun) return false
 
+        // [{"id":1,"goods_id":1,"goods_number":2,'main_order_no':M20230412102104894540,"order_no": "C20230412102104404443"}]
         const goodsArr = defData.multipleSelect.map((item) => {
             return {
                 id: item.id,
                 goods_id: item.goods_id,
                 goods_number: item.return_number,
+                main_order_no: item.main_order_no,
+                order_no: item.order_no,
             }
         })
 
