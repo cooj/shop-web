@@ -37,10 +37,10 @@
                 <template #main_order_no="{ scopes }">
                     <div v-if="scopes.row.index" class="flex justify-between">
                         <div>
-                            订单编号：<span class="mr5px c-#000">{{ scopes.row.main_order_no }}</span>
+                            订单编号：<span class="mr8px c-#000">{{ scopes.row.main_order_no }}</span>
                             下单时间：<span>{{ scopes.row.cerate_time }}</span>
                         </div>
-                        <div v-if="scopes.row.pay_type === 3 && scopes.row.order_status !== 7" class="flex items-center">
+                        <div v-if="scopes.row.pay_type === 3 && scopes.row.order_status === 1" class="flex items-center">
                             <i class="i-ep-clock mr3px mt2px" />
                             <el-countdown title="" format="[倒计时 剩余]DD[天]HH[时]mm[分]ss[秒]" :value="setEndTime(scopes.row)"
                                 value-style="font-size:13px;" @finish="onFinish(scopes.row)" />
@@ -190,7 +190,6 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
     ],
     pagination: {
         ...PAGINATION,
-        // total: 0,
     },
 })
 
@@ -201,14 +200,13 @@ const initTableData = async () => {
         page_size: tableData.pagination.page_size,
         status: Number(searchData.data.status),
         main_order_no: searchData.data.order_no,
-        pay_type: Number(searchData.data.pay_type),
+        pay_type: Number(searchData.data.pay_type) || '',
         consignee_name: searchData.data.consignee_name,
         start_time: '',
         end_time: '',
     }
 
     if (searchData.data.time?.[0]) {
-        params.srte_time = searchData.data.time[0] ?? ''
         params.start_time = searchData.data.time[0] ?? ''
         params.end_time = searchData.data.time[1] ?? ''
     }
@@ -338,6 +336,8 @@ const setEndTime = (row: OrderApi_GetOrderListItem) => {
  * 倒计时结束事件（清除倒计时，订单设置为已取消）
  */
 const onFinish = (row: OrderApi_GetOrderListItem) => {
+    // 订单支付完成时，不处理
+    if (row.order_status > 1) return
     tableData.data.forEach((item) => {
         if (item.main_order_no === row.main_order_no) {
             item.order_status = 7
@@ -382,9 +382,6 @@ initTableData()
         .line-text {
             background-color: var(--el-table-row-hover-bg-color);
         }
-    }
-
-    :deep(.el-table__body) {
 
         .goods-list-row:has(.goods-list) {
             padding: 0;
@@ -393,6 +390,7 @@ initTableData()
                 padding: 0;
             }
         }
+
     }
 }
 
