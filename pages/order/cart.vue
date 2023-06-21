@@ -16,12 +16,10 @@
                     <el-table-column type="selection" width="55" align="center" />
                     <el-table-column prop="goods_name" label="商品名称" min-width="180">
                         <template #default="{ row }">
-                            <div class="h50px flex items-center">
-                                <div class="goods_img">
-                                    <CoImage class="h50px w50px" :src="row.goods_img" :icon-size="20" />
-                                </div>
+                            <div class="h45px flex items-center">
+                                <CoImage class="h45px w45px" :src="row.goods_img" :icon-size="20" />
                                 <div class="pl10px">
-                                    <NuxtLink class="goods_link" :to="`/goods/${row.goods_sn}`" target="_blank">
+                                    <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                         {{ row.goods_name }}
                                     </NuxtLink>
                                 </div>
@@ -145,7 +143,8 @@ const onChangeNumber = useDebounceFn(async (row: GoodsTableCartItem) => {
         number: row.goods_number,
     })
     if (data.value?.code === 200) {
-        if (data.value.data.goods_number < row.goods_number) row.goods_number = data.value.data.goods_number
+        if (row.goods_number !== data.value?.data.number) row.goods_number = data.value?.data.number
+        // if (data.value.data.goods_number < row.goods_number) row.goods_number = data.value.data.goods_number
     }
 }, 1000)
 
@@ -175,17 +174,7 @@ definePageMeta({
     min-height: 500px;
     background-color: var(--el-color-white);
 
-    .goods_img {
-        :deep(.image-error) {
-            background-color: var(--el-color-info-light-9);
-
-            i {
-                font-size: 20px;
-            }
-        }
-    }
-
-    .goods_link {
+    .goods-link {
         font-weight: bold;
         color: var(--el-table-text-color);
 

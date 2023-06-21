@@ -44,7 +44,7 @@
                     <el-divider direction="vertical" />
                 </template>
 
-                <NuxtLink to="/login">
+                <NuxtLink to="/order/cart">
                     <el-button link>
                         <i class="i-ep-shopping-cart-full" />
                         <span>购物车({{ number }})</span>
