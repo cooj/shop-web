@@ -74,7 +74,8 @@
                                         优惠券
                                     </div>
                                     <div class="gt">
-                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
+                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)"
+                                            :key="item.coupon_id">
                                             {{ item.coupon_name }}立减{{ item.par_value }}元
                                         </GoodsCoupon>
                                     </div>
@@ -243,21 +244,53 @@
                                 </el-tab-pane>
                                 <el-tab-pane label="商品问答" name="2" lazy>
                                     <div v-if="CLIENT">
-                                        <el-input v-model="form.question" style="width: 300px;margin-right: 10px;"
-                                            placeholder="输入提问" clearable />
                                         <el-button style="background-color: var(--el-color-primary);color: white;"
                                             @click="questionClick">
-                                            发送提问
+                                            我要提问
                                         </el-button>
-
-                                        <el-table :data="defData.tableData" style="width: 100%">
-                                            <el-table-column label="" prop="user_name" />
-                                            <el-table-column label="" prop="content" />
+                                        <el-table :data="defData.tableData" style="width: 100%" default-expand-all>
+                                            <el-table-column type="expand">
+                                                <template #default="props">
+                                                    <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
+                                                        <span class="mr5px fw-800">答</span>
+                                                        暂无回答
+                                                    </div>
+                                                    <el-table v-else :data="props.row.answer_lists" :show-header="false" style="--el-table-border-color: none;">
+                                                        <el-table-column width="49px" />
+                                                        <el-table-column prop="content">
+                                                            <template #default="scopes">
+                                                                <span class="mr5px fw-800 c-green">答</span>
+                                                                <span>{{ scopes.row.content }}</span>
+                                                            </template>
+                                                        </el-table-column>
+                                                        <el-table-column prop="" width="300" show-overflow-tooltip
+                                                            align="right">
+                                                            <template #default="scopes">
+                                                                <span style="font-weight: 80;font-size: 12px;"> {{ changeToStar(scopes.row.user_name) }}
+                                                                    {{ formatTime(scopes.row.add_time) }}</span>
+                                                            </template>
+                                                        </el-table-column>
+                                                        <el-table-column width="120px" />
+                                                    </el-table>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column label="" prop="content">
+                                                <template #default="scopes">
+                                                    <span class="mr5px fw-800 c-red">问</span>
+                                                    <span style="font-weight: 800;">{{ scopes.row.content }}</span>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column prop="" width="300" show-overflow-tooltip align="right">
+                                                <template #default="scopes">
+                                                    <span style="font-weight: 80;font-size: 13px;"> {{ changeToStar(scopes.row.user_name) }}
+                                                        {{ formatTime(scopes.row.add_time) }}</span>
+                                                </template>
+                                            </el-table-column>
                                             <el-table-column fixed="right" label="" width="120">
                                                 <template #default="scopes">
                                                     <el-button link type="primary" size="small"
                                                         @click="onAnswer(scopes.row)">
-                                                        查看回答
+                                                        去回答
                                                     </el-button>
                                                 </template>
                                             </el-table-column>
@@ -295,36 +328,38 @@
                         </el-form-item>
                     </el-form>
                     <!-- <div class="text-center">
-          <el-image :src="defData.shareCode" class="h120px w120px -mt20px" />
-          <div class="">
-            <el-button type="success" text @click="onCopy('text')">
-              复制链接地址
-            </el-button>
-            <el-button type="warning" text @click="onCopy('img')">
-              复制二维码
-            </el-button>
-          </div>
-        </div> -->
+                        <el-image :src="defData.shareCode" class="h120px w120px -mt20px" />
+                        <div class="">
+                            <el-button type="success" text @click="onCopy('text')">
+                            复制链接地址
+                            </el-button>
+                            <el-button type="warning" text @click="onCopy('img')">
+                            复制二维码
+                            </el-button>
+                        </div>
+                    </div> -->
                 </el-dialog>
             </el-skeleton>
         </div>
     </section>
 
-    <el-dialog v-model="defData.visible" auto-height width="680px" :draggable="true" @close="onClose">
+    <el-dialog v-model="defData.visible" auto-height width="680px" :draggable="true" :title="comData.title"
+        @close="onClose">
         <el-form ref="formRef" :model="form" inline>
-            <el-form-item prop="content">
-                <el-input v-model="form.answer" style="width: 300px" placeholder="请输入回答" clearable />
+            <el-form-item v-if="defData.type === 1" prop="content">
+                <el-input v-model="form.question" style="width: 500px;margin-right: 10px;" placeholder="请输入您的问题吧~" clearable
+                    type="textarea" />
+            </el-form-item>
+
+            <el-form-item v-else prop="content">
+                <el-input v-model="form.answer" type="textarea" style="width: 500px" placeholder="请输入您的回答~" clearable />
             </el-form-item>
             <el-form-item>
                 <el-button style="background-color: var(--el-color-primary);color: white;" @click="answerClick">
-                    发送回答
+                    发布
                 </el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="form.answerList" style="width: 100%">
-            <el-table-column label="" prop="user_name" />
-            <el-table-column label="" prop="content" />
-        </el-table>
     </el-dialog>
 </template>
 
@@ -359,6 +394,7 @@ const defData = reactive({
     skeleton: true, // 默认显示骨架屏
     goods_id: 0, // 当前的商品id
     visible: false,
+    type: 1, // 1：提问，2：回答
     btnLoading: false,
 
 })
@@ -373,7 +409,6 @@ const form = reactive({
     answer: '', // 问答列表 回答
     user_id: '',
     question_id: 0,
-    answerList: [],
 })
 const param_id = useRouteParam('id')
 
@@ -421,6 +456,18 @@ const initGoodsData = async () => {
     }
 }
 
+// 问答列表 弹窗标题
+const comData = computed(() => {
+    let dat = {
+        title: '提问',
+    }
+    if (defData.type === 2) {
+        dat = {
+            title: '回答',
+        }
+    }
+    return dat
+})
 // 问答列表 获取数据
 const initQuestionData = async () => {
     const param: InterListApi_getList = {
@@ -434,52 +481,68 @@ const initQuestionData = async () => {
     defData.tableData = res.data.value.data.lists
     defData.total = res.data.value.data.total
 }
+// 打开提问弹窗
+const questionClick = async () => {
+    defData.type = 1
+    defData.visible = true
+}
+// 打开回答弹窗
+const onAnswer = async (row: any) => {
+    defData.type = 2
+    defData.visible = true
+    form.user_id = row.user_id
+    form.question_id = row.question_id
+}
+// 发布提问 / 回答
+const answerClick = async () => {
+    if (defData.type === 1) { // 提问
+        if (!form.question) return ElMessage.error('请先输入提问')
+        const info: InterListApi_addList = {
+            goods_id: defData.goods_id,
+            type: 1,
+            q_id: 0,
+            content: form.question,
+        }
+        const { data, error } = await InterListApi.addList(info)
+        if (error.value) return
+        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+        initQuestionData()
+        defData.visible = false
+        ElMessage.success('发布成功')
+        form.question = ''
+    } else { // 回答
+        if (!form.answer) return ElMessage.error('请输入回答')
+        const info: InterListApi_addList = {
+            goods_id: defData.goods_id,
+            type: 2,
+            q_id: form.question_id,
+            content: form.answer,
+        }
+        console.log('data :>> ', info)
+        const { data, error } = await InterListApi.addList(info)
+        if (error.value) return
+        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+        initQuestionData()
+        defData.visible = false
+        ElMessage.success('回答成功')
+        form.answer = ''
+    }
+}
 // 分页数量点击
 const onHandleSizeChange = () => {
     initQuestionData()
 }
-
-// 新增问答
-const questionClick = async () => {
-    if (!form.question) return ElMessage.error('请先输入提问')
-    const info: InterListApi_addList = {
-        goods_id: defData.goods_id,
-        type: 1,
-        q_id: 0,
-        content: form.question,
-    }
-    const { data, error } = await InterListApi.addList(info)
-    if (error.value) return
-    if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
-    initQuestionData()
-    ElMessage.success('提问成功')
-    form.question = ''
-}
-
-// 打开回答弹窗
-const onAnswer = async (row: any) => {
-    defData.visible = true
-    form.user_id = row.user_id
-    form.question_id = row.question_id
-    form.answerList = row.answer_lists
-}
-
-// 回答
-const answerClick = async () => {
-    if (!form.answer) return ElMessage.error('请输入回答')
-    const info: InterListApi_addList = {
-        goods_id: defData.goods_id,
-        type: 2,
-        q_id: form.question_id,
-        content: form.answer,
-    }
-    const { data, error } = await InterListApi.addList(info)
-    if (error.value) return
-    if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
-    initQuestionData()
-    defData.visible = false
-    ElMessage.success('回答成功')
-    form.answer = ''
+// 用户名脱敏处理
+const changeToStar = (str: any) => {
+    const len1 = 1
+    const len2 = 1
+    const strLen = str.length
+    // let stars = ''
+    // for (let i = 0; i < strLen - len1 - len2; i++) {
+    //     stars += '*'
+    // }
+    str = `${str.substr(0, len1)}***${str.substr(strLen - len2)}`
+    return str
 }
 
 // 关闭弹窗
