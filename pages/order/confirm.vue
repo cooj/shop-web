@@ -247,7 +247,8 @@
                         <section class="sec-box flex items-center justify-end b-t b-t-#eee">
                             <b class="mr30px">实付款：<span class="main-color text-24px">¥{{ formatNumber(payMoney)
                             }}</span></b>
-                            <el-button type="primary" class="min-w150px" size="large" @click="onSubmit">
+                            <el-button type="primary" class="min-w150px" size="large" :loading="defData.btnLoading"
+                                @click="onSubmit">
                                 <b>提交订单</b>
                             </el-button>
                         </section>
@@ -270,12 +271,19 @@ import { UserAddressApi } from '~/api/user/address'
 import { UserAddressModel, UserInvoiceModel } from '#components'
 import { UserInvoiceApi } from '~/api/user/invoice'
 
+// 购物车数量，全局
+const useCartNumber = useCartNumberState()
+
 const router = useRouter()
 const backRoute = ref(router.options.history.state.back as string)
 
 const modelRef = ref<InstanceType<typeof UserAddressModel>>()
 const invoiceRef = ref<InstanceType<typeof UserInvoiceModel>>()
 const formRef = ref<FormInstance>()
+
+const cart_id = useRouteQuery('cart_id') // 购物车id
+const goods_id = useRouteQuery('goods_id') // 商品id
+const goods_number = useRouteQuery('goods_number') // 商品数量
 
 const defData = reactive({
     skeleton: true, // 默认打开骨架屏
@@ -291,6 +299,8 @@ const defData = reactive({
     total_peas: 0, // 该订单可用工游豆
     user_peas: 0, // 当前可用工游豆
     freight_price: 0, // 运费
+
+    btnLoading: false,
 })
 
 const form = reactive({
@@ -354,10 +364,6 @@ const payMoney = computed(() => {
 const initDefaultData = async () => {
     const numReg = /^[0-9]*$/ // 检查数字是否合法或不包含数字的正则表达式 或 空或空字符串
 
-    const cart_id = useRouteQuery('cart_id') // 购物车id
-    const goods_id = useRouteQuery('goods_id') // 商品id
-    const goods_number = useRouteQuery('goods_number') // 商品数量
-
     const num = numReg.test(goods_number.value) ? (Number(goods_number) || 1) : 1
     // 0:不请求接口，1：根据购物车id请求，2：根据商品id请求，
     let type = 0
@@ -387,7 +393,7 @@ const initDefaultData = async () => {
 
     if (res1 && res1.data.value?.code === 200) {
         const data = res1.data.value?.data
-        console.log('data :>> ', data)
+        // console.log('data :>> ', data)
         // 未获取到商品时
         if (!data.goods_list.length) return defData.ready = false
 
@@ -467,10 +473,7 @@ const getInvoice = (params: UserInvoiceApi_Edit) => {
 const onSubmit = async () => {
     const isRun = await useFormVerify(formRef.value)
     if (!isRun) return false
-    // 是否开发票
-    if (form.is_invoice) {
-        //
-    }
+
     let goods_peas = Number(form.peas_number)
     if (!goods_peas) {
         form.is_peas = 0
@@ -483,6 +486,7 @@ const onSubmit = async () => {
         address_id: Number(form.address_id),
         coupon_draw_id: form.coupon_id || 0,
         remarks: form.remark,
+        pay_type: form.payType === 1 ? 1 : 2,
         bill_status: form.is_invoice ? 1 : 0, // 是否开票
         type: '',
         header: '',
@@ -525,15 +529,22 @@ const onSubmit = async () => {
     // console.log(resp)
     // console.log('params :>> ', params)
     // return
-    const { data: res } = await OrderApi.confirmSettle(params)
+    defData.btnLoading = true
+    const { data: res, error } = await OrderApi.confirmSettle(params)
+    defData.btnLoading = false
 
+    if (error.value) return
     if (res.value?.code === 200) {
         ElMessage.success('提交成功')
+        const order_no = res.value.data.main_order_no
+
+        // 从购物车来下单的，更新购物车商品数量
+        if (cart_id.value) useCartNumber.setCartNumber(true)
 
         navigateTo({
             path: '/order/pay',
             query: {
-                order_no: res.value.data.main_order_no, // 订单编号，必须传递！！！！！！！！！！！！！！！
+                order_no, // 订单编号，
             },
         })
     } else {

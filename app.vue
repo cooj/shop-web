@@ -27,6 +27,7 @@ const systemInfo = await useSystem.getSystemInfo()
 useHead({
     title: systemInfo.value?.shop_title,
     meta: [
+        { name: 'keywords', content: systemInfo.value?.seo_keywords },
         { name: 'description', content: systemInfo.value?.shop_describe },
     ],
     link: [

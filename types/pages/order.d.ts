@@ -71,6 +71,7 @@ declare interface OrderApi_GetSettleResponse {
 declare interface OrderApi_ConfirmSettle {
     is_peas: number;     // 是否使用工游豆 1是 0否      示例值:0
     goods_peas: number;     // 工游豆数量      示例值:0
+    pay_type:1|2;   // 支付类型1线上支付 2对公
 
     address_id: number;     // 地址ID      示例值:5
     coupon_draw_id: number;     // 优惠券id（无传0）      示例值:0
@@ -86,7 +87,7 @@ declare interface OrderApi_ConfirmSettle {
     logon_tel: string;  // 是 Text注册电话type=1填 
     bank: string; // 是 Text开户银行type=1填 
     bank_account: string; // 是 Text开户账号type=1填
-    bill_address_id:number|''; // 发票收货地址
+    bill_address_id: number | ''; // 发票收货地址
 }
 
 
@@ -199,7 +200,7 @@ declare interface OrderApi_GetPayTypeResponse {
 declare interface OrderApi_GetOrderList extends ListPage {
     status: number,  // 订单状态 0全部 1待支付 2待发货 3待确认 4已取消
     main_order_no: string // 订单号  M20230424090858907460
-    pay_type: number;  // 支付类型 1微信 2支付宝 3线下
+    pay_type: number | '';  // 支付类型 1微信 2支付宝 3线下
     consignee_name: string;  // 收件人名
     start_time: string;  // 下单开始时间  2023-04-01
     end_time: string // 下单结束时间  2023-04-14
@@ -277,8 +278,12 @@ declare interface OrderReturnApi_GetListResponse {
     "goods_name": string,       // "红钐 按键寿命试验机 HSL-TA4 四工位"
     "goods_img": string,
     "goods_sn": string,     // "AA00001"
+    main_order_no:string,   // 主订单号
+    order_no:string;    // 商品订单号
 
     return_number?: number,  // 退换商品数量
+
+
 
 }
 
