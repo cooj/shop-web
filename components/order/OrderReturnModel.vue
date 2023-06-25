@@ -1,6 +1,5 @@
 <!-- 新增、修改退货 -->
 <template>
-    <!-- auto-height -->
     <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden :title="comData.title"
         width="800px" @close="onClose" @cancel="onClose" @confirm="onConfirm">
         <el-form ref="formRef" :model="form.data" :label-width="130" :rules="rules">
@@ -142,7 +141,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type FormInstance, type FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { OrderReturnApi } from '~/api/goods/order'
 
 const emits = defineEmits<{

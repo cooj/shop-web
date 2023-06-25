@@ -25,6 +25,7 @@ export default defineNuxtConfig({
         inlineSSRStyles: false,
         // treeshakeClientOnly: false,
         // renderJsonPayloads: true,
+        typedPages: true,
     },
     // css: [
     //   '@unocss/reset/tailwind.css',
