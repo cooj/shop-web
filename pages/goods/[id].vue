@@ -63,7 +63,7 @@
                                     <div class="lt" />
                                     <div class="gt">
                                         <span class="price3" @click="onApprove">
-                                            注册企业会员享企业价
+                                            认证企业会员尊享价
                                             <i class="i-ep-arrow-right inline-block" />
                                         </span>
                                         <span class="text-12px c-#666">会员价</span>
@@ -74,7 +74,8 @@
                                         优惠券
                                     </div>
                                     <div class="gt">
-                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
+                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)"
+                                            :key="item.coupon_id">
                                             {{ item.coupon_name }}立减{{ item.par_value }}元
                                         </GoodsCoupon>
                                     </div>
@@ -337,13 +338,14 @@ import { RecordApi } from '~/api/user/record'
 
 const formRef = ref<FormInstance>()
 const userState = useUserState()
+// 登录用户
+const userData = await userState.getUserInfo()
 const useCartNumber = useCartNumberState()
 const usePayType = usePayTypeState()
 // 支持的支付方式
 const payTypeList = await usePayType.getPayTypeList()
 // console.log('payTypeList :>> ', payTypeList)
 const defData = reactive({
-    user_id: userState.userInfo.value?.user_id || 0,
     page: 1,
     total: 0,
     pageSize: 10,
@@ -555,8 +557,10 @@ const onAddCart = async () => {
 
 // 商品分享
 const onShare = async () => {
-    if (defData.user_id) {
-        defData.shareLink = `${location.origin}/login/register?id=${defData.user_id}`
+    console.log(userData.value?.user_id)
+    console.log('userState.userInfo.value :>> ', userState.userInfo.value)
+    if (userData.value?.user_id) {
+        defData.shareLink = `${location.origin}/login/register?id=${userData.value?.user_id}`
         if (!defData.shareCode) {
             defData.shareCode = await QRCode.toDataURL(defData.shareLink)
         }
@@ -633,7 +637,9 @@ const onDownload = () => {
 
 // 认证企业会员
 const onApprove = () => {
-    if (defData.user_id) {
+    console.log(userData.value)
+    console.log(userData.value?.user_id)
+    if (!userData.value?.user_id) { // 未登录
         navigateTo('/login')
     } else {
         // 转到企业认证页面
@@ -655,7 +661,7 @@ const onHistory = async () => {
     if (!process.client) return
     // 进入页面2秒后加入历史记录中
     await wait(2000)
-    if (defData.user_id && defData.goods_id) {
+    if (userData.value?.user_id && defData.goods_id) {
         const params: RecordApi_Add = {
             goods_id: defData.goods_id,
             type: 2,
