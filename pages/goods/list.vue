@@ -370,8 +370,8 @@ const form = reactive({
     max_price: '', // 最高价
 
     page: 1,
-    pageSize: 30,
-    pageSizes: [30, 60, 90],
+    pageSize: 60,
+    pageSizes: [60, 120, 150],
     total: 0,
 
 })

@@ -27,7 +27,7 @@
                             </div>
                             <el-form-item prop="address_id" label-width="auto">
                                 <el-radio-group v-if="defData.addressList.length" v-model="form.address_id"
-                                    class="address-radio">
+                                    class="address-radio" @change="onChooseAddress">
                                     <el-radio v-for="item in defData.addressList" :key="item.address_id"
                                         :label="item.address_id">
                                         <span>{{ setAddressText(item) }}</span>
@@ -379,20 +379,48 @@ const initDefaultData = async () => {
         return
     }
 
+    // // 获取结算商品信息、用户地址
+    // const [res1, res2, res3] = await Promise.all([
+    //     type === 1
+    //         ? OrderApi.getSettleCart({ cart_id: cart_id.value })
+    //         : (type === 2 ? OrderApi.getSettleGoods({ goods_id: Number(goods_id.value), goods_number: num }) : undefined),
+    //     UserAddressApi.getList(),
+    //     UserInvoiceApi.getList(),
+    // ])
+
+    // await wait(800)
+    // defData.skeleton = false
+
+    // if (res1 && res1.data.value?.code === 200) {
+    //     const data = res1.data.value?.data
+    //     // console.log('data :>> ', data)
+    //     // 未获取到商品时
+    //     if (!data.goods_list.length) return defData.ready = false
+
+    //     form.tableData = data.goods_list
+    //     defData.couponList = data.coupon_list
+
+    //     defData.count_number = data.number
+    //     defData.total_price = data.total_price
+    //     defData.total_peas = data.total_peas
+    //     defData.user_peas = data.user_peas
+    //     defData.freight_price = data.freight_price
+    // } else {
+    //     return defData.ready = false
+    // }
+
     // 获取结算商品信息、用户地址
     const [res1, res2, res3] = await Promise.all([
-        type === 1
-            ? OrderApi.getSettleCart({ cart_id: cart_id.value })
-            : (type === 2 ? OrderApi.getSettleGoods({ goods_id: Number(goods_id.value), goods_number: num }) : undefined),
+        initGoodsData(),
         UserAddressApi.getList(),
         UserInvoiceApi.getList(),
     ])
 
     await wait(800)
     defData.skeleton = false
-
-    if (res1 && res1.data.value?.code === 200) {
-        const data = res1.data.value?.data
+    console.log(res1)
+    if (res1) {
+        const data = res1
         // console.log('data :>> ', data)
         // 未获取到商品时
         if (!data.goods_list.length) return defData.ready = false
@@ -420,9 +448,41 @@ const initDefaultData = async () => {
     }
 }
 
+// 获取结算的商品信息
+const initGoodsData = async () => {
+    const { data, error, pending } = await useFetch<{ data: OrderApi_GetSettleResponse } & ResponseCodeMsg>('/api/order/confirm', {
+        method: 'POST',
+        body: {
+            cart_id: cart_id.value,
+            goods_id: Number(goods_id.value),
+            goods_number: goods_number.value,
+            address_id: form.address_id,
+        },
+    })
+    console.log(pending.value)
+
+    await wait(1500)
+    console.log(pending.value)
+    console.log(error.value)
+    console.log('data.value?.code :>> ', data.value?.code)
+    // 请求错误处理
+    if (error.value) {
+        return defData.ready = false
+    }
+    if (data.value?.code !== 200) return defData.ready = false
+    return data.value.data
+}
+
 // 地址信息拼接
 const setAddressText = (row: UserAddressApi_GetListResponse) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
+}
+
+// 地址选中
+const onChooseAddress = async () => {
+
+    // const da = await initGoodsData()
+    // console.log(da)
 }
 
 /**

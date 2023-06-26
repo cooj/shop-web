@@ -13,14 +13,14 @@
         </div>
         <el-table :data="address?.data" border>
             <el-table-column prop="contacts" label="收件人" width="150" show-overflow-tooltip />
-            <el-table-column prop="phone" label="联系电话" width="120" show-overflow-tooltip />
+            <el-table-column prop="phone" label="联系电话" width="130" show-overflow-tooltip />
             <el-table-column prop="province" label="收件地址" min-width="150" show-overflow-tooltip>
                 <template #default="{ row }">
                     {{ setAddressText(row) }}
                 </template>
             </el-table-column>
             <el-table-column prop="email" label="邮箱地址" width="150" show-overflow-tooltip />
-            <el-table-column prop="is_default" label="默认地址" width="90" align="center" show-overflow-tooltip>
+            <el-table-column prop="is_default" label="默认地址" width="85" align="center" show-overflow-tooltip>
                 <template #default="{ row }">
                     <el-tag v-if="row.is_default" type="success">
                         是
