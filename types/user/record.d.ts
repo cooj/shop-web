@@ -5,7 +5,7 @@
  * 获取商品收藏、商品浏览历史记录 - 请求参数
  */
 declare interface RecordApi_GetList {
-    user_id?: number;  // 用户id
+    // user_id?: number;  // 用户id
     type: 1 | 2  //1收藏，2最近浏览
 }
 

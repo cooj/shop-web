@@ -5,7 +5,7 @@ export const CouponApi = {
     // 我的优惠券
     geList: () => useHttp<CouponApi_getListResponse>('/api/mall/get_coupon_list', '', { method: 'get' }),
     // 优惠券列表
-    allList: () => useHttp<CouponApi_allListResponse[]>('/api/index/get_coupon_list', '', { method: 'get' }),
+    allList: () => useHttp<CouponApi_allListResponse>('/api/index/get_coupon_list', '', { method: 'post' }),
     // 领取优惠券
     addList: (data: CouponApi_addList) => useHttp('/api/mall/add_coupon', data, { method: 'post' }),
     // 删除优惠券
