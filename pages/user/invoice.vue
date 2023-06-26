@@ -35,10 +35,10 @@
             <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip />
             <el-table-column prop="is_default" label="是否默认" width="83" show-overflow-tooltip fixed="right">
                 <template #default="{ row }">
-                    <el-tag v-if="row.is_default" type="success" @click="onDefault(row)">
+                    <el-tag v-if="row.is_default" type="success" style="cursor: pointer;" @click="onDefault(row)">
                         是
                     </el-tag>
-                    <el-tag v-else type="danger" @click="onDefault(row)">
+                    <el-tag v-else type="danger" style="cursor: pointer;" @click="onDefault(row)">
                         否
                     </el-tag>
                 </template>
