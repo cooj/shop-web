@@ -64,7 +64,7 @@
                     </div>
                 </template>
                 <template #refund_status="{ scopes }">
-                    <div>
+                    <!-- <div>
                         <el-tag v-if="scopes.row.refund_status === 1" type="success" size="small">
                             已完成
                         </el-tag>
@@ -81,7 +81,10 @@
                                 回复消息
                             </el-text>
                         </template>
-                    </el-popover>
+                    </el-popover> -->
+                    <div class="text-13px">
+                        {{ defData.operateList[scopes.row.status as '1'] }}
+                    </div>
                 </template>
                 <template #operate="{ scopes }">
                     <div class="mb5px">
@@ -113,6 +116,14 @@ const modelRef = ref<InstanceType<typeof OrderReturnModel>>()
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
+    operateList: { // 0售后正在审核出来 1审核通过待处理 2审核未通过 3要求售后寄回 4快递已寄回 5售后完成
+        0: '售后正在审核处理',
+        1: '审核通过,待处理',
+        2: '审核未通过',
+        3: '售后要求寄回',
+        4: '快递已寄回',
+        5: '售后已完成',
+    },
 })
 
 type TableDataItem = OrderReturnApi_ReturnList['lists'][0]
@@ -121,7 +132,7 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
     tableHeader: [
         { property: 'main_order_no', label: '订单信息', minWidth: 200, slot: true, className: 'goods-list-row', showOverflowTooltip: false },
         { property: 'type', label: '退换信息', minWidth: 150, slot: true, showOverflowTooltip: false },
-        { property: 'refund_status', label: '状态', width: 100, slot: true, align: 'center' },
+        { property: 'refund_status', label: '状态', width: 130, slot: true, align: 'center' },
         { property: 'operate', label: '操作', width: 100, slot: true, align: 'center', showOverflowTooltip: false },
     ],
     pagination: {
