@@ -88,6 +88,12 @@ export const PAGINATION = {
 // 是否为客户端 true|false
 export const CLIENT = process.client
 
+export const INVOICE_DATA = {
+    1: '增值税发票',
+    2: '普通发票',
+    3: '电子发票',
+}
+
 // 地址信息拼接
 export const setArrayTextName = (row: any[], char = ' ') => {
     // 去除空值
@@ -129,7 +135,7 @@ export const setOrderStatusType = (row: number) => {
         3: {
             type: 'success',
             color: '',
-            text: '待确认',
+            text: '待收货',
         },
         4: {
             type: '',

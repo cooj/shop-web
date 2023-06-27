@@ -43,6 +43,7 @@ declare interface OrderApi_GetSettleResponse {
     "total_peas": 36, //该订单可用工游豆
     "user_peas": 2330, //当前用户工游豆
     "freight_price": 0, //运费
+    matrixing_scale: number,     // 工游豆抵扣金额比例
     "coupon_list": {
         "id": 1, //记录ID
         "coupon_id": 11,
@@ -71,7 +72,7 @@ declare interface OrderApi_GetSettleResponse {
 declare interface OrderApi_ConfirmSettle {
     is_peas: number;     // 是否使用工游豆 1是 0否      示例值:0
     goods_peas: number;     // 工游豆数量      示例值:0
-    pay_type:1|2;   // 支付类型1线上支付 2对公
+    pay_type: 1 | 2;   // 支付类型1线上支付 2对公
 
     address_id: number;     // 地址ID      示例值:5
     coupon_draw_id: number;     // 优惠券id（无传0）      示例值:0
@@ -159,7 +160,13 @@ declare interface OrderApi_GetInfoResponse {
         "selected": 1
     }[],
     end_time?: number,  // 订单支付截止时间戳（秒级）只有对公转账时才有
-
+    order_logistics: {
+        "logistics_no": "110000",
+        "create_time": "2023-06-27 09:34:11",
+        "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位",
+        "logistics_name": "顺丰物流"
+    }[]
+    peas_price:string, // 工游豆抵扣金额
 }
 
 
@@ -278,8 +285,8 @@ declare interface OrderReturnApi_GetListResponse {
     "goods_name": string,       // "红钐 按键寿命试验机 HSL-TA4 四工位"
     "goods_img": string,
     "goods_sn": string,     // "AA00001"
-    main_order_no:string,   // 主订单号
-    order_no:string;    // 商品订单号
+    main_order_no: string,   // 主订单号
+    order_no: string;    // 商品订单号
 
     return_number?: number,  // 退换商品数量
 

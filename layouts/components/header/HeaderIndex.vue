@@ -113,6 +113,8 @@ onMounted(() => {
     .left-box {
         width: var(--banner-left-width);
         position: relative;
+        // background: var(--el-color-primary);
+        // background: var(--el-color-white);
     }
 
     .swp {

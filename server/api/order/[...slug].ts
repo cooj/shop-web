@@ -45,39 +45,39 @@ router.use('/info', defineEventHandler(async (event) => {
 // }
 
 /**
- * 订单确认
+ * 订单结算 - 获取信息
  */
 router.use('/confirm', defineEventHandler(async (event) => {
     const method = getMethod(event)
     const params = method === 'GET' ? getQuery(event) : await readBody(event)
+
     let data: OrderApi_GetSettleResponse | undefined
     if (params.cart_id) {
-        const res = await useServerFetch<OrderApi_GetSettleResponse>(event, '/api/mall/settle_goods', { cart_id: params.cart_id })
+        const pam = {
+            cart_id: params.cart_id,
+            address_id: params.address_id,
+        }
+        const res = await useServerFetch<OrderApi_GetSettleResponse>(event, '/api/mall/settle_goods', pam)
         if (res.code !== 200) return { code: res.code, msg: res.msg }
         data = res.data
     } else if (params.goods_id) {
-        //
-    }
-    console.log(params)
+        const numReg = /^[1-9][0-9]*$/ // 检查数字是否合法或不包含数字的正则表达式 或 空或空字符串
 
-    return { code: 1 }
-    // 获取订单信息
-    // const res = await useServerFetch<OrderApi_GetInfoResponse>(event, '/api/mall_order/order_details')
-    // console.log(res)
-    // if (res) {
-    //     if (res.code !== 200) return { code: res.code, msg: res.msg }
-    //     // 获取线下支付的订单信息
-    //     if (res.data.pay_type === 3) {
-    //         // { main_order_no: order_no.value, pay_type: form.payType }
-    //         const dat = await useServerFetch<OrderApi_PayOrderResponse>(event, '/api/mall/pay_order', {
-    //             pay_type: 3,
-    //         })
-    //         console.log(dat)
-    //         return { code: 200, info: res.data, pay: dat.data }
-    //     }
-    //     return { code: 200, info: res.data }
-    // }
-    // return res
+        const num = numReg.test(params.goods_number) ? (Number(params.goods_number) || 1) : 1
+        const pam = {
+            goods_id: params.goods_id,
+            goods_number: num,
+            address_id: params.address_id,
+        }
+        // console.log(pam)
+        const res = await useServerFetch<OrderApi_GetSettleResponse>(event, '/api/mall/settle_liji', pam)
+        if (res.code !== 200) return { code: res.code, msg: res.msg }
+        data = res.data
+    }
+    // console.log(params, data)
+    if (!data) return { code: 400, msg: 'error' }
+
+    return { code: 200, data }
 }))
 
 export default useBase('/api/order', router.handler)

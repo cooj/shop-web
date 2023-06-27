@@ -59,11 +59,12 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="items-center bg-#f8f8f8 -mt10px">
+                                <!---->
+                                <li v-if="!userData?.attest_status" class="items-center bg-#f8f8f8 -mt10px">
                                     <div class="lt" />
                                     <div class="gt">
                                         <span class="price3" @click="onApprove">
-                                            注册企业会员享企业价
+                                            认证企业会员尊享价
                                             <i class="i-ep-arrow-right inline-block" />
                                         </span>
                                         <span class="text-12px c-#666">会员价</span>
@@ -112,38 +113,6 @@
                                         {{ goodsInfo?.goods_code }}
                                     </div>
                                 </li>
-                                <!-- <li>
-              <div class="lt">
-                品牌
-              </div>
-              <div class="gt">
-                0.迪塞福
-              </div>
-            </li>
-            <li>
-              <div class="lt">
-                重量
-              </div>
-              <div class="gt">
-                0.2170kg
-              </div>
-            </li> -->
-                                <!-- <li>
-                                    <div class="lt">
-                                        库存
-                                    </div>
-                                    <div v-if="goodsInfo" class="gt">
-                                        <p v-if="goodsInfo?.goods_number > 10">
-                                            有货
-                                        </p>
-                                        <p v-else-if="goodsInfo?.goods_number > 0">
-                                            商品即将售完
-                                        </p>
-                                        <p v-else>
-                                            暂无库存
-                                        </p>
-                                    </div>
-                                </li> -->
                                 <li>
                                     <div class="lt">
                                         支付方式
@@ -255,7 +224,8 @@
                                                         <span class="mr5px fw-800">答</span>
                                                         暂无回答
                                                     </div>
-                                                    <el-table v-else :data="props.row.answer_lists" :show-header="false" style="--el-table-border-color: none;">
+                                                    <el-table v-else :data="props.row.answer_lists" :show-header="false"
+                                                        style="--el-table-border-color: none;">
                                                         <el-table-column width="49px" />
                                                         <el-table-column prop="content">
                                                             <template #default="scopes">
@@ -266,7 +236,8 @@
                                                         <el-table-column prop="" width="300" show-overflow-tooltip
                                                             align="right">
                                                             <template #default="scopes">
-                                                                <span style="font-weight: 80;font-size: 12px;"> {{ changeToStar(scopes.row.user_name) }}
+                                                                <span style="font-weight: 80;font-size: 12px;"> {{
+                                                                                                                    changeToStar(scopes.row.user_name) }}
                                                                     {{ formatTime(scopes.row.add_time) }}</span>
                                                             </template>
                                                         </el-table-column>
@@ -282,7 +253,8 @@
                                             </el-table-column>
                                             <el-table-column prop="" width="300" show-overflow-tooltip align="right">
                                                 <template #default="scopes">
-                                                    <span style="font-weight: 80;font-size: 13px;"> {{ changeToStar(scopes.row.user_name) }}
+                                                    <span style="font-weight: 80;font-size: 13px;"> {{
+                                                                                                        changeToStar(scopes.row.user_name) }}
                                                         {{ formatTime(scopes.row.add_time) }}</span>
                                                 </template>
                                             </el-table-column>
@@ -339,6 +311,9 @@
                         </div>
                     </div> -->
                 </el-dialog>
+                <el-dialog v-model="defData.visibleLogin" width="450px" title="">
+                    <UserLogin ref="loginRef" class="goods-login" @update="onUserLogin" />
+                </el-dialog>
             </el-skeleton>
         </div>
     </section>
@@ -369,16 +344,21 @@ import QRCode from 'qrcode'
 import { GoodsApi } from '~/api/goods/list'
 import { InterListApi } from '~/api/user/interList'
 import { RecordApi } from '~/api/user/record'
+import { UserLogin } from '#components'
 
 const formRef = ref<FormInstance>()
 const userState = useUserState()
+// 登录用户
+const userData = await userState.getUserInfo()
 const useCartNumber = useCartNumberState()
 const usePayType = usePayTypeState()
 // 支持的支付方式
 const payTypeList = await usePayType.getPayTypeList()
 // console.log('payTypeList :>> ', payTypeList)
+
+const loginRef = ref<InstanceType<typeof UserLogin>>()
+
 const defData = reactive({
-    user_id: userState.userInfo.value?.user_id || 0,
     page: 1,
     total: 0,
     pageSize: 10,
@@ -396,7 +376,7 @@ const defData = reactive({
     visible: false,
     type: 1, // 1：提问，2：回答
     btnLoading: false,
-
+    visibleLogin: false,
 })
 // 商品信息
 const goodsData = ref<GoodsApi_GetInfoResponse>()
@@ -421,7 +401,7 @@ const initGoodsData = async () => {
     if (data.value?.code === 200) {
         const dat = data.value.data
         const infoData = dat.goods_info
-        console.log(infoData)
+
         // if (goods.goods_id === id) {
         if (infoData) {
             goodsData.value = dat
@@ -618,8 +598,8 @@ const onAddCart = async () => {
 
 // 商品分享
 const onShare = async () => {
-    if (defData.user_id) {
-        defData.shareLink = `${location.origin}/login/register?id=${defData.user_id}`
+    if (userData.value?.user_id) {
+        defData.shareLink = `${location.origin}/login/register?id=${userData.value?.user_id}`
         if (!defData.shareCode) {
             defData.shareCode = await QRCode.toDataURL(defData.shareLink)
         }
@@ -696,11 +676,19 @@ const onDownload = () => {
 
 // 认证企业会员
 const onApprove = () => {
-    if (defData.user_id) {
-        navigateTo('/login')
+    if (!userData.value?.user_id) { // 未登录
+        // navigateTo('/login')
+        defData.visibleLogin = true
     } else {
         // 转到企业认证页面
+        navigateTo('/user/enterprise')
     }
+}
+
+// 用户登陆成功后,更新页面
+const onUserLogin = () => {
+    defData.visibleLogin = false // 关闭登陆
+    if (process.client) location.reload()
 }
 
 /**
@@ -718,7 +706,7 @@ const onHistory = async () => {
     if (!process.client) return
     // 进入页面2秒后加入历史记录中
     await wait(2000)
-    if (defData.user_id && defData.goods_id) {
+    if (userData.value?.user_id && defData.goods_id) {
         const params: RecordApi_Add = {
             goods_id: defData.goods_id,
             type: 2,
@@ -959,5 +947,13 @@ definePageMeta({
     align-items: center;
     justify-content: center;
     font-size: 14px;
+}
+
+.goods-login {
+    width: 100%;
+
+    :deep(.login-tle) {
+        margin-top: -30px;
+    }
 }
 </style>

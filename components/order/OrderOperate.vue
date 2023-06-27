@@ -1,10 +1,10 @@
 <template>
     <div class="order-operate">
-        <div v-if="!props.data.bill_status && orderStatus !== 7" class="item-ope">
+        <!-- <div v-if="!props.data.bill_status && orderStatus !== 7" class="item-ope">
             <el-button type="" :link="props.link" :size="props.size" class="mb3px" @click="onInvoice()">
                 申请发票
             </el-button>
-        </div>
+        </div> -->
         <div v-if="orderStatus === 1" class="item-ope">
             <el-button type="warning" :link="props.link" :size="props.size" class="mb3px" @click="onPayOrder()">
                 去付款
