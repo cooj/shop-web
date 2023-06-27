@@ -117,6 +117,10 @@ const defData = reactive({
     type: 1, // 1账户登录 2验证码登录 3微信扫码之后注册 4二维码
     time: 0, // 验证码倒计时时间
     sendCode: true, // true：发送验证码 false:倒计时
+    nickname: '', //
+    openid: '', //
+    unionid: '', //
+    headimgurl: '', //
 })
 const form = reactive({
     phone: '',
@@ -160,6 +164,20 @@ const onClick = async () => {
         if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
         ElMessage.success('登录成功')
         userState.setToken(res.value.data.token)
+        return navigateTo('/')
+    } else if (defData.type === 3) { // 微信扫码未绑定账号登录
+        const info: LoginApi_Login = {
+            type: 4,
+            phone: form.phone,
+            validate_code: form.validate_code,
+            nickname: defData.nickname,
+            openid: defData.openid,
+            unionid: defData.unionid,
+            headimgurl: defData.headimgurl,
+        }
+        const res = await LoginApi.Login(info)
+        form.loading = false
+        if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
         return navigateTo('/')
     } else { // 验证码登录
         const data: LoginApi_Login = {
@@ -232,18 +250,12 @@ const getOpenId = async () => {
         return navigateTo('/')
     } else { // 未注册用户
         defData.type = 3
-        const info: LoginApi_Login = {
-            type: 4,
-            phone: form.phone,
-            validate_code: form.validate_code,
-            nickname: codeId.value?.data.openid_info.nickname,
-            openid: codeId.value?.data.openid_info.openid,
-            unionid: codeId.value?.data.openid_info.unionid,
-            headimgurl: codeId.value?.data.openid_info.headimgurl,
+        if (codeId.value) {
+            defData.nickname = codeId.value.data.openid_info.nickname
+            defData.openid = codeId.value.data.openid_info.openid
+            defData.unionid = codeId.value.data.openid_info.unionid
+            defData.headimgurl = codeId.value.data.openid_info.headimgurl
         }
-        const res = await LoginApi.Login(info)
-        if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-        return navigateTo('/')
     }
 }
 getOpenId()
