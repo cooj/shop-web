@@ -171,6 +171,15 @@ declare interface OrderApi_GetInfoResponse {
 
 
 /**
+ * 订单支付（选择微信支付返回数据） - 响应数据
+ */
+declare interface OrderApi_PayOrderWeChatResponse{
+    "pay_type": 1,
+    "code_url": "weixin://wxpay/bizpayurl?pr=p4lpSuKzz"
+}
+
+
+/**
  * 获取线下转账信息 - 响应数据
  */
 declare interface OrderApi_PayOrderResponse {

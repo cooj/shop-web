@@ -155,10 +155,8 @@
                         <span class="item-text">￥{{ orderInfo?.freight_price }}</span>
                     </li>
                     <li>
-                        <span class="item-title">优惠金额：</span>
-                        <span class="item-text">-￥0.00
-                            <!-- TODO {{ formatNumber(setPreferMoney) }} -->
-                        </span>
+                        <span class="item-title">优惠券抵扣金额：</span>
+                        <span class="item-text">-￥{{ formatNumber(setPreferMoney) }}</span>
                     </li>
                     <li>
                         <span class="item-title">工游豆抵扣金额：</span>
@@ -218,15 +216,22 @@ const addressText = computed(() => {
 // 步骤选中
 const stepSelect = computed(() => {
     let step = 0
-    orderInfo.value?.status_info.forEach((item, index) => {
+    orderInfo.value?.status_info.forEach((item, index, arr) => {
         if (item.selected) step = index
+        if (item.selected) {
+            if (arr.length - 1 === index) {
+                step = index + 1
+            } else {
+                step = index
+            }
+        }
     })
     return step
 })
 
-// 优惠金额
+// 优惠券抵扣金额
 const setPreferMoney = computed(() => {
-    const num = Number(orderInfo.value?.total_price || 0) - Number(orderInfo.value?.meet_price || 0)
+    const num = Number(orderInfo.value?.coupon_price || 0)
     return num >= 0 ? num : 0
 })
 

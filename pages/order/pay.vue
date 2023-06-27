@@ -129,6 +129,14 @@
                             </template>
                         </el-result>
                         <!-- pay_type -->
+                        <el-dialog v-model="defData.visibleChat" width="300px" title="" center @close="onClose">
+                            <div class="text-center">
+                                <co-image :src="defData.chatPayUrl" class="h130px w130px b-1 b-#eee" />
+                                <p class="mt5px">
+                                    请使用微信扫一扫完成支付
+                                </p>
+                            </div>
+                        </el-dialog>
                     </div>
                 </div>
                 <div v-else class="my15px b-#eee bg-#fff">
@@ -140,6 +148,7 @@
 </template>
 
 <script lang="ts" setup>
+import QRCode from 'qrcode'
 import { OrderApi } from '~/api/goods/order'
 
 const alipayRef = ref<HTMLDivElement>()
@@ -161,6 +170,10 @@ const defData = reactive({
         flag: false,
     },
     submit: false,
+    visibleChat: false,
+    chatPayUrl: '', // 微信返回的支付地址
+    update: false, // 是否重新获取订单详情
+
 })
 
 const form = reactive({
@@ -227,8 +240,20 @@ const onPayment = async () => {
     if (error.value) return
     // console.log('res :>> ', res)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+
+    if (form.payType === 1) {
+        const dat = res.value?.data as OrderApi_PayOrderWeChatResponse
+        const url = dat.code_url
+        // const url = dat.code_url ? `${dat.code_url}&_tcs=${Date.now()}` : ''
+        if (!url) return ElMessage.error('未获取到付款码，请稍后再试')
+        defData.chatPayUrl = await QRCode.toDataURL(url)
+
+        defData.visibleChat = true
+        return
+    }
+
     if (form.payType === 2) { // 支付宝支付
-        defData.aliData = res.value?.data
+        defData.aliData = res.value?.data as string
         nextTick(() => {
             const form = alipayRef.value?.firstElementChild as HTMLFormElement
             form.setAttribute('target', '_blank')
@@ -288,6 +313,23 @@ const setCountDown = () => {
             // defData.orderInfo!.order_status=7
         }
     }, 1000)
+}
+
+// 微信扫码支付关闭弹窗，查询订单是否支付完成了
+const onClose = async () => {
+    if (defData.update) return
+    defData.update = true
+    const { data: res, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
+        method: 'post',
+        body: { main_order_no: order_no.value },
+    })
+
+    await wait(500)
+    defData.update = false
+    if (error.value) return
+    if (res.value?.code === 200) {
+        defData.status = res.value!.info.order_status
+    }
 }
 
 initDefaultData()
