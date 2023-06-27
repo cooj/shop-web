@@ -80,7 +80,7 @@
                     </li>
                     <li>
                         <div class="lt">
-                            备注信息
+                            备注信息：
                         </div>
                         <div class="gt">
                             {{ orderInfo?.remarks }}
@@ -91,8 +91,10 @@
                             配送方式：
                         </div>
                         <div class="gt">
-                            <!-- TODO 默认快递 -->
-                            --
+                            <div v-for="(item, index) in orderInfo?.order_logistics" :key="index">
+                                {{ item.logistics_name }} <span class="mr20px opacity-80">({{ item.logistics_no }})</span>
+                                <span class="c-#666">发货时间：{{ item.create_time }}</span>
+                            </div>
                         </div>
                     </li>
                     <li>
@@ -128,26 +130,46 @@
                     <!-- <el-table-column prop="goods_code" label="商品型号" width="160" />
                 <el-table-column prop="goods_spec" label="商品规格" width="160" /> -->
                     <el-table-column prop="price" label="商品价格" width="120" />
-                    <el-table-column prop="goods_number" label="购买数量" width="100">
+                    <el-table-column prop="goods_number" label="购买数量" width="100" align="center">
                         <template #default="{ row }">
                             <b>{{ row.goods_number }}</b>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="total" label="小计" width="100">
+                    <el-table-column prop="total" label="小计" width="110">
                         <template #default="{ row }">
                             <b>{{ formatNumber(row.price * row.goods_number) }}</b>
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="count-money">
-                    <p>商品总价 ：<span class="count-money-text">￥{{ orderInfo?.total_price }}</span> </p>
-                    <p>优惠金额 ：<span class="count-money-text">-￥{{ formatNumber(setPreferMoney) }}</span></p>
-                    <p>运费 ：<span class="count-money-text">+￥{{ orderInfo?.freight_price }}</span></p>
-                    <p>
-                        实付金额：<span class="count-money-text color-primary text-18px font-bold">￥{{ orderInfo?.meet_price
+                <ul class="prefer-ul pt5px">
+                    <li>
+                        <span class="item-title">商品总件数：</span>
+                        <span class="item-text">{{ orderInfo?.total_number }}件</span>
+                    </li>
+                    <li>
+                        <span class="item-title">商品总金额：</span>
+                        <span class="item-text">￥{{ orderInfo?.total_price }}</span>
+                    </li>
+                    <li>
+                        <span class="item-title">运费<i>(明细)</i>：</span>
+                        <span class="item-text">￥{{ orderInfo?.freight_price }}</span>
+                    </li>
+                    <li>
+                        <span class="item-title">优惠金额：</span>
+                        <span class="item-text">-￥0.00
+                            <!-- TODO {{ formatNumber(setPreferMoney) }} -->
+                        </span>
+                    </li>
+                    <li>
+                        <span class="item-title">工游豆抵扣金额：</span>
+                        <span class="item-text">-￥{{ orderInfo?.peas_price }}</span>
+                    </li>
+                    <li>
+                        <span class="item-title">实付金额：</span>
+                        <span class="item-text color-primary text-18px font-bold">￥{{ orderInfo?.meet_price
                         }}</span>
-                    </p>
-                </div>
+                    </li>
+                </ul>
             </div>
         </el-skeleton>
     </LayoutUser>
@@ -288,18 +310,6 @@ definePageMeta({
     }
 }
 
-.count-money {
-    text-align: right;
-    font-size: 13px;
-    margin-top: 8px;
-
-    .count-money-text {
-        display: inline-block;
-        min-width: 100px;
-        color: var(--el-color-primary);
-    }
-}
-
 .order-ope {
     display: flex;
 
@@ -312,6 +322,19 @@ definePageMeta({
 
 .goods-link {
     &:hover {
+        color: var(--el-color-primary);
+    }
+}
+
+.prefer-ul {
+    font-size: 12px;
+    text-align: right;
+    color: #333;
+    line-height: 2;
+
+    .item-text {
+        display: inline-block;
+        min-width: 90px;
         color: var(--el-color-primary);
     }
 }

@@ -135,7 +135,7 @@ export const setOrderStatusType = (row: number) => {
         3: {
             type: 'success',
             color: '',
-            text: '待确认',
+            text: '待收货',
         },
         4: {
             type: '',

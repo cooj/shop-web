@@ -72,7 +72,7 @@
                         <p class="text-12px">
                             优惠金额：-{{ setPreferMoney(scopes.row) }}
                         </p>
-                        <p class="c-#000">
+                        <p class="truncate c-#000" :title="`￥${scopes.row.meet_price}`">
                             实付金额: <span class="c-#f00">￥{{ scopes.row.meet_price }}</span>
                         </p>
                         <p class="b-t-1 text-12px">
@@ -182,8 +182,8 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
         // { property: '', label: '', type: "selection", width: 38, },
         // { property: 'goods_img', label: '图片', width: 60, align: "center", slot: true },
         { property: 'main_order_no', label: '订单信息', minWidth: 200, slot: true, className: 'goods-list-row', showOverflowTooltip: false },
-        { property: 'meet_price', label: '订单金额', width: 150, align: 'right', slot: true, showOverflowTooltip: false },
-        { property: 'consignee_name', label: '收货信息', minWidth: 150, slot: true, showOverflowTooltip: false },
+        { property: 'meet_price', label: '订单金额', width: 170, align: 'right', slot: true, showOverflowTooltip: false },
+        { property: 'consignee_name', label: '收货信息', minWidth: 130, slot: true, showOverflowTooltip: false },
         { property: 'order_status', label: '订单状态', width: 100, slot: true, align: 'center' },
         { property: 'operate', label: '操作', width: 100, slot: true, align: 'center', showOverflowTooltip: false },
         // { property: 'market_price', label: '市场价', width: 85, align: 'center' },
@@ -282,7 +282,7 @@ const setTagType = (row: number) => {
         3: {
             type: 'success',
             color: '',
-            text: '待确认',
+            text: '待收货',
         },
         4: {
             type: '',
