@@ -29,22 +29,25 @@
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="logon_tel" label="注册电话" width="120" show-overflow-tooltip />
-            <el-table-column prop="bank" label="开户银行" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="is_default" label="是否默认" width="83" show-overflow-tooltip fixed="right">
+            <el-table-column prop="is_default" label="是否默认" width="83" show-overflow-tooltip>
                 <template #default="{ row }">
-                    <el-tag v-if="row.is_default" type="success" style="cursor: pointer;" @click="onDefault(row)">
+                    <el-tag v-if="row.is_default" type="success">
                         是
                     </el-tag>
-                    <el-tag v-else type="danger" style="cursor: pointer;" @click="onDefault(row)">
+                    <el-tag v-else type="danger">
                         否
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="operate" label="操作" width="100" align="center" show-overflow-tooltip fixed="right">
+            <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
+            <el-table-column prop="logon_tel" label="注册电话" width="120" show-overflow-tooltip />
+            <el-table-column prop="bank" label="开户银行" min-width="150" show-overflow-tooltip />
+            <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip />
+            <el-table-column prop="operate" label="操作" width="165" align="center" show-overflow-tooltip fixed="right">
                 <template #default="{ row }">
+                    <el-button type="primary" link size="small" @click="onDefault(row)">
+                        设为默认
+                    </el-button>
                     <el-button type="primary" link size="small" @click="onEdit(row)">
                         修改
                     </el-button>
