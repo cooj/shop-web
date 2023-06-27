@@ -61,34 +61,38 @@
                             </el-form-item>
                             <el-form-item v-if="form.is_invoice" prop="invoice_id" label="" label-width="auto">
                                 <el-radio-group v-model="form.invoice_id" class="address-radio bill">
-                                    <div class="grid grid-cols-2 w100% b-1">
-                                        <div>
-                                            <h4 class="b-b-1 p5px text-center text-14px">
-                                                增值税发票
-                                            </h4>
-                                            <div class="p5px">
-                                                <el-radio v-for="item in invoiceList1" :key="item.bill_header_id"
+                                    <el-table :data="invoiceData" table-layout="fixed" border>
+                                        <el-table-column prop="date" label="增值税发票" align="center">
+                                            <template #default="{ row }">
+                                                <el-radio v-for="item in row['1']" :key="item.bill_header_id"
                                                     :label="item.bill_header_id">
                                                     <span>抬头：{{ item.header }}</span>
                                                     <span class="mx10px opacity90">email：{{ item.enterprise_email }} </span>
                                                     <!-- <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em> -->
                                                 </el-radio>
-                                            </div>
-                                        </div>
-                                        <div class="b-l-1">
-                                            <h4 class="b-b-1 p5px text-center text-14px">
-                                                普通发票
-                                            </h4>
-                                            <div class="p5px">
-                                                <el-radio v-for="item in invoiceList2" :key="item.bill_header_id"
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="name" label="普通发票" align="center">
+                                            <template #default="{ row }">
+                                                <el-radio v-for="item in row['2']" :key="item.bill_header_id"
                                                     :label="item.bill_header_id">
                                                     <span>抬头：{{ item.header }}</span>
                                                     <span class="mx10px opacity90">email：{{ item.enterprise_email }} </span>
                                                     <!-- <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em> -->
                                                 </el-radio>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="address" label="电子发票" align="center">
+                                            <template #default="{ row }">
+                                                <el-radio v-for="item in row['3']" :key="item.bill_header_id"
+                                                    :label="item.bill_header_id">
+                                                    <span>抬头：{{ item.header }}</span>
+                                                    <span class="mx10px opacity90">email：{{ item.enterprise_email }} </span>
+                                                    <!-- <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em> -->
+                                                </el-radio>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
                                 </el-radio-group>
                             </el-form-item>
 
@@ -234,13 +238,17 @@
                                     <span class="item-title">运费<i>(明细)</i>：</span>
                                     <span class="item-text">￥{{ formatNumber(defData.freight_price) }}</span>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <span class="item-title">运费减免：</span>
                                     <span class="item-text">-￥0.00</span>
-                                </li>
+                                </li> -->
                                 <li>
                                     <span class="item-title">优惠金额：</span>
                                     <span class="item-text">-￥{{ formatNumber(preferMoney) }}</span>
+                                </li>
+                                <li>
+                                    <span class="item-title">工游豆抵扣金额：</span>
+                                    <span class="item-text">-￥{{ formatNumber(beanMoney) }}</span>
                                 </li>
                             </ul>
                         </section>
@@ -299,6 +307,7 @@ const defData = reactive({
     total_peas: 0, // 该订单可用工游豆
     user_peas: 0, // 当前可用工游豆
     freight_price: 0, // 运费
+    ratio_scale: 0, // 工游豆换算金额的比例
 
     btnLoading: false,
 })
@@ -326,9 +335,19 @@ const rules = reactive<FormRules>({
 })
 
 // 增值税发票
-const invoiceList1 = computed(() => defData.invoiceList.filter(item => item.type === 1))
-// 普通发票
-const invoiceList2 = computed(() => defData.invoiceList.filter(item => item.type === 2))
+const invoiceData = computed(() => {
+    const obj: {
+        [key: string]: UserInvoiceApi_getListResponse[]
+    } = {}
+    defData.invoiceList.forEach((item) => {
+        if (!obj[item.type]) {
+            obj[item.type] = []
+        }
+        obj[item.type].push(item)
+    })
+
+    return [obj]
+})
 
 // 面包屑导航
 const breadcrumbData = computed(() => {
@@ -355,25 +374,21 @@ const peasNumber = computed(() => {
 const preferMoney = computed(() => {
     return 0
 })
+// 工游豆抵扣金额
+const beanMoney = computed(() => {
+    if (!form.peas_number || !defData.ratio_scale) return 0
+    return form.peas_number / defData.ratio_scale
+})
 
 // 需支付金额
 const payMoney = computed(() => {
-    return defData.total_price + defData.freight_price
+    return defData.total_price + defData.freight_price - beanMoney.value
 })
 
 const initDefaultData = async () => {
-    const numReg = /^[0-9]*$/ // 检查数字是否合法或不包含数字的正则表达式 或 空或空字符串
+    const numReg = /^[1-9][0-9]*$/ // 检查数字是否合法或不包含数字的正则表达式 或 空或空字符串
 
-    const num = numReg.test(goods_number.value) ? (Number(goods_number) || 1) : 1
-    // 0:不请求接口，1：根据购物车id请求，2：根据商品id请求，
-    let type = 0
-
-    if (cart_id.value) {
-        type = 1
-    } else if (goods_id.value && numReg.test(goods_id.value)) {
-        type = 2
-    }
-    if (!type) {
+    if (!cart_id.value && !numReg.test(goods_id.value)) {
         defData.skeleton = false
         defData.ready = false
         return
@@ -418,7 +433,7 @@ const initDefaultData = async () => {
 
     await wait(800)
     defData.skeleton = false
-    console.log(res1)
+    // console.log(res1)
     if (res1) {
         const data = res1
         // console.log('data :>> ', data)
@@ -430,9 +445,11 @@ const initDefaultData = async () => {
 
         defData.count_number = data.number
         defData.total_price = data.total_price
-        defData.total_peas = data.total_peas
+        defData.total_peas = Math.floor(data.total_peas || 0)
         defData.user_peas = data.user_peas
         defData.freight_price = data.freight_price
+
+        defData.ratio_scale = data.matrixing_scale || 0
     } else {
         return defData.ready = false
     }
@@ -459,12 +476,13 @@ const initGoodsData = async () => {
             address_id: form.address_id,
         },
     })
-    console.log(pending.value)
 
-    await wait(1500)
     console.log(pending.value)
-    console.log(error.value)
-    console.log('data.value?.code :>> ', data.value?.code)
+    // await nextTick()
+    await wait(1500)
+    // console.log(pending.value)
+    // console.log(error.value)
+    // console.log('data.value?.code :>> ', data.value?.code)
     // 请求错误处理
     if (error.value) {
         return defData.ready = false

@@ -43,6 +43,7 @@ declare interface OrderApi_GetSettleResponse {
     "total_peas": 36, //该订单可用工游豆
     "user_peas": 2330, //当前用户工游豆
     "freight_price": 0, //运费
+    matrixing_scale:number,     // 工游豆抵扣金额比例
     "coupon_list": {
         "id": 1, //记录ID
         "coupon_id": 11,
