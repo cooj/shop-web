@@ -166,14 +166,14 @@ declare interface OrderApi_GetInfoResponse {
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位",
         "logistics_name": "顺丰物流"
     }[]
-    peas_price:string, // 工游豆抵扣金额
+    peas_price: string, // 工游豆抵扣金额
 }
 
 
 /**
  * 订单支付（选择微信支付返回数据） - 响应数据
  */
-declare interface OrderApi_PayOrderWeChatResponse{
+declare interface OrderApi_PayOrderWeChatResponse {
     "pay_type": 1,
     "code_url": "weixin://wxpay/bizpayurl?pr=p4lpSuKzz"
 }
@@ -367,10 +367,10 @@ declare interface OrderReturnApi_InfoResponse {
     "refund_info": {
         "id": 4, //记录ID
         "refund_no": "XS20230508142742302981", //退换单号
-        "order_no": "M20230505143130386350", //订单号
+        "main_order_no": "M20230505143130386350", //订单号
         "describe": "退货", //问题描述
         "type": 1, //类型 1退货 2换货
-        "status": 0, //订单状态 0全部 1待支付 2待发货 3待确认 4已取消
+        "status": 0 | 1 | 2 | 3 | 4 | 5, //状态 0售后正在审核 1审核通过待处理 2审核未通过 3要求售后寄回 4快递已寄回 5售后完成
         "logistics_cusmoer": "", //物流公司
         "logistics_no": "", //快递单号
         "reply": "", //回复内容
@@ -403,8 +403,28 @@ declare interface OrderReturnApi_InfoResponse {
         "create_time": "2023-05-08 14:27:42", //操作时间
         "user_id": 57, //用户ID
         "author": "会员" //操作者
-    }[]
+    }[],
+    flow_path: { // 退换步骤
+        "title": "提交申请",
+        "item": "2023-05-08 14:27:42",
+        "selected": 1
+    }[],
 }
+
+
+/**
+ * 退换货管理 -- 补充问题、快递信息 - 请求参数
+ */
+declare interface OrderReturnApi_Fill {
+    refund_no: string;   // 退货编号
+    refund_type: 1 | 2;    // 填写类型 1补充问题 2添加快递
+    describe: string;    // 问题描述
+    img_url: string; // 图片路径
+    logistics_cusmoer?: string;   // 快递名称
+    logistics_no?: string;    // 快递单号
+}
+
+
 
 
 
@@ -464,8 +484,8 @@ declare interface OrderOperatePropsData {
 
 // 订单退换货onOpenDialog传值
 declare interface OrderReturnOpen {
-    row?: OrderReturnApi_ReturnList['lists'][0],  // 退货记录信息
-    order_no?: string, // 订单编号
+    // row?: OrderReturnApi_ReturnList['lists'][0],  // 退货记录信息
+    order_no: string, // 订单编号
 }
 
 

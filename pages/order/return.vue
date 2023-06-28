@@ -64,55 +64,34 @@
                     </div>
                 </template>
                 <template #refund_status="{ scopes }">
-                    <!-- <div>
-                        <el-tag v-if="scopes.row.refund_status === 1" type="success" size="small">
-                            已完成
-                        </el-tag>
-                        <el-tag v-else-if="scopes.row.refund_status === 2" type="info" size="small">
-                            已取消
-                        </el-tag>
-                        <el-tag v-else type="" size="small">
-                            申请中
-                        </el-tag>
-                    </div>
-                    <el-popover v-if="scopes.row.reply" placement="top" trigger="hover" :content="scopes.row.reply">
-                        <template #reference>
-                            <el-text class="cursor-pointer" size="small">
-                                回复消息
-                            </el-text>
-                        </template>
-                    </el-popover> -->
                     <div class="text-13px">
                         {{ defData.operateList[scopes.row.status as '1'] }}
                     </div>
                 </template>
                 <template #operate="{ scopes }">
-                    <div class="mb5px">
-                        <el-button type="primary" size="small" link @click="onReturnDetail(scopes.row)">
+                    <NuxtLink :to="`/order/returned?order_no=${scopes.row.refund_no}`">
+                        <el-button type="primary" size="small" link>
                             退换详情
                         </el-button>
-                    </div>
-                    <el-button size="small" link @click="onOrderDetail(scopes.row)">
-                        订单详情
-                    </el-button>
+                    </NuxtLink>
+                    <NuxtLink :to="`/order/detail?order_no=${scopes.row.main_order_no}`">
+                        <el-button size="small" link>
+                            订单详情
+                        </el-button>
+                    </NuxtLink>
                 </template>
             </CoTable>
-
-            <OrderReturnModel ref="modelRef" />
         </el-skeleton>
     </LayoutUser>
 </template>
 
 <script setup lang="ts">
 import { OrderReturnApi } from '~/api/goods/order'
-import { OrderReturnModel } from '#components'
 
 definePageMeta({
     layout: 'home',
     middleware: 'auth',
 })
-
-const modelRef = ref<InstanceType<typeof OrderReturnModel>>()
 
 const defData = reactive({
     skeleton: true, // 显示骨架屏
@@ -164,25 +143,6 @@ const initTableData = async () => {
         tableData.data = res.value.data.lists
         tableData.pagination.total = res.value.data.total// 总条数 记录数大于10条记录不
     }
-}
-
-/**
- * 查看退换信息
- */
-const onReturnDetail = (row: TableDataItem) => {
-    modelRef.value?.onOpenDialog({ row })
-}
-
-/**
- * 查看订单详情
- */
-const onOrderDetail = (row: TableDataItem) => {
-    navigateTo({
-        path: '/order/detail',
-        query: {
-            order_no: row.main_order_no,
-        },
-    })
 }
 
 // 分页切换
