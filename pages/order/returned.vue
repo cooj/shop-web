@@ -361,31 +361,8 @@ definePageMeta({
     }
 }
 
-.order-ope {
-    display: flex;
-
-    :deep(.item-ope) {
-        &+.item-ope {
-            margin-left: 10px;
-        }
-    }
-}
-
 .goods-link {
     &:hover {
-        color: var(--el-color-primary);
-    }
-}
-
-.prefer-ul {
-    font-size: 12px;
-    text-align: right;
-    color: #333;
-    line-height: 2;
-
-    .item-text {
-        display: inline-block;
-        min-width: 90px;
         color: var(--el-color-primary);
     }
 }
