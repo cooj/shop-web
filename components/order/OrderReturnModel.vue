@@ -78,7 +78,10 @@
                 <div class="return-pane">
                     <div class="mb10px">
                         <span class="mr-5px">退换状态:</span>
-                        <el-tag v-if="returnData.refund_status === 1" type="success" size="large">
+                        <el-tag type="success">
+                            {{ defData.operateList[returnData.status] }}
+                        </el-tag>
+                        <!-- <el-tag v-if="returnData.refund_status === 1" type="success" size="large">
                             已完成
                         </el-tag>
                         <el-tag v-else-if="returnData.refund_status === 2" type="info" size="large">
@@ -86,7 +89,7 @@
                         </el-tag>
                         <el-tag v-else type="" size="large">
                             申请中
-                        </el-tag>
+                        </el-tag> -->
                     </div>
                     <div class="mb8px">
                         <span class="mr-5px">服务类型:</span>
@@ -160,6 +163,14 @@ const defData = reactive({
     multipleSelect: [] as OrderReturnApi_GetListResponse[], //
 
     billData: {} as OrderReturnApi_InfoResponse,
+    operateList: { // 0售后正在审核出来 1审核通过待处理 2审核未通过 3要求售后寄回 4快递已寄回 5售后完成
+        0: '售后正在审核处理',
+        1: '审核通过,待处理',
+        2: '审核未通过',
+        3: '售后要求寄回',
+        4: '快递已寄回',
+        5: '售后已完成',
+    },
 })
 
 // 表单数据

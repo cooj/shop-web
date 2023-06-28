@@ -243,7 +243,7 @@
                                     <span class="item-text">-￥0.00</span>
                                 </li> -->
                                 <li>
-                                    <span class="item-title">优惠金额：</span>
+                                    <span class="item-title">优惠券抵扣金额：</span>
                                     <span class="item-text">-￥{{ formatNumber(preferMoney) }}</span>
                                 </li>
                                 <li>
@@ -372,7 +372,9 @@ const peasNumber = computed(() => {
 
 // 优惠金额
 const preferMoney = computed(() => {
-    return 0
+    const node = defData.couponList.find(item => item.coupon_draw_id === form.coupon_id)
+    if (!node) return 0
+    return Number(node.par_value)
 })
 // 工游豆抵扣金额
 const beanMoney = computed(() => {
@@ -479,7 +481,7 @@ const initGoodsData = async () => {
 
     console.log(pending.value)
     // await nextTick()
-    await wait(1500)
+    await wait(1200)
     // console.log(pending.value)
     // console.log(error.value)
     // console.log('data.value?.code :>> ', data.value?.code)

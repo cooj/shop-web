@@ -17,7 +17,7 @@
                     返回首页
                 </el-button>
             </NuxtLink>
-            <el-button class="ml15px" type="primary" plain @click="router.back()">
+            <el-button class="ml15px" type="primary" plain @click="$router.back()">
                 返回上一页
             </el-button>
         </div>
@@ -25,5 +25,5 @@
 </template>
 
 <script setup lang="ts">
-const router = useRouter()
+
 </script>
