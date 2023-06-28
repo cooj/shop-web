@@ -58,6 +58,18 @@
                         </el-form-item>
                     </el-col>
                 </template>
+                <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                    <el-form-item v-if="defData.type === 2" prop="is_default" label="设为默认：">
+                        <el-radio-group v-model="form.data.is_default">
+                            <el-radio :label="0">
+                                否
+                            </el-radio>
+                            <el-radio :label="1">
+                                是
+                            </el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
             </el-row>
         </el-form>
     </CoDialog>
@@ -65,6 +77,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
+
 import { UserInvoiceApi } from '~/api/user/invoice'
 
 const emits = defineEmits<{
@@ -91,7 +104,7 @@ const form = reactive({
         logon_addr: '', // 注册地址
         bank: '', // 开户银行
         bank_account: '', // 开户账号
-
+        is_default: 0, //
         bill_header_id: '' as '' | number,
     },
 })
@@ -157,6 +170,7 @@ const onOpenDialog = (row?: UserInvoiceApi_getListResponse) => {
         form.data.logon_addr = row.logon_addr
         form.data.bank_account = row.bank_account
         form.data.bank = row.bank
+        form.data.is_default = row.is_default
     } else {
         defData.type = 1
         form.data.enterprise_name = ''
@@ -202,6 +216,7 @@ const onConfirm = async () => {
             emits('update', {
                 ...params,
                 bill_header_id: res.value?.data?.bill_header_id || Date.now(),
+                is_default: 0,
             })
             onClose()
         } else {
@@ -210,6 +225,7 @@ const onConfirm = async () => {
     } else if (defData.type === 2) { // 修改
         const edit: UserInvoiceApi_Edit = {
             ...params,
+            is_default: form.data.is_default as 0 | 1,
             bill_header_id: Number(form.data.bill_header_id),
         }
         defData.btnLoading = true

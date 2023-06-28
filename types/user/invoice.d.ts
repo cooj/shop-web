@@ -50,6 +50,7 @@ declare interface UserInvoiceApi_Edit {
     logon_addr: string //注册地址（增票必填）
     bank: string //开户银行（增票必填）
     bank_account: string//开户账号（增票必填）
+    is_default: 0 | 1 // 是否默认 0不是 1是
 }
 
 /**
