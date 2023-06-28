@@ -114,7 +114,7 @@ definePageMeta({
 
 const route = useRoute()
 const defData = reactive({
-    type: 1, // 1账户登录 2验证码登录 3微信扫码之后注册 4二维码
+    type: 1, // 1账户登录 2验证码登录 3微信扫码未注册之后登录 4二维码页面
     time: 0, // 验证码倒计时时间
     sendCode: true, // true：发送验证码 false:倒计时
     nickname: '', //
@@ -178,6 +178,7 @@ const onClick = async () => {
         const res = await LoginApi.Login(info)
         form.loading = false
         if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
+        userState.setToken(res.data.value.data.token)
         return navigateTo('/')
     } else { // 验证码登录
         const data: LoginApi_Login = {
