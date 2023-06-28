@@ -105,4 +105,11 @@ export const OrderReturnApi = {
      */
     info: (data: { refund_no: string }) => useHttp<OrderReturnApi_InfoResponse>('/api/mall_refund/get_refund_info', data, { method: 'post' }),
 
+    /**
+     * 退换货管理 -- 问题补充
+     * @param data
+     * @returns
+     */
+    fill: (data: OrderReturnApi_Fill) => useHttp('/api/mall_refund/set_operate', data, { method: 'post' }),
+
 }

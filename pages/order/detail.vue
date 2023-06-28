@@ -278,6 +278,7 @@ initDefaultData()
 
 definePageMeta({
     layout: 'home',
+    middleware: 'auth',
 })
 </script>
 
