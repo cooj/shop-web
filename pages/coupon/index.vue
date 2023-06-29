@@ -1,7 +1,7 @@
 <template>
     <div style="height: auto;background-color: #f00408;">
-        <div style="background-image: url('assets/images/coupon-bg.png');background-size: cover;background-repeat: no-repeat;
-    background-position: center;height: 550px;">
+        <div style="background-image: url('/assets/images/coupon-bg.png');background-size: cover;background-repeat: no-repeat;
+    background-position: center;height: 550px;width: 100%;">
             <Transition name="slide">
                 <div class="side-item">
                     <a href="#current">
