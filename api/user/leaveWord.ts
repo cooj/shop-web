@@ -7,7 +7,7 @@ export const LeaveWordApi = {
      * 获取留言列表
      * @returns
      */
-    getList: () => useHttp<LeaveWordApi_GetListResponse[]>('/api/mall_user/comment_lists', '', { method: 'post' }),
+    getList: (data: LeaveWordApi_GetList) => useHttp<LeaveWordApi_GetListResponse>('/api/mall_user/comment_lists', data, { method: 'post' }),
 
     /**
      * 添加留言

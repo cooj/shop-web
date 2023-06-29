@@ -66,6 +66,11 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="goods-pagination">
+                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
+                    layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
+                    @current-change="onHandleSizeChange" />
+            </div>
         </el-skeleton>
     </LayoutUser>
 
@@ -89,7 +94,11 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { LeaveWordApi } from '~/api/user/leaveWord'
 
 const defData = reactive({
-    tableData: [] as LeaveWordApi_GetListResponse[],
+    page: 1,
+    total: 10,
+    pageSize: 11,
+
+    tableData: [] as LeaveWordApi_GetListResponse['lists'],
     skeleton: true,
     typeList: [
         {
@@ -135,11 +144,17 @@ const rules = reactive<FormRules>({
 })
 
 const initTableData = async () => {
-    const res = await LeaveWordApi.getList()
+    const data: LeaveWordApi_GetList = {
+        is_paging: 1,
+        page: defData.page,
+        page_size: defData.pageSize,
+    }
+    const res = await LeaveWordApi.getList(data)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
 
-    defData.tableData = res.data.value.data
+    defData.tableData = res.data.value.data.lists
+    defData.total = res.data.value.data.total
 }
 initTableData()
 
@@ -164,10 +179,25 @@ const onClose = () => {
     formRef.value?.resetFields()
 }
 
+// 分页数量点击
+const onHandleSizeChange = () => {
+    initTableData()
+}
+
 definePageMeta({
     layout: 'home',
     middleware: 'auth',
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.goods-pagination {
+    padding: 20px 0;
+    --el-pagination-button-bg-color: var(--el-color-white);
+    /* :deep(.el-pagination) {
+    --el-pagination-button-bg-color: var(--el-color-white);
+    justify-content: center;
+    --el-disabled-bg-color: var(--el-border-color);
+  } */
+}
+</style>
