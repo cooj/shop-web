@@ -34,6 +34,7 @@
                                         <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
                                         <span class="mx5px">{{ item.phone }}</span>
                                         <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                        <!-- <em class="mx5px fw400 opacity70" @click.stop.prevent="console.log('test')">修改</em> -->
                                     </el-radio>
                                 </el-radio-group>
                                 <div v-else class="w100% text-center text-13px c-#666">
@@ -182,7 +183,7 @@
                                 </div>
                             </div>
                             <el-form-item prop="coupon_id" label="优惠券">
-                                <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
+                                <!-- <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
                                     <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id"
                                         :label="item.coupon_draw_id">
                                         {{ item.coupon_name }}-减{{ item.par_value }}
@@ -190,7 +191,17 @@
                                     <el-radio :label="0">
                                         不使用优惠券
                                     </el-radio>
-                                </el-radio-group>
+                                </el-radio-group> -->
+                                <div v-if="defData.couponList.length" class="coupon-list">
+                                    <GoodsCoupon v-for="item in defData.couponList" :key="item.coupon_draw_id"
+                                        :class="{ on: item.coupon_draw_id === form.coupon_id }"
+                                        @click="choseCoupon(item.coupon_draw_id)">
+                                        {{ item.coupon_name }}立减{{ item.par_value }}元
+                                    </GoodsCoupon>
+                                    <GoodsCoupon :class="{ on: !form.coupon_id }" @click="choseCoupon(0)">
+                                        不使用优惠券
+                                    </GoodsCoupon>
+                                </div>
                                 <span v-else class="text-12px c-#888">暂无可用优惠券</span>
                             </el-form-item>
                             <el-form-item prop="is_peas" label="是否使用工游豆" label-width="auto">
@@ -319,7 +330,7 @@ const form = reactive({
     address_id: '' as '' | number, // 地址id
     bill_address_id: '' as '' | number, // 发票地址
 
-    is_invoice: 1, // 是否开发票 1：是 0：否 （默认1）
+    is_invoice: 0, // 是否开发票 1：是 0：否 （默认1）
     invoice_id: '' as '' | number, // 发票id
 
     coupon_id: '' as '' | number, // 使用的优惠券编号或编号列表（可选）
@@ -384,7 +395,7 @@ const beanMoney = computed(() => {
 
 // 需支付金额
 const payMoney = computed(() => {
-    return defData.total_price + defData.freight_price - beanMoney.value
+    return defData.total_price + defData.freight_price - beanMoney.value - preferMoney.value
 })
 
 const initDefaultData = async () => {
@@ -444,6 +455,9 @@ const initDefaultData = async () => {
 
         form.tableData = data.goods_list
         defData.couponList = data.coupon_list
+        if (defData.couponList.length) {
+            form.coupon_id = defData.couponList[0].coupon_draw_id
+        }
 
         defData.count_number = data.number
         defData.total_price = data.total_price
@@ -498,18 +512,22 @@ const setAddressText = (row: UserAddressApi_GetListResponse) => {
     return setArrayTextName([row.province, row.city, row.area, row.address], '  ')
 }
 
-// 地址选中
+// 地址选中(设置运费)
 const onChooseAddress = async () => {
+    // 位置移动
+    // const index = defData.addressList.findIndex(item => item.address_id === form.address_id)
+    // if (index > 0) defData.addressList = moveArraySite(defData.addressList, index, 0)
 
-    // const da = await initGoodsData()
-    // console.log(da)
+    // 运费更新
+    const dat = await initGoodsData()
+    if (dat) defData.freight_price = dat.freight_price
 }
 
 /**
  * 新增地址、新增发票
  * @param type 1：收货地址 2：发票地址，3、新增发票
  */
-const onAddressInvoice = (type: 1 | 2 | 3) => {
+const onAddressInvoice = async (type: 1 | 2 | 3) => {
     defData.type = type
     if (type === 1 || type === 2) {
         modelRef.value?.onOpenDialog()
@@ -547,6 +565,11 @@ const getInvoice = (params: UserInvoiceApi_Edit) => {
     })
 
     form.invoice_id = params.bill_header_id
+}
+
+// 选择优惠券
+const choseCoupon = (id: number) => {
+    form.coupon_id = id
 }
 
 // 提交订单
@@ -710,6 +733,23 @@ definePageMeta({
 
     &:hover {
         color: var(--el-color-primary);
+    }
+}
+
+.coupon-list {
+    display: flex;
+    align-items: center;
+
+    :deep(.coupon-pane) {
+        --coupon-default-color: var(--el-text-color-regular);
+        transform: unset;
+        margin-right: 20px;
+        cursor: pointer;
+        padding: 2px 10px;
+
+        &.on {
+            --coupon-default-color: var(--el-color-primary)
+        }
     }
 }
 </style>

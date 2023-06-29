@@ -10,6 +10,7 @@
 
 <style lang="scss">
 .coupon-pane {
+    --coupon-default-color:var(--el-color-primary);
     position: relative;
     overflow: hidden;
     padding: 0 7px;
@@ -17,9 +18,9 @@
     line-height: 18px;
     display: inline-block;
     // margin-right: 5px;
-    color: var(--el-color-primary);
-    border-top: 1px solid var(--el-color-primary);
-    border-bottom: 1px solid var(--el-color-primary);
+    color: var(--coupon-default-color);
+    border-top: 1px solid var(--coupon-default-color);
+    border-bottom: 1px solid var(--coupon-default-color);
     transform: scale(0.9);
     transform-origin: left;
 
@@ -29,8 +30,8 @@
         --co-wavy-width: 3px;
         width: 100%;
         height: var(--co-wavy-width);
-        background: linear-gradient(135deg, transparent, transparent 45%, var(--el-color-primary), transparent 55%),
-            linear-gradient(45deg, transparent, transparent 45%, var(--el-color-primary), transparent 55%);
+        background: linear-gradient(135deg, transparent, transparent 45%, var(--coupon-default-color), transparent 55%),
+            linear-gradient(45deg, transparent, transparent 45%, var(--coupon-default-color), transparent 55%);
         background-size: calc(var(--co-wavy-width) * 2) calc(var(--co-wavy-width) * 2);
         background-repeat: repeat-x, repeat-x;
         transform: rotateZ(90deg);
@@ -45,7 +46,7 @@
 
     &::after {
         position: absolute;
-        bottom: -1px;
+        bottom: -2px;
         right: 2px;
         transform-origin: right;
     }
