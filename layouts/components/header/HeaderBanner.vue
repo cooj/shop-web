@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper'
-import { HomeApi } from '~/api/home/home'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -65,25 +64,15 @@ const defData = reactive({
 })
 
 // 获取轮播图
-// const getBannerList = async () => {
-const { data: banner } = await HomeApi.getBanner({ position_id: 1 })
-
-//     "start_time": 1678334400, //开始时间
-// "end_time": 1685246400, //结束时间
-const _list = banner.value?.data.lists.filter((item) => {
-    const nowTime = new Date().getTime() // 当前时间的毫秒数
-    // php时间戳为10位
-    const start = !!(nowTime > item.start_time * 1000 && nowTime < item.end_time * 1000) // 开始和结束时间是否在当前时间范围内 （比如
-    if (item.enabled && start) {
-        return true
-    } else {
-        return false
-    }
+const { data: banner, error } = await useFetch<{ data: HomeApi_GetBannerResponse } & ResponseCodeMsg>('/api/main/banner', {
+    method: 'post',
+    body: {
+        position_id: 1,
+    },
 })
-defData.bannerList = _list || []
-// }
-
-// getBannerList()
+if (!error.value && banner.value?.code === 200) {
+    defData.bannerList = banner.value.data.lists
+}
 </script>
 
 <style lang="scss" scoped>

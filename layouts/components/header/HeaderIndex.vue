@@ -40,7 +40,6 @@ import HeaderMenu from './HeaderMenu.vue'
 
 import HeaderBanner from './HeaderBanner.vue'
 import HeaderUser from './HeaderUser.vue'
-import { HomeApi } from '~/api/home/home'
 
 // import HeaderBanner2 from './HeaderBanner2.vue'
 
@@ -54,28 +53,15 @@ const defData = reactive({
 })
 
 // 获取活动专区广告
-const getActiveList = async () => {
-    // 获取活动广告
-    const { data: banner } = await HomeApi.getBanner({ position_id: 3 })
-
-    //     "start_time": 1678334400, //开始时间
-    // "end_time": 1685246400, //结束时间
-    const _list = banner.value?.data.lists.filter((item) => {
-        const nowTime = new Date().getTime() // 当前时间的毫秒数
-        // php时间戳为10位
-        const start = !!(nowTime > item.start_time * 1000 && nowTime < item.end_time * 1000) // 开始和结束时间是否在当前时间范围内 （比如
-        if (item.enabled && start) {
-            return true
-        } else {
-            return false
-        }
-    })
-    defData.activeList = _list || []
-}
-
-onMounted(() => {
-    getActiveList()
+const { data: banner, error } = await useFetch<{ data: HomeApi_GetBannerResponse } & ResponseCodeMsg>('/api/main/banner', {
+    method: 'post',
+    body: {
+        position_id: 3,
+    },
 })
+if (!error.value && banner.value?.code === 200) {
+    defData.activeList = banner.value.data.lists
+}
 </script>
 
 <style lang="scss" scoped>
