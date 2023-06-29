@@ -2,6 +2,11 @@
  * waitUtil方法
  * @param ms 需要等待的时间，毫秒级
  * @returns
+ * @example
+ * ```js
+ * // 等待1秒后，再往后面运行
+ * await wait(1000)
+ * ```
  */
 export const wait = (ms: number) => {
     return new Promise((resolve) => {
@@ -87,7 +92,7 @@ export const formatTime = (num: number | string | Date = new Date().getTime(), f
  * @param {String} [url=window.location.href] 地址，默认为浏览器的url
  * @returns {string|object} name为空时，返回对象
  * @example
- *  getUrlParams('aa', 'https://www.baidu.com?aa=101')       //101
+ * getUrlParams('aa', 'https://www.baidu.com?aa=101')       //101
  */
 export const getUrlParams = (name = '', url: string = window.location.href): string | object => {
     let endVal = ''
@@ -152,7 +157,10 @@ export const updateUrlParams = (key: string, value?: string | number, url?: stri
  * @param {number}  [len] 截取的长度(不填从开始截取到最后)
  * @param {string}  [rep=''] 需要替换的字符（例如："*"）默认为空
  * @example
- *  var value=strCutReplace('18011223344',4,4,'*')  //180****3344
+ * ```js
+ * // 手机号码隐藏中间4位
+ * const value = strCutReplace('18011223344', 4, 4, '*') // 180****3344
+ * ```
  */
 export const strCutReplace = (str: string, start: number, len: number, rep = '') => {
     if (str && (str.length - start) > 0) { // 判断开始截取的位置,字符串的长度需大于截取的长度
@@ -175,4 +183,30 @@ export const strCutReplace = (str: string, start: number, len: number, rep = '')
     } else {
         return str
     }
+}
+
+/**
+ * 数组元素移动位置，不改变原有数组
+ * @param arr 需要改变的数组
+ * @param nowIndex 需要移动项在当前数组里的下标
+ * @param newIndex 移动到指定的位置（下标）
+ * @returns
+ * @example
+ * ```js
+ * // 将数组中2的那一项移动到最前面
+ * const newArr = moveArraySite([0, 1, 2, 3], 2, 0)   // newArr：[2,0,1,3]
+ *
+ * ```
+ */
+export const moveArraySite = <T = any>(list: T[], nowIndex: number, newIndex: number) => {
+    // 改动位置没变化时，直接返回原数组
+    if (nowIndex === newIndex) return list
+
+    /** splice 会更改原来数组的数据,所以使用map形成一个新数组 */
+    /**  list.splice(oldIndex, 1)[0] 删除旧数据位置返回删除的数据 */
+    /** list.splice(newIndex, 0, old)  相当于把删除的旧数据插入到新的位置上去 */
+    const newArr = list.map(item => item)
+    newArr.splice(newIndex, 0, newArr.splice(nowIndex, 1)[0])
+
+    return newArr
 }
