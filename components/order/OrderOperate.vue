@@ -118,10 +118,22 @@ const onCancel = async () => {
  *  确认订单
  */
 const onConfirm = async () => {
-    const { data } = await OrderApi.confirmOrder({ main_order_no: props.data.order_no })
-    if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+    ElMessageBox.confirm('将该订单设置收货状态？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }).then(async () => {
+        const { data } = await OrderApi.confirmOrder({ main_order_no: props.data.order_no })
+        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
 
-    ElMessage.success('操作成功')
+        ElMessage.success('操作成功')
+        emits('update', 7) // 更新
+    }).catch(() => {
+        // ElMessage({
+        //     type: 'info',
+        //     message: 'Delete canceled',
+        // })
+    })
 }
 
 /**

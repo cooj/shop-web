@@ -4,6 +4,7 @@ import { useServerFetch } from '../../utils'
  * 获取订单列表
  */
 export default defineEventHandler(async (event) => {
+    return 1
     const res = await useServerFetch<OrderApi_GetOrderListResponse>(event, '/api/mall_order/get_order_list')
 
     // if(res.)

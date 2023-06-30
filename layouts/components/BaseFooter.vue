@@ -21,16 +21,18 @@
                 </ul>
                 <div class="footer-right">
                     <div class="footer-logo">
-                        <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
-                        <p> 售后电话 {{ systemInfo?.sale_tel }}</p>
-                        <p>工作时间 {{ systemInfo?.work_time }}</p>
+                        <NuxtLink to="/">
+                            <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
+                        </NuxtLink>
+                        <p>售后电话: {{ systemInfo?.sale_tel }}</p>
+                        <p>工作时间: {{ systemInfo?.work_time }}</p>
                     </div>
                     <div class="footer-code">
                         <div class="footer-code-box text-center">
-                            <div class="mb5px">
+                            <CoImage class="w110px pb100%" :src="systemInfo?.wx_code" />
+                            <div class="mt5px">
                                 公众号二维码
                             </div>
-                            <CoImage class="w110px pb100%" :src="systemInfo?.wx_code" />
                             <!-- <div class="footer-code-item">
                 <div class="mb5px">
                   公众号二维码
@@ -51,7 +53,7 @@
                     <NuxtLink class="mr5px">
                         用户协议
                     </NuxtLink>
-                    <NuxtLink class="mr5px">
+                    <NuxtLink to="/list/site" class="link-name mr5px">
                         网站导航
                     </NuxtLink>
                 </div>
@@ -67,21 +69,22 @@
 </template>
 
 <script lang="ts" setup>
-import { HomeApi } from '~/api/home/home'
-
 // 获取系统信息
 const useSystem = useSystemState()
 const systemInfo = await useSystem.getSystemInfo()
 // console.log('systemInfo :>> ', systemInfo)
 const navList = ref<HomeApi_GetArticleResponse[]>([])
-const initDefaultData = async () => {
-    // 获取底部导航
-    const { data: footer, error } = await HomeApi.getArticle({ type: 1 })
-    if (error.value) return
-    navList.value = footer.value?.data || []
-}
 
-initDefaultData()
+// 获取底部导航
+const { data: footer, error } = await useFetch<{ data: HomeApi_GetArticleResponse[] } & ResponseCodeMsg>('/api/main/nav', {
+    method: 'post',
+    body: {
+        type: 1,
+    },
+})
+if (!error.value && footer.value?.code === 200) {
+    navList.value = footer.value.data || []
+}
 </script>
 
 <style lang="scss" scoped>
@@ -136,6 +139,10 @@ initDefaultData()
             font-size: 14px;
             color: #ccc;
             margin: 5px 0;
+
+            a:hover {
+                color: #fff;
+            }
         }
     }
 }
@@ -144,5 +151,11 @@ initDefaultData()
     width: 38%;
     display: flex;
     justify-content: space-between;
+}
+
+.link-name {
+    &:hover {
+        color: var(--el-color-info);
+    }
 }
 </style>

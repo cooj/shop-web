@@ -7,7 +7,7 @@ import { OrderApi } from '~/api/goods/order'
  */
 export const useGoodsState = () => {
     // 商品分类
-    const goodsClassList = useState<GoodsApi_GetClassResponse[]>('goodsClass', () => [])
+    const goodsClassList = useState<GoodsApi_GetClass[]>('goodsClass', () => [])
 
     /**
      * 获取商品分类

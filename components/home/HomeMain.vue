@@ -14,18 +14,19 @@
                 </NuxtLink>
             </div>
             <div class="goods-best-list">
-                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="link" :to="`/goods/${item.goods_sn}`">
+                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="goods-link v1"
+                    :to="`/goods/${item.goods_sn}`">
                     <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
-                    <h3 class="tle">
+                    <h3 class="tle hov-name">
                         {{ item.goods_name }}
                     </h3>
                     <div class="price">
                         <span>惊爆价</span>
                         <em>￥{{ item.shop_price }}</em>
                     </div>
-                    <el-button text bg type="danger">
+                    <!-- <el-button text bg type="danger">
                         大热卖推荐
-                    </el-button>
+                    </el-button> -->
                 </NuxtLink>
             </div>
         </div>
@@ -53,18 +54,18 @@
                             :name="`${index}-${i}`" lazy>
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
-                                    <NuxtLink class="link" :to="`/goods/${son.goods_sn}`" target="_blank">
-                                        <CoImage class="w100% pb100%" :src="son.goods_img" loading="lazy" />
-                                        <h3 class="goods-name">
+                                    <NuxtLink class="goods-link v2" :to="`/goods/${son.goods_sn}`" target="_blank">
+                                        <CoImage class="hov-img w100% pb100%" :src="son.goods_img" loading="lazy" />
+                                        <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
-                                        <div class="price truncate">
+                                        <div class="truncate">
                                             <span>惊爆价</span>
-                                            <em>￥{{ son.shop_price }}</em>
+                                            <em class="color-primary">￥{{ son.shop_price }}</em>
                                         </div>
-                                        <el-button text bg type="danger">
+                                        <!-- <el-button text bg type="danger">
                                             大热卖推荐
-                                        </el-button>
+                                        </el-button> -->
                                     </NuxtLink>
                                 </li>
                             </ul>
@@ -74,7 +75,8 @@
                 <div class="brand-list">
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                        <CoImage class="h70px w100%" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" />
+                        <CoImage class="h70px w100% block!" :src="sub.brand_logo" style="--el-color-info-light-9:#282828;"
+                            :icon-size="30" />
                     </NuxtLink>
                 </div>
             </div>
@@ -137,7 +139,7 @@ onMounted(async () => {
 .goods-best {
     background-color: var(--el-color-white);
     padding: 20px;
-    margin-bottom:30px;
+    margin-bottom: 30px;
 }
 
 .goods-best-tle {
@@ -160,32 +162,9 @@ onMounted(async () => {
 
 .goods-best-list {
     display: grid;
-    gap: 20px;
+    gap: 25px;
     grid-template-columns: repeat(5, 1fr);
-
-    .link {
-        display: block;
-        height: 100%;
-        text-align: center;
-        padding: 15px;
-
-        &:hover {
-            box-shadow: 0 0 10px #eee;
-        }
-
-        .tle {
-            height: 48px;
-            overflow: hidden;
-            line-height: 24px;
-            font-size: 14px;
-            font-weight: bold;
-            text-align: left;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-    }
+    padding: 10px;
 
     .price {
         margin: 5px 0;
@@ -233,7 +212,8 @@ onMounted(async () => {
     .left {
         width: var(--floor-left-width);
         color: var(--el-color-white);
-        min-height: 560px;
+        // min-height: 560px;
+        height: 620px;
         position: relative;
         z-index: 1;
 
@@ -244,7 +224,6 @@ onMounted(async () => {
     }
 
     .class-list {
-
         padding: 0 20px;
 
         .el-button {
@@ -253,12 +232,16 @@ onMounted(async () => {
 
             --el-button-text-color: var(--el-color-white);
             --el-button-hover-bg-color: transparent;
+
+            &:hover {
+                border-color: var(--el-color-primary)
+            }
         }
     }
 
     .right {
         width: calc(100% - var(--floor-left-width));
-        background: var(--el-color-white);
+        // background: var(--el-color-white);
     }
 
     .tabs-box {
@@ -267,6 +250,7 @@ onMounted(async () => {
 
         :deep(.el-tabs__header) {
             margin: 0;
+            background: var(--el-color-white);
 
             .el-tabs__item.is-top:nth-child(2) {
                 padding-left: 20px;
@@ -299,45 +283,110 @@ onMounted(async () => {
 }
 
 .goods-list {
-    height: 100%;
+    // height: 100%;
     display: flex;
     flex-wrap: wrap;
-    min-height: 580px;
+    background-color: #fff;
 
     li {
+
         width: 20%;
         height: 50%;
-        border-top: 2px solid var(--m-body-bg-color);
+        border-bottom: 2px solid var(--m-body-bg-color);
         border-right: 2px solid var(--m-body-bg-color);
 
         &:nth-child(5n) {
             border-right: 0;
         }
 
-        a {
-            display: block;
-            height: 100%;
-            padding: 15px;
-            text-align: center;
-            min-height: 290px;
+        &:nth-child(n+6) {
+            border-bottom: 0;
+        }
 
-            &:hover {
-                box-shadow: 3px 3px 10px #d8d8d8;
-            }
+    }
 
-            .goods-name {
-                height: 40px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                font-size: 14px;
-                line-height: 20px;
+    &.a2 {
 
+        height: 580px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+
+        li {
+            width: 100%;
+            height: 50%;
+
+        }
+    }
+
+}
+
+.goods-link {
+    display: block;
+    height: 100%;
+    padding: 15px;
+    text-align: center;
+
+    &.v1 {
+        padding: 20px;
+
+        &:hover {
+            box-shadow: 0 0 10px #eee;
+        }
+    }
+
+    &.v2 {
+        min-height: 290px;
+        background: var(--el-color-white);
+
+        &:hover {
+            box-shadow: 3px 3px 10px #d8d8d8;
+        }
+    }
+
+    :deep(.co-image) {
+        >img {
+            transition: all 0.3s;
+        }
+
+        &:hover {
+            >img {
+                transform: scale(1.03);
             }
         }
     }
+
+    .tle {
+        height: 48px;
+        overflow: hidden;
+        line-height: 24px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: left;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin: 5px 0 10px;
+    }
+
+    .goods-name {
+        height: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-size: 14px;
+        line-height: 20px;
+        margin: 5px 0 5px;
+    }
+
+    .hov-name:hover {
+        color: var(--el-color-primary);
+        text-decoration: underline;
+    }
+
 }
 
 .floor-nav {

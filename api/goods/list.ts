@@ -3,10 +3,16 @@
  */
 export const GoodsApi = {
     /**
-     * 获取商品分类
+     * 获取首页显示的商品分类
      * @returns
      */
-    getClass: () => useHttp<GoodsApi_GetClassResponse[]>('/api/index/goods_category_lists', '', { method: 'get' }),
+    getIndexClass: () => useHttp<GoodsApi_GetClassResponse[]>('/api/index/goods_category_lists', '', { method: 'get' }),
+
+    /**
+     * 商品 -- 获取商品分类
+     * @returns
+     */
+    getClass: () => useHttp<GoodsApi_GetClass[]>('/api/mall_user/get_goods_type', '', { method: 'get' }),
 
     /**
      * 商品列表页面

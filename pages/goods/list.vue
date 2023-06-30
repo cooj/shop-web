@@ -186,7 +186,7 @@
                             <div class="w180px">
                                 型号
                             </div>
-                            <div class="w150px">
+                            <div class="w150px text-center">
                                 价格
                             </div>
                             <div class="flex-1 text-center">
@@ -197,11 +197,11 @@
                             <div class="g-info w450px">
                                 <div class="g-info-left">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
-                                        <CoImage class="w80% pb80%" :src="item.goods_img" :icon-size="28" />
+                                        <CoImage class="w100% pb100%" :src="item.goods_img" :icon-size="28" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">
-                                    <div class="name">
+                                    <div class="g-info-name">
                                         <NuxtLink class="link" :to="`/goods/${item.goods_sn}`" target="_blank">
                                             {{ item.goods_name }}
                                         </NuxtLink>
@@ -232,18 +232,14 @@
                                     <!-- <span class="integer">157</span><span class="decimal">.90</span><span
                                         class="unit">/个</span> -->
                                 </div>
-                                <!-- <div class="g-price-3">
-                                    <i>￥</i><span class="integer">157</span><span class="decimal">.90</span><span
-                                        class="unit">/个</span>
-                                </div> -->
-                                <div class="g-price-2">
+                                <!-- <div class="g-price-2">
                                     <span class="member-price">
                                         ￥ ？
                                     </span>
                                     <span class="member-title">
                                         会员价
                                     </span>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="flex-1 text-center">
                                 <el-button :class="{ focus: item.is_collect }" @click="onAddCollect(item)">
@@ -271,21 +267,21 @@
                         <li v-for=" item in defData.tableData " :key="item.goods_id">
                             <div class="goods-list-item">
                                 <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
-                                    <CoImage class="w100% pb100%" :src="item.goods_img" loading="lazy" />
+                                    <CoImage class="hov-img w100% pb100%" :src="item.goods_img" loading="lazy" />
                                 </NuxtLink>
                                 <div class="goods-price">
                                     <div class="goods-price-left">
                                         <i>￥</i><span class="integer">{{ formatNumber(item.shop_price) }}</span>
                                         <!-- <span class="unit">/台</span> -->
                                     </div>
-                                    <div class="goods-price-right">
+                                    <!-- <div class="goods-price-right">
                                         <span class="member-price">
                                             ￥ ？
                                         </span>
                                         <span class="member-title">
                                             会员价
                                         </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="goods-name" :title="item.goods_name">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
@@ -296,7 +292,7 @@
                                     <!-- <p class="truncate">
                                     <span>订货编码：{{item.goods_code}}</span><i class="iconfont copy-icon"></i>
                                 </p> -->
-                                    <p class="truncate">
+                                    <p class="mb3px truncate">
                                         <span>商品型号：{{ item.goods_code }}</span>
                                     </p>
                                 </div>
@@ -320,7 +316,7 @@
                 </div>
                 <div v-else class="min-h500px flex items-center justify-center">
                     <p class="text-12px c-#777">
-                        商品不存在或者已经下架！
+                        暂无相应的商品或者商品已下架！
                     </p>
                 </div>
                 <div v-if="form.total" class="goods-pagination">
@@ -682,6 +678,19 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, .12);
     }
 
+    .hov-img {
+        :deep(>img) {
+            transition: all 0.3s;
+        }
+
+        &:hover {
+            :deep(>img) {
+                transform: scale(1.03);
+            }
+        }
+
+    }
+
     .goods-price {
         display: flex;
         align-items: center;
@@ -794,7 +803,7 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
 
 .g-info {
     display: flex;
-    --goods-info-img-width: 100px;
+    --goods-info-img-width: 80px;
 
     .g-info-left {
         width: var(--goods-info-img-width);
@@ -804,25 +813,26 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
         width: calc(100% - var(--goods-info-img-width));
         padding: 0 10px;
 
-        .name {
-            // height: 48px;
+    }
+
+    .g-info-name {
+        // height: 48px;
+        max-height: 48px;
+        margin-bottom: 5px;
+
+        .link {
+            line-height: 24px;
             max-height: 48px;
-            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
 
-            .link {
-                line-height: 24px;
-                max-height: 48px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-
-                &:hover {
-                    cursor: pointer;
-                    color: var(--el-color-primary);
-                    text-decoration: underline;
-                }
+            &:hover {
+                cursor: pointer;
+                color: var(--el-color-primary);
+                text-decoration: underline;
             }
         }
     }
