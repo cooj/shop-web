@@ -88,7 +88,7 @@
                             </dd>
                             <dd>
                                 <NuxtLink to="/user/invoice">
-                                    抬头管理
+                                    发票抬头管理
                                 </NuxtLink>
                             </dd>
                             <dd>
