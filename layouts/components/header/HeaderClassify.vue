@@ -75,8 +75,8 @@ const eleIconChange = (icon: string) => {
 }
 
 // 获取商品分类
-const { data: cate } = await GoodsApi.getClass()
-const cateList = computed(() => cate.value?.data)
+const { data: cate } = await GoodsApi.getIndexClass()
+const cateList = computed(() => cate.value?.data ?? [])
 //
 </script>
 

@@ -4,7 +4,8 @@
             <div>
                 <el-space wrap :size="20">
                     <div v-for="item in defData.BrandList" :key="item.brand_id" :data="defData" ml30px mt50px>
-                        <img :src="item.brand_logo" h55px w140px>
+                        <!-- <img :src="item.brand_logo" h55px w140px> -->
+                        <co-image class="h55px w140px" :src="item.brand_logo" :icon-size="24" />
                         <div style="font-size: 12px;margin-top: 10px;text-align: center;">
                             {{ item.brand_name }}
                         </div>

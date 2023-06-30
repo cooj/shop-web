@@ -16,6 +16,9 @@ declare interface GoodsApi_GetClassResponse {
 
 }
 
+/**
+ * 获取商品分类 - 响应数据
+ */
 interface GoodsApi_GetClass {
     "cat_id": number,   // 分类id     46
     "pid": number,    // 上级分类id   0
