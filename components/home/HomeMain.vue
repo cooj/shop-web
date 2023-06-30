@@ -14,9 +14,10 @@
                 </NuxtLink>
             </div>
             <div class="goods-best-list">
-                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="link" :to="`/goods/${item.goods_sn}`">
+                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="goods-link v1"
+                    :to="`/goods/${item.goods_sn}`">
                     <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
-                    <h3 class="tle">
+                    <h3 class="tle hov-name">
                         {{ item.goods_name }}
                     </h3>
                     <div class="price">
@@ -53,9 +54,9 @@
                             :name="`${index}-${i}`" lazy>
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
-                                    <NuxtLink class="link" :to="`/goods/${son.goods_sn}`" target="_blank">
-                                        <CoImage class="w100% pb100%" :src="son.goods_img" loading="lazy" />
-                                        <h3 class="goods-name">
+                                    <NuxtLink class="goods-link v2" :to="`/goods/${son.goods_sn}`" target="_blank">
+                                        <CoImage class="hov-img w100% pb100%" :src="son.goods_img" loading="lazy" />
+                                        <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
                                         <div class="price truncate">
@@ -74,7 +75,8 @@
                 <div class="brand-list">
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                        <CoImage class="h70px w100%" :src="sub.brand_logo" style="--el-color-info-light-9:transparent" />
+                        <CoImage class="h70px w100% block!" :src="sub.brand_logo"
+                            style="--el-color-info-light-9:transparent" :icon-size="30" />
                     </NuxtLink>
                 </div>
             </div>
@@ -137,7 +139,7 @@ onMounted(async () => {
 .goods-best {
     background-color: var(--el-color-white);
     padding: 20px;
-    margin-bottom:30px;
+    margin-bottom: 30px;
 }
 
 .goods-best-tle {
@@ -162,30 +164,6 @@ onMounted(async () => {
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(5, 1fr);
-
-    .link {
-        display: block;
-        height: 100%;
-        text-align: center;
-        padding: 15px;
-
-        &:hover {
-            box-shadow: 0 0 10px #eee;
-        }
-
-        .tle {
-            height: 48px;
-            overflow: hidden;
-            line-height: 24px;
-            font-size: 14px;
-            font-weight: bold;
-            text-align: left;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-    }
 
     .price {
         margin: 5px 0;
@@ -244,7 +222,6 @@ onMounted(async () => {
     }
 
     .class-list {
-
         padding: 0 20px;
 
         .el-button {
@@ -253,6 +230,10 @@ onMounted(async () => {
 
             --el-button-text-color: var(--el-color-white);
             --el-button-hover-bg-color: transparent;
+
+            &:hover {
+                border-color: var(--el-color-primary)
+            }
         }
     }
 
@@ -314,30 +295,72 @@ onMounted(async () => {
             border-right: 0;
         }
 
-        a {
-            display: block;
-            height: 100%;
-            padding: 15px;
-            text-align: center;
-            min-height: 290px;
+    }
 
-            &:hover {
-                box-shadow: 3px 3px 10px #d8d8d8;
-            }
+}
 
-            .goods-name {
-                height: 40px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                font-size: 14px;
-                line-height: 20px;
+.goods-link {
+    display: block;
+    height: 100%;
+    padding: 15px;
+    text-align: center;
 
+    &.v1 {
+        &:hover {
+            box-shadow: 0 0 10px #eee;
+        }
+    }
+
+    &.v2 {
+        min-height: 290px;
+
+        &:hover {
+            box-shadow: 3px 3px 10px #d8d8d8;
+        }
+    }
+
+    :deep(.co-image) {
+        >img {
+            transition: all 0.3s;
+        }
+
+        &:hover {
+            >img {
+                transform: scale(1.03);
             }
         }
     }
+
+    .tle {
+        height: 48px;
+        overflow: hidden;
+        line-height: 24px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: left;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+
+    }
+
+    .goods-name {
+        height: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .hov-name:hover {
+        color: var(--el-color-primary);
+        text-decoration: underline;
+    }
+
 }
 
 .floor-nav {

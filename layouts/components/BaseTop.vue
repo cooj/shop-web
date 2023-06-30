@@ -1,80 +1,60 @@
 <template>
-    <section class="header-top bg-#313131 py5px">
-        <div class="flex items-center justify-between text-13px text-#fff container">
+    <section class="header-top">
+        <div class="header-cont container">
             <div class="lt flex items-center">
                 <template v-if="userState.token && username">
-                    <NuxtLink to="/user">
-                        <el-button link>
-                            <span>您好！{{ username }}</span>
-                        </el-button>
+                    <NuxtLink to="/user" class="hov-item">
+                        您好！{{ username }}
                     </NuxtLink>
                     <span class="mx5px">欢迎来到工游记商城!</span>
-                    <el-button type="danger" link @click="onLoginOut">
+                    <NuxtLink class="hov-item-exit" @click="onLoginOut">
                         退出
-                    </el-button>
+                    </NuxtLink>
                 </template>
                 <template v-else>
-                    <span class="mr5px">欢迎来到工游记商城!</span>
-                    <NuxtLink to="/login">
-                        <el-button link>
-                            <!-- <i class="i-ep-user" /> -->
-                            <span>登录</span>
-                        </el-button>
+                    <span class="mr10px">欢迎来到工游记商城!</span>
+                    <NuxtLink to="/login" class="hov-item">
+                        登录
                     </NuxtLink>
                     <el-divider direction="vertical" />
-                    <NuxtLink to="/login/register">
-                        <el-button link>
-                            <span>注册</span>
-                        </el-button>
+                    <NuxtLink to="/login/register" class="hov-item">
+                        注册
                     </NuxtLink>
                 </template>
             </div>
-            <div class="gt text-right">
+            <div class="gt flex items-center">
                 <!-- <el-button link>
                     <i class="i-ep-location-information" />
                     <span>广东省/深圳市</span>
                 </el-button>
                 <el-divider direction="vertical" /> -->
                 <template v-if="userState.token && username">
-                    <NuxtLink to="/order/list">
-                        <el-button link>
-                            我的订单
-                        </el-button>
+                    <NuxtLink to="/order/list" class="hov-item">
+                        我的订单
                     </NuxtLink>
                     <el-divider direction="vertical" />
                 </template>
-
-                <NuxtLink to="/order/cart">
-                    <el-button link>
-                        <i class="i-ep-shopping-cart-full" />
-                        <span>购物车({{ number }})</span>
-                    </el-button>
+                <NuxtLink to="/order/cart" class="hov-item flex items-center">
+                    <i class="i-ep-shopping-cart-full mr2px" />
+                    <span>购物车({{ number }})</span>
                 </NuxtLink>
                 <el-divider direction="vertical" />
-                <NuxtLink to="/">
-                    <el-button link>
-                        <span>网站导航</span>
-                    </el-button>
+                <NuxtLink to="/" class="hov-item">
+                    网站导航
                 </NuxtLink>
                 <el-divider direction="vertical" />
-                <el-button link>
+                <NuxtLink>
+                    帮助中心
+                </NuxtLink>
+                <!-- <el-button link>
                     <span>帮助中心</span>
-                </el-button>
-                <el-divider direction="vertical" />
-                <NuxtLink to="/sale">
-                    <el-button link>
-                        <span>售后中心</span>
-                    </el-button>
-                </NuxtLink>
-                <!-- <el-divider direction="vertical" />
-                <el-button link>
-                    <i class="i-ep-shopping-cart-full" />
-                    <span>购物车（0）</span>
                 </el-button> -->
                 <el-divider direction="vertical" />
-                <el-button link readonly>
-                    <span>{{ systemInfo?.sale_tel }}</span>
-                </el-button>
+                <NuxtLink to="/sale" class="hov-item">
+                    售后中心
+                </NuxtLink>
+                <el-divider direction="vertical" />
+                <span class="mr5px">{{ systemInfo?.sale_tel }}</span>
             </div>
         </div>
     </section>
@@ -104,12 +84,29 @@ const onLoginOut = async () => {
 
 <style lang="scss" scoped>
 .header-top {
-    .el-button {
-        --el-button-text-color: #fff;
-        --el-font-size-base: 13px;
+    padding: 6px 0 5px;
+    background-color: #313131;
 
-        &.el-button--danger {
-            --el-button-text-color: var(--el-color-danger-light-8);
+    .header-cont {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--el-color-white);
+    }
+
+    .hov-item {
+        &:hover {
+            color: var(--el-color-info);
+        }
+    }
+
+    .hov-item-exit {
+        cursor: pointer;
+        color: var(--el-color-danger-light-3);
+
+        &:hover {
+            color: var(--el-color-danger-light-8);
         }
     }
 }

@@ -668,7 +668,7 @@ const onDownload = () => {
     const myBlob = base64ToBlob(defData.shareCode)
     const link = document.createElement('a')
     link.href = window.URL.createObjectURL(myBlob)
-    link.download = 'qrcode.png'
+    link.download = `goyojo-share${Date.now()}.png`
     link.click()
 
     document.removeChild(link)
@@ -784,58 +784,58 @@ definePageMeta({
         font-weight: normal;
         // line-height: 24px;
         line-height: 1.6;
-
-        .lt {
-            width: 80px;
-            padding: 5px 8px;
-
-            color: var(--el-text-color-secondary);
-        }
-
-        .gt {
-            flex: 1;
-            padding: 5px 8px;
-            color: var(--el-text-color-primary);
-
-            .price1 {
-
-                b {
-                    font-size: 28px;
-                    color: var(--el-color-primary);
-
-                    span {
-                        font-size: 70%;
-                        font-weight: normal;
-                    }
-                }
-
-            }
-
-            .price2 {
-                font-size: 16px;
-                text-decoration: line-through;
-                color: var(--el-text-color-secondary);
-            }
-
-            .price3 {
-                display: inline-flex;
-                align-items: center;
-                padding-left: 3px;
-                border: 1px solid var(--el-color-info);
-                font-size: 12px;
-                cursor: pointer;
-
-                &:hover {
-                    color: var(--el-color-primary);
-                    border-color: var(--el-color-primary);
-                }
-            }
-        }
     }
 
     .buy-item {
         :deep(.el-button) {
             --el-font-size-base: 16px;
+        }
+    }
+
+    .lt {
+        width: 80px;
+        padding: 5px 8px;
+
+        color: var(--el-text-color-secondary);
+    }
+
+    .gt {
+        flex: 1;
+        padding: 5px 8px;
+        color: var(--el-text-color-primary);
+
+        .price1 {
+
+            b {
+                font-size: 28px;
+                color: var(--el-color-primary);
+
+                span {
+                    font-size: 70%;
+                    font-weight: normal;
+                }
+            }
+
+        }
+
+        .price2 {
+            font-size: 16px;
+            text-decoration: line-through;
+            color: var(--el-text-color-secondary);
+        }
+
+        .price3 {
+            display: inline-flex;
+            align-items: center;
+            padding-left: 3px;
+            border: 1px solid var(--el-color-info);
+            font-size: 12px;
+            cursor: pointer;
+
+            &:hover {
+                color: var(--el-color-primary);
+                border-color: var(--el-color-primary);
+            }
         }
     }
 
