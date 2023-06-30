@@ -24,9 +24,9 @@
                         <span>惊爆价</span>
                         <em>￥{{ item.shop_price }}</em>
                     </div>
-                    <el-button text bg type="danger">
+                    <!-- <el-button text bg type="danger">
                         大热卖推荐
-                    </el-button>
+                    </el-button> -->
                 </NuxtLink>
             </div>
         </div>
@@ -59,13 +59,13 @@
                                         <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
-                                        <div class="price truncate">
+                                        <div class="truncate">
                                             <span>惊爆价</span>
-                                            <em>￥{{ son.shop_price }}</em>
+                                            <em class="color-primary">￥{{ son.shop_price }}</em>
                                         </div>
-                                        <el-button text bg type="danger">
+                                        <!-- <el-button text bg type="danger">
                                             大热卖推荐
-                                        </el-button>
+                                        </el-button> -->
                                     </NuxtLink>
                                 </li>
                             </ul>
@@ -75,8 +75,8 @@
                 <div class="brand-list">
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                        <CoImage class="h70px w100% block!" :src="sub.brand_logo"
-                            style="--el-color-info-light-9:transparent" :icon-size="30" />
+                        <CoImage class="h70px w100% block!" :src="sub.brand_logo" style="--el-color-info-light-9:#282828;"
+                            :icon-size="30" />
                     </NuxtLink>
                 </div>
             </div>
@@ -162,8 +162,9 @@ onMounted(async () => {
 
 .goods-best-list {
     display: grid;
-    gap: 20px;
+    gap: 25px;
     grid-template-columns: repeat(5, 1fr);
+    padding: 10px;
 
     .price {
         margin: 5px 0;
@@ -211,7 +212,8 @@ onMounted(async () => {
     .left {
         width: var(--floor-left-width);
         color: var(--el-color-white);
-        min-height: 560px;
+        // min-height: 560px;
+        height: 620px;
         position: relative;
         z-index: 1;
 
@@ -239,7 +241,7 @@ onMounted(async () => {
 
     .right {
         width: calc(100% - var(--floor-left-width));
-        background: var(--el-color-white);
+        // background: var(--el-color-white);
     }
 
     .tabs-box {
@@ -248,6 +250,7 @@ onMounted(async () => {
 
         :deep(.el-tabs__header) {
             margin: 0;
+            background: var(--el-color-white);
 
             .el-tabs__item.is-top:nth-child(2) {
                 padding-left: 20px;
@@ -280,21 +283,40 @@ onMounted(async () => {
 }
 
 .goods-list {
-    height: 100%;
+    // height: 100%;
     display: flex;
     flex-wrap: wrap;
-    min-height: 580px;
+    background-color: #fff;
 
     li {
+
         width: 20%;
         height: 50%;
-        border-top: 2px solid var(--m-body-bg-color);
+        border-bottom: 2px solid var(--m-body-bg-color);
         border-right: 2px solid var(--m-body-bg-color);
 
         &:nth-child(5n) {
             border-right: 0;
         }
 
+        &:nth-child(n+6) {
+            border-bottom: 0;
+        }
+
+    }
+
+    &.a2 {
+
+        height: 580px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+
+        li {
+            width: 100%;
+            height: 50%;
+
+        }
     }
 
 }
@@ -306,6 +328,8 @@ onMounted(async () => {
     text-align: center;
 
     &.v1 {
+        padding: 20px;
+
         &:hover {
             box-shadow: 0 0 10px #eee;
         }
@@ -313,6 +337,7 @@ onMounted(async () => {
 
     &.v2 {
         min-height: 290px;
+        background: var(--el-color-white);
 
         &:hover {
             box-shadow: 3px 3px 10px #d8d8d8;
@@ -342,7 +367,7 @@ onMounted(async () => {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-
+        margin: 5px 0 10px;
     }
 
     .goods-name {
@@ -354,6 +379,7 @@ onMounted(async () => {
         -webkit-box-orient: vertical;
         font-size: 14px;
         line-height: 20px;
+        margin: 5px 0 5px;
     }
 
     .hov-name:hover {

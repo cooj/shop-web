@@ -53,7 +53,7 @@
                     <NuxtLink class="mr5px">
                         用户协议
                     </NuxtLink>
-                    <NuxtLink class="mr5px">
+                    <NuxtLink to="/list/site" class="link-name mr5px">
                         网站导航
                     </NuxtLink>
                 </div>
@@ -151,5 +151,11 @@ if (!error.value && footer.value?.code === 200) {
     width: 38%;
     display: flex;
     justify-content: space-between;
+}
+
+.link-name {
+    &:hover {
+        color: var(--el-color-info);
+    }
 }
 </style>

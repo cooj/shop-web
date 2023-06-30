@@ -39,7 +39,7 @@
                     <span>购物车({{ number }})</span>
                 </NuxtLink>
                 <el-divider direction="vertical" />
-                <NuxtLink to="/" class="hov-item">
+                <NuxtLink to="/list/site" class="hov-item">
                     网站导航
                 </NuxtLink>
                 <el-divider direction="vertical" />
