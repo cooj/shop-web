@@ -24,6 +24,11 @@
                                 </NuxtLink>
                             </dd>
                             <dd>
+                                <NuxtLink to="/order/invoice">
+                                    订单发票列表
+                                </NuxtLink>
+                            </dd>
+                            <dd>
                                 <NuxtLink to="/user/info">
                                     站内信息
                                 </NuxtLink>
