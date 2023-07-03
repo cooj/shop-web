@@ -91,7 +91,7 @@ export const CLIENT = process.client
 export const INVOICE_DATA = {
     1: '增值税发票',
     2: '普通发票',
-    3: '电子发票',
+    3: '电子普通发票',
 }
 
 // 地址信息拼接
@@ -150,7 +150,7 @@ export const setOrderStatusType = (row: number) => {
         6: {
             type: 'warning',
             color: '#ff6c6c',
-            text: '已确认',
+            text: '已完成',
         },
         7: {
             type: 'info',
