@@ -68,19 +68,26 @@ const initTableData = async () => {
 }
 initTableData()
 
-const onRemove = async (row: any) => {
-    const data: RecordApi_Del = {
-        type: 1,
-        goods_ids: row.goods_id,
-    }
-
-    const res = await RecordApi.del(data)
-    if (res.data.value?.code !== 200) {
-        ElMessage.error(res.data.value?.msg)
-        return false
-    }
-    ElMessage.success('删除成功')
-    initTableData() // 重新加载列表
+// 删除
+const onRemove = (row: any) => {
+    ElMessageBox.confirm('此操作将永久删除该条内容，是否继续?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        buttonSize: 'default',
+    }).then(async () => {
+        const data: RecordApi_Del = {
+            type: 1,
+            goods_ids: row.goods_id,
+        }
+        const res = await RecordApi.del(data)
+        if (res.data.value?.code !== 200) {
+            ElMessage.error(res.data.value?.msg)
+            return false
+        }
+        ElMessage.success('删除成功')
+        initTableData() // 重新加载列表
+    }).catch(() => { })
 }
 
 definePageMeta({

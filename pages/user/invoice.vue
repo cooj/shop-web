@@ -14,7 +14,7 @@
                 <el-breadcrumb-item>
                     账户管理
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>抬头管理</el-breadcrumb-item>
+                <el-breadcrumb-item>发票抬头管理</el-breadcrumb-item>
             </el-breadcrumb>
             <div class="my15px">
                 <el-button type="primary" @click="onAdd">
@@ -22,10 +22,10 @@
                 </el-button>
             </div>
             <el-table :data="defData.tableData" border>
-                <el-table-column prop="enterprise_name" label="企业名称" min-width="150" show-overflow-tooltip />
-                <el-table-column prop="enterprise_email" label="企业邮箱" width="175" show-overflow-tooltip />
-                <el-table-column prop="header" label="发票抬头" width="150" show-overflow-tooltip />
-                <el-table-column prop="tax_no" label="纳税人识别号" width="110" show-overflow-tooltip />
+                <el-table-column prop="enterprise_name" label="发票抬头" min-width="150" show-overflow-tooltip align="center" />
+                <el-table-column prop="enterprise_email" label="企业邮箱" min-width="120" show-overflow-tooltip align="center" />
+                <!-- <el-table-column prop="header" label="发票抬头" width="150" show-overflow-tooltip /> -->
+                <el-table-column prop="tax_no" label="纳税人识别号" min-width="100" show-overflow-tooltip align="center" />
                 <el-table-column prop="type" label="发票类型" width="120" align="center" show-overflow-tooltip>
                     <template #default="{ row }">
                         <el-tag v-if="row.type === 1" type="success">
@@ -49,10 +49,10 @@
                         </el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
+                <!-- <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
                 <el-table-column prop="logon_tel" label="注册电话" width="120" show-overflow-tooltip />
                 <el-table-column prop="bank" label="开户银行" min-width="150" show-overflow-tooltip />
-                <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip />
+                <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip /> -->
                 <el-table-column prop="operate" label="操作" width="100" align="center" show-overflow-tooltip fixed="right">
                     <template #default="{ row }">
                         <el-button type="primary" link size="small" @click="onEdit(row)">

@@ -2,12 +2,12 @@
     <div class="fixed-box">
         <ul class="side-ul">
             <li>
-                <div class="side-item">
+                <NuxtLink class="side-item" to="https://w1011.ttkefu.com/k/linkurl/?t=3G6FHI1">
                     <i class="i-ep-service" />
                     <p class="text">
                         客服
                     </p>
-                </div>
+                </NuxtLink>
             </li>
             <li>
                 <NuxtLink class="side-item" to="/order/list">
