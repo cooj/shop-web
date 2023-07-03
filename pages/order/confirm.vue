@@ -83,7 +83,7 @@
                                                 </el-radio>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="address" label="电子发票" align="center">
+                                        <el-table-column prop="address" label="电子普通发票" align="center">
                                             <template #default="{ row }">
                                                 <el-radio v-for="item in row['3']" :key="item.bill_header_id"
                                                     :label="item.bill_header_id">
@@ -389,6 +389,7 @@ const preferMoney = computed(() => {
 })
 // 工游豆抵扣金额
 const beanMoney = computed(() => {
+    if (!form.is_peas) return 0
     if (!form.peas_number || !defData.ratio_scale) return 0
     return form.peas_number / defData.ratio_scale
 })
