@@ -6,7 +6,7 @@
             <div class="user-login">
                 <div class="flex items-center">
                     <div class="face">
-                        <el-image v-if="user?.user_name && faceImg" class="h58px w58px" :src="faceImg" />
+                        <co-image v-if="user?.user_name && faceImg" class="h55px w55px b-rounded-5px" :src="faceImg" />
                         <i v-else class="i-carbon-user-avatar-filled-alt block text-48px" />
                     </div>
                     <div class="text-14px font700">
@@ -167,7 +167,7 @@ const onLoginOut = () => {
         .face {
             color: var(--el-text-color-regular);
             margin-right: 5px;
-            height: 58px;
+            height: 55px;
         }
     }
 
