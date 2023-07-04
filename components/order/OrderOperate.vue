@@ -1,10 +1,13 @@
 <template>
     <div class="order-operate">
-        <!-- <div v-if="!props.data.bill_status && orderStatus !== 7" class="item-ope">
+        <div v-if="isApply" class="item-ope">
             <el-button type="" :link="props.link" :size="props.size" class="mb3px" @click="onInvoice()">
                 申请发票
             </el-button>
-        </div> -->
+            <Teleport to="body">
+                <OrderInvoiceModel ref="invoiceRef" @update="setUpdateList()" />
+            </Teleport>
+        </div>
         <div v-if="orderStatus === 1" class="item-ope">
             <el-button type="warning" :link="props.link" :size="props.size" class="mb3px" @click="onPayOrder()">
                 去付款
@@ -45,7 +48,7 @@
 <script lang="ts" setup>
 import { OrderApi } from '~/api/goods/order'
 
-import { OrderReturnModel } from '#components'
+import { OrderInvoiceModel, OrderReturnModel } from '#components'
 
 // const props = defineProps<{
 //     data: OrderOperatePropsData
@@ -67,10 +70,20 @@ const emits = defineEmits<{
     update: [status: number]
 }>()
 
+// 退货申请
 const modelRef = ref<InstanceType<typeof OrderReturnModel>>()
+
+// 发票申请
+const invoiceRef = ref<InstanceType<typeof OrderInvoiceModel>>()
 
 // 订单状态
 const orderStatus = computed(() => props.data.status)
+
+// 是否可以申请发票
+const isApply = computed(() => {
+    // 已付款、未申请发票、订单未取消
+    return orderStatus.value > 1 && !props.data.bill_status && orderStatus.value !== 7
+})
 
 // 退换申请提交后，向上更新父组件列表数据
 const setUpdateList = () => {
@@ -177,7 +190,7 @@ const onDel = () => {
  * 申请发票
  */
 const onInvoice = () => {
-    ElMessage.warning('申请发票')
+    invoiceRef.value?.onOpenDialog({ order_no: props.data.order_no }, 1)
 }
 </script>
 
