@@ -72,21 +72,16 @@
 // 获取系统信息
 const useSystem = useSystemState()
 const systemInfo = await useSystem.getSystemInfo()
-// console.log('systemInfo :>> ', systemInfo)
-// const navList = ref<HomeApi_GetArticleResponse[]>([])
 
 // 获取底部导航
-const { data: footer, error } = await useFetch<{ data: HomeApi_GetArticleResponse[] } & ResponseCodeMsg>('/api/main/nav', {
+const { data: footer } = await useFetch<{ data: HomeApi_GetArticleResponse[] } & ResponseCodeMsg>('/api/main/nav', {
     method: 'post',
     body: {
         type: 1,
     },
 })
-console.log(error.value)
+
 const navList = computed<HomeApi_GetArticleResponse[]>(() => footer.value?.data || [])
-// if (!error.value && footer.value?.code === 200) {
-//     navList.value = footer.value.data || []
-// }
 </script>
 
 <style lang="scss" scoped>
