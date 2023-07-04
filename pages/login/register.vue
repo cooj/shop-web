@@ -171,6 +171,8 @@ const onClick = async () => {
         validate_code: form.validate_code,
     }
     if (route.query.id) data.share_id = Number(route.query.id)
+    if (route.query.salesman_id) data.salesman_id = Number(route.query.salesman_id)
+
     const { data: res } = await LoginApi.Login(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('注册成功')

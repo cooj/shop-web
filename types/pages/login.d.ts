@@ -11,6 +11,7 @@ declare interface LoginApi_Login {
     unionid?: string //微信unionid(类型为4传)
     headimgurl?: string //微信头像（类型为4传）
     share_id?: number //推荐人id （类型为2，3，4传）
+    salesman_id?: number // 业务员id
 }
 
 /**

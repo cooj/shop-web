@@ -175,6 +175,8 @@ const onClick = async () => {
             unionid: defData.unionid,
             headimgurl: defData.headimgurl,
         }
+        if (route.query.id) info.share_id = Number(route.query.id)
+        if (route.query.salesman_id) info.salesman_id = Number(route.query.salesman_id)
         const res = await LoginApi.Login(info)
         form.loading = false
         if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
@@ -186,6 +188,9 @@ const onClick = async () => {
             phone: form.phone,
             validate_code: form.validate_code,
         }
+        if (route.query.id) data.share_id = Number(route.query.id)
+        if (route.query.salesman_id) data.salesman_id = Number(route.query.salesman_id)
+
         const { data: res } = await LoginApi.Login(data)
         form.loading = false
         if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
