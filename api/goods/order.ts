@@ -113,3 +113,30 @@ export const OrderReturnApi = {
     fill: (data: OrderReturnApi_Fill) => useHttp('/api/mall_refund/set_operate', data, { method: 'post' }),
 
 }
+
+/**
+ * 订单发票列表对应api
+ */
+export const OrderInvoiceApi = {
+    /**
+     * 已申请开票的列表
+     * @param data
+     * @returns
+     */
+    getList: (data: OrderInvoiceApi_GetList) => useHttp<OrderInvoiceApi_GetListResponse>('/api/mall_user/bill_lists', data, { method: 'post' }),
+
+    /**
+     * 订单发票 -- 申请开票
+     * @param data
+     * @returns
+     */
+    add: (data: OrderInvoiceApi_Add) => useHttp('/api/mall_user/bill_add', data, { method: 'post' }),
+
+    /**
+     * 订单发票 -- 修改发票
+     * @param data
+     * @returns
+     */
+    edit: (data: OrderInvoiceApi_Edit) => useHttp('/api/mall_user/bill_edit', data, { method: 'post' }),
+
+}

@@ -8,7 +8,7 @@
                     </NuxtLink>
                 </div>
                 <div class="search-box relative w50%">
-                    <el-input v-model="search.keyword" placeholder="">
+                    <el-input v-model="search.keyword" placeholder="" @keyup.enter="onSearch">
                         <template #prepend>
                             <lazy-el-select v-model="search.select" placeholder="" style="width: 115px">
                                 <el-option label="全部商品" value="1" />

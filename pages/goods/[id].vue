@@ -884,7 +884,7 @@ definePageMeta({
 
     .goods-lt-tabs {
         background-color: var(--el-color-white);
-        min-height: 350px;
+        min-height: 400px;
     }
 
     .goods-gt-tabs {

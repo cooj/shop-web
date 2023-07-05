@@ -435,7 +435,7 @@ declare interface OrderReturnApi_Fill {
  * 获取订单详情信息
  */
 
-interface OrderDetailInfoData {
+declare interface OrderDetailInfoData {
     info: OrderApi_GetInfoResponse,      // 订单信息
     pay?: OrderApi_PayOrderResponse,          // 支付信息(线下支付)
     code?: number,
@@ -444,7 +444,77 @@ interface OrderDetailInfoData {
 
 
 
+/**
+ * 订单发票列表 - 请求参数
+ */
+declare interface OrderInvoiceApi_GetList extends ListPage {
 
+}
+
+
+/**
+ * 订单发票列表 - 响应数据
+ */
+declare interface OrderInvoiceApi_GetListResponse extends ListTotal {
+    lists: OrderInvoiceApi_GetListItem[]
+}
+
+declare interface OrderInvoiceApi_GetListItem {
+    "bill_id": 1,
+    "type": 3,
+    "header": "工业品",
+    "enterprise_name": "八戒公司123",
+    "enterprise_email": "123456@qq.com",
+    "tax_no": "",
+    "logon_addr": "",
+    "logon_tel": "",
+    "bank": "",
+    "bank_account": "",
+    "verify_status": 3,
+    "express_name": "顺丰",
+    "express_no": "sf123456789",
+    "failed_remark": "",
+    "order_no": "",
+    "add_time": 1685688353,
+    "address_id": 21,
+    "bill_address": {
+        "address_id": 21,
+        "contacts": "张三",
+        "phone": "18080080080",
+        "email": "1@123.com",
+        "province": "广西壮族自治区",
+        "city": "南宁市",
+        "area": "兴宁区",
+        "address": "云志科园",
+        "is_default": 1,
+        "is_bill_address": 1
+    }
+}
+
+
+/**
+ * 订单发票列表 - 发票申请 - 请求参数
+ */
+declare interface OrderInvoiceApi_Add {
+    order_no: string;    // 申请发票的订单号    M20230505143130386350
+    address_id: number;  // 收票地址id
+    type: number;    // 类型 1：增值税专用发票，2：普通发票， 3：电子普通发票
+    enterprise_name: string; // 企业名称
+    enterprise_email: string;    // 企业邮箱 123456@qq.com
+    tax_no: string;  // 纳税人识别号（普票可填，增票必填）
+    logon_addr?: string; // 注册地址（增票必填）深圳市光明区云智科技园18楼
+    logon_tel?: string;   // 注册电话（增票必填）    0755 - 1234567
+    bank?: string;    // 开户银行（增票必填）    工商银行
+    bank_account?: string;    // 开户账户（增票必填）    888877779999
+}
+
+
+/**
+ * 订单发票列表 - 发票修改 - 请求参数
+ */
+declare interface OrderInvoiceApi_Edit extends OrderInvoiceApi_Add {
+    bill_id: number; //  发票id
+}
 
 
 
