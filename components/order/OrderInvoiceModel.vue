@@ -51,8 +51,7 @@
                 </el-col>
                 <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                     <el-form-item prop="order_no" label="申请时间:">
-                        {{ billInfo?.add_time ? formatTime(billInfo?.add_time) : '--'
-                        }}
+                        {{ billInfo?.add_time ? formatTime(billInfo?.add_time) : '--' }}
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="-mt10px">
@@ -129,8 +128,7 @@
                 <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                     <el-descriptions title="" :column="2" border>
                         <el-descriptions-item label="订单编号:" label-class-name="lab-wid">
-                            {{ billInfo?.order_no
-                            }}
+                            {{ billInfo?.order_no }}
                         </el-descriptions-item>
                         <!-- <el-descriptions-item label="审核状态:">
                             <el-tag v-if="billInfo?.verify_status === 1">审核通过</el-tag>
