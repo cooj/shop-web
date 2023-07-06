@@ -14,5 +14,5 @@ declare interface EnterpriseApi_attest {
   enterprise_address: string  //企业地址
   enterprise_remark: string  //企业备注
   enterprise_file: string //企业认证上传资料
-  // user_id: number  //用户id
+  user_id: number  //用户id
 }
