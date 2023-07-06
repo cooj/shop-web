@@ -141,7 +141,7 @@ export const useHttp2 = <T = any>(url: string, data?: RequestDataType, opt?: Use
  * @param promise
  * @returns
  */
-export default function useCustomFetch<T = any>(promise: Promise<T>) {
+export function useCustomFetch<T = any>(promise: Promise<T>) {
     const data = ref()
     const error = ref()
     const isLoading = ref(false)
@@ -163,7 +163,7 @@ export default function useCustomFetch<T = any>(promise: Promise<T>) {
             // const { results: users } = await response.json()
             // data.value = users
 
-            data.value = await promise()
+            data.value = await promise
             error.value = undefined
         } catch (err) {
             data.value = undefined
@@ -174,4 +174,22 @@ export default function useCustomFetch<T = any>(promise: Promise<T>) {
     fetchData()
 
     return { isLoading, error, data }
+}
+
+/**
+ * 外部接口测试
+ * @param promise
+ * @returns
+ */
+export function useTestFetch(url: string, data?: any) {
+    if (process.client) {
+        throw new Error('useTestFetch 只能测试使用')
+    }
+    return useFetch('/api/test', {
+        method: 'post',
+        body: {
+            api_url: url,
+            ...data,
+        },
+    })
 }

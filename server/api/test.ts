@@ -5,8 +5,9 @@ import { useServerFetch } from '../utils'
  */
 export default defineEventHandler(async (event) => {
     // const res = ''
+    const body = await readBody(event)
     try {
-        const res = await useServerFetch<any>(event, '/api/index/get_address')
+        const res = await useServerFetch<any>(event, body.api_url)
         console.log(res)
 
         return res
