@@ -19,8 +19,7 @@ const locale = ref(zhCn)
 const messageConfig = reactive({
     max: 1,
 })
-const cookie = useCookie('admin_token')
-if (!cookie.value) cookie.value = ''
+
 // 获取商城信息
 const useSystem = useSystemState()
 const systemInfo = await useSystem.getSystemInfo()

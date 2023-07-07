@@ -36,12 +36,13 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string, p
     // if (token) {
     //     headers.token = token
     // }
+
     console.log(baseURL)
     return $fetch<T>(url, {
         headers: {
             // 'Content-Type': headers['content-type'] as string,
             // 'Authorization': authorization as string,
-            token: token as string,
+            token: token ?? '', // 注意token会为undefined，会导致接口首次获取不到数据
         },
         // headers: headers as HeadersInit,
         baseURL,
