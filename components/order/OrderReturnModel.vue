@@ -43,7 +43,7 @@
                     <el-form-item prop="type" label="类型:">
                         <el-radio-group v-model="form.data.type">
                             <el-radio :label="1">
-                                退货
+                                退货/退款
                             </el-radio>
                             <el-radio :label="2">
                                 换货

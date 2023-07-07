@@ -530,6 +530,10 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
         // ElMessage.error('请先登录!')
         return navigateTo('/login')
     }
+    const price = row.shop_price || ''
+    if (Number(price) <= 0) {
+        return ElMessage.error('商品价格不正确')
+    }
 
     const number = 1 // 默认加1购物车条目
     const { data } = await GoodsApi.addCart({ goods_id: row.goods_id, goods_number: number })

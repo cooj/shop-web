@@ -64,7 +64,7 @@
                         <div class="gt">
                             <span class="mr-5px">{{ returnData?.is_all ? '全部' : '部分' }}</span>
                             <el-tag v-if="returnData?.type === 1" type="info" size="small">
-                                退货
+                                退货/退款
                             </el-tag>
                             <el-tag v-else type="warning" size="small">
                                 换货

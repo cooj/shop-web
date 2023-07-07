@@ -48,7 +48,7 @@
                     <div class="type">
                         <span class="mr-5px">{{ scopes.row.is_all ? '全部' : '部分' }}</span>
                         <el-tag v-if="scopes.row.type === 1" type="info" size="small">
-                            退货
+                            退货/退款
                         </el-tag>
                         <el-tag v-else type="warning" size="small">
                             换货
