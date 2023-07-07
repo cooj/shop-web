@@ -7,12 +7,12 @@
             <el-row>
                 <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
                     <el-form-item prop="enterprise_name" label="企业名称：">
-                        <el-input v-model="form.data.enterprise_name" placeholder="请输入企业名称" maxlength="20" clearable />
+                        <el-input v-model="form.data.enterprise_name" placeholder="请输入企业名称" maxlength="40" clearable />
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
                     <el-form-item prop="enterprise_email" label="企业邮箱：">
-                        <el-input v-model="form.data.enterprise_email" type="email" placeholder="请输入企业邮箱" maxlength="20"
+                        <el-input v-model="form.data.enterprise_email" type="email" placeholder="请输入企业邮箱" maxlength="40"
                             clearable />
                     </el-form-item>
                 </el-col>
@@ -33,7 +33,7 @@
                 </el-col>
                 <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
                     <el-form-item prop="tax_no" label="纳税人识别号：">
-                        <el-input v-model="form.data.tax_no" placeholder="请输入纳税人识别号" maxlength="20" clearable />
+                        <el-input v-model="form.data.tax_no" placeholder="请输入纳税人识别号" clearable />
                     </el-form-item>
                 </el-col>
                 <template v-if="form.data.type === 1">
@@ -133,6 +133,7 @@ const rules = reactive<FormRules>({
     ],
     tax_no: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
+        { min: 15, max: 20, message: '长度在15~20个字符' },
     ],
     logon_tel: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
@@ -149,13 +150,6 @@ const rules = reactive<FormRules>({
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
     ],
 })
-
-// 初始化数据
-const initDefaultData = async () => {
-    if (defData.ready) return false
-
-    defData.ready = true
-}
 
 // 打开弹窗
 const onOpenDialog = (row?: UserInvoiceApi_getListResponse) => {

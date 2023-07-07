@@ -3,7 +3,7 @@
     <LayoutContent :type="3">
         <div v-if="defData.type === 1">
             <div v-if="defData.videoList.length === 0">
-                <el-empty description="没有数据，请前往商城后台管理系统-文章管理-文章列表-修改文章进行添加数据" />
+                <el-empty description="暂无数据" />
             </div>
             <div v-else>
                 <el-space wrap>
