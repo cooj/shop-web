@@ -34,253 +34,244 @@
                         </div>
                     </div>
                 </template>
-                <div v-if="defData.loading">
-                    <GoodsBreadcrumb class="my15px" :cid="goodsInfo?.cat_id" :name="goodsInfo?.goods_name" />
-                    <div class="goods-main">
-                        <div class="goods-zoom">
-                            <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
-                            <CoImage v-else class="w100% pb100%" style="--el-color-info-light-9:#fff;" />
-                        </div>
-                        <div class="goods-cen">
-                            <div class="goods-tle">
-                                {{ goodsInfo?.goods_name }}
-                            </div>
-                            <ul class="goods-pros">
-                                <li class="items-center bg-#f8f8f8">
-                                    <div class="lt">
-                                        价格
-                                    </div>
-                                    <div class="gt">
-                                        <div class="price1">
-                                            <b>￥{{ goodsInfo?.shop_price }}
-                                                <!-- <span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit}}</span> -->
-                                            </b>
-                                            <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
-                                        </div>
-                                    </div>
-                                </li>
-                                <!---->
-                                <li v-if="!userData?.attest_status" class="items-center bg-#f8f8f8 -mt10px">
-                                    <div class="lt" />
-                                    <div class="gt">
-                                        <span class="price3" @click="onApprove">
-                                            认证企业会员尊享价
-                                            <i class="i-ep-arrow-right inline-block" />
-                                        </span>
-                                        <span class="text-12px c-#666">会员价</span>
-                                    </div>
-                                </li>
-                                <li v-if="goodsInfo?.coupon_list?.length" class="bg-#f8f8f8">
-                                    <div class="lt">
-                                        优惠券
-                                    </div>
-                                    <div class="gt">
-                                        <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)"
-                                            :key="item.coupon_id">
-                                            {{ item.coupon_name }}立减{{ item.par_value }}元
-                                        </GoodsCoupon>
-                                    </div>
-                                </li>
-                                <li class="items-center bg-#f8f8f8 -mt10px">
-                                    <div class="lt" />
-                                    <div class="gt my5px">
-                                        <el-tag v-if="goodsInfo?.is_best" type="" effect="dark" size="small" class="mr5px">
-                                            精选
-                                        </el-tag>
-                                        <el-tag v-if="goodsInfo?.is_new" type="warning" effect="dark" size="small"
-                                            class="mr5px">
-                                            精选
-                                        </el-tag>
-                                        <el-tag v-if="goodsInfo?.is_hot" type="danger" effect="dark" size="small"
-                                            class="mr5px">
-                                            热销
-                                        </el-tag>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="lt">
-                                        商品编号
-                                    </div>
-                                    <div class="gt">
-                                        {{ goodsInfo?.goods_sn }}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="lt">
-                                        商品型号
-                                    </div>
-                                    <div class="gt">
-                                        {{ goodsInfo?.goods_code }}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="lt">
-                                        支付方式
-                                    </div>
-                                    <div class="gt">
-                                        <el-button text bg size="small" class="cursor-default!">
-                                            <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
-                                            微信
-                                        </el-button>
-                                        <el-button text bg size="small" class="cursor-default!">
-                                            <!-- <i class="i-ic-baseline-payment mr3px c-#3887ff" /> -->
-                                            <i class="i-ri-alipay-fill mr3px c-#3887ff" />
-                                            支付宝
-                                        </el-button>
-                                        <el-button text bg size="small" class="cursor-default!">
-                                            <i class="i-ic-twotone-payments mr3px c-#ff5335" />
-                                            线下转账
-                                        </el-button>
-                                    </div>
-                                </li>
-                                <li class="items-center">
-                                    <div class="lt">
-                                        购买数量
-                                    </div>
-                                    <div class="gt">
-                                        <el-input-number v-model="form.number" :min="1" :max="10000" />
-                                        <span class="ml5px c-#aaa">起购量:1个</span>
-                                    </div>
-                                </li>
-                                <li class="my8px b-t b-t-dashed">
-                                    <!--  -->
-                                </li>
-                                <li>
-                                    <div class="lt" />
-                                    <div class="gt">
-                                        <el-button v-if="goodsInfo?.is_collect" type="primary" text bg size="small"
-                                            @click="onCollect">
-                                            <i class="i-carbon-favorite-filled mr3px" />
-                                            收藏
-                                        </el-button>
-                                        <el-button v-else text bg size="small" @click="onCollect">
-                                            <i class="i-carbon-favorite mr3px" />
-                                            收藏
-                                        </el-button>
-                                        <el-button text bg size="small" @click="onShare">
-                                            <i class="i-ep-share mr3px" />
-                                            分享
-                                        </el-button>
-                                    </div>
-                                </li>
-                                <li class="buy-item">
-                                    <div class="lt">
-                                        <!-- 购买数量 -->
-                                    </div>
-                                    <div class="gt">
-                                        <el-button type="primary" size="large" @click="onBuyGoods">
-                                            立即购买
-                                        </el-button>
-                                        <el-button type="primary" plain size="large" @click="onAddCart">
-                                            <i class="i-carbon-shopping-cart mr3px" />
-                                            加入购物车
-                                        </el-button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="goods-right">
-                            <img class="outline-1px outline-#e5e7eb outline-solid" src="~/assets/images/gyj-band.png"
-                                alt="">
-                        </div>
+                <GoodsBreadcrumb class="my15px" :cid="goodsInfo?.cat_id" :name="goodsInfo?.goods_name" />
+                <div class="goods-main">
+                    <div class="goods-zoom">
+                        <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
+                        <CoImage v-else class="w100% pb100%" style="--el-color-info-light-9:#fff;" />
                     </div>
-                    <div class="goods-cont">
-                        <div class="lt">
-                            <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
-                                <el-tab-pane label="推荐商品" name="1">
-                                    <ul class="goods-list">
-                                        <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
-                                            <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
-                                                <CoImage :src="item.goods_img" class="w100% pb100%" />
-                                            </NuxtLink>
-                                            <div class="tle">
-                                                <NuxtLink :to="`/goods/${item.goods_sn}`">
-                                                    {{ item.goods_name }}
-                                                </NuxtLink>
-                                            </div>
-                                            <div class="pce">
-                                                <span>￥{{ item.shop_price }}</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </el-tab-pane>
-                            </el-tabs>
+                    <div class="goods-cen">
+                        <div class="goods-tle">
+                            {{ goodsInfo?.goods_name }}
                         </div>
-                        <div class="gt">
-                            <el-tabs v-model="defData.rightActive" class="goods-gt-tabs" @tab-change="onRightTabChange">
-                                <el-tab-pane label="商品详情" name="1">
-                                    <div v-html="goodsInfo?.goods_desc" />
-                                </el-tab-pane>
-                                <el-tab-pane label="商品问答" name="2" lazy>
-                                    <div v-if="CLIENT">
-                                        <el-button style="background-color: var(--el-color-primary);color: white;"
-                                            @click="questionClick">
-                                            我要提问
-                                        </el-button>
-                                        <el-table :data="defData.tableData" style="width: 100%" default-expand-all>
-                                            <el-table-column type="expand">
-                                                <template #default="props">
-                                                    <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
-                                                        <span class="mr5px fw-800">答</span>
-                                                        暂无回答
-                                                    </div>
-                                                    <el-table v-else :data="props.row.answer_lists" :show-header="false"
-                                                        style="--el-table-border-color: none;">
-                                                        <el-table-column width="49px" />
-                                                        <el-table-column prop="content">
-                                                            <template #default="scopes">
-                                                                <span class="mr5px fw-800 c-green">答</span>
-                                                                <span>{{ scopes.row.content }}</span>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column prop="" width="300" show-overflow-tooltip
-                                                            align="right">
-                                                            <template #default="scopes">
-                                                                <span style="font-weight: 80;font-size: 12px;"> {{
-                                                                                                                    changeToStar(scopes.row.user_name) }}
-                                                                    {{ formatTime(scopes.row.add_time) }}</span>
-                                                            </template>
-                                                        </el-table-column>
-                                                        <el-table-column width="120px" />
-                                                    </el-table>
-                                                </template>
-                                            </el-table-column>
-                                            <el-table-column label="" prop="content">
-                                                <template #default="scopes">
-                                                    <span class="mr5px fw-800 c-red">问</span>
-                                                    <span style="font-weight: 800;">{{ scopes.row.content }}</span>
-                                                </template>
-                                            </el-table-column>
-                                            <el-table-column prop="" width="300" show-overflow-tooltip align="right">
-                                                <template #default="scopes">
-                                                    <span style="font-weight: 80;font-size: 13px;"> {{
-                                                                                                        changeToStar(scopes.row.user_name) }}
-                                                        {{ formatTime(scopes.row.add_time) }}</span>
-                                                </template>
-                                            </el-table-column>
-                                            <el-table-column fixed="right" label="" width="120">
-                                                <template #default="scopes">
-                                                    <el-button link type="primary" size="small"
-                                                        @click="onAnswer(scopes.row)">
-                                                        去回答
-                                                    </el-button>
-                                                </template>
-                                            </el-table-column>
-                                        </el-table>
-                                        <div class="goods-pagination" mt15px>
-                                            <el-pagination v-model:current-page="defData.page"
-                                                v-model:page-size="defData.pageSize" small background
-                                                layout=" prev, pager, next,total, jumper" :total="defData.total"
-                                                @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
-                                        </div>
+                        <ul class="goods-pros">
+                            <li class="items-center bg-#f8f8f8">
+                                <div class="lt">
+                                    价格
+                                </div>
+                                <div class="gt">
+                                    <div class="price1">
+                                        <b>￥{{ goodsInfo?.shop_price }}
+                                            <!-- <span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit}}</span> -->
+                                        </b>
+                                        <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
                                     </div>
-                                </el-tab-pane>
-                            </el-tabs>
-                        </div>
+                                </div>
+                            </li>
+                            <!---->
+                            <li v-if="!userData?.attest_status" class="items-center bg-#f8f8f8 -mt10px">
+                                <div class="lt" />
+                                <div class="gt">
+                                    <span class="price3" @click="onApprove">
+                                        认证企业会员尊享价
+                                        <i class="i-ep-arrow-right inline-block" />
+                                    </span>
+                                    <span class="text-12px c-#666">会员价</span>
+                                </div>
+                            </li>
+                            <li v-if="goodsInfo?.coupon_list?.length" class="bg-#f8f8f8">
+                                <div class="lt">
+                                    优惠券
+                                </div>
+                                <div class="gt">
+                                    <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
+                                        {{ item.coupon_name }}立减{{ item.par_value }}元
+                                    </GoodsCoupon>
+                                </div>
+                            </li>
+                            <li class="items-center bg-#f8f8f8 -mt10px">
+                                <div class="lt" />
+                                <div class="gt my5px">
+                                    <el-tag v-if="goodsInfo?.is_best" type="" effect="dark" size="small" class="mr5px">
+                                        精选
+                                    </el-tag>
+                                    <el-tag v-if="goodsInfo?.is_new" type="warning" effect="dark" size="small"
+                                        class="mr5px">
+                                        精选
+                                    </el-tag>
+                                    <el-tag v-if="goodsInfo?.is_hot" type="danger" effect="dark" size="small" class="mr5px">
+                                        热销
+                                    </el-tag>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="lt">
+                                    商品编号
+                                </div>
+                                <div class="gt">
+                                    {{ goodsInfo?.goods_sn }}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="lt">
+                                    商品型号
+                                </div>
+                                <div class="gt">
+                                    {{ goodsInfo?.goods_code }}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="lt">
+                                    支付方式
+                                </div>
+                                <div class="gt">
+                                    <el-button text bg size="small" class="cursor-default!">
+                                        <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
+                                        微信
+                                    </el-button>
+                                    <el-button text bg size="small" class="cursor-default!">
+                                        <!-- <i class="i-ic-baseline-payment mr3px c-#3887ff" /> -->
+                                        <i class="i-ri-alipay-fill mr3px c-#3887ff" />
+                                        支付宝
+                                    </el-button>
+                                    <el-button text bg size="small" class="cursor-default!">
+                                        <i class="i-ic-twotone-payments mr3px c-#ff5335" />
+                                        线下转账
+                                    </el-button>
+                                </div>
+                            </li>
+                            <li class="items-center">
+                                <div class="lt">
+                                    购买数量
+                                </div>
+                                <div class="gt">
+                                    <el-input-number v-model="form.number" :min="1" :max="10000" />
+                                    <span class="ml5px c-#aaa">起购量:1个</span>
+                                </div>
+                            </li>
+                            <li class="my8px b-t b-t-dashed">
+                                <!--  -->
+                            </li>
+                            <li>
+                                <div class="lt" />
+                                <div class="gt">
+                                    <el-button v-if="goodsInfo?.is_collect" type="primary" text bg size="small"
+                                        @click="onCollect">
+                                        <i class="i-carbon-favorite-filled mr3px" />
+                                        收藏
+                                    </el-button>
+                                    <el-button v-else text bg size="small" @click="onCollect">
+                                        <i class="i-carbon-favorite mr3px" />
+                                        收藏
+                                    </el-button>
+                                    <el-button text bg size="small" @click="onShare">
+                                        <i class="i-ep-share mr3px" />
+                                        分享
+                                    </el-button>
+                                </div>
+                            </li>
+                            <li class="buy-item">
+                                <div class="lt">
+                                    <!-- 购买数量 -->
+                                </div>
+                                <div class="gt">
+                                    <el-button type="primary" size="large" @click="onBuyGoods">
+                                        立即购买
+                                    </el-button>
+                                    <el-button type="primary" plain size="large" @click="onAddCart">
+                                        <i class="i-carbon-shopping-cart mr3px" />
+                                        加入购物车
+                                    </el-button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="goods-right">
+                        <img class="outline-1px outline-#e5e7eb outline-solid" src="~/assets/images/gyj-band.png" alt="">
                     </div>
                 </div>
-                <div v-else class="no-goods-box">
-                    <BaseError />
+                <div class="goods-cont">
+                    <div class="lt">
+                        <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
+                            <el-tab-pane label="推荐商品" name="1">
+                                <ul class="goods-list">
+                                    <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
+                                        <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
+                                            <CoImage :src="item.goods_img" class="w100% pb100%" />
+                                        </NuxtLink>
+                                        <div class="tle">
+                                            <NuxtLink :to="`/goods/${item.goods_sn}`">
+                                                {{ item.goods_name }}
+                                            </NuxtLink>
+                                        </div>
+                                        <div class="pce">
+                                            <span>￥{{ item.shop_price }}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
+                    <div class="gt">
+                        <el-tabs v-model="defData.rightActive" class="goods-gt-tabs" @tab-change="onRightTabChange">
+                            <el-tab-pane label="商品详情" name="1">
+                                <div v-html="goodsInfo?.goods_desc" />
+                            </el-tab-pane>
+                            <el-tab-pane label="商品问答" name="2" lazy>
+                                <div v-if="CLIENT">
+                                    <el-button style="background-color: var(--el-color-primary);color: white;"
+                                        @click="questionClick">
+                                        我要提问
+                                    </el-button>
+                                    <el-table :data="defData.tableData" style="width: 100%" default-expand-all>
+                                        <el-table-column type="expand">
+                                            <template #default="props">
+                                                <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
+                                                    <span class="mr5px fw-800">答</span>
+                                                    暂无回答
+                                                </div>
+                                                <el-table v-else :data="props.row.answer_lists" :show-header="false"
+                                                    style="--el-table-border-color: none;">
+                                                    <el-table-column width="49px" />
+                                                    <el-table-column prop="content">
+                                                        <template #default="scopes">
+                                                            <span class="mr5px fw-800 c-green">答</span>
+                                                            <span>{{ scopes.row.content }}</span>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column prop="" width="300" show-overflow-tooltip
+                                                        align="right">
+                                                        <template #default="scopes">
+                                                            <span style="font-weight: 80;font-size: 12px;"> {{
+                                                                                                                changeToStar(scopes.row.user_name) }}
+                                                                {{ formatTime(scopes.row.add_time) }}</span>
+                                                        </template>
+                                                    </el-table-column>
+                                                    <el-table-column width="120px" />
+                                                </el-table>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column label="" prop="content">
+                                            <template #default="scopes">
+                                                <span class="mr5px fw-800 c-red">问</span>
+                                                <span style="font-weight: 800;">{{ scopes.row.content }}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column prop="" width="300" show-overflow-tooltip align="right">
+                                            <template #default="scopes">
+                                                <span style="font-weight: 80;font-size: 13px;"> {{
+                                                                                                    changeToStar(scopes.row.user_name) }}
+                                                    {{ formatTime(scopes.row.add_time) }}</span>
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column fixed="right" label="" width="120">
+                                            <template #default="scopes">
+                                                <el-button link type="primary" size="small" @click="onAnswer(scopes.row)">
+                                                    去回答
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <div class="goods-pagination" mt15px>
+                                        <el-pagination v-model:current-page="defData.page"
+                                            v-model:page-size="defData.pageSize" small background
+                                            layout=" prev, pager, next,total, jumper" :total="defData.total"
+                                            @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
+                                    </div>
+                                </div>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
                 </div>
                 <el-dialog v-if="CLIENT" v-model="defData.shareVisible" title="分享给好友" width="450px" draggable>
                     <el-form class="-mt20px" label-position="top">
@@ -365,7 +356,6 @@ const defData = reactive({
     // pageSizes: [10, 20, 30],
     leftActive: '1',
     rightActive: '1',
-    loading: true,
 
     shareVisible: false,
     shareCode: '', // 分享二维码
@@ -397,6 +387,7 @@ const initGoodsData = async () => {
     if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
 
     const { data, error } = await GoodsApi.getInfo({ goods_sn })
+    await wait(200)
     if (error.value) return ElMessage.error('网络错误!')
     if (data.value?.code === 200) {
         const dat = data.value.data
@@ -424,11 +415,10 @@ const initGoodsData = async () => {
                 title: infoData.web_title || infoData.goods_name,
                 meta,
             })
-            await wait(200)
+
             defData.skeleton = false // 关闭骨架屏
         } else {
             ElMessage.error('未获取到商品信息,请检查地址是否正确')
-            defData.loading = false
             // navigateTo('/404')
         }
     } else {
@@ -562,6 +552,10 @@ const onCollect = async () => {
 
 // 立即购买
 const onBuyGoods = () => {
+    const price = goodsInfo.value?.shop_price || ''
+    if (Number(price) <= 0) {
+        return ElMessage.error('商品价格不正确')
+    }
     const param = {
         goods_id: defData.goods_id,
         goods_number: form.number,
@@ -579,6 +573,10 @@ const onAddCart = async () => {
     if (!userState.token.value) {
         ElMessage.error('请先登录!')
         return navigateTo('/login')
+    }
+    const price = goodsInfo.value?.shop_price || ''
+    if (Number(price) <= 0) {
+        return ElMessage.error('商品价格不正确')
     }
 
     const { number } = form

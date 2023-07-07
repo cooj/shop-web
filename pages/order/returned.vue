@@ -64,7 +64,7 @@
                         <div class="gt">
                             <span class="mr-5px">{{ returnData?.is_all ? '全部' : '部分' }}</span>
                             <el-tag v-if="returnData?.type === 1" type="info" size="small">
-                                退货
+                                退货/退款
                             </el-tag>
                             <el-tag v-else type="warning" size="small">
                                 换货
@@ -163,12 +163,12 @@
                 <el-table :data="orderInfo?.refund_log" size="small" border>
                     <el-table-column label="操作者" width="120" property="author" show-overflow-tooltip />
                     <el-table-column label="信息" min-width="160" property="content" show-overflow-tooltip />
-                    <el-table-column label="时间" width="160" property="create_time" show-overflow-tooltip />
-                    <!-- <el-table-column label="图片" width="80" property="img_url" align="center" show-overflow-tooltip>
+                    <el-table-column label="图片" width="80" property="img_url" align="center" show-overflow-tooltip>
                         <template #default="{ row }">
-                            <CoImage :src="row.img_url" class="h40px w40px vertical-bottom" :icon-size="18" />
+                            <CoImage :src="row.img_url" :preview-src-list="[row.img_url]" class="h30px w50px vertical-bottom" :icon-size="18" preview-teleported />
                         </template>
-                    </el-table-column> -->
+                    </el-table-column>
+                    <el-table-column label="时间" width="160" property="create_time" show-overflow-tooltip />
                 </el-table>
             </div>
         </el-skeleton>
