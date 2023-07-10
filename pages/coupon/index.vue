@@ -80,6 +80,10 @@
 import { ElMessage } from 'element-plus'
 import { CouponApi } from '~/api/user/coupon'
 
+definePageMeta({
+    layout: 'home',
+})
+
 const userState = useUserState()
 
 const defData = reactive({

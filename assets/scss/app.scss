@@ -117,5 +117,9 @@
 
 
 .el-form {
-    --el-form-inline-content-width: unset!important;
+    --el-form-inline-content-width: unset !important;
+}
+
+.el-textarea__inner {
+    max-height: 500px;
 }

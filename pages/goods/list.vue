@@ -645,6 +645,10 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
         align-items: center;
         color: var(--el-text-color-regular);
 
+        &.cursor-pointer:not(.on):hover {
+            color: var(--el-color-primary);
+        }
+
         &.on {
             background-color: var(--el-color-primary);
             color: var(--el-color-white)
@@ -656,6 +660,10 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
             :deep(.el-checkbox) {
                 padding: 0 20px;
                 height: 100%;
+
+                &:hover {
+                    color: var(--el-color-primary);
+                }
             }
         }
 
@@ -843,7 +851,7 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
 }
 
 .goods-pagination {
-    padding: 20px 0;
+    padding: 20px 0 30px;
 
     :deep(.el-pagination) {
         --el-pagination-button-bg-color: var(--el-color-white);
