@@ -1,98 +1,101 @@
 <template>
-    <LayoutUser>
-        <div h40px>
-            <el-breadcrumb>
-                <el-breadcrumb-item>
-                    企业管理
-                </el-breadcrumb-item>
-                <el-breadcrumb-item>企业用户</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div v-if="CLIENT">
-            <div style="margin-bottom: 20px; color: var(--el-color-primary);">
-                认证状态：
-                <span v-if="defData.attest_status === 0">
-                    未认证
-                </span>
-                <span v-else-if="defData.attest_status === 1">
-                    已认证，（{{ defData.enterprise_name }}）
-                </span>
-                <span v-else-if="defData.attest_status === 2">
-                    正在审核中...
-                </span>
-                <span v-else>
-                    未通过，请重新提交认证
-                </span>
+    <ClientOnly>
+        <LayoutUser>
+            <div h40px>
+                <el-breadcrumb>
+                    <el-breadcrumb-item>
+                        企业管理
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>企业用户</el-breadcrumb-item>
+                </el-breadcrumb>
             </div>
-            <el-button v-if="defData.attest_status === 0 || defData.attest_status === 3" mb13px type="danger"
-                @click="onOpenDialog">
-                成为企业用户
-            </el-button>
-            <el-image class="h490px w900px" :src="testUrl" />
-
-            <lazy-el-dialog v-model="defData.visible" title="成为企业用户" :draggable="true" width="600px"
-                style="text-align: center;">
-                <el-form ref="formRef" :model="form" :rules="rules" label-width="140px">
-                    <el-tabs v-model="activeName" class="demo-tabs">
-                        <el-tab-pane label="上传" name="first">
-                            <el-form-item label="模板下载：" prop="download">
-                                <a :href="defData.download.url" :download="defData.download.name">{{ defData.download.label
-                                }}</a>
-                                <span style="color: var(--el-color-primary);"> (请下载模板打印，盖章后拍照上传认证图片)</span>
-                            </el-form-item>
-                            <el-form-item prop="enterprise_file" label="认证图片：">
-                                <CoUpload v-model="form.enterprise_file" />
-                            </el-form-item>
-                        </el-tab-pane>
-                        <el-tab-pane label="企业认证" name="second">
-                            <el-form-item prop="enterprise_name" label="企业名称：">
-                                <el-input v-model="form.enterprise_name" clearable />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_code" label="企业信用代码：">
-                                <el-input v-model="form.enterprise_code" clearable />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_account" label="企业账号：">
-                                <el-input v-model="form.enterprise_account" clearable />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_contacts" label="企业联系人：">
-                                <el-input v-model="form.enterprise_contacts" clearable />
-                            </el-form-item>
-                            <el-form-item prop="contacts_post" label="联系人职务：">
-                                <el-input v-model="form.contacts_post" clearable />
-                            </el-form-item>
-                            <el-form-item prop="contacts_phone" label="联系人电话：">
-                                <el-input v-model="form.contacts_phone" clearable />
-                            </el-form-item>
-                            <el-form-item prop="contacts_email" label="联系人邮箱：">
-                                <el-input v-model="form.contacts_email" clearable />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_industry" label="所属行业：">
-                                <el-input v-model="form.enterprise_industry" />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_capital" label="注册资金：">
-                                <el-input-number v-model="form.enterprise_capital" :min="0" :max="10 ** 14"
-                                    :precision="0" />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_address" label="企业地址：">
-                                <el-input v-model="form.enterprise_address" clearable />
-                            </el-form-item>
-                            <el-form-item prop="enterprise_remark" label="企业备注：">
-                                <el-input v-model="form.enterprise_remark" clearable />
-                            </el-form-item>
-                        </el-tab-pane>
-                    </el-tabs>
-                </el-form>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button @click="defData.visible = false">取消</el-button>
-                        <el-button @click="onSubmit">
-                            提交
-                        </el-button>
+            <div v-if="CLIENT">
+                <div style="margin-bottom: 20px; color: var(--el-color-primary);">
+                    认证状态：
+                    <span v-if="defData.attest_status === 0">
+                        未认证
                     </span>
-                </template>
-            </lazy-el-dialog>
-        </div>
-    </LayoutUser>
+                    <span v-else-if="defData.attest_status === 1">
+                        已认证，（{{ defData.enterprise_name }}）
+                    </span>
+                    <span v-else-if="defData.attest_status === 2">
+                        正在审核中...
+                    </span>
+                    <span v-else>
+                        未通过，请重新提交认证
+                    </span>
+                </div>
+                <el-button v-if="defData.attest_status === 0 || defData.attest_status === 3" mb13px type="danger"
+                    @click="onOpenDialog">
+                    成为企业用户
+                </el-button>
+                <el-image class="h490px w900px" :src="testUrl" />
+
+                <lazy-el-dialog v-model="defData.visible" title="成为企业用户" :draggable="true" width="600px"
+                    style="text-align: center;">
+                    <el-form ref="formRef" :model="form" :rules="rules" label-width="140px">
+                        <el-tabs v-model="activeName" class="demo-tabs">
+                            <el-tab-pane label="上传" name="first">
+                                <el-form-item label="模板下载：" prop="download">
+                                    <a :href="defData.download.url" :download="defData.download.name">{{
+                                        defData.download.label
+                                    }}</a>
+                                    <span style="color: var(--el-color-primary);"> (请下载模板打印，盖章后拍照上传认证图片)</span>
+                                </el-form-item>
+                                <el-form-item prop="enterprise_file" label="认证图片：">
+                                    <CoUpload v-model="form.enterprise_file" />
+                                </el-form-item>
+                            </el-tab-pane>
+                            <el-tab-pane label="企业认证" name="second">
+                                <el-form-item prop="enterprise_name" label="企业名称：">
+                                    <el-input v-model="form.enterprise_name" clearable />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_code" label="企业信用代码：">
+                                    <el-input v-model="form.enterprise_code" clearable />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_account" label="企业账号：">
+                                    <el-input v-model="form.enterprise_account" clearable />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_contacts" label="企业联系人：">
+                                    <el-input v-model="form.enterprise_contacts" clearable />
+                                </el-form-item>
+                                <el-form-item prop="contacts_post" label="联系人职务：">
+                                    <el-input v-model="form.contacts_post" clearable />
+                                </el-form-item>
+                                <el-form-item prop="contacts_phone" label="联系人电话：">
+                                    <el-input v-model="form.contacts_phone" clearable />
+                                </el-form-item>
+                                <el-form-item prop="contacts_email" label="联系人邮箱：">
+                                    <el-input v-model="form.contacts_email" clearable />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_industry" label="所属行业：">
+                                    <el-input v-model="form.enterprise_industry" />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_capital" label="注册资金：">
+                                    <el-input-number v-model="form.enterprise_capital" :min="0" :max="10 ** 14"
+                                        :precision="0" />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_address" label="企业地址：">
+                                    <el-input v-model="form.enterprise_address" clearable />
+                                </el-form-item>
+                                <el-form-item prop="enterprise_remark" label="企业备注：">
+                                    <el-input v-model="form.enterprise_remark" clearable />
+                                </el-form-item>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </el-form>
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button @click="defData.visible = false">取消</el-button>
+                            <el-button @click="onSubmit">
+                                提交
+                            </el-button>
+                        </span>
+                    </template>
+                </lazy-el-dialog>
+            </div>
+        </LayoutUser>
+    </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -113,6 +116,18 @@ const defData = reactive({
     attest_status: 0,
     enterprise_name: '',
     visible: false,
+
+    // enterprise_code: '',
+    // enterprise_account: '',
+    // enterprise_contacts: '',
+    // contacts_post: '',
+    // contacts_phone: '',
+    // contacts_email: '',
+    // enterprise_industry: '',
+    // enterprise_capital: 0,
+    // enterprise_address: '',
+    // enterprise_remark: '',
+    // enterprise_file: '',
 })
 
 const userStatus = async () => {
