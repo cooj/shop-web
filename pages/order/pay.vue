@@ -83,21 +83,13 @@
                                     <b>{{ defData.payInfo?.bank_info.address }}</b>
                                 </el-descriptions-item>
                             </el-descriptions>
-                            <div class="mt20px w100%">
+                            <div v-if="defData.payInfo?.bank_info.item_notes" class="mt20px w100%">
                                 <h3 class="mb5px">
                                     注意事项：
                                 </h3>
                                 <el-alert type="info" :closable="false">
                                     <template #title>
-                                        银行账号信息
-                                        公司名称 深圳工游记集团有限公司12465646123
-                                        银行账号 4564641454785385761234
-                                        开户银行 深圳农商银行
-                                        银联号(CNAPS) 4564641454785385761234
-                                        用途/备注/摘要 55555
-                                        税号 4564641454785385761234
-                                        电话 15766875587
-                                        地址 广东省深圳市光明去一片光明
+                                        <div v-html="defData.payInfo?.bank_info.item_notes" />
                                     </template>
                                 </el-alert>
                             </div>

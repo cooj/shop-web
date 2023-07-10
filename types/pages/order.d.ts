@@ -196,6 +196,7 @@ declare interface OrderApi_PayOrderResponse {
         duty: '4564641454785385761234',
         phone: '15766875587',
         address: '广东省深圳市光明去一片光明',
+        item_notes:strings, // 注意事项
     },
     day_num: '15',
 }
