@@ -75,3 +75,39 @@ export const filterTreeList = <T = any>(data: T[], keyword: T[keyof T], name: ke
     }
     return result
 }
+
+/**
+ * 商品分类，根据某个分类id获取获取到后面最后一级的分类id（逗号拼接）
+ * @param data 数组数据，平级或树形数组皆可
+ * @param val 键值id的值，（唯一）
+ * @param key id 默认（唯一不重复的键值）
+ * @param children 子类
+ * @returns
+ */
+export function getLastLevelIds<T = any>(data: Array<T>, val: T[keyof T], key = 'id' as keyof T, children = 'children' as keyof T) {
+    if (!val) return ''
+    const ids: T[keyof T][] = []
+
+    const forFn = function (arr: any[]) {
+        for (let i = 0; i < arr.length; i++) {
+            const item = arr[i]
+            if (item[children]?.length) { // 有子类继续找子类内容
+                forFn(item[children])
+            } else { // 没有子类时，当前项就是最后一级
+                ids.push(item[key])
+            }
+        }
+    }
+
+    const node = findNodeItem(data, val, key, children)
+    if (node) {
+        // @ts-expect-error children是子类内容
+        if (node[children]?.length) { //
+            forFn(node[children] as any[])
+        } else { // 没有子类，当前这一级就是最后一级
+            ids.push(node[key])
+        }
+    }
+
+    return ids.join(',')
+}
