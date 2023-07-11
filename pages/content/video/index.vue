@@ -52,7 +52,7 @@ const defData = reactive({
     total: 0,
     pageSize: 9,
     type: 1,
-    id: 1,
+    id: 38,
 })
 
 const id = useRouteQuery('id')
@@ -60,12 +60,13 @@ const id = useRouteQuery('id')
 // 获取视频列表
 const initData = async () => {
     if (process.client) document.documentElement.scrollTop = 0
-    if (!(/^\d+$/.test(id.value))) return defData.error = true
+    // if (!(/^\d+$/.test(id.value))) return defData.error = true
     const param: VideoApi_GetVideoList = {
         id: Number(id.value),
         page: defData.page,
         page_size: defData.pageSize,
     }
+    if (!param.id) param.id = 38
     const { data, error } = await VideoApi.getVideoList(param)
     if (error.value) defData.error = true
     if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
