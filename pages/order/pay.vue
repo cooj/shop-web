@@ -20,7 +20,8 @@
                         </el-breadcrumb-item>
                     </el-breadcrumb>
                     <div class="mb20px min-h300px bg-#fff p15px">
-                        <div v-if="defData.orderInfo?.pay_type === 3 && !defData.countDown.flag" class="flex p5px">
+                        <div v-if="defData.orderInfo?.pay_type === 3 && !defData.countDown.flag"
+                            class="flex flex-wrap p5px">
                             <div class="flex-1">
                                 <div class="pay-ready text-center">
                                     <el-alert type="success" :closable="false" center show-icon>
@@ -82,6 +83,16 @@
                                     <b>{{ defData.payInfo?.bank_info.address }}</b>
                                 </el-descriptions-item>
                             </el-descriptions>
+                            <div v-if="defData.payInfo?.bank_info.item_notes" class="mt20px w100%">
+                                <h3 class="mb5px">
+                                    注意事项：
+                                </h3>
+                                <el-alert type="info" :closable="false">
+                                    <template #title>
+                                        <div v-html="defData.payInfo?.bank_info.item_notes" />
+                                    </template>
+                                </el-alert>
+                            </div>
                         </div>
                         <el-result v-else-if="payStatus === 1" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
                             <template #extra>
