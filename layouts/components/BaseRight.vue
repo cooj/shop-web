@@ -2,7 +2,7 @@
     <div class="fixed-box">
         <ul class="side-ul">
             <li>
-                <NuxtLink class="side-item" to="https://w1011.ttkefu.com/k/linkurl/?t=3G6FHI1">
+                <NuxtLink class="side-item" to="https://w1011.ttkefu.com/k/linkurl/?t=3G6FHI1" target="_blank">
                     <i class="i-ep-service" />
                     <p class="text">
                         客服
@@ -18,11 +18,12 @@
                 </NuxtLink>
             </li>
             <li>
-                <NuxtLink class="side-item" to="/order/cart">
+                <NuxtLink class="side-item cart-num" to="/order/cart">
                     <i class="i-ic-twotone-shopping-cart" />
                     <p class="text">
                         购物车
                     </p>
+                    <span class="n">{{ number }}</span>
                 </NuxtLink>
             </li>
             <li>
@@ -46,6 +47,10 @@
 </template>
 
 <script lang="ts" setup>
+const useCartNumber = useCartNumberState()
+
+// 购物车商品数量
+const number = await useCartNumber.setCartNumber()
 // const el = ref<HTMLElement | null>(null)
 // const rt = useScroll(el, { behavior: 'smooth' })
 
@@ -93,6 +98,23 @@
 
         i {
             font-size: 18px;
+        }
+    }
+
+    .cart-num {
+        position: relative;
+
+        .n {
+            position: absolute;
+            transform: scale(0.8);
+            top: 2px;
+            left: 38px;
+            color: var(--el-color-primary);
+        }
+        &:hover{
+            .n{
+                color: var(--el-color-white);
+            }
         }
     }
 }
