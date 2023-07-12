@@ -338,6 +338,7 @@ import { RecordApi } from '~/api/user/record'
 import { UserLogin } from '#components'
 
 // const { text, copy, copied, isSupported } = useClipboard({ legacy: true })
+const { x, y } = useMouse() // 鼠标位置函数用于获取当前鼠标位置
 
 const formRef = ref<FormInstance>()
 const userState = useUserState()
@@ -490,7 +491,7 @@ const answerClick = async () => {
             q_id: form.question_id,
             content: form.answer,
         }
-        console.log('data :>> ', info)
+
         const { data, error } = await InterListApi.addList(info)
         if (error.value) return
         if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
@@ -588,6 +589,8 @@ const onAddCart = async () => {
             useCartNumber.setCartNumber()
             ElMessage.success('加入购物车成功')
             form.number = 1
+            // 设置动画
+            useCartNumber.setShopAnimate({ top: y.value, left: x.value })
         } else {
             ElMessage.error('加入购物车失败')
         }

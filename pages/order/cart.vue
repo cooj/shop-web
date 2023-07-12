@@ -145,6 +145,7 @@ const onChangeNumber = useDebounceFn(async (row: GoodsTableCartItem) => {
     if (data.value?.code === 200) {
         if (row.goods_number !== data.value?.data.number) row.goods_number = data.value?.data.number
         // if (data.value.data.goods_number < row.goods_number) row.goods_number = data.value.data.goods_number
+        useCartNumber.setCartNumber() // 更新购物车数量
     }
 }, 1000)
 

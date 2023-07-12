@@ -69,15 +69,24 @@ export const useCartNumberState = () => {
     /**
      * 设置购物车动画
      */
-    const setShop = () => {
+    const setShopAnimate = async (param: { top: number; left: number }) => {
+        let scrollTop = 0
+        if (process.client) scrollTop = document.documentElement.scrollTop
+        site.value.top = param.top - 30 - scrollTop
+        site.value.left = param.left - 20
+        site.value.show = true
+        await wait(1000)
+        site.value.show = false
 
+        site.value.top = 0
+        site.value.left = 0
     }
 
     return {
         cartNum,
         setCartNumber,
         site,
-        setShop,
+        setShopAnimate,
     }
 }
 

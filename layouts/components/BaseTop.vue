@@ -57,6 +57,10 @@
                 <span class="mr5px">{{ systemInfo?.sale_tel }}</span>
             </div>
         </div>
+        <div v-if="useCartNumber.site.value.show" class="shop-site2"
+            :style="{ top: `${useCartNumber.site.value.top || 0}px`, left: `${useCartNumber.site.value.left || 0}px` }">
+            <i class="color-primary i-ep-goods-filled block text-24px" />
+        </div>
     </section>
 </template>
 
@@ -86,6 +90,8 @@ const onLoginOut = async () => {
 .header-top {
     padding: 6px 0 5px;
     background-color: #313131;
+    position: relative;
+    z-index: 1;
 
     .header-cont {
         display: flex;
@@ -108,6 +114,56 @@ const onLoginOut = async () => {
         &:hover {
             color: var(--el-color-danger-light-8);
         }
+    }
+}
+
+.shop-site {
+    position: absolute;
+    animation: ani-shop-to-cart 1s ease-in-out forwards;
+    // top: v-、bind('styles.top');
+    // left: v-、bind('styles.left');
+}
+
+@keyframes ani-shop-to-cart {
+    0% {
+        transform: scale(1.2);
+    }
+
+    70% {
+        top: 40px;
+        transform: translate(-20px, -25px);
+    }
+
+    100% {
+        top: 70px;
+        // left: calc(100% - 100px);
+        left: calc((100% - 1200px) / 2 + 1100px);
+        transform: translate(0, 0);
+        display: none
+    }
+}
+
+.shop-site2 {
+    position: fixed;
+    animation: ani-shop-to-cart2 1s ease-in-out forwards;
+}
+
+@keyframes ani-shop-to-cart2 {
+    0% {
+        transform: scale(1.2);
+    }
+
+    70% {
+        top: 420px;
+        transform: translate(-20px, -25px);
+    }
+
+    100% {
+        top: 430px;
+        left: calc(100% - 30px);
+        // left: calc((100% - 1200px) / 2 + 1100px);
+        transform: translate(0, 0);
+        display: none
     }
 }
 </style>

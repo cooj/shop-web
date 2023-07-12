@@ -339,6 +339,7 @@ definePageMeta({
 
 const userState = useUserState() // 用户信息
 const useCartNumber = useCartNumberState() // 购物车商品数量
+const { x, y } = useMouse() // 鼠标位置函数用于获取当前鼠标位置
 
 const keyword = useRouteQuery('keyword') // 搜索
 const cid = useRouteQuery('cid') // 分类
@@ -540,6 +541,9 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
     if (data.value?.code === 200) {
         useCartNumber.setCartNumber() // 更新购物车商品数量
         ElMessage.success('加入购物车成功')
+
+        // 设置动画
+        useCartNumber.setShopAnimate({ top: y.value, left: x.value })
     } else {
         ElMessage.error(data.value?.msg || '加入购物车失败')
     }
