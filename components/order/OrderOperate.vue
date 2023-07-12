@@ -13,7 +13,7 @@
                 去付款
             </el-button>
         </div>
-        <div v-if="orderStatus === 1 || orderStatus === 2" class="item-ope">
+        <div v-if="orderStatus === 1 || orderStatus === 2 || orderStatus === 4" class="item-ope">
             <el-button type="info" :link="props.link" :size="props.size" @click="onCancel()">
                 取消订单
             </el-button>

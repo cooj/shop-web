@@ -337,6 +337,8 @@ import { InterListApi } from '~/api/user/interList'
 import { RecordApi } from '~/api/user/record'
 import { UserLogin } from '#components'
 
+// const { text, copy, copied, isSupported } = useClipboard({ legacy: true })
+
 const formRef = ref<FormInstance>()
 const userState = useUserState()
 // 登录用户

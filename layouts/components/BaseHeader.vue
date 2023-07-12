@@ -26,7 +26,7 @@
                         热门搜索：<span v-for="(item) in searchHot" :key="item" @click="onSearchHot(item)">{{ item }}</span>
                     </div>
                 </div>
-                <div class="cart">
+                <div ref="cartRef" class="cart">
                     <NuxtLink to="/order/cart">
                         <el-badge :value="number" class="cart-number">
                             <el-button type="primary" class="min-w150px">
@@ -35,6 +35,10 @@
                             </el-button>
                         </el-badge>
                     </NuxtLink>
+                    <!-- <div v-if="useCartNumber.site.value.show" class="shop-site"
+                        :style="{ top: `${useCartNumber.site.value.top || 0}px`, left: `${useCartNumber.site.value.left || 0}px` }">
+                        <i class="i-ep-goods-filled color-primary block text-24px" />
+                    </div> -->
 
                     <!-- <el-button>
             <i class="i-ep-shopping-cart-full" />
@@ -52,10 +56,16 @@
 import HeaderIndex from './header/HeaderIndex.vue'
 
 const useCartNumber = useCartNumberState()
-
 const number = await useCartNumber.setCartNumber()
 
 const route = useRoute()
+
+const cartRef = ref<HTMLDivElement>()
+// const { top, left } = useElementBounding(cartRef)
+// const styles = reactive({
+//     top: '0',
+//     left: '0',
+// })
 
 const search = reactive({
     keyword: '',
@@ -163,4 +173,23 @@ watch(() => route.query.keyword, (val) => {
         }
     }
 }
+/*
+.shop-site {
+    position: fixed;
+    animation: ani-shop-to-cart 1s ease-in-out forwards;
+    // top: v-bind('styles.top');
+    // left: v-bind('styles.left');
+}
+
+@keyframes ani-shop-to-cart {
+    0% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        top: 100px;
+        left: 800px;
+        display: none
+    }
+} */
 </style>

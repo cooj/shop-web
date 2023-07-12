@@ -41,6 +41,14 @@ export const useGoodsState = () => {
  */
 export const useCartNumberState = () => {
     const cartNum = useState('cartNum', () => 0) // 记录购物车数量
+
+    const site = useState('cartSite', () => {
+        return {
+            show: false, // 图标显示隐藏
+            top: 0, // 距离顶部的位置
+            left: 0, //  距离左部的位置
+        }
+    })
     /**
      * 获取购物车数量
      */
@@ -57,9 +65,19 @@ export const useCartNumberState = () => {
 
         return cartNum
     }
+
+    /**
+     * 设置购物车动画
+     */
+    const setShop = () => {
+
+    }
+
     return {
         cartNum,
         setCartNumber,
+        site,
+        setShop,
     }
 }
 
