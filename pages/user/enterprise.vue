@@ -36,6 +36,11 @@
                 <el-form ref="formRef" :model="form" :rules="rules" label-width="140px">
                     <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="上传" name="first">
+                            <el-form-item label="未通过原因：">
+                                <div v-if="defData.attest_status === 3" style="color: var(--el-color-primary);">
+                                    {{ form.failed_remark }}
+                                </div>
+                            </el-form-item>
                             <el-form-item label="模板下载：" prop="download">
                                 <a :href="defData.download.url" :download="defData.download.name">{{
                                     defData.download.label
@@ -73,7 +78,7 @@
                             </el-form-item>
                             <el-form-item prop="enterprise_capital" label="注册资金：">
                                 <el-input-number v-model="form.enterprise_capital" :min="0" :max="10 ** 14"
-                                    :precision="0" />
+                                    :precision="0" /><span class="ml5px">万</span>
                             </el-form-item>
                             <el-form-item prop="enterprise_address" label="企业地址：">
                                 <el-input v-model="form.enterprise_address" clearable />
@@ -116,18 +121,6 @@ const defData = reactive({
     attest_status: 0,
     enterprise_name: '',
     visible: false,
-
-    // enterprise_code: '',
-    // enterprise_account: '',
-    // enterprise_contacts: '',
-    // contacts_post: '',
-    // contacts_phone: '',
-    // contacts_email: '',
-    // enterprise_industry: '',
-    // enterprise_capital: 0,
-    // enterprise_address: '',
-    // enterprise_remark: '',
-    // enterprise_file: '',
 })
 
 const userStatus = async () => {
@@ -139,11 +132,6 @@ const userStatus = async () => {
     } else {
         return ElMessage.error('请先登录')
     }
-    // if (defData.attest_status === 0 || defData.attest_status === 3) {
-    //   defData.type = 1
-    // } else {
-    //   defData.type = 2
-    // }
 }
 userStatus()
 
@@ -161,6 +149,7 @@ const form = reactive({
     enterprise_address: '',
     enterprise_remark: '',
     enterprise_file: '',
+    failed_remark: '',
 })
 const rules = reactive<FormRules>({
     enterprise_name: [
@@ -217,7 +206,23 @@ const onSubmit = async () => {
 }
 
 //  打开弹窗
-const onOpenDialog = () => {
+const onOpenDialog = async () => {
+    const { data: res } = await EnterpriseApi.info({ user_id: defData.user_id })
+    if (res.value?.data) {
+        form.enterprise_name = res.value?.data.enterprise_name
+        form.enterprise_code = res.value?.data.enterprise_code
+        form.enterprise_account = res.value?.data.enterprise_account
+        form.enterprise_contacts = res.value?.data.enterprise_contacts
+        form.contacts_post = res.value?.data.contacts_post
+        form.contacts_phone = res.value?.data.contacts_phone
+        form.contacts_email = res.value?.data.contacts_email
+        form.enterprise_industry = res.value?.data.enterprise_industry
+        form.enterprise_capital = res.value?.data.enterprise_capital
+        form.enterprise_address = res.value?.data.enterprise_address
+        form.enterprise_remark = res.value?.data.enterprise_remark
+        form.enterprise_file = res.value?.data.enterprise_file
+        form.failed_remark = res.value?.data.failed_remark
+    }
     defData.visible = true
 }
 
