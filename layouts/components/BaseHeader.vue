@@ -35,7 +35,6 @@
                             </el-button>
                         </el-badge>
                     </NuxtLink>
-
                     <!-- <el-button>
             <i class="i-ep-shopping-cart-full" />
             批量下单
@@ -52,7 +51,6 @@
 import HeaderIndex from './header/HeaderIndex.vue'
 
 const useCartNumber = useCartNumberState()
-
 const number = await useCartNumber.setCartNumber()
 
 const route = useRoute()

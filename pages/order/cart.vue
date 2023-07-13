@@ -31,7 +31,7 @@
                     <el-table-column prop="shop_price" label="价格" width="120" align="center" />
                     <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
                         <template #default="{ row }">
-                            <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="0" :max="100"
+                            <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="1" :max="100"
                                 @change="onChangeNumber(row)" />
                         </template>
                     </el-table-column>
@@ -145,6 +145,7 @@ const onChangeNumber = useDebounceFn(async (row: GoodsTableCartItem) => {
     if (data.value?.code === 200) {
         if (row.goods_number !== data.value?.data.number) row.goods_number = data.value?.data.number
         // if (data.value.data.goods_number < row.goods_number) row.goods_number = data.value.data.goods_number
+        useCartNumber.setCartNumber() // 更新购物车数量
     }
 }, 1000)
 

@@ -579,7 +579,7 @@ const onSubmit = async () => {
     if (!isRun) return false
 
     let goods_peas = Number(form.peas_number)
-    if (!goods_peas) {
+    if (!form.is_peas || !goods_peas) { // 不使用工游豆，或者工豆为0时
         form.is_peas = 0
         goods_peas = 0
     }
