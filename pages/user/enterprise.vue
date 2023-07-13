@@ -36,8 +36,8 @@
                 <el-form ref="formRef" :model="form" :rules="rules" label-width="140px">
                     <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="上传" name="first">
-                            <el-form-item label="未通过原因：">
-                                <div v-if="defData.attest_status === 3" style="color: var(--el-color-primary);">
+                            <el-form-item v-if="defData.attest_status === 3" label="未通过原因：">
+                                <div style="color: var(--el-color-primary);">
                                     {{ form.failed_remark }}
                                 </div>
                             </el-form-item>
