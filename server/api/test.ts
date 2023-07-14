@@ -8,11 +8,11 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     try {
         const res = await useServerFetch<any>(event, body.api_url)
-        console.log(res)
+        console.log('res', res)
 
         return res
     } catch (error: any) {
-        console.log(error)
+        console.log('error :>> ', error)
         return error.data
     }
 })
