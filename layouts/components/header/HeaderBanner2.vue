@@ -1,9 +1,9 @@
-<!-- 轮播图 -->
+<!-- 轮播图 swiper v10.0.4 -->
 
 <template>
-    <swiper-container v-if="CLIENT" class="swp-banner" :slides-per-view="1" :centered-slides="true" :pagination="true" :loop="true"
-        :autoplay="{ delay: 6000,
-                     disableOnInteraction: false }" :speed="1500" effect="fade" @progress="onProgress"
+    <swiper-container v-if="CLIENT" class="swp-banner" :slides-per-view="1" :centered-slides="true" :pagination="true"
+        :loop="true" :autoplay="{ delay: 6000,
+                                  disableOnInteraction: false }" :speed="1500" effect="fade" @progress="onProgress"
         @slidechange="onSlideChange">
         <!-- <swiper-slide>Slide 1</swiper-slide>
         <swiper-slide>Slide 2</swiper-slide>
@@ -22,12 +22,12 @@ import { register } from 'swiper/element/bundle'
 register()
 
 const onProgress = (e: any) => {
-    const [swiper, progress] = e.detail
-    console.log(progress)
+    // const [swiper, progress] = e.detail
+    // console.log(progress)
 }
 
 const onSlideChange = (e: any) => {
-    console.log('slide changed')
+    // console.log('slide changed')
 }
 
 const defData = reactive({

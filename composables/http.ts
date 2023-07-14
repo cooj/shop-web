@@ -38,7 +38,9 @@ export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: UseF
     // console.log('options :>> ', options)
     // 发送请求出错
     options.onRequestError = (error) => {
+        /* eslint-disable no-console */
         console.log(error)
+        /* eslint-enable  no-console */
         // console.error('请求出错，请重试！')
         ElMessage.error('服务器内部错误')
     }

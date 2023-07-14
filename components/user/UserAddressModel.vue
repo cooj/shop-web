@@ -189,7 +189,6 @@ const onConfirm = async () => {
         is_default: form.data.defaultArr.includes(1) ? 1 : 0,
         is_bill_address: form.data.defaultArr.includes(2) ? 1 : 0,
     }
-    console.log('params :>> ', params)
 
     if (defData.type === 1) { //  新增
         defData.btnLoading = true

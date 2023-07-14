@@ -345,10 +345,11 @@ const userState = useUserState()
 // 登录用户
 const userData = await userState.getUserInfo()
 const useCartNumber = useCartNumberState()
-const usePayType = usePayTypeState()
+
+// const usePayType = usePayTypeState()
 // 支持的支付方式
-const payTypeList = await usePayType.getPayTypeList()
-// console.log('payTypeList :>> ', payTypeList)
+// const payTypeList = await usePayType.getPayTypeList()
+// // console.log('payTypeList :>> ', payTypeList)
 
 const loginRef = ref<InstanceType<typeof UserLogin>>()
 

@@ -52,7 +52,7 @@ export const useCartNumberState = () => {
     /**
      * 获取购物车数量
      */
-    const setCartNumber = async (update?: boolean) => {
+    const setCartNumber = async () => {
         const token = useUserState().token
         if (!token.value) {
             cartNum.value = 0

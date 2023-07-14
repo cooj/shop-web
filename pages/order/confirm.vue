@@ -484,7 +484,7 @@ const initDefaultData = async () => {
 
 // 获取结算的商品信息
 const initGoodsData = async () => {
-    const { data, error, pending } = await useFetch<{ data: OrderApi_GetSettleResponse } & ResponseCodeMsg>('/api/order/confirm', {
+    const { data, error } = await useFetch<{ data: OrderApi_GetSettleResponse } & ResponseCodeMsg>('/api/order/confirm', {
         method: 'POST',
         body: {
             cart_id: cart_id.value,
@@ -494,9 +494,9 @@ const initGoodsData = async () => {
         },
     })
 
-    console.log(pending.value)
+    // console.log(pending.value)
     // await nextTick()
-    await wait(1200)
+    await wait(1000)
     // console.log(pending.value)
     // console.log(error.value)
     // console.log('data.value?.code :>> ', data.value?.code)
@@ -643,7 +643,7 @@ const onSubmit = async () => {
         const order_no = res.value.data.main_order_no
 
         // 从购物车来下单的，更新购物车商品数量
-        if (cart_id.value) useCartNumber.setCartNumber(true)
+        if (cart_id.value) useCartNumber.setCartNumber()
 
         navigateTo({
             path: '/order/pay',

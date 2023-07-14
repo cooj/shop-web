@@ -159,9 +159,9 @@ const onReturn = async () => {
 /**
  * 再次购买
  */
-const onOrderBuy = () => {
+// const onOrderBuy = () => {
 
-}
+// }
 
 /**
  * 删除订单
