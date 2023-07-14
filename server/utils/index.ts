@@ -11,7 +11,7 @@ import { getCookie, getHeaders, getMethod, getQuery, readBody } from 'h3'
  * @param merge 是否将param参数跟原有参数信息进行合并，默认不合并，直接覆盖
  * @returns
  */
-export const useServerFetch = async <T = unknown>(event: H3Event, url: string, param?: any, merge?: Boolean) => {
+export const useServerFetch = async <T = unknown>(event: H3Event, url: string, param?: any, merge?: boolean) => {
     const runtimeConfig = useRuntimeConfig()
     const baseURL = runtimeConfig.public.apiBase || ''
     const method = getMethod(event)
