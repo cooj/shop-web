@@ -16,3 +16,23 @@ declare interface EnterpriseApi_attest {
   enterprise_file: string //企业认证上传资料
   user_id: number  //用户id
 }
+
+/**
+ * 企业查询 响应数据
+ */
+declare interface EnterPriseApi_infoResponse {
+  "attest_status": 0 | 1 | 2 | 3 //认证状态：0未认证，1已认证，2审核中，3未通过
+  "enterprise_name": string,
+  "enterprise_code": string,
+  "failed_remark": string, 
+  "enterprise_account": string,
+  "enterprise_contacts": string,
+  "contacts_post": string,
+  "contacts_phone": string,
+  "contacts_email": string,
+  "enterprise_industry": string,
+  "enterprise_capital": number, //注册资金
+  "enterprise_address": string,
+  "enterprise_remark": string,
+  "enterprise_file": string
+}
