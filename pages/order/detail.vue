@@ -118,7 +118,7 @@
                     <el-table-column prop="goods_name" label="商品名称" min-width="180">
                         <template #default="{ row }">
                             <div class="h50px flex items-center">
-                                <CoImage class="h50px w50px" :src="row.goods_img" />
+                                <CoImage class="h50px w50px" :src="setGoodsOssImg(row.goods_img, 60)" />
                                 <div class="pl10px">
                                     <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                         {{ row.goods_name }}

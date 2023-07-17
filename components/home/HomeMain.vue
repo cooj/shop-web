@@ -54,7 +54,8 @@
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
                                     <NuxtLink class="goods-link v2" :to="`/goods/${son.goods_sn}`" target="_blank">
-                                        <CoImage class="hov-img w100% pb100%" :src="son.goods_img" loading="lazy" />
+                                        <CoImage class="hov-img w100% pb100%" :src="setGoodsOssImg(son.goods_img, 200)"
+                                            loading="lazy" />
                                         <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
@@ -121,7 +122,13 @@ floor.value?.data.forEach((item, index) => {
 const { data: goods } = await HomeApi.getNewGoods()
 
 // 只显示前五个（下标0开始，截取5个）
-const goodsList = computed(() => goods.value?.data.lists.slice(0, 5) || [])
+const goodsList = computed(() => {
+    const list = goods.value?.data.lists.slice(0, 5).map((item) => {
+        item.goods_img = setGoodsOssImg(item.goods_img, 300)
+        return item
+    })
+    return list || []
+})
 
 onMounted(async () => {
     await wait(1000)

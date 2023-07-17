@@ -79,7 +79,10 @@ const initTableData = async () => {
     const res = await RecordApi.getList(data)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-    defData.tableData = res.data.value?.data
+    defData.tableData = res.data.value?.data.map((item) => {
+        item.goods_img = setGoodsOssImg(item.goods_img, 60)
+        return item
+    })
 }
 initTableData()
 

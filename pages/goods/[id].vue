@@ -135,7 +135,7 @@
                                     购买数量
                                 </div>
                                 <div class="gt">
-                                    <el-input-number v-model="form.number" :min="1" :max="10000" />
+                                    <el-input-number v-model="form.number" :min="1" :max="9999" />
                                     <span class="ml5px c-#aaa">起购量:1个</span>
                                 </div>
                             </li>

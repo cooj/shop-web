@@ -105,7 +105,7 @@
                                         <span>{{ setAddressText(item) }}</span>
                                         <span class="mx5px opacity90">（{{ item.contacts }} 收）</span>
                                         <span class="mx5px">{{ item.phone }}</span>
-                                        <em v-if="item.is_default" class="mx5px fw400 opacity70">默认地址</em>
+                                        <em v-if="item.is_bill_address" class="mx5px fw400 opacity70">默认地址</em>
                                     </el-radio>
                                 </el-radio-group>
                                 <div v-else class="w100% text-center text-13px c-#666">
@@ -454,7 +454,10 @@ const initDefaultData = async () => {
         // 未获取到商品时
         if (!data.goods_list.length) return defData.ready = false
 
-        form.tableData = data.goods_list
+        form.tableData = data.goods_list.map((item) => {
+            item.goods_img = setGoodsOssImg(item.goods_img, 60)
+            return item
+        })
         defData.couponList = data.coupon_list
         if (defData.couponList.length) {
             form.coupon_id = defData.couponList[0].coupon_draw_id
@@ -474,6 +477,13 @@ const initDefaultData = async () => {
     if (res2 && res2.data.value?.code === 200) {
         const data = res2.data.value?.data
         defData.addressList = data
+
+        // 选中默认地址
+        const node = defData.addressList.find(item => item.is_default === 1)
+        form.address_id = node?.address_id || ''
+
+        const node2 = defData.addressList.find(item => item.is_bill_address === 1)
+        form.bill_address_id = node2?.address_id || ''
     }
 
     if (res3 && res3.data.value?.code === 200) {

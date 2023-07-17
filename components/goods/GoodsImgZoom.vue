@@ -1,10 +1,10 @@
 <template>
     <div class="goods-image mb10px">
         <!-- 大图 -->
-        <div v-show="show" class="large" :style="[{ backgroundImage: `url(${images[currIndex]})` }, largePosition]" />
+        <div v-show="show" class="large" :style="[{ backgroundImage: `url(${imgList.big[currIndex]})` }, largePosition]" />
         <!-- 中图 -->
         <div ref="target" class="middle" @mousemove="moveImg" @mouseleave="moveOutImg">
-            <img :src="images[currIndex]" alt="">
+            <img :src="imgList.big[currIndex]" alt="">
             <!-- 遮罩色块 -->
             <div v-show="show" class="layer" :style="layerPosition" />
         </div>
@@ -12,7 +12,7 @@
     <div class="swiper-box">
         <Swiper class="swp" :slides-per-view="5" :slides-per-group="5" :space-between="10" :navigation="navigate"
             :modules="modules">
-            <SwiperSlide v-for="(item, index) in images" :key="index" class="swp-slide"
+            <SwiperSlide v-for="(item, index) in imgList.small" :key="index" class="swp-slide"
                 :class="{ active: index === currIndex }">
                 <img :src="item" alt="" @mouseenter="currIndex = index">
             </SwiperSlide>
@@ -32,9 +32,14 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import type { NavigationOptions } from 'swiper/types'
 
-defineProps<{
+const props = defineProps<{
     images: string[]
 }>()
+
+const imgList = computed(() => {
+    const small = props.images.map(item => setGoodsOssImg(item, 60))
+    return { big: props.images, small }
+})
 
 const modules = ref([Navigation])
 
