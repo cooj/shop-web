@@ -37,7 +37,7 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string, p
     //     headers.token = token
     // }
 
-    console.log(baseURL)
+    console.warn(baseURL)
     return $fetch<T>(url, {
         headers: {
             // 'Content-Type': headers['content-type'] as string,

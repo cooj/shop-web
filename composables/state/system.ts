@@ -55,7 +55,8 @@ export const useUserState = () => {
 
     // 获取用户接口数据
     const getUserData = async () => {
-        if (!token.value) return userInfo
+        // if (!token.value) return userInfo
+
         // if (token.value && userInfo.value) {
         //     // ElMessage.error('请先登录')
         //     return userInfo

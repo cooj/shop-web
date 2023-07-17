@@ -6,16 +6,14 @@ import { useServerFetch } from '../utils'
 export default defineEventHandler(async (event) => {
     // const res = ''
     const body = await readBody(event)
-    /* eslint-disable no-console */
     try {
         const res = await useServerFetch<any>(event, body.api_url)
 
-        console.log('res', res)
+        console.warn('res', res)
 
         return res
     } catch (error: any) {
-        console.log('error :>> ', error)
+        console.warn('error :>> ', error)
         return error.data
     }
-    /* eslint-enable  no-console */
 })

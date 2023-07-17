@@ -32,7 +32,7 @@
         </div>
         <div ref="floorRef" class="floor-box">
             <div v-for="(item, index) in floorList" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
-                <div class="left">
+                <div class="left" :style="`background-image: url(${item.storey_img || ''});`">
                     <h3 class="tle">
                         {{ item.storey_name }}
                     </h3>
@@ -45,7 +45,6 @@
                             </NuxtLink>
                         </li>
                     </ul>
-                    <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" :src="item.storey_img" alt="">
                 </div>
                 <div class="right">
                     <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
@@ -216,6 +215,7 @@ onMounted(async () => {
         height: 620px;
         position: relative;
         z-index: 1;
+        background-size: cover;
 
         .tle {
             font-size: 24px;
