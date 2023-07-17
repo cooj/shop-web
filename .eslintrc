@@ -97,8 +97,10 @@
                 // "args": "after-used",
                 // "argsIgnorePattern": "^_"
                 "argsIgnorePattern": "^"
-
             }
+        ],
+        "n/prefer-global/process": [
+            "off"
         ]
     }
 }
