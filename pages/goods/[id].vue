@@ -187,7 +187,7 @@
                                 <ul class="goods-list">
                                     <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
-                                            <CoImage :src="setGoodsOssImg(item.goods_img, 300)" class="w100% pb100%" />
+                                            <CoImage :src="setGoodsOssImg(item.goods_img, 300)" class="hov-img w100% pb100%" />
                                         </NuxtLink>
                                         <div class="tle">
                                             <NuxtLink :to="`/goods/${item.goods_sn}`">
@@ -939,6 +939,18 @@ definePageMeta({
         font-size: 13px;
         font-weight: bold;
         color: var(--el-color-primary);
+    }
+    .hov-img {
+        :deep(>img) {
+            transition: all 0.3s;
+        }
+
+        &:hover {
+            :deep(>img) {
+                transform: scale(1.03);
+            }
+        }
+
     }
 }
 

@@ -24,9 +24,6 @@
                         <span>惊爆价</span>
                         <em>￥{{ item.shop_price }}</em>
                     </div>
-                    <!-- <el-button text bg type="danger">
-                        大热卖推荐
-                    </el-button> -->
                 </NuxtLink>
             </div>
         </div>
@@ -59,13 +56,10 @@
                                         <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
-                                        <div class="truncate">
-                                            <span>惊爆价</span>
-                                            <em class="color-primary">￥{{ son.shop_price }}</em>
+                                        <div class="color-primary truncate">
+                                            <span class="text-14px">￥</span>
+                                            <span class="font-bold">{{ son.shop_price }}</span>
                                         </div>
-                                        <!-- <el-button text bg type="danger">
-                                            大热卖推荐
-                                        </el-button> -->
                                     </NuxtLink>
                                 </li>
                             </ul>
