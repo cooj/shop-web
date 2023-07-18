@@ -1,18 +1,18 @@
 <template>
     <div class="goods-image mb10px">
         <!-- 大图 -->
-        <div v-show="show" class="large" :style="[{ backgroundImage: `url(${images[currIndex]})` }, largePosition]" />
+        <div v-show="show" class="large" :style="[{ backgroundImage: `url(${imgList.big[currIndex]})` }, largePosition]" />
         <!-- 中图 -->
         <div ref="target" class="middle" @mousemove="moveImg" @mouseleave="moveOutImg">
-            <img :src="images[currIndex]" alt="">
+            <img :src="imgList.big[currIndex]" alt="">
             <!-- 遮罩色块 -->
             <div v-show="show" class="layer" :style="layerPosition" />
         </div>
     </div>
     <div class="swiper-box">
-        <Swiper class="swp" :slides-per-view="5" :slides-per-group="5" :space-between="10" :navigation="{ nextEl: '.swiper-button-next',
-                                                                                                          prevEl: '.swiper-button-prev' }" :modules="modules" @swiper="onSwiper" @slide-change="onSlideChange">
-            <SwiperSlide v-for="(item, index) in images" :key="index" class="swp-slide"
+        <Swiper class="swp" :slides-per-view="5" :slides-per-group="5" :space-between="10" :navigation="navigate"
+            :modules="modules">
+            <SwiperSlide v-for="(item, index) in imgList.small" :key="index" class="swp-slide"
                 :class="{ active: index === currIndex }">
                 <img :src="item" alt="" @mouseenter="currIndex = index">
             </SwiperSlide>
@@ -24,20 +24,29 @@
 
 <script  lang="ts" setup>
 import { reactive, ref } from 'vue'
-
 import { useMouseInElement } from '@vueuse/core'
-
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
+import type { NavigationOptions } from 'swiper/types'
 
-defineProps<{
-  images: string[]
+const props = defineProps<{
+    images: string[]
 }>()
 
+const imgList = computed(() => {
+    const small = props.images.map(item => setGoodsOssImg(item, 60))
+    return { big: props.images, small }
+})
+
 const modules = ref([Navigation])
+
+const navigate = ref<NavigationOptions>({
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+})
 
 // 当前预览图的索引
 const currIndex = ref(0)
@@ -135,128 +144,121 @@ const moveOutImg = () => {
 //     largePosition.backgroundPositionX = -2 * position.x + 'px'
 //     largePosition.backgroundPositionY = -2 * position.y + 'px'
 // })
-
-const onSwiper = (swiper: any) => {
-
-}
-const onSlideChange = () => {
-
-}
 </script>
 
 <style scoped lang="scss">
 .swiper-box {
-  position: relative;
-  --swiper-navigation-sides-offset:5px;
+    position: relative;
+    --swiper-navigation-sides-offset: 5px;
 
-  .swp {
-    width: calc(100% - 50px);
-    margin: 0 auto;
-  }
-
-  .swp-slide {
-
-    // height: 100%;
-    img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 1/1;
-      object-fit: cover;
+    .swp {
+        width: calc(100% - 50px);
+        margin: 0 auto;
     }
 
-    &:hover,
-    &.active {
-      border: 1px solid #f00;
+    .swp-slide {
+
+        // height: 100%;
+        img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+
+        &:hover,
+        &.active {
+            border: 1px solid #f00;
+        }
     }
-  }
 
-  --swiper-navigation-size: 24px;
-  --swiper-navigation-color:#333;
+    --swiper-navigation-size: 24px;
+    --swiper-navigation-color:#333;
 
-  .swiper-button-prev,
-  .swiper-button-next {
-    height: 50px;
-    margin: 0;
-    transform: translateY(-50%);
-    // width: 15px;
-    // border-radius: 2px;
-    font-weight: bold;
-    display: flex;
-  }
+    .swiper-button-prev,
+    .swiper-button-next {
+        height: 50px;
+        margin: 0;
+        transform: translateY(-50%);
+        // width: 15px;
+        // border-radius: 2px;
+        font-weight: bold;
+        display: flex;
+    }
 
-  // .swiper-button-prev,
-  // .swiper-rtl .swiper-button-next {
-  //   left: 0px;
-  //   // background-color: #eee;
-  // }
+    // .swiper-button-prev,
+    // .swiper-rtl .swiper-button-next {
+    //   left: 0px;
+    //   // background-color: #eee;
+    // }
 
-  // .swiper-button-next,
-  // .swiper-rtl .swiper-button-prev {
-  //   right: 0px;
-  //   // background-color: #eee;
-  // }
+    // .swiper-button-next,
+    // .swiper-rtl .swiper-button-prev {
+    //   right: 0px;
+    //   // background-color: #eee;
+    // }
 }
 
 .goods-image {
-  // width: 100%;
-  width: 400px;
-  position: relative;
-  display: flex;
-  z-index: 3;
-
-  .large {
-    position: absolute;
-    top: 0;
-    left: 101%;
-    width: 480px;
-    height: 480px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-repeat: no-repeat;
-    background-size: 200% 200%;
-    background-color: #f8f8f8;
-  }
-
-  .middle {
-    width: 100%;
-    aspect-ratio: 1/1;
-    // height: 400px;
-    background: #f5f5f5;
-    border: 1px solid #f5f5f5;
+    // width: 100%;
+    width: 400px;
     position: relative;
-    cursor: move;
-    overflow: hidden;
+    display: flex;
+    z-index: 3;
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .large {
+        position: absolute;
+        top: 0;
+        left: 101%;
+        width: 480px;
+        height: 480px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-repeat: no-repeat;
+        background-size: 200% 200%;
+        background-color: #f8f8f8;
     }
 
-    .layer {
-      width: 200px;
-      height: 200px;
-      background: rgba(0, 0, 0, 0.2);
-      left: 0;
-      top: 0;
-      position: absolute;
+    .middle {
+        width: 100%;
+        aspect-ratio: 1/1;
+        // height: 400px;
+        background: #f5f5f5;
+        border: 1px solid #f5f5f5;
+        position: relative;
+        cursor: move;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .layer {
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            left: 0;
+            top: 0;
+            position: absolute;
+        }
     }
-  }
 
-  .small {
-    width: 80px;
+    .small {
+        width: 80px;
 
-    li {
-      width: 68px;
-      height: 68px;
-      margin-left: 12px;
-      margin-bottom: 15px;
-      cursor: pointer;
+        li {
+            width: 68px;
+            height: 68px;
+            margin-left: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
 
-      &:hover,
-      &.active {
-        border: 2px solid #f00;
-      }
+            &:hover,
+            &.active {
+                border: 2px solid #f00;
+            }
+        }
     }
-  }
 }
 </style>

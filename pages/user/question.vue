@@ -150,8 +150,8 @@ const onclick = () => {
 
 // 打开查看弹窗
 const openView = async (row: any) => {
-    console.log('row.question_id :>> ', row.question_id)
-    console.log('row.q_id :>> ', row.q_id)
+    // console.log('row.question_id :>> ', row.question_id)
+    // console.log('row.q_id :>> ', row.q_id)
     const data: InterListApi_getUserList = {
         question_id: row.question_id,
     }

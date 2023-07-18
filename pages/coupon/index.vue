@@ -126,7 +126,7 @@ const onReceive = async (row: any) => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .box-card {
     width: 280px;
     height: 150px;

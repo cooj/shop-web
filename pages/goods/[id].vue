@@ -135,7 +135,7 @@
                                     购买数量
                                 </div>
                                 <div class="gt">
-                                    <el-input-number v-model="form.number" :min="1" :max="10000" />
+                                    <el-input-number v-model="form.number" :min="1" :max="9999" />
                                     <span class="ml5px c-#aaa">起购量:1个</span>
                                 </div>
                             </li>
@@ -187,7 +187,7 @@
                                 <ul class="goods-list">
                                     <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
-                                            <CoImage :src="item.goods_img" class="w100% pb100%" />
+                                            <CoImage :src="setGoodsOssImg(item.goods_img, 300)" class="w100% pb100%" />
                                         </NuxtLink>
                                         <div class="tle">
                                             <NuxtLink :to="`/goods/${item.goods_sn}`">
@@ -345,10 +345,11 @@ const userState = useUserState()
 // 登录用户
 const userData = await userState.getUserInfo()
 const useCartNumber = useCartNumberState()
-const usePayType = usePayTypeState()
+
+// const usePayType = usePayTypeState()
 // 支持的支付方式
-const payTypeList = await usePayType.getPayTypeList()
-// console.log('payTypeList :>> ', payTypeList)
+// const payTypeList = await usePayType.getPayTypeList()
+// // console.log('payTypeList :>> ', payTypeList)
 
 const loginRef = ref<InstanceType<typeof UserLogin>>()
 
@@ -592,7 +593,7 @@ const onAddCart = async () => {
             // 设置动画
             useCartNumber.setShopAnimate({ top: y.value, left: x.value })
         } else {
-            ElMessage.error('加入购物车失败')
+            ElMessage.error(data.value?.msg || '加入购物车失败')
         }
     } else {
         ElMessage.error('购买数量不能为0')

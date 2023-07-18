@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => {
     // const res = await useServerFetch(event, '/api/index/nav_lists')
     const res = await useServerFetch<AccountApi_userInfoResponse>(event, '/api/mall/get_user_info')
 
-    console.log('res :>> ', res)
+    console.log('res :>> ', res) // eslint-disable-line no-console
+
     return res
 })

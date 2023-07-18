@@ -2,15 +2,19 @@ import { CommonApi } from '~/api/common'
 import { AccountApi } from '~/api/user/account'
 
 /**
- * 获取商城信息
+ * 商城信息状态存储
  * @returns
  */
 export const useSystemState = () => {
     const system = useState<CommonApi_GetSystemResponse | undefined>('system')
-
+    /**
+     * 获取系统信息
+     * @param update boolean 是否强制获取最新数据，默认false
+     * @returns
+     */
     const getSystemInfo = async (update?: boolean) => {
-        // console.log('system.value :>> ', system.value)
-        if (system.value) return system
+        // 系统信息已存在
+        if (system.value && !update) return system
         const { data, error } = await CommonApi.getSystem()
         // console.log(data.value?.code)
         // 接口发生错误时
@@ -51,7 +55,8 @@ export const useUserState = () => {
 
     // 获取用户接口数据
     const getUserData = async () => {
-        if (!token.value) return userInfo
+        // if (!token.value) return userInfo
+
         // if (token.value && userInfo.value) {
         //     // ElMessage.error('请先登录')
         //     return userInfo

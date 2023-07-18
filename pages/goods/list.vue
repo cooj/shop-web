@@ -264,7 +264,7 @@
                     </dl>
                     <!-- 网格 -->
                     <ul v-else class="goods-list-ul">
-                        <li v-for=" item in defData.tableData " :key="item.goods_id">
+                        <li v-for=" item in defData.tableData" :key="item.goods_id">
                             <div class="goods-list-item">
                                 <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
                                     <CoImage class="hov-img w100% pb100%" :src="item.goods_img" loading="lazy" />
@@ -432,7 +432,10 @@ const initTableData = async () => {
     defData.classList = dat.category.lists
     defData.brandList = dat.brand
 
-    defData.tableData = dat.goods.lists || []
+    defData.tableData = dat.goods.lists.map((item) => {
+        item.goods_img = setGoodsOssImg(item.goods_img, 300)
+        return item
+    }) || []
     form.total = dat.goods.total || 0
 
     defData.skeleton = false // 关闭骨架屏

@@ -18,7 +18,7 @@
                         <template #default="{ row }">
                             <div class="h45px flex items-center">
                                 <CoImage class="h45px w45px" :src="row.goods_img" :icon-size="20" />
-                                <div class="pl10px">
+                                <div class="flex-1 pl10px">
                                     <NuxtLink class="goods-link" :to="`/goods/${row.goods_sn}`" target="_blank">
                                         {{ row.goods_name }}
                                     </NuxtLink>
@@ -31,7 +31,7 @@
                     <el-table-column prop="shop_price" label="价格" width="120" align="center" />
                     <el-table-column prop="goods_number" label="商品数量" width="150" align="center">
                         <template #default="{ row }">
-                            <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="1" :max="100"
+                            <el-input-number v-model="row.goods_number" class="w100%!" :precision="0" :min="1" :max="9999"
                                 @change="onChangeNumber(row)" />
                         </template>
                     </el-table-column>
@@ -97,7 +97,10 @@ const initTableData = async () => {
     const { data } = await GoodsApi.getCartList()
     await wait(500)
     if (data.value?.code === 200) {
-        defData.tableData = data.value.data.goods_list
+        defData.tableData = data.value.data.goods_list.map((item) => {
+            item.goods_img = setGoodsOssImg(item.goods_img, 60)
+            return item
+        })
     } else {
         ElMessage.error(data.value?.msg)
     }

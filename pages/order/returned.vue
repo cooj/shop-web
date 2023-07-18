@@ -136,7 +136,7 @@
                     <el-table-column label="商品信息" min-width="160" property="goods_name">
                         <template #default="{ row }">
                             <div class="flex items-center">
-                                <CoImage class="h45px w45px" :src="row.goods_img" :icon-size="22" />
+                                <CoImage class="h45px w45px" :src="setGoodsOssImg(row.goods_img, 60)" :icon-size="22" />
                                 <div class="flex-1 pl8px">
                                     <NuxtLink :to="`/goods/${row.goods_sn}`" target="_blank" class="goods-link">
                                         {{ row.goods_name }}
@@ -165,7 +165,8 @@
                     <el-table-column label="信息" min-width="160" property="content" show-overflow-tooltip />
                     <el-table-column label="图片" width="80" property="img_url" align="center" show-overflow-tooltip>
                         <template #default="{ row }">
-                            <CoImage :src="row.img_url" :preview-src-list="[row.img_url]" class="h30px w50px vertical-bottom" :icon-size="18" preview-teleported />
+                            <CoImage :src="row.img_url" :preview-src-list="[row.img_url]"
+                                class="h30px w50px vertical-bottom" :icon-size="18" preview-teleported />
                         </template>
                     </el-table-column>
                     <el-table-column label="时间" width="160" property="create_time" show-overflow-tooltip />

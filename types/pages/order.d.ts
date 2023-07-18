@@ -27,7 +27,7 @@ declare interface OrderApi_GetSettleResponse {
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
         "goods_code": "HSL-TA4",
         "shop_price": "200.00",
-        "goods_img": "", //商品图片
+        "goods_img": string, //商品图片
         "goods_weight": "0.00",
         "unit": "台",
         "peas_num": 0,
@@ -277,7 +277,7 @@ declare interface OrderApi_GetOrderListItem {
         "goods_number": 2, //数量
         "meet_price": "191.86", //实付金额
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
-        "goods_img": ""
+        "goods_img": string
     }[]
     "order_status": number //订单状态 ：待支付 1，待发货 2，已发货 3，配货中 4，部分发货 5，已确认 6，已取消 7
     end_time?: number,  // 订单支付截止时间戳（秒级）只有对公转账时才有

@@ -223,12 +223,18 @@ const initTableData = async () => {
 
     const list: OrderListTableData[] = []
     res.value.data.lists.forEach((item, index) => {
+        const goodsList = item.goods_info.map((item) => {
+            item.goods_img = setGoodsOssImg(item.goods_img, 60)
+            return item
+        })
         const obj: OrderListTableData = {
             ...item,
+            goods_info: goodsList,
             index: index + 1, // 序列号
         }
         const obj2: OrderListTableData = {
             ...obj,
+            goods_info: goodsList,
             index: 0,
         }
         list.push(...[obj, obj2])

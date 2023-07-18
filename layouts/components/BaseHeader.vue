@@ -1,6 +1,6 @@
 <template>
     <section class="header-box">
-        <el-form class="py25px" size="large">
+        <el-form class="overflow-hidden py25px" size="large">
             <div class="flex items-center justify-between text-#f8f8f8 container">
                 <div class="logo min-w150px">
                     <NuxtLink to="/">

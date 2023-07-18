@@ -1,5 +1,3 @@
-// 进入商品页面
-
 /**
  * 进入商品页面方法
  */
@@ -30,7 +28,7 @@ export const linkGoodsList = (params: GoodsListParams): string => {
     } else {
         navigateTo({
             path: url,
-            query: data as {},
+            query: data as any,
         })
 
         return ''
@@ -62,7 +60,7 @@ export const linkGoodsDetail = (params: { query: GoodsDetailParamsQuery; url: bo
     } else {
         return navigateTo({
             path: url,
-            query: data as {},
+            query: data as any,
         })
     }
 

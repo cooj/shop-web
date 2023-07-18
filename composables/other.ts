@@ -10,7 +10,7 @@ import Big from 'big.js'
  */
 export function useRouteParam<T = string>(name: string, init = '' as T) {
     const route = useRoute()
-    return computed(() => route.params[name] as T ?? init)
+    return computed(() => (route.params as any)[name] as T ?? init)
 }
 /**
  * vue路由获取query参数（获取？后面的参数）   /goods/list?name=foo&price=10
@@ -113,6 +113,11 @@ export const useElLoading = () => {
     })
 }
 
+/**
+ * 设置订单状态类型
+ * @param row number
+ * @returns
+ */
 export const setOrderStatusType = (row: number) => {
     const dat = {
         type: '',
@@ -165,4 +170,21 @@ export const setOrderStatusType = (row: number) => {
     }
     // console.log(end)
     return end
+}
+
+/**
+ * 设置商品显示的图片的尺寸大小
+ * @param url string 原有图片的路径地址
+ * @param width number 图片的大小尺寸
+ */
+export const setGoodsOssImg = (url: string, width: number) => {
+    const i = url.indexOf('?x-oss-process=image')
+    if (width < 30) return url
+
+    if (i >= 0) {
+        url = `${url}/resize,w_${width},h_${width}`
+    } else {
+        url = `${url}?x-oss-process=image/resize,w_${width},h_${width}`
+    }
+    return url
 }

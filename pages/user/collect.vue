@@ -64,7 +64,10 @@ const initTableData = async () => {
     }
     const res = await RecordApi.getList(data)
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-    defData.tableData = res.data.value?.data
+    defData.tableData = res.data.value?.data.map((item) => {
+        item.goods_img = setGoodsOssImg(item.goods_img, 60)
+        return item
+    })
 }
 initTableData()
 

@@ -65,7 +65,7 @@ declare interface GoodsApi_GetListItem {
     goods_sn: string,     // 品牌编号  AA00256 
     "goods_id": 1,
     "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位",
-    "goods_img": "",
+    "goods_img": string,
     "goods_code": "HSL-TA4",
     "shop_price": 0.15,
     "is_best": 0,
@@ -106,7 +106,7 @@ declare interface GoodsApi_GetCartListResponse {
         "goods_name": "红钐 按键寿命试验机 HSL-TA3 三工位", //商品名称
         "goods_code": "HSL-TA3", //商品型号
         "shop_price": "0.00", //原价
-        "goods_img": "https://goyojo.oss-cn-shenzhen.aliyuncs.com/20230104/202301041419308274.jpg?x-oss-process=image/quality,Q_50", //商品图片
+        "goods_img": string, //商品图片
         "goods_weight": "0.00", //商品重量
         "unit": "台" //单位
     }[]

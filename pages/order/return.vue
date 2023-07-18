@@ -26,7 +26,7 @@
                     </div>
                     <ul class="goods-list">
                         <li v-for="item in scopes.row.goods_list" :key="item.goods_id">
-                            <CoImage class="h50px w50px" :src="item.goods_img" :icon-size="24" />
+                            <CoImage class="h50px w50px" :src="setGoodsOssImg(item.goods_img, 60)" :icon-size="24" />
                             <div class="flex-1 pl10px">
                                 <h3 class="tle">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">

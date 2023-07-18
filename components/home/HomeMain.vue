@@ -32,7 +32,7 @@
         </div>
         <div ref="floorRef" class="floor-box">
             <div v-for="(item, index) in floorList" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
-                <div class="left">
+                <div class="left" :style="`background-image: url(${item.storey_img || ''});`">
                     <h3 class="tle">
                         {{ item.storey_name }}
                     </h3>
@@ -45,7 +45,6 @@
                             </NuxtLink>
                         </li>
                     </ul>
-                    <img class="absolute left-0 top-0 h100% w99% object-cover -z-1" :src="item.storey_img" alt="">
                 </div>
                 <div class="right">
                     <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
@@ -55,7 +54,8 @@
                             <ul class="goods-list">
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
                                     <NuxtLink class="goods-link v2" :to="`/goods/${son.goods_sn}`" target="_blank">
-                                        <CoImage class="hov-img w100% pb100%" :src="son.goods_img" loading="lazy" />
+                                        <CoImage class="hov-img w100% pb100%" :src="setGoodsOssImg(son.goods_img, 200)"
+                                            loading="lazy" />
                                         <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
@@ -122,7 +122,13 @@ floor.value?.data.forEach((item, index) => {
 const { data: goods } = await HomeApi.getNewGoods()
 
 // 只显示前五个（下标0开始，截取5个）
-const goodsList = computed(() => goods.value?.data.lists.slice(0, 5) || [])
+const goodsList = computed(() => {
+    const list = goods.value?.data.lists.slice(0, 5).map((item) => {
+        item.goods_img = setGoodsOssImg(item.goods_img, 300)
+        return item
+    })
+    return list || []
+})
 
 onMounted(async () => {
     await wait(1000)
@@ -216,6 +222,7 @@ onMounted(async () => {
         height: 620px;
         position: relative;
         z-index: 1;
+        background-size: cover;
 
         .tle {
             font-size: 24px;

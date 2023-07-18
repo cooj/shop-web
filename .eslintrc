@@ -88,6 +88,19 @@
         "vue/object-curly-newline": [
             "warn",
             "never"
+        ],
+        "unused-imports/no-unused-vars": [
+            "warn",
+            {
+                "vars": "all",
+                // "varsIgnorePattern": "^_",
+                // "args": "after-used",
+                // "argsIgnorePattern": "^_"
+                "argsIgnorePattern": "^"
+            }
+        ],
+        "n/prefer-global/process": [
+            "off"
         ]
     }
 }

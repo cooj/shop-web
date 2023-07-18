@@ -126,13 +126,6 @@ const comData = computed(() => {
     return dat
 })
 
-// 获取初始信息
-const initDefaultData = async () => {
-    if (defData.ready) return false
-
-    defData.ready = true
-}
-
 const initTableData = async () => {
     const main_order_no = form.data.order_no
     if (!main_order_no) return ElMessage.error('请先输入订单编号')

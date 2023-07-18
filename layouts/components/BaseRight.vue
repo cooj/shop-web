@@ -23,7 +23,7 @@
                     <p class="text">
                         购物车
                     </p>
-                    <span class="n">{{ number }}</span>
+                    <span v-if="number" class="n">{{ number }}</span>
                 </NuxtLink>
             </li>
             <li>
