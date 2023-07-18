@@ -21,7 +21,7 @@
                 </el-button>
             </div>
             <el-table :data="address?.data" border>
-                <el-table-column prop="contacts" label="收件人" width="150" show-overflow-tooltip />
+                <el-table-column prop="contacts" label="收件人" width="140" show-overflow-tooltip />
                 <el-table-column prop="phone" label="联系电话" width="130" show-overflow-tooltip />
                 <el-table-column prop="province" label="收件地址" min-width="150" show-overflow-tooltip>
                     <template #default="{ row }">
@@ -31,10 +31,20 @@
                 <el-table-column prop="email" label="邮箱地址" width="150" show-overflow-tooltip />
                 <el-table-column prop="is_default" label="默认地址" width="85" align="center" show-overflow-tooltip>
                     <template #default="{ row }">
-                        <el-tag v-if="row.is_default" type="success">
+                        <el-tag v-if="row.is_default" type="success" size="small">
                             是
                         </el-tag>
-                        <el-tag v-else type="info">
+                        <el-tag v-else type="info" size="small">
+                            否
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="is_bill_address" label="默认发票" width="85" align="center" show-overflow-tooltip>
+                    <template #default="{ row }">
+                        <el-tag v-if="row.is_bill_address" type="success" size="small">
+                            是
+                        </el-tag>
+                        <el-tag v-else type="info" size="small">
                             否
                         </el-tag>
                     </template>

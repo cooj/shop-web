@@ -494,12 +494,14 @@ const initDefaultData = async () => {
 
 // 获取结算的商品信息
 const initGoodsData = async () => {
+    // const num = Number(goods_number.value) ? (Number(goods_number.value) > 10000 ? 9999 : Number(goods_number.value)) : ''
+    const num = Number(goods_number.value) || ''
     const { data, error } = await useFetch<{ data: OrderApi_GetSettleResponse } & ResponseCodeMsg>('/api/order/confirm', {
         method: 'POST',
         body: {
             cart_id: cart_id.value,
             goods_id: Number(goods_id.value),
-            goods_number: goods_number.value,
+            goods_number: num,
             address_id: form.address_id,
         },
     })
@@ -514,7 +516,10 @@ const initGoodsData = async () => {
     if (error.value) {
         return defData.ready = false
     }
-    if (data.value?.code !== 200) return defData.ready = false
+    if (data.value?.code !== 200) {
+        ElMessage.error(data.value?.msg)
+        return defData.ready = false
+    }
     return data.value.data
 }
 

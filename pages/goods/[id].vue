@@ -187,7 +187,7 @@
                                 <ul class="goods-list">
                                     <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
-                                            <CoImage :src="item.goods_img" class="w100% pb100%" />
+                                            <CoImage :src="setGoodsOssImg(item.goods_img, 300)" class="w100% pb100%" />
                                         </NuxtLink>
                                         <div class="tle">
                                             <NuxtLink :to="`/goods/${item.goods_sn}`">
@@ -593,7 +593,7 @@ const onAddCart = async () => {
             // 设置动画
             useCartNumber.setShopAnimate({ top: y.value, left: x.value })
         } else {
-            ElMessage.error('加入购物车失败')
+            ElMessage.error(data.value?.msg || '加入购物车失败')
         }
     } else {
         ElMessage.error('购买数量不能为0')
