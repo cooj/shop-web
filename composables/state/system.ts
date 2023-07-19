@@ -7,6 +7,16 @@ import { AccountApi } from '~/api/user/account'
  */
 export const useSystemState = () => {
     const system = useState<CommonApi_GetSystemResponse | undefined>('system')
+
+    const systemStatus = ref({
+        is_close: !!Number(system.value?.shop_status), // 是否关闭商城
+        close_msg: system.value?.status_cause, // 关闭原因
+        is_bill: !!Number(system.value?.is_bill), // 是否能开发票
+        is_coupon: !!Number(system.value?.is_coupon), // 是否使用优惠券
+        is_bean: !!Number(system.value?.is_legumes), // 是否使用工游豆
+        is_signup: !!Number(system.value?.logon_status), // 是否关闭注册
+    })
+
     /**
      * 获取系统信息
      * @param update boolean 是否强制获取最新数据，默认false
@@ -31,6 +41,7 @@ export const useSystemState = () => {
     return {
         system,
         getSystemInfo,
+        systemStatus,
     }
 }
 

@@ -43,7 +43,7 @@
                                 </div>
                             </el-form-item>
                         </section>
-                        <section class="sec-box">
+                        <section v-if="systemStatus.is_bill" class="sec-box">
                             <div class="tle">
                                 <b>发票信息</b>
                                 <el-button text bg size="small" @click="onAddressInvoice(3)">
@@ -160,38 +160,14 @@
                             <div class="text-12px c-#888 -mt5px">
                                 支持微信、支付宝在线支付
                             </div>
-                            <!-- <div class="inline-flex items-center">
-                                <span class="inline-flex items-center">
-                                    支持
-                                    <i class="i-ic-baseline-wechat mr3px c-#09bb07" />
-                                    微信
-                                </span>
-                                <span class="ml3px inline-flex items-center">
-                                    <i class="i-ic-baseline-payment mr3px c-#3887ff" />
-                                    在线支付
-                                </span>
-                                <span class="ml3px inline-flex items-center">
-                                    <i class="i-ic-twotone-payments mr3px c-#ff5335" />
-                                    线下转账
-                                </span>
-                            </div> -->
                         </section>
-                        <section class="sec-box">
+                        <section v-if="systemStatus.is_coupon || systemStatus.is_bean" class="sec-box">
                             <div class="flex-1">
                                 <div class="tle">
                                     <b>优惠方式</b>
                                 </div>
                             </div>
-                            <el-form-item prop="coupon_id" label="优惠券">
-                                <!-- <el-radio-group v-if="defData.couponList.length" v-model="form.coupon_id">
-                                    <el-radio v-for="item in defData.couponList" :key="item.coupon_draw_id"
-                                        :label="item.coupon_draw_id">
-                                        {{ item.coupon_name }}-减{{ item.par_value }}
-                                    </el-radio>
-                                    <el-radio :label="0">
-                                        不使用优惠券
-                                    </el-radio>
-                                </el-radio-group> -->
+                            <el-form-item v-if="systemStatus.is_coupon" prop="coupon_id" label="优惠券">
                                 <div v-if="defData.couponList.length" class="coupon-list">
                                     <GoodsCoupon v-for="item in defData.couponList" :key="item.coupon_draw_id"
                                         :class="{ on: item.coupon_draw_id === form.coupon_id }"
@@ -204,11 +180,7 @@
                                 </div>
                                 <span v-else class="text-12px c-#888">暂无可用优惠券</span>
                             </el-form-item>
-                            <el-form-item prop="is_peas" label="是否使用工游豆" label-width="auto">
-                                <!-- <template #label>
-                                    是否使用工游豆
-                                </template> -->
-                                <!-- <span class="mr10px c-#666">是否使用工游豆</span> -->
+                            <el-form-item v-if="systemStatus.is_bean" prop="is_peas" label="是否使用工游豆" label-width="auto">
                                 <el-radio-group v-model="form.is_peas" class="mr15px">
                                     <el-radio :label="1">
                                         是
@@ -242,9 +214,6 @@
                                         formatNumber(defData.total_price)
                                     }}</span>
                                 </li>
-                                <!-- <li>
-                <span class="item-title">税额：</span><span class="item-text">￥30.68</span>
-              </li> -->
                                 <li>
                                     <span class="item-title">运费<i>(明细)</i>：</span>
                                     <span class="item-text">￥{{ formatNumber(defData.freight_price) }}</span>
@@ -292,6 +261,7 @@ import { UserInvoiceApi } from '~/api/user/invoice'
 
 // 购物车数量，全局
 const useCartNumber = useCartNumberState()
+const { systemStatus } = useSystemState() // 商城状态
 
 const router = useRouter()
 const backRoute = ref(router.options.history.state.back as string)
