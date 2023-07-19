@@ -68,8 +68,8 @@
             </el-skeleton>
         </LayoutUser>
 
-        <el-dialog v-model="defData.myVisible" auto-height width="680px" :draggable="true">
-            <el-table :data="defData.myTableData" style="width: 100%" default-expand-all>
+        <el-dialog v-model="defData.myVisible" width="680px" :draggable="true">
+            <el-table :data="defData.myTableData" style="width: 100%" max-height="600" default-expand-all>
                 <el-table-column type="expand">
                     <template #default="props">
                         <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
