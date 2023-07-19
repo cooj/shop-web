@@ -47,42 +47,42 @@
             <ul class="user-warp-ul">
                 <li>
                     <a target="_blank">
-                        <div class="icon-box"><img src="//static.zkh360.com/image/2022-10-13/huiyuanjia-1665627779233.png">
+                        <div class="icon-box"><img src="~assets/images/gyj-huiyuanjia.png">
                         </div>
                         <div>专享会员价</div>
                     </a>
                 </li>
                 <li>
                     <a target="_blank">
-                        <div class="icon-box"><img src="//static.zkh360.com/image/2022-10-13/quanbao-1665627779230.png">
+                        <div class="icon-box"><img src="~assets/images/gyj-quanbao.png">
                         </div>
                         <div>降本券包</div>
                     </a>
                 </li>
                 <li>
                     <a target="_blank">
-                        <div class="icon-box"><img src="//static.zkh360.com/image/2022-10-13/mianyou-1665627779224.png">
+                        <div class="icon-box"><img src="~assets/images/gyj-mianyou.png">
                         </div>
                         <div>首单免邮</div>
                     </a>
                 </li>
                 <li>
                     <a target="_blank">
-                        <div class="icon-box"><img src="//static.zkh360.com/image/2022-10-13/quanyi-1665627779238.png">
+                        <div class="icon-box"><img src="~assets/images/gyj-quanyi.png">
                         </div>
                         <div>帐期权益</div>
                     </a>
                 </li>
                 <li>
                     <a target="_blank">
-                        <div class="icon-box"><img src="//static.zkh360.com/image/2022-10-13/zuzhiguanli-1665627779225.png">
+                        <div class="icon-box"><img src="~assets/images/gyj-zuzhiguanli.png">
                         </div>
                         <div>组织管理</div>
                     </a>
                 </li>
                 <li>
                     <a target="_blank">
-                        <div class="icon-box"><img src="//static.zkh360.com/image/2022-10-13/kefu1-1665627779219.png"></div>
+                        <div class="icon-box"><img src="~assets/images/gyj-kefu1.png"></div>
                         <div>专属客服</div>
                     </a>
                 </li>
