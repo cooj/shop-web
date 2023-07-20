@@ -187,7 +187,8 @@
                                 <ul class="goods-list">
                                     <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
-                                            <CoImage :src="setGoodsOssImg(item.goods_img, 300)" class="hov-img w100% pb100%" />
+                                            <CoImage :src="setGoodsOssImg(item.goods_img, 300)"
+                                                class="hov-img w100% pb100%" />
                                         </NuxtLink>
                                         <div class="tle">
                                             <NuxtLink :to="`/goods/${item.goods_sn}`">
@@ -556,6 +557,8 @@ const onCollect = async () => {
 
 // 立即购买
 const onBuyGoods = () => {
+    if (!goodsInfo.value?.is_sale) return ElMessage.error('商品已下架')
+
     const price = goodsInfo.value?.shop_price || ''
     if (Number(price) <= 0) {
         return ElMessage.error('商品价格不正确')
@@ -573,6 +576,7 @@ const onBuyGoods = () => {
 
 // 加入购物车
 const onAddCart = async () => {
+    if (!goodsInfo.value?.is_sale) return ElMessage.error('商品已下架')
     // 用户未登录时，不允许加入购物车页面
     if (!userState.token.value) {
         ElMessage.error('请先登录!')
@@ -940,6 +944,7 @@ definePageMeta({
         font-weight: bold;
         color: var(--el-color-primary);
     }
+
     .hov-img {
         :deep(>img) {
             transition: all 0.3s;

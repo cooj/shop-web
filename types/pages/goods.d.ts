@@ -140,6 +140,7 @@ declare interface GoodsApi_GoodsInfoData {
     "is_best": 0, //是否精品
     "is_new": 1, //是否新品
     "is_hot": 0, //是否热销
+    is_sale: 0 | 1,    // 是否上架
     "cat_id": 1322, //分类id
     "brand_id": 1, //品牌id
     "is_collect": 0 | 1, //是否收藏 1是 0否
