@@ -557,6 +557,7 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
 initTableData()
 
 watch(() => [keyword.value, cid.value, bid.value], () => {
+    if (!keyword.value && !cid.value && !bid.value) return
     initTableData()
 })
 </script>

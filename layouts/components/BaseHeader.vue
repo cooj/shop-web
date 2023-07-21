@@ -70,6 +70,7 @@ const searchHot = computed(() => {
 
 // 搜索
 const onSearch = () => {
+    if (!search.keyword?.trim()) return ElMessage.error('请输入商品关键词')
     if (search.keyword.trim()) {
         linkGoodsList({
             query: {
