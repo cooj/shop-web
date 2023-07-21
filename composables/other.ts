@@ -178,6 +178,7 @@ export const setOrderStatusType = (row: number) => {
  * @param width number 图片的大小尺寸
  */
 export const setGoodsOssImg = (url: string, width: number) => {
+    if (!url) return ''
     const i = url.indexOf('?x-oss-process=image')
     if (width < 30) return url
 

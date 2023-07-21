@@ -20,4 +20,13 @@ router.use('/nav', defineEventHandler(async (event) => {
     return res
 }))
 
+/**
+ * 商品列表
+ */
+router.use('/goods', defineEventHandler(async (event) => {
+    const res = await useServerFetch<ResponseDataType<HomeApi_GetArticleResponse[]>>(event, '/api/goods_lists/index')
+
+    return res
+}))
+
 export default useBase('/api/main', router.handler)

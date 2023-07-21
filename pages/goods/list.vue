@@ -330,6 +330,7 @@
 </template>
 
 <script setup lang="ts">
+import { useApiServer } from '~/api/server'
 import { GoodsApi } from '~/api/goods/list'
 import { RecordApi } from '~/api/user/record'
 
@@ -375,10 +376,9 @@ const form = reactive({
 
 // 取得品牌名称
 const brandName = computed(() => {
-    if (bid.value) {
-        return defData.brandList.find(item => item.brand_id === Number(bid.value))?.brand_name // 品牌名称
-    }
-    return ''
+    if (!bid.value) return ''
+    const brand = defData.brandList.find(item => item.brand_id === Number(bid.value))
+    return brand?.brand_name || '' // 品牌名称
 })
 
 // 获取初始数据
@@ -425,7 +425,9 @@ const initTableData = async () => {
 
     // console.log('params :>> ', params)
     const loading = useElLoading()
-    const { data } = await GoodsApi.getList(params)
+
+    const { data } = await useApiServer.getGoodsList(params)
+
     loading?.close()
     const dat = data.value!.data
     defData.breadcrumbList = dat.category.position
