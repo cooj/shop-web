@@ -36,6 +36,12 @@
                         {{ defData.operateList[scopes.row.verify_status as '1'] }}
                     </div>
                 </template>
+                <template #failed_remark="{ scopes }">
+                    <div class="text-13px">
+                        {{ scopes.row.verify_status !== 5 ? scopes.row.failed_remark : '' }}
+                    </div>
+                </template>
+
                 <template #operate="{ scopes }">
                     <el-button v-if="scopes.row.verify_status === 0 || scopes.row.verify_status === 2" type="primary"
                         size="small" link @click="onDetail(scopes.row, 2)">
@@ -86,7 +92,7 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
         { property: 'type', label: '发票类型', width: 120, align: 'center', slot: true },
         { property: 'add_time', label: '申请时间', width: 160, slot: true },
         { property: 'verify_status', label: '状态', width: 100, align: 'center', slot: true },
-        { property: 'failed_remark', label: '审核原因', width: 130 },
+        { property: 'failed_remark', label: '审核原因', width: 130, slot: true },
         { property: 'operate', label: '操作', width: 100, align: 'center', slot: true, fixed: 'right' },
     ],
     pagination: {

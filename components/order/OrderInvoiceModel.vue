@@ -156,6 +156,12 @@
                         <el-descriptions-item label="收货地址:" :span="2">
                             {{ fullAddress }}
                         </el-descriptions-item>
+                        <el-descriptions-item label="物流公司:" label-class-name="lab-wid">
+                            {{ billInfo?.express_name }}
+                        </el-descriptions-item>
+                        <el-descriptions-item label="物流单号:" label-class-name="lab-wid">
+                            {{ billInfo?.express_no }}
+                        </el-descriptions-item>
                         <el-descriptions-item label="" :span="2">
                             <div class="pt10px">
                                 <!--  -->

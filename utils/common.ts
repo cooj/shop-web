@@ -210,3 +210,73 @@ export const moveArraySite = <T = any>(list: T[], nowIndex: number, newIndex: nu
 
     return newArr
 }
+
+/**
+ * 根据文件名称判断文件类型
+ * @param fileName {String} 文件名称地址
+ * @returns
+ * ```
+ * getFileType('https://www.baidu.com/123.png') // image
+ * // false:无后缀匹配
+ * // image:匹配图片
+ * // txt:匹配 txt
+ * // excel:匹配 excel
+ * // word:匹配 word
+ * // pdf:匹配 pdf
+ * // ppt:匹配 ppt
+ * // video:匹配 视频
+ * // radio:匹配 音频
+ * // other:其他匹配项
+ *
+ * ```
+ */
+export const getFileType = function (fileName: string) {
+    // 列举出文件的格式类型对象
+    const obj = {
+        image: ['png', 'jpg', 'jpeg', 'bmp', 'gif'], // 图片格式
+        txt: ['txt'],
+        excel: ['xls', 'xlsx'],
+        word: ['doc', 'docx'],
+        pdf: ['pdf'],
+        ppt: ['ppt'],
+        video: ['mp4', 'm2v', 'mkv'],
+        radio: ['mp3', 'wav', 'wmv'],
+        other: [] as string[],
+    }
+
+    // 后缀获取
+    let suffix = ''
+
+    // 取得obj对象里的key值类型
+    type FileType = keyof typeof obj
+    // 获取类型结果
+    let result: FileType | false = false
+    try {
+        if (fileName.includes('?')) { // 判断url中有没有出现?
+            fileName = fileName.substring(0, fileName.indexOf('?')) // 去除'?'后面部分
+        }
+        const fileArr = fileName.split('.')
+        suffix = fileArr[fileArr.length - 1]
+    } catch (err) {
+        suffix = ''
+    }
+    // fileName无后缀返回 false
+    if (!suffix) {
+        result = false
+        return result
+    }
+
+    for (const i in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, i)) {
+            const key = i as FileType
+            const item = obj[key]
+            if (item.includes(suffix)) {
+                result = key
+                break
+            }
+        }
+    }
+
+    // obj循环没有找到时，此时result是为false的
+    return result || 'other'
+}
