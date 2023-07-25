@@ -197,7 +197,7 @@
                             <div class="g-info w450px">
                                 <div class="g-info-left">
                                     <NuxtLink :to="`/goods/${item.goods_sn}`" target="_blank">
-                                        <CoImage class="w100% pb100%" :src="item.goods_img" :icon-size="28" />
+                                        <CoImage class="hov-img w100% pb100%" :src="item.goods_img" :icon-size="28" />
                                     </NuxtLink>
                                 </div>
                                 <div class="g-info-right">
@@ -330,6 +330,7 @@
 </template>
 
 <script setup lang="ts">
+import { useApiServer } from '~/api/server'
 import { GoodsApi } from '~/api/goods/list'
 import { RecordApi } from '~/api/user/record'
 
@@ -375,10 +376,9 @@ const form = reactive({
 
 // 取得品牌名称
 const brandName = computed(() => {
-    if (bid.value) {
-        return defData.brandList.find(item => item.brand_id === Number(bid.value))?.brand_name // 品牌名称
-    }
-    return ''
+    if (!bid.value) return ''
+    const brand = defData.brandList.find(item => item.brand_id === Number(bid.value))
+    return brand?.brand_name || '' // 品牌名称
 })
 
 // 获取初始数据
@@ -425,7 +425,9 @@ const initTableData = async () => {
 
     // console.log('params :>> ', params)
     const loading = useElLoading()
-    const { data } = await GoodsApi.getList(params)
+
+    const { data } = await useApiServer.getGoodsList(params)
+
     loading?.close()
     const dat = data.value!.data
     defData.breadcrumbList = dat.category.position
@@ -555,6 +557,7 @@ const onAddCart = async (row: GoodsApi_GetListItem) => {
 initTableData()
 
 watch(() => [keyword.value, cid.value, bid.value], () => {
+    if (!keyword.value && !cid.value && !bid.value) return
     initTableData()
 })
 </script>
@@ -680,6 +683,21 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
     }
 }
 
+.goods-list {
+    .hov-img {
+        :deep(>img) {
+            transition: all 0.3s;
+        }
+
+        &:hover {
+            :deep(>img) {
+                transform: scale(1.05);
+            }
+        }
+
+    }
+}
+
 .goods-list-ul {
     display: grid;
     gap: 12px;
@@ -695,19 +713,6 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
 
     &:hover {
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, .12);
-    }
-
-    .hov-img {
-        :deep(>img) {
-            transition: all 0.3s;
-        }
-
-        &:hover {
-            :deep(>img) {
-                transform: scale(1.03);
-            }
-        }
-
     }
 
     .goods-price {
@@ -740,6 +745,7 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
         height: 40px;
         overflow: hidden;
         margin-bottom: 8px;
+        font-weight: bold;
 
         >a:hover {
             color: var(--el-color-primary);
@@ -838,6 +844,7 @@ watch(() => [keyword.value, cid.value, bid.value], () => {
         // height: 48px;
         max-height: 48px;
         margin-bottom: 5px;
+        font-weight: bold;
 
         .link {
             line-height: 24px;

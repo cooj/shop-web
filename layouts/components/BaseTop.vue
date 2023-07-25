@@ -65,8 +65,8 @@
 </template>
 
 <script lang="ts" setup>
-const userState = useUserState()
 const useSystem = useSystemState()
+const userState = useUserState()
 const useCartNumber = useCartNumberState()
 
 // 获取商城信息

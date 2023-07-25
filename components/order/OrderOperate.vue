@@ -47,7 +47,6 @@
 
 <script lang="ts" setup>
 import { OrderApi } from '~/api/goods/order'
-
 import { OrderInvoiceModel, OrderReturnModel } from '#components'
 
 // const props = defineProps<{
@@ -70,9 +69,10 @@ const emits = defineEmits<{
     update: [status: number]
 }>()
 
+const { systemStatus } = useSystemState() // 商城状态
+
 // 退货申请
 const modelRef = ref<InstanceType<typeof OrderReturnModel>>()
-
 // 发票申请
 const invoiceRef = ref<InstanceType<typeof OrderInvoiceModel>>()
 
@@ -81,6 +81,8 @@ const orderStatus = computed(() => props.data.status)
 
 // 是否可以申请发票
 const isApply = computed(() => {
+    // 商城关闭开发票是
+    if (!systemStatus.value.is_bill) return false
     // 已付款、未申请发票、订单未取消
     return orderStatus.value > 1 && !props.data.bill_status && orderStatus.value !== 7
 })

@@ -37,7 +37,15 @@ const props = defineProps<{
 }>()
 
 const imgList = computed(() => {
-    const small = props.images.map(item => setGoodsOssImg(item, 60))
+    const small = props.images.map((item) => {
+        let url = item
+        try {
+            url = setGoodsOssImg(item, 60)
+        } catch (error) {
+
+        }
+        return url
+    })
     return { big: props.images, small }
 })
 
@@ -231,7 +239,8 @@ const moveOutImg = () => {
         img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background-color: #fff;
         }
 
         .layer {

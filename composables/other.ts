@@ -178,8 +178,30 @@ export const setOrderStatusType = (row: number) => {
  * @param width number 图片的大小尺寸
  */
 export const setGoodsOssImg = (url: string, width: number) => {
+    if (!url) return ''
     const i = url.indexOf('?x-oss-process=image')
     if (width < 30) return url
+
+    // // 字符串转base64文本
+    // const text = btoa('123')
+    // // <el-radio :label="0">无</el-radio>
+    // // <el-radio :label="1">左上</el-radio>
+    // // <el-radio :label="2">右上</el-radio>
+    // // <el-radio :label="3">居中</el-radio>
+    // // <el-radio :label="4">坐下</el-radio>
+    // // <el-radio :label="5">右下</el-radio>
+    // const siteData = { // g_se
+    //     1: 'nw', // 左上
+    //     // north：中上
+    //     2: 'ne', // 右上
+    //     // west：左中
+    //     3: 'center', // 中部
+    //     // east：右中
+    //     4: 'sw', // 左下
+    //     // south：中下
+    //     5: 'se', // （默认值）：右下
+    // }
+    // const watermark = `/watermark,g_center,text_${text},size_24,rotate_315,shadow_50`
 
     if (i >= 0) {
         url = `${url}/resize,w_${width},h_${width}`

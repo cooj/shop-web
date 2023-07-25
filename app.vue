@@ -1,7 +1,8 @@
 <template>
     <el-config-provider :locale="locale" :message="messageConfig">
         <VitePwaManifest />
-        <NuxtLayout>
+        <BaseClose v-if="systemStatus.is_close" />
+        <NuxtLayout v-else>
             <NuxtPage />
         </NuxtLayout>
     </el-config-provider>
@@ -21,8 +22,8 @@ const messageConfig = reactive({
 })
 
 // 获取商城信息
-const useSystem = useSystemState()
-const systemInfo = await useSystem.getSystemInfo()
+const { systemStatus, getSystemInfo } = useSystemState()
+const systemInfo = await getSystemInfo()
 
 useHead({
     title: systemInfo.value?.shop_title,
