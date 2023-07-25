@@ -17,7 +17,7 @@
                     <el-breadcrumb-item>问答列表</el-breadcrumb-item>
                 </el-breadcrumb>
 
-                <div>
+                <div class="mt20px">
                     <el-radio-group v-model="defData.type" @change="onclick()">
                         <el-radio-button :label="1">
                             我的提问
@@ -28,7 +28,7 @@
                     </el-radio-group>
                 </div>
 
-                <el-table :data="defData.tableData" class="mt18px">
+                <el-table :data="defData.tableData" class="mt10px">
                     <el-table-column prop="type" label="类型" width="90" show-overflow-tooltip align="center">
                         <template #default="scopes">
                             {{ scopes.row.type === 1 ? '我的提问' : '我的回答' }}

@@ -29,16 +29,16 @@
             <div style="margin-top: 20px">
                 <el-radio-group v-model="defData.is_status" @change="onclick()">
                     <el-radio-button :label="1">
-                        未使用
+                        可用优惠券
                     </el-radio-button>
-                    <el-radio-button :label="2">
+                    <!-- <el-radio-button :label="2">
                         使用中
-                    </el-radio-button>
+                    </el-radio-button> -->
                     <el-radio-button :label="3">
-                        已使用
+                        已用优惠券
                     </el-radio-button>
                     <el-radio-button :label="4">
-                        已过期
+                        过期优惠券
                     </el-radio-button>
                 </el-radio-group>
             </div>
