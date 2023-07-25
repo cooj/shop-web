@@ -17,7 +17,7 @@
                     <el-breadcrumb-item>问答列表</el-breadcrumb-item>
                 </el-breadcrumb>
 
-                <div style="margin-top: 20px">
+                <div>
                     <el-radio-group v-model="defData.type" @change="onclick()">
                         <el-radio-button :label="1">
                             我的提问

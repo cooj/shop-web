@@ -1,4 +1,11 @@
 /**
+ * 个人中心 我的优惠券 请求参数
+ */
+declare interface CouponApi_getList {
+  is_status: 1 | 2 | 3 | 4 //状态 1未使用 2使用中 3已使用 4已过期
+}
+
+/**
  * 个人中心 我的优惠券 响应数据
  */
 declare interface CouponApi_getListResponse {
