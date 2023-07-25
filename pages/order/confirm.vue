@@ -378,41 +378,13 @@ const initDefaultData = async () => {
         return
     }
 
-    // // 获取结算商品信息、用户地址
-    // const [res1, res2, res3] = await Promise.all([
-    //     type === 1
-    //         ? OrderApi.getSettleCart({ cart_id: cart_id.value })
-    //         : (type === 2 ? OrderApi.getSettleGoods({ goods_id: Number(goods_id.value), goods_number: num }) : undefined),
-    //     UserAddressApi.getList(),
-    //     UserInvoiceApi.getList(),
-    // ])
+    // 先获取用户地址,选中地址设置运费
+    await initAddressData()
 
-    // await wait(800)
-    // defData.skeleton = false
-
-    // if (res1 && res1.data.value?.code === 200) {
-    //     const data = res1.data.value?.data
-    //     // console.log('data :>> ', data)
-    //     // 未获取到商品时
-    //     if (!data.goods_list.length) return defData.ready = false
-
-    //     form.tableData = data.goods_list
-    //     defData.couponList = data.coupon_list
-
-    //     defData.count_number = data.number
-    //     defData.total_price = data.total_price
-    //     defData.total_peas = data.total_peas
-    //     defData.user_peas = data.user_peas
-    //     defData.freight_price = data.freight_price
-    // } else {
-    //     return defData.ready = false
-    // }
-
-    // 获取结算商品信息、用户地址
-    const [res1, res2, res3] = await Promise.all([
+    // 获取结算商品信息、发票列表
+    const [res1] = await Promise.all([
         initGoodsData(),
-        UserAddressApi.getList(),
-        UserInvoiceApi.getList(),
+        initInvoiceData(),
     ])
 
     await wait(800)
@@ -434,31 +406,14 @@ const initDefaultData = async () => {
         }
 
         defData.count_number = data.number
-        defData.total_price = data.total_price
+        defData.total_price = Number(data.total_price)
         defData.total_peas = Math.floor(data.total_peas || 0)
         defData.user_peas = data.user_peas
-        defData.freight_price = data.freight_price
+        defData.freight_price = Number(data.freight_price)
 
         defData.ratio_scale = data.matrixing_scale || 0
     } else {
         return defData.ready = false
-    }
-
-    if (res2 && res2.data.value?.code === 200) {
-        const data = res2.data.value?.data
-        defData.addressList = data
-
-        // 选中默认地址
-        const node = defData.addressList.find(item => item.is_default === 1)
-        form.address_id = node?.address_id || ''
-
-        const node2 = defData.addressList.find(item => item.is_bill_address === 1)
-        form.bill_address_id = node2?.address_id || ''
-    }
-
-    if (res3 && res3.data.value?.code === 200) {
-        const data = res3.data.value?.data
-        defData.invoiceList = data
     }
 }
 
@@ -491,6 +446,33 @@ const initGoodsData = async () => {
         return defData.ready = false
     }
     return data.value.data
+}
+
+// 初始化收货地址，选中默认地址
+const initAddressData = async () => {
+    const res2 = await UserAddressApi.getList()
+    if (res2 && res2.data.value?.code === 200) {
+        const data = res2.data.value?.data
+        defData.addressList = data
+
+        // 选中默认地址
+        const node = defData.addressList.find(item => item.is_default === 1)
+        form.address_id = node?.address_id || ''
+
+        const node2 = defData.addressList.find(item => item.is_bill_address === 1)
+        form.bill_address_id = node2?.address_id || ''
+    }
+}
+
+// 初始化发票列表
+const initInvoiceData = async () => {
+    // 不开发票时，不调用接口
+    if (!systemStatus.value.is_bill) return false
+    const res3 = await UserInvoiceApi.getList()
+    if (res3 && res3.data.value?.code === 200) {
+        const data = res3.data.value?.data
+        defData.invoiceList = data
+    }
 }
 
 // 地址信息拼接
