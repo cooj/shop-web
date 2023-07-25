@@ -49,6 +49,17 @@
                                 clearable />
                         </el-form-item>
                     </el-col>
+                    <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
+                        <el-form-item prop="des_img" label="上传图片">
+                            <CoUpload v-model="form.data.des_img" chat="||" multiple :limit="10" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
+                        <el-form-item label="上传视频" prop="des_video">
+                            <CoUpload v-model="form.data.des_vivo" type="text" accept="video/*" />
+                        </el-form-item>
+                    </el-col>
+
                     <el-col :xs="24" :sm="12" :md="12" :lg="11" :xl="11">
                         <el-form-item label="手机号码" prop="phone">
                             <el-input v-model="form.data.phone" class="w100%" placeholder="请输入手机号码" maxlength="255"
@@ -99,6 +110,7 @@ import { SaleAfterApi } from '~/api/user/saleAfter'
 const formRef = ref<FormInstance>()
 const rules = reactive<FormRules>({
     contacts: [{ required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' }],
+    goods_id: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
     phone: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
         { required: true, pattern: /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' },
@@ -124,6 +136,9 @@ const form = reactive({
         ask_date: '', // 预约上门时间      示例值:2023-03-04 10:58
         validate_code: '', // 验证码
         goods_id: '' as '' | number, // 商品id
+        des_img: '', //
+        des_vivo: '',
+
     },
 })
 
@@ -218,7 +233,9 @@ const onSubmit = useThrottleFn(async () => {
             goods_type_txt: node.cat_name,
             goods_code: node.goods_code,
             describe: form.data.describe,
+            des_img: form.data.des_img,
             ask_date: form.data.ask_date,
+            des_vivo: form.data.des_vivo,
         }
         const res = await SaleAfterApi.add(data)
         if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
