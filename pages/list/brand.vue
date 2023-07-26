@@ -9,12 +9,12 @@
                     </div>
                 </template>
                 <div class="brand-list">
-                    <div v-for="item in defData.brandList" :key="item.brand_id" class="brand-item">
+                    <NuxtLink v-for="item in defData.brandList" :key="item.brand_id" class="brand-item" :to="linkGoodsList({ query: { bid: item.brand_id }, url: true })">
                         <co-image class="h65px w100%" :src="item.brand_logo" :icon-size="24" />
                         <div class="mt5px text-center text-13px">
                             {{ item.brand_name }}
                         </div>
-                    </div>
+                    </NuxtLink>
                 </div>
                 <div class="mt30px">
                     <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
