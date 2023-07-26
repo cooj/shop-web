@@ -1,6 +1,6 @@
 <template>
     <section class="header-box">
-        <el-form class="overflow-hidden py25px" size="large">
+        <el-form class="overflow-hidden py25px" size="large" @submit.prevent="onSearch">
             <div class="flex items-center justify-between text-#f8f8f8 container">
                 <div class="logo min-w150px">
                     <NuxtLink to="/">
@@ -8,20 +8,36 @@
                     </NuxtLink>
                 </div>
                 <div class="search-box relative w50%">
-                    <el-input v-model="search.keyword" placeholder="" @keyup.enter="onSearch">
-                        <template #prepend>
+                    <el-autocomplete v-model="search.keyword" :fetch-suggestions="querySearchAsync"
+                        popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
+                        select-when-unmatched @select="onSearch">
+                        <template #prefix>
+                            <i class="i-ep-search" />
+                        </template>
+                        <!-- <template #prepend>
                             <lazy-el-select v-model="search.select" placeholder="" style="width: 115px">
                                 <el-option label="全部商品" value="1" />
                                 <el-option label="精选商品" value="2" />
                                 <el-option label="特价商品" value="3" />
                             </lazy-el-select>
-                        </template>
+                        </template> -->
                         <template #append>
-                            <el-button type="primary" class="btn-search min-w100px" @click="onSearch">
+                            <el-button type="primary" class="btn-search min-w120px" @click="onSearch">
                                 搜 索
                             </el-button>
                         </template>
-                    </el-input>
+                        <template #default="{ item }">
+                            <div class="pop-item flex justify-between">
+                                <div class="pop-text text-13px">
+                                    {{ item.value }}
+                                </div>
+                                <el-button v-if="item.history" size="small" link @click.stop="onRemoveHistory(item.value)">
+                                    <span class="v1">搜索历史</span>
+                                    <span class="color-primary">删除</span>
+                                </el-button>
+                            </div>
+                        </template>
+                    </el-autocomplete>
                     <div v-if="searchHot.length" class="search-hot">
                         热门搜索：<span v-for="(item) in searchHot" :key="item" @click="onSearchHot(item)">{{ item }}</span>
                     </div>
@@ -35,10 +51,6 @@
                             </el-button>
                         </el-badge>
                     </NuxtLink>
-                    <!-- <el-button>
-            <i class="i-ep-shopping-cart-full" />
-            批量下单
-          </el-button> -->
                 </div>
             </div>
         </el-form>
@@ -49,6 +61,7 @@
 
 <script lang="ts" setup>
 import HeaderIndex from './header/HeaderIndex.vue'
+import { GoodsApi } from '~/api/goods/list'
 
 const useCartNumber = useCartNumberState()
 const number = await useCartNumber.setCartNumber()
@@ -63,6 +76,8 @@ const search = reactive({
 const useSystem = useSystemState()
 const systemInfo = ref(useSystem.system)
 
+const searchDataList = useLocalStorage<string[]>('searchKeywordList', [])
+
 const searchHot = computed(() => {
     const text = systemInfo.value?.hot ?? ''
     return text.split(',')
@@ -70,24 +85,52 @@ const searchHot = computed(() => {
 
 // 搜索
 const onSearch = () => {
-    if (!search.keyword?.trim()) return ElMessage.error('请输入商品关键词')
-    if (search.keyword.trim()) {
-        linkGoodsList({
-            query: {
-                keyword: search.keyword,
-            },
-        })
-    } else if (route.path === '/goods/list') {
-        linkGoodsList({
-            query: {},
-        })
+    const queryStr = search.keyword?.trim() ?? ''
+    if (!queryStr) return ElMessage.error('请输入商品关键词')
+    // 记录搜索历史,追加到第一项
+    const index = searchDataList.value.findIndex(item => item === queryStr)
+    if (index >= 0) {
+        searchDataList.value = moveArraySite(searchDataList.value, index, 0) // 移动到第一项位置
+    } else {
+        searchDataList.value.unshift(queryStr)
     }
+
+    linkGoodsList({
+        query: {
+            keyword: queryStr,
+        },
+    })
 }
 
 // 热门
 const onSearchHot = (text: string) => {
     search.keyword = text
     onSearch()
+}
+
+// 下拉显示数据
+const querySearchAsync = (queryString: string, callback: (arg: any) => void) => {
+    const query = queryString?.trim() ?? ''
+    if (query) {
+        GoodsApi.searchKeyword({ keyword: queryString }).then((res) => {
+            let results: { value: string }[] = []
+            if (res.data.value && res.data.value.data.length > 0) {
+                results = res.data.value.data.slice(0, 10).map((item) => {
+                    return { value: item }
+                })
+            }
+            callback(results)
+        })
+    } else {
+        const dat = searchDataList.value.slice(0, 10).map(item => ({ value: item, history: 1 }))
+        callback(dat)
+    }
+}
+
+// 删除搜索记录
+const onRemoveHistory = (item: string) => {
+    const index = searchDataList.value.indexOf(item)
+    if (index >= 0) searchDataList.value.splice(index, 1) // Remove item from list.
 }
 
 watch(() => route.query.keyword, (val) => {
@@ -159,6 +202,26 @@ watch(() => route.query.keyword, (val) => {
 
         &:hover {
             color: var(--el-color-primary-light-3);
+        }
+    }
+}
+</style>
+
+<style lang="scss">
+.pop-search {
+    .pop-item {
+        .color-primary {
+            display: none;
+        }
+
+        &:hover {
+            .v1 {
+                display: none;
+            }
+
+            .color-primary {
+                display: block;
+            }
         }
     }
 }

@@ -118,7 +118,7 @@ const { data: goods } = await HomeApi.getNewGoods()
 // 只显示前五个（下标0开始，截取5个）
 const goodsList = computed(() => {
     const list = goods.value?.data.lists.slice(0, 5).map((item) => {
-        item.goods_img = setGoodsOssImg(item.goods_img, 300)
+        item.goods_img = setGoodsOssImg(item.goods_img, 200)
         return item
     })
     return list || []
