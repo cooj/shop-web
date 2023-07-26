@@ -15,6 +15,12 @@ export const GoodsApi = {
     getClass: () => useHttp<GoodsApi_GetClass[]>('/api/mall_user/get_goods_type', '', { method: 'get' }),
 
     /**
+     * 商品搜索补全
+     * @returns
+     */
+    searchKeyword: (data: { keyword: string }) => useHttp<string[]>('/api/goods_lists/search', data, { method: 'post' }),
+
+    /**
      * 商品列表页面
      * @returns
      */
