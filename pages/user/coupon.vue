@@ -9,17 +9,14 @@
                     <el-skeleton :rows="5" />
                 </div>
             </template>
+            <el-breadcrumb>
+                <el-breadcrumb-item>
+                    订单中心
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>我的优惠券</el-breadcrumb-item>
+            </el-breadcrumb>
 
-            <div h40px>
-                <el-breadcrumb>
-                    <el-breadcrumb-item>
-                        订单中心
-                    </el-breadcrumb-item>
-                    <el-breadcrumb-item>我的优惠券</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            <div>
-                <div style="margin:0 0 20px;font-size: large;">
+            <!-- <div style="margin:0 0 20px;font-size: large;">
                     我的优惠券
                     <NuxtLink to="/coupon">
                         <div v-if="defData.MyCouponList.length === 0"
@@ -27,14 +24,38 @@
                             暂无优惠券，去优惠券中心领取
                         </div>
                     </NuxtLink>
-                </div>
+                </div> -->
+
+            <div style="margin-top: 20px">
+                <el-radio-group v-model="defData.is_status" @change="onclick()">
+                    <el-radio-button :label="1">
+                        可用优惠券
+                    </el-radio-button>
+                    <!-- <el-radio-button :label="2">
+                        使用中
+                    </el-radio-button> -->
+                    <el-radio-button :label="3">
+                        已用优惠券
+                    </el-radio-button>
+                    <el-radio-button :label="4">
+                        过期优惠券
+                    </el-radio-button>
+                </el-radio-group>
+            </div>
+
+            <div class="mt10px">
                 <el-space wrap>
+                    <div v-if="defData.MyCouponList.length === 0">
+                        <el-empty class="ml50px" description="暂无优惠券" />
+                    </div>
                     <el-card v-for="item in defData.MyCouponList" :key="item.coupon_id" class="box-card" shadow="hover"
                         :data="defData">
-                        <i class="i-ep-close inline-block" style="float: right;margin: 5px;"
-                            @click="delClick(item.id)" />
+                        <i class="i-ep-close inline-block" style="float: right;margin: 5px;" @click="delClick(item.id)" />
                         <div style="font-size: xx-large;font-weight: bold;">
                             ￥{{ item.par_value }}
+                        </div>
+                        <div style="font-size: 14px;">
+                            类型： {{ item.type === 1 ? '通用券' : '品类券' }}
                         </div>
                         <div style="font-size: 14px;">
                             活动： {{ item.coupon_name }}
@@ -42,12 +63,12 @@
                         <div style="font-size: 14px;">
                             有效期：{{ item.start_time }}至{{ item.end_time }}
                         </div>
-                        <div v-if="item.is_status === 1">
+                        <!-- <div v-if="item.is_status === 1">
                             <el-button type="danger" plain>
                                 未使用
                             </el-button>
-                        </div>
-                        <div v-else-if="item.is_status === 3">
+                        </div> -->
+                        <!-- <div v-else-if="item.is_status === 3">
                             <el-button type="info" plain>
                                 已使用
                             </el-button>
@@ -56,7 +77,7 @@
                             <el-button type="info" plain>
                                 已过期
                             </el-button>
-                        </div>
+                        </div> -->
                     </el-card>
                 </el-space>
             </div>
@@ -74,17 +95,25 @@ const defData = reactive({
     user_id: '' as number | '',
     token: '',
     skeleton: true,
+    is_status: 1,
 
 })
 
 // 初始化数据 我的优惠券
 const initCardData = async () => {
-    const res = await CouponApi.geList()
+    const data: CouponApi_getList = {
+        is_status: defData.is_status as 1 | 2 | 3 | 4,
+    }
+    const res = await CouponApi.geList(data)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
     defData.MyCouponList = res.data.value.data.lists
 }
 initCardData()
+
+const onclick = () => {
+    initCardData()
+}
 
 // 删除
 const delClick = async (row: any) => {

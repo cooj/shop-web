@@ -13,7 +13,7 @@ export const SaleAfterApi = {
      * 售后详情
      * @returns
      */
-    info: (data: SaleAfterApi_Info) => useHttp<SaleAfterApi_InfoResponse[]>('/api/mall_user/get_after_sales_info', data, { method: 'post' }),
+    info: (data: SaleAfterApi_Info) => useHttp<SaleAfterApi_InfoResponse>('/api/mall_user/get_after_sales_info', data, { method: 'post' }),
 
     /**
      * 售后 -- 获取商品类型

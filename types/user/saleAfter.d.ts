@@ -42,25 +42,27 @@ declare interface SaleAfterApi_Info {
  */
 declare interface SaleAfterApi_InfoResponse {
     "id": number, //记录ID
-    "type": number, //类型 1
-    "contacts": string, //联系电话
+    "type": number, //单据类型 1安装申请 2维护申请
+    "contacts": string, //联系人名称
     "phone": string, //联系电话
     "province": string, //省份
     "city": string, //城市
     "area": string, //地区
     "address": string, //详细地址
-    "goods_type": string, //详细地址
+    "goods_type": string, //商品类型ID
     "goods_type_txt": string, //商品类型
     "goods_code": string, //商品型号
     "describe": string, //需求详细描述
     "ask_date": string, //上门预约时间
+    "confirm_time": string, //确定上门时间
     "des_img": string, //上传图片
-    "des_type": string, //文件类型 图片img 视频voiv
+    "des_type": string, //文件类型 图片img 视频video
     "add_time": string, //接单时间
     "create_ta": string, //创建时间
     "status": number, //状态 0未接单 1已接单
     "user_id": number, //制单人id
     "user_name": string, //制单人名称
+    "accept_id": number, //接单人id
     "accept_name": string, //接单人名称
     "date": string, //日期
     "time": string //时间
@@ -96,6 +98,8 @@ declare interface SaleAfterApi_Add {
     describe: string //需求详细描述
     ask_date: string //预约上门时间
     type: 1 | 2 //类型 1安装申请 2维护申请
+    des_vivo: string // 视频路径（多个||分开）
+    des_img: string //图片路径（多个||分开）
 }
 
 /**

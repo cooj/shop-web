@@ -3,7 +3,7 @@
  */
 export const CouponApi = {
     // 我的优惠券
-    geList: () => useHttp<CouponApi_getListResponse>('/api/mall/get_coupon_list', '', { method: 'get' }),
+    geList: (data: CouponApi_getList) => useHttp<CouponApi_getListResponse>('/api/mall/get_coupon_list', data, { method: 'post' }),
     // 优惠券列表
     allList: () => useHttp<CouponApi_allListResponse>('/api/index/get_coupon_list', '', { method: 'post' }),
     // 领取优惠券
