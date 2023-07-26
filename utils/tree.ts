@@ -5,7 +5,23 @@
  * @param key 查找值对应的键值，默认为id
  * @param children 子类的键值，默认children
  * @returns any[]
-*/
+ * @example
+ * ```javascript
+ *const list = [{
+ *    value: 1,
+ *    name: '物品',
+ *    children: [{
+ *        value: 2,
+ *        name: '物品2',
+ *        children: [],
+ *    }, {
+ *        value: 3,
+ *        name: '物品1-3',
+ *    }],
+ *}]
+ * findParentsNode(list, 3, 'value', 'children') // [{value:1, name: '物品', children: [{value:2, name: '物品2', children: []},{value:3, name: '物品1-3'}]},{value:3, name: '物品1-3'}]
+ * ```
+ */
 export function findParentsNode<T = any>(classifyList: Array<T>, val: T[keyof T], key = 'id' as keyof T, children = 'children' as keyof T): T[] {
     const temp: any[] = []
     const forFn = function (arr: any[], id: T[keyof T]) {

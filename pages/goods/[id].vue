@@ -185,7 +185,7 @@
                         <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
                             <el-tab-pane label="推荐商品" name="1">
                                 <ul class="goods-list">
-                                    <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
+                                    <li v-for="item in goodsData?.link_lists.slice(0, 10)" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
                                             <CoImage :src="setGoodsOssImg(item.goods_img, 300)"
                                                 class="hov-img w100% pb100%" />
@@ -387,6 +387,7 @@ const form = reactive({
 })
 const param_id = useRouteParam('id')
 
+// 获取商品信息
 const initGoodsData = async () => {
     const goods_sn = param_id.value?.trim() ?? ''
     if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
@@ -396,6 +397,7 @@ const initGoodsData = async () => {
     if (error.value) return ElMessage.error('网络错误!')
     if (data.value?.code === 200) {
         const dat = data.value.data
+        // console.log(dat)
         const infoData = dat.goods_info
 
         // if (goods.goods_id === id) {

@@ -382,39 +382,32 @@ const initDefaultData = async () => {
     await initAddressData()
 
     // 获取结算商品信息、发票列表
-    const [res1] = await Promise.all([
-        initGoodsData(),
-        initInvoiceData(),
-    ])
-
-    await wait(800)
+    const res1 = await initGoodsData()
     defData.skeleton = false
     // console.log(res1)
-    if (res1) {
-        const data = res1
-        // console.log('data :>> ', data)
-        // 未获取到商品时
-        if (!data.goods_list.length) return defData.ready = false
+    if (!res1) return defData.ready = false
 
-        form.tableData = data.goods_list.map((item) => {
-            item.goods_img = setGoodsOssImg(item.goods_img, 60)
-            return item
-        })
-        defData.couponList = data.coupon_list
-        if (defData.couponList.length) {
-            form.coupon_id = defData.couponList[0].coupon_draw_id
-        }
+    const data = res1
+    // console.log('data :>> ', data)
+    // 未获取到商品时
+    if (!data.goods_list.length) return defData.ready = false
 
-        defData.count_number = data.number
-        defData.total_price = Number(data.total_price)
-        defData.total_peas = Math.floor(data.total_peas || 0)
-        defData.user_peas = data.user_peas
-        defData.freight_price = Number(data.freight_price)
-
-        defData.ratio_scale = data.matrixing_scale || 0
-    } else {
-        return defData.ready = false
+    form.tableData = data.goods_list.map((item) => {
+        item.goods_img = setGoodsOssImg(item.goods_img, 60)
+        return item
+    })
+    defData.couponList = data.coupon_list
+    if (defData.couponList.length) {
+        form.coupon_id = defData.couponList[0].coupon_draw_id
     }
+
+    defData.count_number = data.number
+    defData.total_price = Number(data.total_price)
+    defData.total_peas = Math.floor(data.total_peas || 0)
+    defData.user_peas = data.user_peas
+    defData.freight_price = Number(data.freight_price)
+
+    defData.ratio_scale = data.matrixing_scale || 0
 }
 
 // 获取结算的商品信息
@@ -432,8 +425,8 @@ const initGoodsData = async () => {
     })
 
     // console.log(pending.value)
-    // await nextTick()
-    await wait(1000)
+    await nextTick()
+    // await wait(800)
     // console.log(pending.value)
     // console.log(error.value)
     // console.log('data.value?.code :>> ', data.value?.code)
@@ -451,6 +444,8 @@ const initGoodsData = async () => {
 // 初始化收货地址，选中默认地址
 const initAddressData = async () => {
     const res2 = await UserAddressApi.getList()
+    await wait(200)
+    await nextTick()
     if (res2 && res2.data.value?.code === 200) {
         const data = res2.data.value?.data
         defData.addressList = data
@@ -469,6 +464,7 @@ const initInvoiceData = async () => {
     // 不开发票时，不调用接口
     if (!systemStatus.value.is_bill) return false
     const res3 = await UserInvoiceApi.getList()
+    await wait(300)
     if (res3 && res3.data.value?.code === 200) {
         const data = res3.data.value?.data
         defData.invoiceList = data
@@ -625,6 +621,8 @@ const onSubmit = async () => {
 
 onBeforeMount(() => {
     initDefaultData()
+    // 默认不开发票，获取发票列表可以慢点执行，
+    initInvoiceData()
 })
 
 definePageMeta({
