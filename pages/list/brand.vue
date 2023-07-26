@@ -10,10 +10,12 @@
                 </template>
                 <div class="brand-list">
                     <div v-for="item in defData.brandList" :key="item.brand_id" class="brand-item">
-                        <co-image class="h65px w100%" :src="item.brand_logo" :icon-size="24" />
-                        <div class="mt5px text-center text-13px">
-                            {{ item.brand_name }}
-                        </div>
+                        <NuxtLink :to="linkGoodsList({ query: { bid: item.brand_id }, url: true })">
+                            <co-image class="w100% pb45%" :src="item.brand_logo" :icon-size="24" />
+                            <div class="pt5px text-center text-14px">
+                                {{ item.brand_name }}
+                            </div>
+                        </NuxtLink>
                     </div>
                 </div>
                 <div class="mt30px">
@@ -78,5 +80,15 @@ const onHandleSizeChange = () => {
     gap: 40px;
     grid-template-columns: repeat(6, 1fr);
 
+    .brand-item:hover {
+        color: var(--el-color-primary);
+
+        :deep(.co-image) {
+            >img {
+                border: 1px solid var(--el-color-error-light-5);
+            }
+        }
+
+    }
 }
 </style>

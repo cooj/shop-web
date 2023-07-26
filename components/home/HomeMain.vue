@@ -69,8 +69,8 @@
                 <div class="brand-list">
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
-                        <CoImage class="h70px w100% block!" :src="sub.brand_logo" style="--el-color-info-light-9:#282828;"
-                            :icon-size="30" />
+                        <CoImage class="w100% pb45% block!" :src="sub.brand_logo" style="--el-color-info-light-9:#282828;"
+                            :icon-size="28" />
                     </NuxtLink>
                 </div>
             </div>
