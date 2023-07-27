@@ -366,7 +366,8 @@ const beanMoney = computed(() => {
 
 // 需支付金额
 const payMoney = computed(() => {
-    return defData.total_price + defData.freight_price - beanMoney.value - preferMoney.value
+    const money = defData.total_price + defData.freight_price - beanMoney.value - preferMoney.value
+    return money > 0 ? money : 0
 })
 
 const initDefaultData = async () => {
@@ -444,7 +445,7 @@ const initGoodsData = async () => {
 // 初始化收货地址，选中默认地址
 const initAddressData = async () => {
     const res2 = await UserAddressApi.getList()
-    await wait(200)
+    await wait(350)
     await nextTick()
     if (res2 && res2.data.value?.code === 200) {
         const data = res2.data.value?.data

@@ -200,7 +200,7 @@
                         <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
                             <el-tab-pane label="推荐商品" name="1">
                                 <ul class="goods-list">
-                                    <li v-for="item in goodsData?.link_lists.slice(0, 10)" :key="item.goods_id">
+                                    <li v-for="item in goodsData?.link_lists?.slice(0, 10)" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
                                             <CoImage :src="setGoodsOssImg(item.goods_img, 300)"
                                                 class="hov-img w100% pb100%" />
