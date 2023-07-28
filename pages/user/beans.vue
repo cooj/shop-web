@@ -23,8 +23,7 @@
             </div>
             <div>
                 <el-table :data="defData.tableData" style="width: 100%" border>
-                    <el-table-column prop="peas" label="工游豆" width="200px" align="center" />
-                    <el-table-column prop="remarks" label="工游豆来源、用途" min-width="200px" align="center" />
+                    <el-table-column prop="create_at" label="时间" width="200px" align="center" />
                     <el-table-column prop="type" label="类型" width="180px" align="center">
                         <template #default="scopes">
                             <el-tag v-if="scopes.row.type === 1">
@@ -35,7 +34,8 @@
                             </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="create_at" label="时间" width="200px" align="center" />
+                    <el-table-column prop="peas" label="工游豆" width="200px" align="center" />
+                    <el-table-column prop="remarks" label="备注（工游豆来源、用途)" min-width="200px" align="center" />
                 </el-table>
             </div>
         </el-skeleton>
