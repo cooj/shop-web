@@ -1,6 +1,6 @@
 <template>
     <section class="header-box">
-        <el-form class="overflow-hidden py25px" size="large" @submit.prevent="onSearch">
+        <el-form class="overflow-hidden py25px" size="large" @submit.prevent="onSearch('')">
             <div class="flex items-center justify-between text-#f8f8f8 container">
                 <div class="logo min-w150px">
                     <NuxtLink to="/">
@@ -8,7 +8,7 @@
                     </NuxtLink>
                 </div>
                 <div class="search-box relative w50%">
-                    <el-autocomplete v-model="search.keyword" :fetch-suggestions="querySearchAsync"
+                    <ElAutocomplete ref="autocompleteRef" v-model="search.keyword" :fetch-suggestions="querySearchAsync"
                         popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
                         select-when-unmatched @select="onSearch">
                         <template #prefix>
@@ -22,7 +22,7 @@
                             </lazy-el-select>
                         </template> -->
                         <template #append>
-                            <el-button type="primary" class="btn-search min-w120px" @click="onSearch">
+                            <el-button type="primary" class="btn-search min-w120px" @click="onSearch('')">
                                 搜 索
                             </el-button>
                         </template>
@@ -34,8 +34,9 @@
                                     <span class="pop-remove">删除</span>
                                 </el-button>
                             </div>
+                            <div class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
                         </template>
-                    </el-autocomplete>
+                    </ElAutocomplete>
                     <div v-if="searchHotList.length" class="search-hot">
                         热门搜索：<span v-for="(item) in searchHotList" :key="item" @click="onSearchHot(item)">{{ item }}</span>
                     </div>
@@ -58,6 +59,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElAutocomplete } from 'element-plus'
 import HeaderIndex from './header/HeaderIndex.vue'
 import { GoodsApi } from '~/api/goods/list'
 
@@ -74,6 +76,8 @@ const search = reactive({
 const useSystem = useSystemState()
 const systemInfo = ref(useSystem.system)
 
+const autocompleteRef = ref<InstanceType<typeof ElAutocomplete>>()
+
 const searchDataList = useLocalStorage<GoodsSearchItem[]>('searchKeywordList', [])
 
 const searchHotList = computed(() => {
@@ -82,38 +86,35 @@ const searchHotList = computed(() => {
 })
 
 // 搜索
-const onSearch = (row?: any) => {
-    let queryStr = search.keyword?.trim() ?? ''
+const onSearch = (row?: any | '') => {
+    const queryStr = search.keyword?.trim() ?? ''
     if (!queryStr) return ElMessage.error('请输入商品关键词')
 
-    const { cloned: node } = useCloned<GoodsSearchItem>(row)
-
-    if (node.value.id && node.value.value) {
-        queryStr = node.value.value
-    } else {
-        node.value.id = 0
-        node.value.type = 3
+    const node: GoodsSearchItem = {
+        id: row?.id ?? 0,
+        type: row?.type ?? 3,
+        value: row?.value ?? queryStr,
     }
 
     // 记录搜索历史,追加到第一项
-    const index = searchDataList.value.findIndex(item => item.value === queryStr)
+    const index = searchDataList.value.findIndex(item => item.value === node.value)
     if (index >= 0) {
         searchDataList.value = moveArraySite(searchDataList.value, index, 0) // 移动到第一项位置
     } else {
-        searchDataList.value.unshift({ value: queryStr, id: node.value.id, type: node.value.type })
+        searchDataList.value.unshift({ value: node.value, id: node.id, type: node.type })
     }
 
     const query: GoodsListParamsQuery = {}
-    if (node.value.type === 1) query.cid = node.value.id
-    if (node.value.type === 2) query.bid = node.value.id
-    if (node.value.type === 3) query.keyword = node.value.value
+    if (node.type === 1) query.cid = node.id
+    if (node.type === 2) query.bid = node.id
+    if (node.type === 3) query.keyword = node.value
 
     linkGoodsList({
         query,
     })
 
     // 是分类、品牌跳转时，清空input框
-    if (node.value.type === 1 || node.value.type === 2) {
+    if (node.type === 1 || node.type === 2) {
         search.keyword = ''
     }
 }
@@ -180,6 +181,14 @@ const querySearchAsync = (queryString: string, callback: (arg: any) => void) => 
 const onRemoveHistory = (text: string) => {
     const index = searchDataList.value.findIndex(item => item.value === text)
     if (index >= 0) searchDataList.value.splice(index, 1) // Remove item from list.
+    // 失去焦点
+    autocompleteRef.value?.blur()
+}
+// 删除所有搜索记录
+const onRemoveHistoryAll = () => {
+    searchDataList.value = []
+    // 失去焦点
+    autocompleteRef.value?.blur()
 }
 
 // 设置文字高亮
@@ -284,6 +293,13 @@ watch(() => route.query.keyword, (val) => {
                 display: block;
             }
         }
+    }
+
+    .pop-clear {
+        position: absolute;
+        right: 3px;
+        bottom: 4px;
+        // line-height: 16px;
     }
 }
 </style>
