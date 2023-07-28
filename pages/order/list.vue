@@ -132,6 +132,10 @@ definePageMeta({
     middleware: 'auth',
 })
 
+const route = useRoute()
+const router = useRouter()
+const page = useRouteQuery('page')
+
 const defData = reactive({
     skeleton: true, // 显示骨架屏
     payList: { // 支付类型 1微信 2支付宝 3线下
@@ -190,6 +194,7 @@ const tableData = reactive<BaseTableDataType<TableDataItem>>({
     ],
     pagination: {
         ...PAGINATION,
+        page: /^[1-9][0-9]*$/.test(page.value) ? Number(page.value) : 1,
     },
 })
 
@@ -241,6 +246,14 @@ const initTableData = async () => {
     })
     tableData.data = list
     tableData.pagination.total = res.value.data.total // 总条数
+
+    router.replace({
+        path: route.path,
+        query: {
+            ...route.query,
+            page: tableData.pagination.page,
+        },
+    })
 }
 
 // table合并行
@@ -367,7 +380,7 @@ const onSearch = () => {
     initTableData()
 }
 // 分页切换
-const onHandleCurrentChange = () => {
+const onHandleCurrentChange = (pagination: BaseTableDataType['pagination']) => {
     initTableData()
 }
 
