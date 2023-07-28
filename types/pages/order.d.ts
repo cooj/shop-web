@@ -153,7 +153,7 @@ declare interface OrderApi_GetInfoResponse {
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
         "goods_img": ""
     }[],
-    order_status: number,    // 订单状态 
+    order_status: number,    //订单状态 : 0:无， 1特支付，2待发货 ，3已发货 ，4配货中，5部分发货 ，6已确认 ，7已取消，8已退货 
     status_info: {
         "text": "提交订单",
         "time": "2023-05-26 15:14:43",
