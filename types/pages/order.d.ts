@@ -196,7 +196,7 @@ declare interface OrderApi_PayOrderResponse {
         duty: '4564641454785385761234',
         phone: '15766875587',
         address: '广东省深圳市光明去一片光明',
-        item_notes:strings, // 注意事项
+        item_notes: string, // 注意事项
     },
     day_num: '15',
 }
@@ -462,7 +462,7 @@ declare interface OrderInvoiceApi_GetListResponse extends ListTotal {
 
 declare interface OrderInvoiceApi_GetListItem {
     "bill_id": 1,
-    "type": 3,
+    "type": 1 | 2 | 3,
     "header": "工业品",
     "enterprise_name": "八戒公司123",
     "enterprise_email": "123456@qq.com",
@@ -471,7 +471,7 @@ declare interface OrderInvoiceApi_GetListItem {
     "logon_tel": "",
     "bank": "",
     "bank_account": "",
-    "verify_status": 3,
+    "verify_status": 0|1|2|3,
     "express_name": "顺丰",
     "express_no": "sf123456789",
     "failed_remark": "",

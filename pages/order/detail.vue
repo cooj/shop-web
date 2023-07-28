@@ -91,7 +91,7 @@
                             配送方式：
                         </div>
                         <div class="gt">
-                            <div v-for="(item, index) in orderInfo?.order_logistics" :key="index">
+                            <div v-for="(item, index) in logisticsList" :key="index">
                                 {{ item.logistics_name }} <span class="mr20px opacity-80">({{ item.logistics_no }})</span>
                                 <span class="c-#666">发货时间：{{ item.create_time }}</span>
                             </div>
@@ -106,6 +106,16 @@
                             <span v-else-if="orderInfo?.pay_type === 2">支付宝支付</span>
                             <span v-else-if="orderInfo?.pay_type === 3" class="color-warning">线下支付</span>
                             <span v-else>--</span>
+                        </div>
+                    </li>
+                    <li v-if="orderInfo!.bill_status">
+                        <div class="lt">
+                            发票信息：
+                        </div>
+                        <div class="gt">
+                            <el-link style="--el-link-font-size:13px;" @click="onInvoiceDetail">
+                                <i class="i-ep-view inline-block" />查看
+                            </el-link>
                         </div>
                     </li>
                 </ul>
@@ -169,19 +179,21 @@
                     </li>
                 </ul>
             </div>
+            <OrderInvoiceModel ref="invoiceRef" />
         </el-skeleton>
     </LayoutUser>
 </template>
 
 <script lang="ts" setup>
-import { OrderApi } from '~/api/goods/order'
+import { OrderInvoiceModel } from '#components'
+import { OrderApi, OrderInvoiceApi } from '~/api/goods/order'
 
 const router = useRouter()
 const backRoute = ref(router.options.history.state.back as string)
 
 // 订单编号
 const order_no = useRouteQuery('order_no')
-
+const invoiceRef = ref<InstanceType<typeof OrderInvoiceModel>>()
 const defData = reactive({
     skeleton: true, // 显示骨架屏
 
@@ -191,7 +203,7 @@ const defData = reactive({
 const breadcrumbData = computed(() => {
     const _list = [
         { text: '个人中心', href: '/order/list', id: 1 },
-        { text: '我的订单', href: '/order/list', id: 2 },
+        { text: '我的订单', href: backRoute.value, id: 2 },
         { text: '订单详情', href: '', id: 3 },
     ]
 
@@ -235,6 +247,21 @@ const setPreferMoney = computed(() => {
     return num >= 0 ? num : 0
 })
 
+// 物流，去除单号重复的物流
+const logisticsList = computed(() => {
+    const arr = orderInfo.value?.order_logistics
+    // 数组去重（根据物流单号去重）
+    const array = arr?.filter((item, index) => arr?.findIndex(opt => opt.logistics_no === item.logistics_no) === index)
+    return array || []
+
+    // const list: OrderApi_GetInfoResponse['order_logistics'] = []
+    //     orderInfo.value?.order_logistics.forEach((item) => {
+    //         const node = list.find(opt => opt.logistics_no === item.logistics_no)
+    //         if (!node) list.push(item)
+    //     })
+    //     return list
+})
+
 // 获取初始信息
 const initDefaultData = async () => {
     // if (defData.ready) return false
@@ -272,6 +299,15 @@ const onFinish = () => {
  */
 const updateOrder = (status: number) => {
     if (status === 7) initDefaultData()
+}
+
+// 查看订单发票信息
+const onInvoiceDetail = async () => {
+    const { data } = await OrderInvoiceApi.info({ order_no: order_no.value })
+    await wait(200)
+    if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+
+    invoiceRef.value?.onOpenDialog(data.value.data, 3)
 }
 
 initDefaultData()

@@ -126,6 +126,14 @@
             </el-row>
             <el-row v-else-if="defData.type === 3">
                 <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                    <el-form-item label="操作状态:">
+                        <el-tag type="success" size="large">
+                            {{ defData.operateList[billInfo?.verify_status || 0] }}
+                        </el-tag>
+                        <div v-if="billInfo?.failed_remark && billInfo?.verify_status === 2" class="ml10px">
+                            审核原因: {{ billInfo?.failed_remark }}
+                        </div>
+                    </el-form-item>
                     <el-descriptions title="" :column="2" border>
                         <el-descriptions-item label="订单编号:" label-class-name="lab-wid">
                             {{ billInfo?.order_no }}
@@ -174,25 +182,27 @@
                             {{ billInfo?.enterprise_email }}
                         </el-descriptions-item>
                         <el-descriptions-item label="开票类型:">
-                            <el-tag v-if="billInfo?.type" size="small">
-                                {{ INVOICE_DATA[billInfo?.type || ''] || '--' }}
+                            <el-tag :type="billInfo?.type === 1 ? 'danger' : billInfo?.type === 2 ? 'success' : 'warning'">
+                                {{ INVOICE_DATA[billInfo?.type as 1] }}
                             </el-tag>
                         </el-descriptions-item>
                         <el-descriptions-item label="纳税人识别号:">
                             {{ billInfo?.tax_no }}
                         </el-descriptions-item>
-                        <el-descriptions-item label="注册电话:">
-                            {{ billInfo?.logon_tel }}
-                        </el-descriptions-item>
-                        <el-descriptions-item label="注册地址:">
-                            {{ billInfo?.logon_addr }}
-                        </el-descriptions-item>
-                        <el-descriptions-item label="开户银行:">
-                            {{ billInfo?.bank }}
-                        </el-descriptions-item>
-                        <el-descriptions-item label="开户账号:">
-                            {{ billInfo?.bank_account }}
-                        </el-descriptions-item>
+                        <template v-if="billInfo?.type === 3">
+                            <el-descriptions-item label="注册电话:">
+                                {{ billInfo?.logon_tel }}
+                            </el-descriptions-item>
+                            <el-descriptions-item label="注册地址:">
+                                {{ billInfo?.logon_addr }}
+                            </el-descriptions-item>
+                            <el-descriptions-item label="开户银行:">
+                                {{ billInfo?.bank }}
+                            </el-descriptions-item>
+                            <el-descriptions-item label="开户账号:">
+                                {{ billInfo?.bank_account }}
+                            </el-descriptions-item>
+                        </template>
                     </el-descriptions>
                 </el-col>
             </el-row>

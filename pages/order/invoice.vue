@@ -21,13 +21,7 @@
                     {{ formatTime(scopes.row.add_time) }}
                 </template>
                 <template #type="{ scopes }">
-                    <el-tag v-if="scopes.row.type === 1" type="danger">
-                        {{ INVOICE_DATA[scopes.row.type as '1'] }}
-                    </el-tag>
-                    <el-tag v-else-if="scopes.row.type === 2" type="success">
-                        {{ INVOICE_DATA[scopes.row.type as '1'] }}
-                    </el-tag>
-                    <el-tag v-if="scopes.row.type === 3" type="warning">
+                    <el-tag :type="scopes.row.type === 1 ? 'danger' : scopes.row.type === 2 ? 'success' : 'warning'">
                         {{ INVOICE_DATA[scopes.row.type as '1'] }}
                     </el-tag>
                 </template>
@@ -65,6 +59,9 @@ definePageMeta({
     layout: 'home',
     middleware: 'auth',
 })
+
+// 订单编号
+const order_no = useRouteQuery('order_no')
 
 const modelRef = ref<InstanceType<typeof OrderInvoiceModel>>()
 
@@ -135,7 +132,9 @@ const onHandleCurrentChange = () => {
 const updateTableData = () => {
     initTableData()
 }
-
+// onBeforeMount(()=>{
+//     // searchData
+// })
 initTableData()
 </script>
 
