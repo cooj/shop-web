@@ -120,7 +120,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="mb20px border-1 p20px">
+            <div class="mb10px border-1 p20px">
                 <div class="tle mb10px text-15px font-600 c-#222">
                     商品信息
                 </div>
