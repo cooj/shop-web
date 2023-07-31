@@ -1,6 +1,6 @@
 <template>
     <section class="header-box">
-        <el-form class="overflow-hidden py25px" size="large" @submit.prevent="onSearch">
+        <el-form class="overflow-hidden py25px" size="large" @submit.prevent="onSearch('')">
             <div class="flex items-center justify-between text-#f8f8f8 container">
                 <div class="logo min-w150px">
                     <NuxtLink to="/">
@@ -8,7 +8,7 @@
                     </NuxtLink>
                 </div>
                 <div class="search-box relative w50%">
-                    <el-autocomplete v-model="search.keyword" :fetch-suggestions="querySearchAsync"
+                    <ElAutocomplete ref="autocompleteRef" v-model="search.keyword" :fetch-suggestions="querySearchAsync"
                         popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
                         select-when-unmatched @select="onSearch">
                         <template #prefix>
@@ -22,24 +22,23 @@
                             </lazy-el-select>
                         </template> -->
                         <template #append>
-                            <el-button type="primary" class="btn-search min-w120px" @click="onSearch">
+                            <el-button type="primary" class="btn-search min-w120px" @click="onSearch('')">
                                 搜 索
                             </el-button>
                         </template>
                         <template #default="{ item }">
                             <div class="pop-item flex justify-between">
-                                <div class="pop-text text-13px">
-                                    {{ item.value }}
-                                </div>
+                                <div class="pop-text text-13px" v-html="setHighlightText(item.value)" />
                                 <el-button v-if="item.history" size="small" link @click.stop="onRemoveHistory(item.value)">
                                     <span class="v1">搜索历史</span>
-                                    <span class="color-primary">删除</span>
+                                    <span class="pop-remove">删除</span>
                                 </el-button>
                             </div>
+                            <div class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
                         </template>
-                    </el-autocomplete>
-                    <div v-if="searchHot.length" class="search-hot">
-                        热门搜索：<span v-for="(item) in searchHot" :key="item" @click="onSearchHot(item)">{{ item }}</span>
+                    </ElAutocomplete>
+                    <div v-if="searchHotList.length" class="search-hot">
+                        热门搜索：<span v-for="(item) in searchHotList" :key="item" @click="onSearchHot(item)">{{ item }}</span>
                     </div>
                 </div>
                 <div class="cart">
@@ -60,6 +59,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElAutocomplete } from 'element-plus'
 import HeaderIndex from './header/HeaderIndex.vue'
 import { GoodsApi } from '~/api/goods/list'
 
@@ -76,30 +76,47 @@ const search = reactive({
 const useSystem = useSystemState()
 const systemInfo = ref(useSystem.system)
 
-const searchDataList = useLocalStorage<string[]>('searchKeywordList', [])
+const autocompleteRef = ref<InstanceType<typeof ElAutocomplete>>()
 
-const searchHot = computed(() => {
+const searchDataList = useLocalStorage<GoodsSearchItem[]>('searchKeywordList', [])
+
+const searchHotList = computed(() => {
     const text = systemInfo.value?.hot ?? ''
     return text.split(',')
 })
 
 // 搜索
-const onSearch = () => {
+const onSearch = (row?: any | '') => {
     const queryStr = search.keyword?.trim() ?? ''
     if (!queryStr) return ElMessage.error('请输入商品关键词')
+
+    const node: GoodsSearchItem = {
+        id: row?.id ?? 0,
+        type: row?.type ?? 3,
+        value: row?.value ?? queryStr,
+    }
+
     // 记录搜索历史,追加到第一项
-    const index = searchDataList.value.findIndex(item => item === queryStr)
+    const index = searchDataList.value.findIndex(item => item.value === node.value)
     if (index >= 0) {
         searchDataList.value = moveArraySite(searchDataList.value, index, 0) // 移动到第一项位置
     } else {
-        searchDataList.value.unshift(queryStr)
+        searchDataList.value.unshift({ value: node.value, id: node.id, type: node.type })
     }
 
+    const query: GoodsListParamsQuery = {}
+    if (node.type === 1) query.cid = node.id
+    if (node.type === 2) query.bid = node.id
+    if (node.type === 3) query.keyword = node.value
+
     linkGoodsList({
-        query: {
-            keyword: queryStr,
-        },
+        query,
     })
+
+    // 是分类、品牌跳转时，清空input框
+    if (node.type === 1 || node.type === 2) {
+        search.keyword = ''
+    }
 }
 
 // 热门
@@ -113,24 +130,76 @@ const querySearchAsync = (queryString: string, callback: (arg: any) => void) => 
     const query = queryString?.trim() ?? ''
     if (query) {
         GoodsApi.searchKeyword({ keyword: queryString }).then((res) => {
-            let results: { value: string }[] = []
-            if (res.data.value && res.data.value.data.length > 0) {
-                results = res.data.value.data.slice(0, 10).map((item) => {
-                    return { value: item }
-                })
+            // console.log(res)
+            const results: GoodsSearchItem[] = []
+            if (res.data.value) {
+                const { goods_lists, cate_lists, brand_lists } = res.data.value.data
+
+                // 商品分类
+                for (let i = 0; i < cate_lists?.length; i++) {
+                    if (results.length >= 10) break
+                    const element = cate_lists[i]
+                    results.push({
+                        value: element.name,
+                        id: Number(element.id),
+                        type: 1,
+                    })
+                }
+
+                // 商品品牌
+                for (let i = 0; i < brand_lists?.length; i++) {
+                    if (results.length >= 10) break
+                    const element = brand_lists[i]
+                    results.push({
+                        value: element.name,
+                        id: Number(element.id),
+                        type: 2,
+                    })
+                }
+
+                // 商品
+                for (let i = 0; i < goods_lists?.length; i++) {
+                    if (results.length >= 10) break
+                    const element = goods_lists[i]
+                    results.push({
+                        value: element.name,
+                        id: Number(element.id),
+                        type: 3,
+                    })
+                }
             }
+
             callback(results)
         })
     } else {
-        const dat = searchDataList.value.slice(0, 10).map(item => ({ value: item, history: 1 }))
+        const dat = searchDataList.value.slice(0, 10).map(item => ({ ...item, history: 1 }))
         callback(dat)
     }
 }
 
 // 删除搜索记录
-const onRemoveHistory = (item: string) => {
-    const index = searchDataList.value.indexOf(item)
+const onRemoveHistory = (text: string) => {
+    const index = searchDataList.value.findIndex(item => item.value === text)
     if (index >= 0) searchDataList.value.splice(index, 1) // Remove item from list.
+    // 失去焦点
+    autocompleteRef.value?.blur()
+}
+// 删除所有搜索记录
+const onRemoveHistoryAll = () => {
+    searchDataList.value = []
+    // 失去焦点
+    autocompleteRef.value?.blur()
+}
+
+// 设置文字高亮
+const setHighlightText = (text: string) => {
+    if (!search.keyword?.trim()) return text
+    // 使用正则表达式全局查找关键字
+    const regex = new RegExp(search.keyword, 'g')
+
+    // 将标注的内容替换到查到到的原内容
+    const newP = `<span class="color-primary">${search.keyword}</span>`
+    return text.replace(regex, newP)
 }
 
 watch(() => route.query.keyword, (val) => {
@@ -210,7 +279,8 @@ watch(() => route.query.keyword, (val) => {
 <style lang="scss">
 .pop-search {
     .pop-item {
-        .color-primary {
+        .pop-remove {
+            color: var(--el-color-primary);
             display: none;
         }
 
@@ -219,10 +289,17 @@ watch(() => route.query.keyword, (val) => {
                 display: none;
             }
 
-            .color-primary {
+            .pop-remove {
                 display: block;
             }
         }
+    }
+
+    .pop-clear {
+        position: absolute;
+        right: 3px;
+        bottom: 4px;
+        // line-height: 16px;
     }
 }
 </style>

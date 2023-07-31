@@ -153,7 +153,7 @@ declare interface OrderApi_GetInfoResponse {
         "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
         "goods_img": ""
     }[],
-    order_status: number,    // 订单状态 
+    order_status: number,    //订单状态 : 0:无， 1特支付，2待发货 ，3已发货 ，4配货中，5部分发货 ，6已确认 ，7已取消，8已退货 
     status_info: {
         "text": "提交订单",
         "time": "2023-05-26 15:14:43",
@@ -196,7 +196,7 @@ declare interface OrderApi_PayOrderResponse {
         duty: '4564641454785385761234',
         phone: '15766875587',
         address: '广东省深圳市光明去一片光明',
-        item_notes:strings, // 注意事项
+        item_notes: string, // 注意事项
     },
     day_num: '15',
 }
@@ -462,7 +462,7 @@ declare interface OrderInvoiceApi_GetListResponse extends ListTotal {
 
 declare interface OrderInvoiceApi_GetListItem {
     "bill_id": 1,
-    "type": 3,
+    "type": 1 | 2 | 3,
     "header": "工业品",
     "enterprise_name": "八戒公司123",
     "enterprise_email": "123456@qq.com",
@@ -471,7 +471,7 @@ declare interface OrderInvoiceApi_GetListItem {
     "logon_tel": "",
     "bank": "",
     "bank_account": "",
-    "verify_status": 3,
+    "verify_status": 0|1|2|3,
     "express_name": "顺丰",
     "express_no": "sf123456789",
     "failed_remark": "",

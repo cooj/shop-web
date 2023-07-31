@@ -139,4 +139,11 @@ export const OrderInvoiceApi = {
      */
     edit: (data: OrderInvoiceApi_Edit) => useHttp('/api/mall_user/bill_edit', data, { method: 'post' }),
 
+    /**
+     * 订单发票 -- 获取发票详情
+     * @param data
+     * @returns
+     */
+    info: (data: { order_no: string }) => useHttp<OrderInvoiceApi_GetListItem>('/api/mall_user/bill_info', data, { method: 'post' }),
+
 }

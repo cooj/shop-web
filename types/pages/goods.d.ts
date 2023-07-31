@@ -19,7 +19,7 @@ declare interface GoodsApi_GetClassResponse {
 /**
  * 获取商品分类 - 响应数据
  */
-interface GoodsApi_GetClass {
+declare interface GoodsApi_GetClass {
     "cat_id": number,   // 分类id     46
     "pid": number,    // 上级分类id   0
     "cat_code": "",
@@ -29,6 +29,20 @@ interface GoodsApi_GetClass {
     "children": GoodsApi_GetClass[]
 }
 
+
+/**
+ * 商品搜索补全列表 - 响应数据
+ */
+declare interface GoodsApi_SearchResponse {
+    brand_lists: GoodsApi_SearchResponseItem[],
+    cate_lists: GoodsApi_SearchResponseItem[],
+    goods_lists: GoodsApi_SearchResponseItem[]
+}
+
+interface GoodsApi_SearchResponseItem {
+    name: string,    // 名称
+    id: number   // id
+}
 
 
 /**
@@ -202,4 +216,17 @@ declare interface GoodsListParamsQuery {
  */
 declare interface GoodsDetailParamsQuery {
     id: number; // 商品id
+}
+
+
+
+
+/**
+ * 商品搜索框列表数据格式
+ */
+declare interface GoodsSearchItem {
+    id: number; // 商品id、分类id、品牌id
+    value: string;    // ...名称
+    type: 1 | 2 | 3;    // 1:分类，2：品牌，3：商品
+    history?: 0 | 1;   // 1:浏览器缓存读取
 }

@@ -74,9 +74,24 @@
                                     优惠券
                                 </div>
                                 <div class="gt">
-                                    <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
+                                    <!-- 未登录禁止领取 -->
+                                    <el-popover v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id"
+                                        placement="top" :width="75" :popper-style="{ minWidth: '75px' }" trigger="hover"
+                                        :disabled="userData?.user_id ? false : true">
+                                        <el-button class="w100%" type="primary" size="small" link
+                                            @click="onReceive(item.coupon_id)">
+                                            领取
+                                        </el-button>
+                                        <template #reference>
+                                            <GoodsCoupon>
+                                                {{ item.coupon_name }}立减{{ item.par_value }}元
+                                            </GoodsCoupon>
+                                        </template>
+                                    </el-popover>
+
+                                    <!-- <GoodsCoupon v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id">
                                         {{ item.coupon_name }}立减{{ item.par_value }}元
-                                    </GoodsCoupon>
+                                    </GoodsCoupon> -->
                                 </div>
                             </li>
                             <li class="items-center bg-#f8f8f8 -mt10px">
@@ -185,7 +200,7 @@
                         <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
                             <el-tab-pane label="推荐商品" name="1">
                                 <ul class="goods-list">
-                                    <li v-for="item in goodsData?.link_lists" :key="item.goods_id">
+                                    <li v-for="item in goodsData?.link_lists?.slice(0, 10)" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
                                             <CoImage :src="setGoodsOssImg(item.goods_img, 300)"
                                                 class="hov-img w100% pb100%" />
@@ -337,6 +352,7 @@ import { GoodsApi } from '~/api/goods/list'
 import { InterListApi } from '~/api/user/interList'
 import { RecordApi } from '~/api/user/record'
 import { UserLogin } from '#components'
+import { CouponApi } from '~/api/user/coupon'
 
 // const { text, copy, copied, isSupported } = useClipboard({ legacy: true })
 const { x, y } = useMouse() // 鼠标位置函数用于获取当前鼠标位置
@@ -387,6 +403,7 @@ const form = reactive({
 })
 const param_id = useRouteParam('id')
 
+// 获取商品信息
 const initGoodsData = async () => {
     const goods_sn = param_id.value?.trim() ?? ''
     if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
@@ -396,6 +413,7 @@ const initGoodsData = async () => {
     if (error.value) return ElMessage.error('网络错误!')
     if (data.value?.code === 200) {
         const dat = data.value.data
+        // console.log(dat)
         const infoData = dat.goods_info
 
         // if (goods.goods_id === id) {
@@ -706,6 +724,17 @@ const onRightTabChange = async () => {
     if (defData.rightActive === '2') {
         initQuestionData()
     }
+}
+
+// 领取优惠券
+const onReceive = async (id: number) => {
+    const data: CouponApi_addList = {
+        user_id: userData.value!.user_id,
+        coupon_id: id,
+    }
+    const res = await CouponApi.addList(data)
+    if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
+    ElMessage.success('领取成功')
 }
 
 // 添加商品浏览历史

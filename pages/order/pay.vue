@@ -19,8 +19,8 @@
                             订单支付
                         </el-breadcrumb-item>
                     </el-breadcrumb>
-                    <div class="mb20px min-h300px bg-#fff p15px">
-                        <div v-if="defData.orderInfo?.pay_type === 3 && !defData.countDown.flag"
+                    <div class="mb20px min-h380px bg-#fff p15px">
+                        <div v-if="defData.orderInfo?.pay_type === 3 && !defData.countDown.flag && payStatus <= 1"
                             class="flex flex-wrap p5px">
                             <div class="flex-1">
                                 <div class="pay-ready text-center">
@@ -197,7 +197,7 @@ const order_no = computed(() => {
 })
 
 // 支付状态
-const payStatus = computed(() => defData.orderInfo?.order_status)
+const payStatus = computed(() => defData.orderInfo!.order_status)
 
 const initDefaultData = async () => {
     if (!order_no.value) {
