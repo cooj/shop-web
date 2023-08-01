@@ -102,18 +102,12 @@
                                 </div>
                                 <div class="radio-box mb20px">
                                     <el-radio-group v-model="form.payType">
-                                        <div class="radio-item">
-                                            <el-radio :label="1" border>
-                                                <img src="~/assets/images/payment-wechat.jpg" alt="">
-                                                <!-- <i class="i-ic-baseline-wechat mr3px inline-block v-text-top c-#09bb07" />
-                                                微信 -->
-                                            </el-radio>
-                                        </div>
-                                        <div class="radio-item">
-                                            <el-radio :label="2" border>
-                                                <img src="~/assets/images/payment-alipay.jpg" alt="">
-                                                <!-- <i class="i-ic-baseline-payment mr3px inline-block v-text-top c-#3887ff" />
-                                                支付宝 -->
+                                        <div v-for="item in payTypeList" :key="item.id" class="radio-item">
+                                            <el-radio :label="item.type" border>
+                                                <img :src="item.ico_url" alt="">
+                                                <!-- <i class="i-ic-baseline-wechat mr3px inline-block v-text-top c-#09bb07" /> -->
+                                                <!-- <i :class="item.ico_url" /> -->
+                                                <!-- {{ item.name }} -->
                                             </el-radio>
                                         </div>
                                     </el-radio-group>
@@ -161,6 +155,11 @@
 <script lang="ts" setup>
 import QRCode from 'qrcode'
 import { OrderApi } from '~/api/goods/order'
+
+const usePayType = usePayTypeState()
+// 支持的支付方式
+const payTypeList = await usePayType.getPayTypeList()
+// console.log('payTypeList :>> ', payTypeList)
 
 const alipayRef = ref<HTMLDivElement>()
 

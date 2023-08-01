@@ -100,7 +100,7 @@ export const usePayTypeState = () => {
      * 获取支付方式
      */
     const getPayTypeList = async () => {
-        if (typeList.value.length === 0) return typeList
+        if (typeList.value.length) return typeList
         const { data } = await OrderApi.getPayType()
         // await wait(1000)
         if (data.value?.code === 200) {
