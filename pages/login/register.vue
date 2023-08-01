@@ -36,14 +36,16 @@
                                 注册
                             </el-button>
                         </el-form-item>
-                        <el-form-item>
+                        <el-form-item label-width="97px">
                             <el-checkbox v-model="form.agree" label="我已阅读并同意" />
-                            <el-button type="text" style="padding-left:0px" @click="openWeb">
-                                《工游记网站服务协议》
-                            </el-button>
-                            <el-button type="text" style="padding-left:110px" @click="openPolicy">
-                                《工游记隐私政策》
-                            </el-button>
+                            <el-button-group>
+                                <el-button type="text" style="padding:0px" @click="openWeb">
+                                    《工游记网站服务协议》
+                                </el-button>
+                                <el-button type="text" style="padding:0px" @click="openPolicy">
+                                    《工游记隐私政策》
+                                </el-button>
+                            </el-button-group>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -68,6 +70,8 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { LoginApi } from '~/api/login'
 
 const route = useRoute()
+
+const userState = useUserState()
 
 definePageMeta({
     layout: 'login',
@@ -176,7 +180,8 @@ const onClick = async () => {
     const { data: res } = await LoginApi.Login(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     ElMessage.success('注册成功')
-    return navigateTo('/login')
+    userState.setToken(res.value.data.token)
+    return navigateTo('/user/account')
 }
 </script>
 
