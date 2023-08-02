@@ -165,7 +165,8 @@ const rules = reactive<FormRules>({
         { required: true, message: '必填项不能为空', trigger: 'blur' },
     ],
     contacts_phone: [
-        { required: true, pattern: /^(((\d{3,4}-)?[0-9]{7,8})|(1(3|4|5|6|7|8|9)\d{9}))$/, message: '填写正确的手机号格式', trigger: 'blur' },
+        { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
+        { required: true, pattern: /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' },
     ],
     enterprise_address: [
         { required: true, message: '必填项不能为空', trigger: 'blur' },

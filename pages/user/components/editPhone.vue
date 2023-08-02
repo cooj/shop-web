@@ -27,8 +27,8 @@
                 </el-form-item>
                 <el-form-item prop="vali_code" label="验证码：">
                     <el-col :span="15">
-                        <el-input v-model.trim="form.vali_code" type="text" maxlength="4" placeholder="请输入验证码" clearable tabindex="3"
-                            @keyup.enter="onClick" />
+                        <el-input v-model.trim="form.vali_code" type="text" maxlength="4" placeholder="请输入验证码" clearable
+                            tabindex="3" @keyup.enter="onClick" />
                     </el-col>
                     <el-col :span="1" />
                     <el-col :span="8">
@@ -117,7 +117,8 @@ const form = reactive({
 // 规则
 const rules = reactive<FormRules>({
     phone: [
-        { required: true, pattern: /^(((\d{3,4}-)?[0-9]{7,8})|(1(3|4|5|6|7|8|9)\d{9}))$/, message: '填写正确的手机号格式', trigger: 'blur' },
+        { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' },
+        { required: true, pattern: /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码', trigger: 'blur' },
     ],
     sms_code: [
         { required: true, message: '请输入短信验证码', trigger: 'blur' },
