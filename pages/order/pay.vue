@@ -115,7 +115,10 @@
                                 <el-button type="primary" size="large" :loading="defData.submit" @click="onPayment">
                                     立即支付
                                 </el-button>
-                                <div ref="alipayRef" class="hidden" v-html="defData.aliData" />
+                                <!-- <div ref="alipayRef" class="hidden" v-html="defData.aliData" /> -->
+                                <el-dialog v-model="defData.visibleAli" width="750" title="" center @close="onCloseAlipay">
+                                    <iframe :srcdoc="defData.aliData" width="700" height="560" />
+                                </el-dialog>
                             </template>
                         </el-result>
                         <el-result v-else :icon="payStatus === 7 ? 'error' : 'success'"
@@ -166,7 +169,7 @@ const alipayRef = ref<HTMLDivElement>()
 const defData = reactive({
     skeleton: true, // 默认打开骨架屏
     ready: true,
-    status: -1, // 支付状态 0未支付 1已支付 2已取消 3已退款
+    // status: -1, // 支付状态 0未支付 1已支付 2已取消 3已退款
     aliData: '', // 支付宝返回的form表单代码
     money: '', // 支付金额
     orderInfo: {} as OrderApi_GetInfoResponse | undefined, // 订单信息
@@ -183,7 +186,8 @@ const defData = reactive({
     visibleChat: false,
     chatPayUrl: '', // 微信返回的支付地址
     update: false, // 是否重新获取订单详情
-
+    visibleAli: false, // 支付宝显示隐藏
+    tim: 0 as any, // 支付宝定时器
 })
 
 const form = reactive({
@@ -223,7 +227,7 @@ const initDefaultData = async () => {
         return defData.ready = false
     }
 
-    defData.status = res.value!.info.order_status
+    // defData.status = res.value!.info.order_status
     defData.money = formatNumber(Number(res.value?.info.meet_price) || 0)
     defData.orderInfo = res.value!.info
 
@@ -238,6 +242,18 @@ const initDefaultData = async () => {
     //     ElMessage.error(res.value?.msg)
     //     return defData.ready = false
     // }
+}
+
+// 查询支付状态
+const getOrderStatus = async () => {
+    const { data: res, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
+        method: 'post',
+        body: { main_order_no: order_no.value },
+    })
+    if (error.value) return ''
+    await wait(500)
+    defData.orderInfo = res.value!.info
+    return res.value!.info.order_status > 1
 }
 
 // 支付
@@ -263,12 +279,21 @@ const onPayment = async () => {
     }
 
     if (form.payType === 2) { // 支付宝支付
+        defData.visibleAli = true
+
         defData.aliData = res.value?.data as string
-        nextTick(() => {
-            const form = alipayRef.value?.firstElementChild as HTMLFormElement
-            form.setAttribute('target', '_blank')
-            form.submit()
-        })
+
+        defData.tim = setInterval(async () => {
+            const n = await getOrderStatus()
+            if (n) onCloseAlipay() // 关闭 支付及弹窗
+        }, 2000)
+
+        // nextTick(() => {
+        //     const form = alipayRef.value?.firstElementChild as HTMLFormElement
+        //     form.setAttribute('target', '_blank')
+        //     form.submit()
+        // })
+
         // const aliPaySubmit = document.getElementById('alipaySubmit')
         // if (aliPaySubmit) document.body.removeChild(aliPaySubmit)// 删除动态创建的按钮元素，防止隐藏按钮造成的
         // const div = document.createElement('div')
@@ -279,7 +304,7 @@ const onPayment = async () => {
         // form.setAttribute('target', '_blank')
         // form.submit()
     }
-    if (form.payType === 3) defData.status = 1
+    // if (form.payType === 3) defData.status = 1
 }
 
 /**
@@ -329,17 +354,16 @@ const setCountDown = () => {
 const onClose = async () => {
     if (defData.update) return
     defData.update = true
-    const { data: res, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
-        method: 'post',
-        body: { main_order_no: order_no.value },
-    })
 
-    await wait(500)
+    await getOrderStatus()
+
     defData.update = false
-    if (error.value) return
-    if (res.value?.code === 200) {
-        defData.status = res.value!.info.order_status
-    }
+}
+
+// 关闭支付宝支付弹窗
+const onCloseAlipay = () => {
+    defData.visibleAli = false
+    clearInterval(defData.tim)
 }
 
 initDefaultData()
