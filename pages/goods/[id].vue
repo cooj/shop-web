@@ -741,8 +741,17 @@ const onReceive = async (id: number) => {
 const onHistory = async () => {
     // 只在客户端时执行
     if (!process.client) return
+
+    // 获取当前路由
+    const name = useRoute().name
+
     // 进入页面2秒后加入历史记录中
     await wait(2000)
+
+    // 路由发生变化时，不添加进入历史记录
+    const newName = useRoute().name
+    if (newName !== name) return
+
     if (userData.value?.user_id && defData.goods_id) {
         const params: RecordApi_Add = {
             goods_id: defData.goods_id,
