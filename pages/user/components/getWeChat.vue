@@ -6,7 +6,7 @@
                     账户管理
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>账户资料</el-breadcrumb-item>
-                <el-breadcrumb-item>修改手机号码</el-breadcrumb-item>
+                <el-breadcrumb-item>绑定微信</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <el-button>
@@ -27,7 +27,7 @@ import { LoginApi } from '~/api/login'
 const route = useRoute()
 const userState = useUserState()
 
-// 微信扫码登录
+// 微信扫码登录 打开微信二维码图片
 const weChat = ref()
 const getWeChat = async () => {
     const data: LoginApi_getChat = {
@@ -51,7 +51,7 @@ const getOpenId = async () => {
         }
         const { data: codeId } = await LoginApi.getOpenid(code)
         if (codeId.value?.code !== 200) return ElMessage.error(codeId.value?.msg)
-        return navigateTo('/user/account')
+        return navigateTo('/user/Account')
     }
 }
 getOpenId()
