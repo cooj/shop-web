@@ -97,23 +97,18 @@
                         <el-result v-else-if="payStatus === 1" icon="info" title="订单提交成功" sub-title="立即支付完成订单">
                             <template #extra>
                                 <div class="mb15px text-13px">
-                                    需支付：<span class="mr20px text-24px">￥{{ defData.money }}</span>
+                                    需支付：<span class="mr20px text-24px">￥{{
+                                        formatNumber(Number(defData.orderInfo?.meet_price) || 0) }}</span>
                                     您的订单号：<span class="color-primary">{{ order_no }}</span>
                                 </div>
                                 <div class="radio-box mb20px">
                                     <el-radio-group v-model="form.payType">
-                                        <div class="radio-item">
-                                            <el-radio :label="1" border>
-                                                <img src="~/assets/images/payment-wechat.jpg" alt="">
-                                                <!-- <i class="i-ic-baseline-wechat mr3px inline-block v-text-top c-#09bb07" />
-                                                微信 -->
-                                            </el-radio>
-                                        </div>
-                                        <div class="radio-item">
-                                            <el-radio :label="2" border>
-                                                <img src="~/assets/images/payment-alipay.jpg" alt="">
-                                                <!-- <i class="i-ic-baseline-payment mr3px inline-block v-text-top c-#3887ff" />
-                                                支付宝 -->
+                                        <div v-for="item in payTypeList" :key="item.id" class="radio-item">
+                                            <el-radio :label="item.type" border>
+                                                <img :src="item.ico_url" alt="">
+                                                <!-- <i class="i-ic-baseline-wechat mr3px inline-block v-text-top c-#09bb07" /> -->
+                                                <!-- <i :class="item.ico_url" /> -->
+                                                <!-- {{ item.name }} -->
                                             </el-radio>
                                         </div>
                                     </el-radio-group>
@@ -121,7 +116,10 @@
                                 <el-button type="primary" size="large" :loading="defData.submit" @click="onPayment">
                                     立即支付
                                 </el-button>
-                                <div ref="alipayRef" class="hidden" v-html="defData.aliData" />
+                                <!-- <div ref="alipayRef" class="hidden" v-html="defData.aliData" /> -->
+                                <el-dialog v-model="defData.visibleAli" width="750" title="" center @close="onCloseAlipay">
+                                    <iframe :srcdoc="defData.aliData" width="700" height="560" scrolling="no" />
+                                </el-dialog>
                             </template>
                         </el-result>
                         <el-result v-else :icon="payStatus === 7 ? 'error' : 'success'"
@@ -162,14 +160,17 @@
 import QRCode from 'qrcode'
 import { OrderApi } from '~/api/goods/order'
 
-const alipayRef = ref<HTMLDivElement>()
+const usePayType = usePayTypeState()
+// 支持的支付方式
+const payTypeList = await usePayType.getPayTypeList()
+// console.log('payTypeList :>> ', payTypeList)
+
+// const alipayRef = ref<HTMLDivElement>()
 
 const defData = reactive({
     skeleton: true, // 默认打开骨架屏
     ready: true,
-    status: -1, // 支付状态 0未支付 1已支付 2已取消 3已退款
-    aliData: '', // 支付宝返回的form表单代码
-    money: '', // 支付金额
+
     orderInfo: {} as OrderApi_GetInfoResponse | undefined, // 订单信息
     payInfo: {} as OrderApi_PayOrderResponse | undefined, // 支付信息(线下支付)
 
@@ -184,7 +185,9 @@ const defData = reactive({
     visibleChat: false,
     chatPayUrl: '', // 微信返回的支付地址
     update: false, // 是否重新获取订单详情
-
+    visibleAli: false, // 支付宝显示隐藏
+    aliData: '', // 支付宝返回的form表单代码
+    tim: 0 as any, // 支付宝定时器
 })
 
 const form = reactive({
@@ -199,6 +202,7 @@ const order_no = computed(() => {
 // 支付状态
 const payStatus = computed(() => defData.orderInfo!.order_status)
 
+// 获取订单信息 // 查询支付状态
 const initDefaultData = async () => {
     if (!order_no.value) {
         defData.ready = false
@@ -224,21 +228,7 @@ const initDefaultData = async () => {
         return defData.ready = false
     }
 
-    defData.status = res.value!.info.order_status
-    defData.money = formatNumber(Number(res.value?.info.meet_price) || 0)
     defData.orderInfo = res.value!.info
-
-    // const { data: res } = await OrderApi.getInfo({ main_order_no: order_no.value })
-    // await wait(500)
-    // defData.skeleton = false
-    // console.log('res :>> ', res)
-    // if (res.value?.code === 200) {
-    //     defData.status = res.value.data.order_status
-    //     defData.money = formatNumber(Number(res.value.data.meet_price) || 0)
-    // } else {
-    //     ElMessage.error(res.value?.msg)
-    //     return defData.ready = false
-    // }
 }
 
 // 支付
@@ -264,12 +254,21 @@ const onPayment = async () => {
     }
 
     if (form.payType === 2) { // 支付宝支付
+        defData.visibleAli = true
+
         defData.aliData = res.value?.data as string
-        nextTick(() => {
-            const form = alipayRef.value?.firstElementChild as HTMLFormElement
-            form.setAttribute('target', '_blank')
-            form.submit()
-        })
+
+        defData.tim = setInterval(async () => {
+            await initDefaultData()
+            if (payStatus.value > 1) onCloseAlipay() // 关闭 支付及弹窗
+        }, 2500)
+
+        // nextTick(() => {
+        //     const form = alipayRef.value?.firstElementChild as HTMLFormElement
+        //     form.setAttribute('target', '_blank')
+        //     form.submit()
+        // })
+
         // const aliPaySubmit = document.getElementById('alipaySubmit')
         // if (aliPaySubmit) document.body.removeChild(aliPaySubmit)// 删除动态创建的按钮元素，防止隐藏按钮造成的
         // const div = document.createElement('div')
@@ -280,7 +279,7 @@ const onPayment = async () => {
         // form.setAttribute('target', '_blank')
         // form.submit()
     }
-    if (form.payType === 3) defData.status = 1
+    // if (form.payType === 3) defData.status = 1
 }
 
 /**
@@ -330,17 +329,16 @@ const setCountDown = () => {
 const onClose = async () => {
     if (defData.update) return
     defData.update = true
-    const { data: res, error } = await useFetch<OrderDetailInfoData>('/api/order/info', {
-        method: 'post',
-        body: { main_order_no: order_no.value },
-    })
 
-    await wait(500)
+    await initDefaultData()
+
     defData.update = false
-    if (error.value) return
-    if (res.value?.code === 200) {
-        defData.status = res.value!.info.order_status
-    }
+}
+
+// 关闭支付宝支付弹窗
+const onCloseAlipay = () => {
+    defData.visibleAli = false
+    clearInterval(defData.tim)
 }
 
 initDefaultData()

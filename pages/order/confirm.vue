@@ -512,6 +512,7 @@ const getAddress = (params: UserAddressApi_Edit) => {
 
     if (defData.type === 1) {
         form.address_id = params.address_id
+        onChooseAddress() // 更新运费
     } else if (defData.type === 2) {
         form.bill_address_id = params.address_id
     }

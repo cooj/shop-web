@@ -224,66 +224,62 @@
                                 <div v-html="goodsInfo?.goods_desc" />
                             </el-tab-pane>
                             <el-tab-pane label="商品问答" name="2" lazy>
-                                <div v-if="CLIENT">
-                                    <el-button style="background-color: var(--el-color-primary);color: white;"
-                                        @click="questionClick">
-                                        我要提问
-                                    </el-button>
-                                    <el-table :data="defData.tableData" style="width: 100%" default-expand-all>
-                                        <el-table-column type="expand">
-                                            <template #default="props">
-                                                <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
-                                                    <span class="mr5px fw-800">答</span>
-                                                    暂无回答
-                                                </div>
-                                                <el-table v-else :data="props.row.answer_lists" :show-header="false"
-                                                    style="--el-table-border-color: none;">
-                                                    <el-table-column width="49px" />
-                                                    <el-table-column prop="content">
-                                                        <template #default="scopes">
-                                                            <span class="mr5px fw-800 c-green">答</span>
-                                                            <span>{{ scopes.row.content }}</span>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column prop="" width="300" show-overflow-tooltip
-                                                        align="right">
-                                                        <template #default="scopes">
-                                                            <span style="font-weight: 80;font-size: 12px;"> {{
-                                                                                                                changeToStar(scopes.row.user_name) }}
-                                                                {{ formatTime(scopes.row.add_time) }}</span>
-                                                        </template>
-                                                    </el-table-column>
-                                                    <el-table-column width="120px" />
-                                                </el-table>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column label="" prop="content">
-                                            <template #default="scopes">
-                                                <span class="mr5px fw-800 c-red">问</span>
-                                                <span style="font-weight: 800;">{{ scopes.row.content }}</span>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column prop="" width="300" show-overflow-tooltip align="right">
-                                            <template #default="scopes">
-                                                <span style="font-weight: 80;font-size: 13px;"> {{
-                                                                                                    changeToStar(scopes.row.user_name) }}
-                                                    {{ formatTime(scopes.row.add_time) }}</span>
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column fixed="right" label="" width="120">
-                                            <template #default="scopes">
-                                                <el-button link type="primary" size="small" @click="onAnswer(scopes.row)">
-                                                    去回答
-                                                </el-button>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>
-                                    <div class="goods-pagination" mt15px>
-                                        <el-pagination v-model:current-page="defData.page"
-                                            v-model:page-size="defData.pageSize" small background
-                                            layout=" prev, pager, next,total, jumper" :total="defData.total"
-                                            @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
-                                    </div>
+                                <el-button style="background-color: var(--el-color-primary);color: white;"
+                                    @click="questionClick">
+                                    我要提问
+                                </el-button>
+                                <el-table :data="defData.tableData" style="width: 100%" default-expand-all>
+                                    <el-table-column type="expand">
+                                        <template #default="props">
+                                            <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
+                                                <span class="mr5px fw-800">答</span>
+                                                暂无回答
+                                            </div>
+                                            <el-table v-else :data="props.row.answer_lists" :show-header="false"
+                                                style="--el-table-border-color: none;">
+                                                <el-table-column width="49px" />
+                                                <el-table-column prop="content">
+                                                    <template #default="scopes">
+                                                        <span class="mr5px fw-800 c-green">答</span>
+                                                        <span>{{ scopes.row.content }}</span>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column prop="" width="300" show-overflow-tooltip align="right">
+                                                    <template #default="scopes">
+                                                        <span style="font-weight: 80;font-size: 12px;"> {{
+                                                                                                            changeToStar(scopes.row.user_name) }}
+                                                            {{ formatTime(scopes.row.add_time) }}</span>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column width="120px" />
+                                            </el-table>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="" prop="content">
+                                        <template #default="scopes">
+                                            <span class="mr5px fw-800 c-red">问</span>
+                                            <span style="font-weight: 800;">{{ scopes.row.content }}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="" width="300" show-overflow-tooltip align="right">
+                                        <template #default="scopes">
+                                            <span style="font-weight: 80;font-size: 13px;"> {{
+                                                                                                changeToStar(scopes.row.user_name) }}
+                                                {{ formatTime(scopes.row.add_time) }}</span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column fixed="right" label="" width="120">
+                                        <template #default="scopes">
+                                            <el-button link type="primary" size="small" @click="onAnswer(scopes.row)">
+                                                去回答
+                                            </el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <div class="goods-pagination" mt15px>
+                                    <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize"
+                                        small background layout=" prev, pager, next,total, jumper" :total="defData.total"
+                                        @size-change="onHandleSizeChange" @current-change="onHandleSizeChange" />
                                 </div>
                             </el-tab-pane>
                         </el-tabs>
@@ -362,11 +358,6 @@ const userState = useUserState()
 // 登录用户
 const userData = await userState.getUserInfo()
 const useCartNumber = useCartNumberState()
-
-// const usePayType = usePayTypeState()
-// 支持的支付方式
-// const payTypeList = await usePayType.getPayTypeList()
-// // console.log('payTypeList :>> ', payTypeList)
 
 const loginRef = ref<InstanceType<typeof UserLogin>>()
 
