@@ -38,6 +38,11 @@
                     <el-table-column prop="remarks" label="备注（工游豆来源、用途)" min-width="200px" align="center" />
                 </el-table>
             </div>
+            <div class="goods-pagination mt10px">
+                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
+                    layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
+                    @current-change="onHandleSizeChange" />
+            </div>
         </el-skeleton>
     </LayoutUser>
 </template>
@@ -49,18 +54,29 @@ const defData = reactive({
     tableData: [] as BeansApi_getListResponse['lists'],
     pears: '' as unknown as number,
     skeleton: true,
+    page: 1,
+    pageSize: 10,
+    total: 10,
 })
 
 const initTableData = async () => {
     const data: BeansApi_getList = {
         type: 0,
+        page: defData.page,
+        page_size: defData.pageSize,
     }
     const { data: res } = await BeansApi.geList(data)
 
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     defData.tableData = res.value?.data.lists
+    defData.total = res.value?.data.total
     defData.pears = res.value?.data.peas
+}
+
+// 分页数量点击
+const onHandleSizeChange = () => {
+    initTableData()
 }
 
 initTableData()

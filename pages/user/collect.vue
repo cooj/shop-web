@@ -45,6 +45,11 @@
                 </template>
             </el-table-column>
         </ElTable>
+        <div class="goods-pagination mt10px">
+            <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
+                layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
+                @current-change="onHandleSizeChange" />
+        </div>
     </LayoutUser>
 </template>
 
@@ -55,19 +60,26 @@ import { RecordApi } from '~/api/user/record'
 const tableRef = ref<InstanceType<typeof ElTable>>()
 
 const defData = reactive({
-    tableData: [] as RecordApi_GetListResponse[],
+    tableData: [] as RecordApi_GetListResponse['lists'],
+    page: 1,
+    total: 10,
+    pageSize: 10,
 })
 
 const initTableData = async () => {
     const data: RecordApi_GetList = {
         type: 1,
+        is_paging: 1,
+        page: defData.page,
+        page_size: defData.pageSize,
     }
     const res = await RecordApi.getList(data)
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-    defData.tableData = res.data.value?.data.map((item) => {
+    defData.tableData = res.data.value?.data.lists.map((item) => {
         item.goods_img = setGoodsOssImg(item.goods_img, 60)
         return item
     })
+    defData.total = res.data.value.data.total
 }
 initTableData()
 
@@ -91,6 +103,11 @@ const onRemove = (row: any) => {
         ElMessage.success('删除成功')
         initTableData() // 重新加载列表
     }).catch(() => { })
+}
+
+// 分页数量点击
+const onHandleSizeChange = () => {
+    initTableData()
 }
 
 definePageMeta({

@@ -55,6 +55,12 @@
                     </template>
                 </el-table-column>
             </ElTable>
+
+            <div class="goods-pagination mt10px">
+                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
+                    layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
+                    @current-change="onHandleSizeChange" />
+            </div>
         </el-skeleton>
     </LayoutUser>
 </template>
@@ -67,22 +73,29 @@ const tableRef = ref<InstanceType<typeof ElTable>>()
 const userState = useUserState()
 
 const defData = reactive({
-    tableData: [] as RecordApi_GetListResponse[],
+    tableData: [] as RecordApi_GetListResponse['lists'],
     skeleton: true,
+    page: 1,
+    total: 10,
+    pageSize: 10,
 
 })
 
 const initTableData = async () => {
     const data: RecordApi_GetList = {
         type: 2,
+        is_paging: 1,
+        page: defData.page,
+        page_size: defData.pageSize,
     }
     const res = await RecordApi.getList(data)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-    defData.tableData = res.data.value?.data.map((item) => {
+    defData.tableData = res.data.value?.data.lists.map((item) => {
         item.goods_img = setGoodsOssImg(item.goods_img, 60)
         return item
     })
+    defData.total = res.data.value.data.total
 }
 initTableData()
 
@@ -109,6 +122,11 @@ const onRemove = async (row: any) => {
             initTableData() // 重新加载列表
         }
     })
+}
+
+// 分页数量点击
+const onHandleSizeChange = () => {
+    initTableData()
 }
 
 definePageMeta({

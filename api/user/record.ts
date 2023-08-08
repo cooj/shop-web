@@ -7,7 +7,7 @@ export const RecordApi = {
      * 获取商品收藏、添加浏览记录列表
      * @returns
      */
-    getList: (data: RecordApi_GetList) => useHttp<RecordApi_GetListResponse[]>('/api/mall_user/get_goods_record', data, { method: 'post' }),
+    getList: (data: RecordApi_GetList) => useHttp<RecordApi_GetListResponse>('/api/mall_user/get_goods_record', data, { method: 'post' }),
 
     /**
      * 添加收藏、添加浏览记录
