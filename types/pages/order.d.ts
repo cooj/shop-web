@@ -167,6 +167,23 @@ declare interface OrderApi_GetInfoResponse {
         "logistics_name": "顺丰物流"
     }[]
     peas_price: string, // 工游豆抵扣金额
+
+
+    amount: '109.00',
+    end_time: 1687657081,
+    bank_info: {
+        name: '深圳工游记集团有限公司12465646123',
+        company_name: '深圳工游记集团有限公司12465646123',
+        bank_account: '4564641454785385761234',
+        bank_name: '深圳农商银行',
+        bank_cnaps: '4564641454785385761234',
+        notes: '55555',
+        duty: '4564641454785385761234',
+        phone: '15766875587',
+        address: '广东省深圳市光明去一片光明',
+        item_notes: string, // 注意事项
+    },
+    day_num: '15',
 }
 
 
@@ -438,7 +455,7 @@ declare interface OrderReturnApi_Fill {
 
 declare interface OrderDetailInfoData {
     info: OrderApi_GetInfoResponse,      // 订单信息
-    pay?: OrderApi_PayOrderResponse,          // 支付信息(线下支付)
+    // pay?: OrderApi_PayOrderResponse,          // 支付信息(线下支付)
     code?: number,
     msg?: string,
 }
