@@ -189,7 +189,7 @@
                         <el-descriptions-item label="纳税人识别号:">
                             {{ billInfo?.tax_no }}
                         </el-descriptions-item>
-                        <template v-if="billInfo?.type === 3">
+                        <template v-if="billInfo?.type === 1">
                             <el-descriptions-item label="注册电话:">
                                 {{ billInfo?.logon_tel }}
                             </el-descriptions-item>
