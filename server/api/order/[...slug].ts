@@ -12,13 +12,14 @@ router.use('/info', defineEventHandler(async (event) => {
     if (res) {
         if (res.code !== 200) return { code: res.code, msg: res.msg }
         // 获取线下支付的订单信息
-        if (res.data.pay_type === 3) {
-            // { main_order_no: order_no.value, pay_type: form.payType }
-            const dat = await useServerFetch<OrderApi_PayOrderResponse>(event, '/api/mall/pay_order', {
-                pay_type: 3,
-            }, true)
-            return { code: 200, info: res.data, pay: dat.data }
-        }
+        // if (res.data.pay_type === 3) {
+        //     // { main_order_no: order_no.value, pay_type: form.payType }
+        //     const dat = await useServerFetch<OrderApi_PayOrderResponse>(event, '/api/mall/pay_order', {
+        //         pay_type: 3,
+        //     }, true)
+        //     console.log('dat :>> ', dat)
+        //     return { code: 200, info: res.data, pay: dat.data }
+        // }
         return { code: 200, info: res.data }
     }
     return res

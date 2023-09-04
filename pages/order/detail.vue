@@ -21,30 +21,27 @@
                     {{ item.text }}
                 </el-breadcrumb-item>
             </el-breadcrumb>
-            <div class="order-top mb20px border-1 p20px">
-                <div class="lt">
-                    <span class="mr20px">订单号：<b>{{ order_no }}</b></span>
-                    <span>订单状态：
-                        <el-text class="font-bold" size="large" :type="orderState.type"
-                            :style="`color: ${orderState.color};`">
-                            {{ orderState.text }}
-                        </el-text>
-                    </span>
-                    <div v-if="orderInfo?.order_status === 1" class="mt10px">
-                        您的订单已提交成功，请尽快完成付款哦！
-                        <el-countdown v-if="orderInfo?.pay_type === 3" format="[剩余]DD[天]HH[时]mm[分]ss[秒]"
-                            :value="setEndTime()" value-style="font-size:13px;" @finish="onFinish()" />
-                    </div>
-                </div>
-                <div class="gt">
-                    <OrderOperate class="order-ope"
-                        :data="{ order_no, status: orderInfo!.order_status, bill_status: orderInfo!.bill_status, is_return: orderInfo!.is_refund }"
-                        @update="updateOrder" />
-                </div>
-            </div>
             <div class="mb20px border-1 p20px">
-                <div class="tle mb10px text-15px font-600 c-#222">
-                    物流信息
+                <div class="order-top mb20px min-h40px">
+                    <div class="lt">
+                        <span class="mr20px">订单号：<b>{{ order_no }}</b></span>
+                        <span>订单状态：
+                            <el-text class="font-bold" size="large" :type="orderState.type"
+                                :style="`color: ${orderState.color};`">
+                                {{ orderState.text }}
+                            </el-text>
+                        </span>
+                        <div v-if="orderInfo?.order_status === 1" class="mt10px">
+                            您的订单已提交成功，请尽快完成付款哦！
+                            <el-countdown v-if="orderInfo?.pay_type === 3" format="[剩余]DD[天]HH[时]mm[分]ss[秒]"
+                                :value="setEndTime()" value-style="font-size:13px;color:#f00;" @finish="onFinish()" />
+                        </div>
+                    </div>
+                    <div class="gt">
+                        <OrderOperate class="order-ope"
+                            :data="{ order_no, status: orderInfo!.order_status, bill_status: orderInfo!.bill_status, is_return: orderInfo!.is_refund }"
+                            @update="updateOrder" />
+                    </div>
                 </div>
                 <div class="bane-item">
                     <lazy-el-steps class="step-box" :active="stepSelect" finish-status="success">
@@ -94,6 +91,8 @@
                             <div v-for="(item, index) in logisticsList" :key="index">
                                 {{ item.logistics_name }} <span class="mr20px opacity-80">({{ item.logistics_no }})</span>
                                 <span class="c-#666">发货时间：{{ item.create_time }}</span>
+
+                                <span class="ml25px c-#222">{{ item.goods_name }}</span>
                             </div>
                         </div>
                     </li>
@@ -237,7 +236,6 @@ const addressText = computed(() => {
 const stepSelect = computed(() => {
     let step = 0
     orderInfo.value?.status_info.forEach((item, index, arr) => {
-        if (item.selected) step = index
         if (item.selected) {
             if (arr.length - 1 === index) {
                 step = index + 1
@@ -258,9 +256,12 @@ const setPreferMoney = computed(() => {
 // 物流，去除单号重复的物流
 const logisticsList = computed(() => {
     const arr = orderInfo.value?.order_logistics
-    // 数组去重（根据物流单号去重）
-    const array = arr?.filter((item, index) => arr?.findIndex(opt => opt.logistics_no === item.logistics_no) === index)
-    return array || []
+
+    return arr
+
+    // // 数组去重（根据物流单号去重）
+    // const array = arr?.filter((item, index) => arr?.findIndex(opt => opt.logistics_no === item.logistics_no) === index)
+    // return array || []
 
     // const list: OrderApi_GetInfoResponse['order_logistics'] = []
     //     orderInfo.value?.order_logistics.forEach((item) => {

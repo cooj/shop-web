@@ -59,37 +59,37 @@
                             </div>
                             <el-descriptions class="ml20px w40%" title="银行账号信息" :column="1" border>
                                 <el-descriptions-item label="公司名称">
-                                    <b>{{ defData.payInfo?.bank_info.company_name }}</b>
+                                    <b>{{ defData.payInfo?.company_name }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="银行账号">
-                                    <b>{{ defData.payInfo?.bank_info.bank_account }}</b>
+                                    <b>{{ defData.payInfo?.bank_account }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="开户银行">
-                                    <b>{{ defData.payInfo?.bank_info.bank_name }}</b>
+                                    <b>{{ defData.payInfo?.bank_name }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="银联号(CNAPS)">
-                                    <b>{{ defData.payInfo?.bank_info.bank_cnaps }}</b>
+                                    <b>{{ defData.payInfo?.bank_cnaps }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="用途/备注/摘要">
-                                    <b>{{ defData.payInfo?.bank_info.notes }}</b>
+                                    <b>{{ defData.payInfo?.notes }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="税号">
-                                    <b>{{ defData.payInfo?.bank_info.duty }}</b>
+                                    <b>{{ defData.payInfo?.duty }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="电话">
-                                    <b>{{ defData.payInfo?.bank_info.phone }}</b>
+                                    <b>{{ defData.payInfo?.phone }}</b>
                                 </el-descriptions-item>
                                 <el-descriptions-item label="地址">
-                                    <b>{{ defData.payInfo?.bank_info.address }}</b>
+                                    <b>{{ defData.payInfo?.address }}</b>
                                 </el-descriptions-item>
                             </el-descriptions>
-                            <div v-if="defData.payInfo?.bank_info.item_notes" class="mt20px w100%">
+                            <div v-if="defData.payInfo?.item_notes" class="mt20px w100%">
                                 <h3 class="mb5px">
                                     注意事项：
                                 </h3>
                                 <el-alert type="info" :closable="false">
                                     <template #title>
-                                        <div v-html="defData.payInfo?.bank_info.item_notes" />
+                                        <div v-html="defData.payInfo?.item_notes" />
                                     </template>
                                 </el-alert>
                             </div>
@@ -172,8 +172,8 @@ const defData = reactive({
     ready: true,
 
     orderInfo: {} as OrderApi_GetInfoResponse | undefined, // 订单信息
-    payInfo: {} as OrderApi_PayOrderResponse | undefined, // 支付信息(线下支付)
-
+    payInfo: {} as OrderApi_PayOrderResponse['bank_info'] | undefined, // 支付信息(线下支付)
+    endTime: 0, // 支付截至时间
     countDown: { // 倒计时
         day: '', // 天
         hour: '', // 时
@@ -215,12 +215,16 @@ const initDefaultData = async () => {
         body: { main_order_no: order_no.value },
     })
 
+    // await wait(200)
+
     // 线下支付
-    if (res.value?.pay) {
-        defData.payInfo = res.value.pay
+    if (res.value?.info.pay_type === 3) {
+        defData.endTime = res.value.info.end_time || 0
+        defData.payInfo = res.value.info.bank_info
         setCountDown()
     }
-    await wait(500)
+    await wait(450)
+
     defData.skeleton = false
     if (error.value) return
     if (res.value?.code !== 200) {
@@ -286,8 +290,8 @@ const onPayment = async () => {
  * 设置倒计时
  */
 const setCountDown = () => {
-    if (!defData.payInfo?.end_time) return
-    const timestamp = defData.payInfo.end_time
+    const timestamp = defData.endTime
+    if (!timestamp) return
     const timer = setInterval(() => {
         const nowTime = new Date()
         const endTime = new Date(timestamp * 1000)
