@@ -359,6 +359,7 @@ declare interface OrderReturnApi_Add {
     describe: string, // 问题描述
     main_order_no: string,// 订单号    M20230412102104894540
     img_url: string,// 上传图片
+    reason_id: number,//退换理由ID
 }
 
 /**
@@ -387,6 +388,8 @@ declare interface OrderReturnApi_InfoResponse {
         "auto_id": 0, //退款操作人ID
         "auto_time": 0, //退款审核时间
         "success_time": 0 //退款成功时间
+        "reason_id": number, //退换理由ID
+        "reason_name": string //退换理由
     },
     "goods_list": {
         "id": 4, //记录ID
@@ -423,6 +426,17 @@ declare interface OrderReturnApi_Fill {
     img_url: string; // 图片路径
     logistics_cusmoer?: string;   // 快递名称
     logistics_no?: string;    // 快递单号
+}
+
+/**
+ * 退换货管理 -- 理由 响应数据
+ */
+declare interface OrderReturnApi_reasonResponse {
+    "lists": {
+        "id": number,
+        "reason_name": string,
+    }[],
+    "total": number,
 }
 
 
@@ -471,7 +485,7 @@ declare interface OrderInvoiceApi_GetListItem {
     "logon_tel": "",
     "bank": "",
     "bank_account": "",
-    "verify_status": 0|1|2|3,
+    "verify_status": 0 | 1 | 2 | 3,
     "express_name": "顺丰",
     "express_no": "sf123456789",
     "failed_remark": "",

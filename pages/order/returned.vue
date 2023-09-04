@@ -75,6 +75,14 @@
                     </li>
                     <li>
                         <div class="lt">
+                            退换理由:
+                        </div>
+                        <div class="gt">
+                            {{ returnData?.reason_name }}
+                        </div>
+                    </li>
+                    <li>
+                        <div class="lt">
                             问题描述:
                         </div>
                         <div class="gt">

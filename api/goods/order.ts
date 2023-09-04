@@ -112,6 +112,11 @@ export const OrderReturnApi = {
      */
     fill: (data: OrderReturnApi_Fill) => useHttp('/api/mall_refund/set_operate', data, { method: 'post' }),
 
+    /**
+     * 退换货管理 -- 理由
+     * @returns
+     */
+    reason: () => useHttp<OrderReturnApi_reasonResponse>('/api/index/get_reason', '', { method: 'get' }),
 }
 
 /**

@@ -52,6 +52,14 @@
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
+                    <el-form-item prop="reason_id" label="退换理由：">
+                        <el-select v-model="form.data.reason_id">
+                            <el-option v-for="item in defData.reasonList" :key="item.id" :label="item.reason_name"
+                                :value="item.id" />
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22">
                     <el-form-item prop="describe" label="问题描述:">
                         <el-input v-model="form.data.describe" type="textarea" resize="none" :rows="3" maxlength="80"
                             clearable show-word-limit />
@@ -70,6 +78,7 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
 import { OrderReturnApi } from '~/api/goods/order'
+import { orderReasonState } from '~/composables/state/reason'
 
 const emits = defineEmits<{
     // (event: 'update'): void
@@ -77,12 +86,20 @@ const emits = defineEmits<{
 }>()
 const formRef = ref<FormInstance>()
 
+const orderReason = orderReasonState()
+
+// 初始化 原因
+const getReason = async () => {
+    const reasonList = await orderReason.getReasonInfo()
+    defData.reasonList = reasonList.value
+}
+
 const defData = reactive({
     visible: false, // 是否显示窗口，默认为false。
     ready: false, // 内容是否加载完成
     type: 1, // 1：新增，2：修改
     btnLoading: false,
-
+    reasonList: [] as OrderReturnApi_reasonResponse['lists'],
     tableData: [] as OrderReturnApi_GetListResponse[],
     multipleSelect: [] as OrderReturnApi_GetListResponse[], //
 
@@ -96,6 +113,7 @@ const form = reactive({
         describe: '', // 描述
         img: '', // 图片地址
         order_no: '', // 订单编号
+        reason_id: '', // 退换货理由
     },
 
 })
@@ -152,6 +170,8 @@ const onOpenDialog = async (params: OrderReturnOpen) => {
     form.data.order_no = params.order_no.trim() ?? '' // 订单编号不能为空或重复的情况
     if (!form.data.order_no) return
     await initTableData()
+    // await initDefaultData()
+    getReason()
     defData.visible = true
 }
 // 关闭弹窗
@@ -184,6 +204,7 @@ const onConfirm = async () => {
         describe: form.data.describe?.trim() ?? '',
         main_order_no: form.data.order_no,
         img_url: form.data.img,
+        reason_id: Number(form.data.reason_id),
     }
 
     defData.btnLoading = true
