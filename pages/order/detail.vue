@@ -108,6 +108,14 @@
                             <span v-else>--</span>
                         </div>
                     </li>
+                    <li>
+                        <div class="lt">
+                            支付时间：
+                        </div>
+                        <div class="gt">
+                            {{ orderInfo?.pay_time }}
+                        </div>
+                    </li>
                     <li v-if="orderInfo!.bill_status">
                         <div class="lt">
                             发票信息：
