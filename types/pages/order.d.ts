@@ -389,7 +389,7 @@ declare interface OrderReturnApi_InfoResponse {
         "main_order_no": "M20230505143130386350", //订单号
         "describe": "退货", //问题描述
         "type": 1, //类型 1退货 2换货
-        "status": 0 | 1 | 2 | 3 | 4 | 5, //状态 0售后正在审核 1审核通过待处理 2审核未通过 3要求售后寄回 4快递已寄回 5售后完成
+        "status": 0 | 1 | 2 | 3 | 4 | 5 | 6, //状态 0售后正在审核 1审核通过待处理 2审核未通过 3要求售后寄回 4快递已寄回 5快递已寄出 6售后完成
         "logistics_cusmoer": "", //物流公司
         "logistics_no": "", //快递单号
         "reply": "", //回复内容
