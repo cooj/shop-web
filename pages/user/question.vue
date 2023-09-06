@@ -42,13 +42,16 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="content" label="内容" min-width="80" show-overflow-tooltip align="center" />
-                    <el-table-column prop="add_time" label="时间" width="180" show-overflow-tooltip align="center">
+                    <el-table-column prop="add_time" label="时间" width="170" show-overflow-tooltip align="center">
                         <template #default="scopes">
                             {{ formatTime(scopes.row.add_time) }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="operate" width="100" align="center" show-overflow-tooltip>
+                    <el-table-column prop="operate" width="90" align="center" show-overflow-tooltip>
                         <template #default="scopes">
+                            <el-button type="primary" link size="small" @click="delClick(scopes.row)">
+                                删除
+                            </el-button>
                             <div v-if="defData.type === 1">
                                 <el-button v-if="scopes.row.answer_lists.length === 0" type="info" link size="small">
                                     暂无回复
@@ -159,6 +162,21 @@ const openView = async (row: any) => {
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     defData.myTableData = res.value.data.lists
     defData.myVisible = true
+}
+
+// 删除
+const delClick = (row: any) => {
+    ElMessageBox.confirm('确定要删除该订单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    }).then(async () => {
+        const { data } = await InterListApi.delList({ question_id: row.question_id })
+        if (data.value?.code !== 200) return ElMessage.error(data.value?.msg)
+        initTableData()
+        ElMessage.success('删除成功')
+    }).catch(() => {
+    })
 }
 
 // 分页数量点击

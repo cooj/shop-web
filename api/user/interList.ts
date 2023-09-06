@@ -15,5 +15,8 @@ export const InterListApi = {
      * 问答列表 - 个人中心
      */
     getUserList: (data: InterListApi_getUserList) => useHttp<InterListApi_getUserListResponse>('/api/mall_user/get_goods_question', data, { method: 'post' }),
-
+    /**
+     * 问答列表 -个人中心 删除
+     */
+    delList: (data: InterListApi_delList) => useHttp('/api/mall_user/del_goods_question', data, { method: 'post' }),
 }
