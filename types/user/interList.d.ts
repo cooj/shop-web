@@ -96,3 +96,10 @@ declare interface InterListApi_addList {
   q_id: number //回答提问的id，type为2填写，type为1默认0
   content: string //内容
 }
+
+/**
+ * 问答列表 个人中心 删除
+ */
+declare interface InterListApi_delList {
+  question_id: number
+}
