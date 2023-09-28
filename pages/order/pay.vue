@@ -116,9 +116,42 @@
                                 <el-button type="primary" size="large" :loading="defData.submit" @click="onPayment">
                                     立即支付
                                 </el-button>
+                                <!-- 支付宝支付 -->
                                 <!-- <div ref="alipayRef" class="hidden" v-html="defData.aliData" /> -->
                                 <el-dialog v-model="defData.visibleAli" width="750" title="" center @close="onCloseAlipay">
                                     <iframe :srcdoc="defData.aliData" width="700" height="560" scrolling="no" />
+                                </el-dialog>
+                                <!-- 微信支付 -->
+                                <el-dialog v-model="defData.visibleChat" width="660px" title="" center @close="onClose">
+                                    <div class="text-center">
+                                        <h3 class="mb5px text-22px c-#000">
+                                            微信扫码支付
+                                        </h3>
+                                        <div class="relative ma h220px w220px select-none">
+                                            <co-image :src="defData.chatPayUrl" class="h100% w100% b-1 b-#eee block!" />
+                                            <div v-if="systemInfo?.ico_img"
+                                                class="ico-code absolute left-50% top-50% h50px w50px bg-#fefefe p5px">
+                                                <co-image :src="systemInfo?.ico_img" class="h100% w100% block!" />
+                                            </div>
+                                        </div>
+                                        <p class="mt5px">
+                                            请使用微信扫一扫完成支付
+                                        </p>
+                                    </div>
+                                    <el-descriptions class="wx-table p20px" :column="1" border>
+                                        <el-descriptions-item label="交易金额" label-align="right" label-class-name="w130px ">
+                                            <strong class="text-18px lh-32px c-#f60">{{ defData.orderInfo?.meet_price
+                                            }}</strong> 元
+                                        </el-descriptions-item>
+                                        <el-descriptions-item label="支付方式" label-align="right">
+                                            <img :src="wxImg" class="h32px -ml8px">
+                                        </el-descriptions-item>
+                                        <el-descriptions-item label="交易号" label-align="right">
+                                            <p class="lh-32px">
+                                                {{ order_no }}
+                                            </p>
+                                        </el-descriptions-item>
+                                    </el-descriptions>
                                 </el-dialog>
                             </template>
                         </el-result>
@@ -137,39 +170,6 @@
                                 </NuxtLink>
                             </template>
                         </el-result>
-                        <!-- pay_type -->
-                        <el-dialog v-model="defData.visibleChat" width="660px" title="" center @close="onClose">
-                            <div class="text-center">
-                                <h3 class="mb5px text-22px c-#000">
-                                    微信扫码支付
-                                </h3>
-                                <div class="relative ma h220px w220px select-none">
-                                    <co-image :src="defData.chatPayUrl" class="h100% w100% b-1 b-#eee block!" />
-                                    <div v-if="systemInfo?.ico_img"
-                                        class="ico-code absolute left-50% top-50% h50px w50px bg-#fefefe p5px">
-                                        <co-image :src="systemInfo?.ico_img" class="h100% w100% block!" />
-                                    </div>
-                                </div>
-
-                                <p class="mt5px">
-                                    请使用微信扫一扫完成支付
-                                </p>
-                            </div>
-                            <el-descriptions class="wx-table p20px" :column="1" border>
-                                <el-descriptions-item label="交易金额" label-align="right" label-class-name="w130px ">
-                                    <strong class="text-18px lh-32px c-#f60">{{ defData.orderInfo?.meet_price
-                                    }}</strong> 元
-                                </el-descriptions-item>
-                                <el-descriptions-item label="支付方式" label-align="right">
-                                    <img src="/public/images/payment-wechat.jpg" class="h32px -ml8px">
-                                </el-descriptions-item>
-                                <el-descriptions-item label="交易号" label-align="right">
-                                    <p class="lh-32px">
-                                        {{ order_no }}
-                                    </p>
-                                </el-descriptions-item>
-                            </el-descriptions>
-                        </el-dialog>
                     </div>
                 </div>
                 <div v-else class="my15px b-#eee bg-#fff">
@@ -229,6 +229,12 @@ const order_no = computed(() => {
 
 // 支付状态
 const payStatus = computed(() => defData.orderInfo!.order_status)
+
+// 微信图标图片
+const wxImg = computed(() => {
+    const node = payTypeList.value.find(item => item.type === 1)
+    return node?.ico_url
+})
 
 // 获取订单信息 // 查询支付状态
 const initDefaultData = async () => {

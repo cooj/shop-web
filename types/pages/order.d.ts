@@ -223,7 +223,7 @@ declare interface OrderApi_PayOrderResponse {
 declare interface OrderApi_GetPayTypeResponse {
     "id": 2, //记录ID
     "name": "支付宝", //支付名称
-    "type": 2, //类型 1微信 2支付宝
+    "type": 1 | 2, //类型 1微信 2支付宝
     "ico_url": "i-ri-alipay-fill" //图片路径
 }
 
