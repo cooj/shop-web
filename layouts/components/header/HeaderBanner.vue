@@ -5,7 +5,7 @@
                                   disableOnInteraction: false }" :speed="1500" effect="fade" :modules="modules">
         <SwiperSlide v-for="item in defData.bannerList" :key="item.ad_id">
             <NuxtLink :to="item.ad_link">
-                <img class="im" :src="item.ad_img" alt="">
+                <img class="im" :src="item.ad_img" :alt="item.ad_name">
             </NuxtLink>
         </SwiperSlide>
     </Swiper>

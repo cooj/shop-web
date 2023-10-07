@@ -14,9 +14,9 @@
                 </NuxtLink>
             </div>
             <div class="goods-best-list">
-                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="goods-link v1"
+                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="v1 goods-link"
                     :to="`/goods/${item.goods_sn}`">
-                    <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" />
+                    <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" :alt="item.goods_name" />
                     <h3 class="tle hov-name">
                         {{ item.goods_name }}
                     </h3>
@@ -52,7 +52,7 @@
                                 <li v-for="son in sub.goods_lists.slice(0, 10)" :key="son.goods_id">
                                     <NuxtLink class="goods-link v2" :to="`/goods/${son.goods_sn}`" target="_blank">
                                         <CoImage class="hov-img w100% pb100%" :src="setGoodsOssImg(son.goods_img, 200)"
-                                            loading="lazy" />
+                                            loading="lazy" :alt="son.goods_name" />
                                         <h3 class="hov-name goods-name">
                                             {{ son.goods_name }}
                                         </h3>
@@ -70,7 +70,7 @@
                     <NuxtLink v-for="sub in item.brand_lists.slice(0, 8)" :key="sub.brand_id"
                         :to="linkGoodsList({ query: { bid: sub.brand_id }, url: true })">
                         <CoImage class="w100% pb45% block!" :src="sub.brand_logo" style="--el-color-info-light-9:#282828;"
-                            :icon-size="28" />
+                            :icon-size="28" :alt="sub.brand_name" />
                     </NuxtLink>
                 </div>
             </div>

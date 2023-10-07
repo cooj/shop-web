@@ -4,13 +4,13 @@
             <div class="flex items-center justify-between text-#f8f8f8 container">
                 <div class="logo min-w150px">
                     <NuxtLink to="/">
-                        <img class="h50px" :src="systemInfo?.shop_logo" alt="">
+                        <img class="h50px" :src="systemInfo?.shop_logo" height="50" alt="logo">
                     </NuxtLink>
                 </div>
                 <div class="search-box relative w50%">
                     <ElAutocomplete ref="autocompleteRef" v-model="search.keyword" :fetch-suggestions="querySearchAsync"
                         popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
-                        select-when-unmatched @select="onSearch">
+                        select-when-unmatched label="test" @select="onSearch">
                         <template #prefix>
                             <i class="i-ep-search" />
                         </template>
@@ -34,7 +34,6 @@
                                     <span class="pop-remove">删除</span>
                                 </el-button>
                             </div>
-                            <div class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
                         </template>
                     </ElAutocomplete>
                     <div v-if="searchHotList.length" class="search-hot">
@@ -53,8 +52,11 @@
                 </div>
             </div>
         </el-form>
-
         <HeaderIndex />
+
+        <Teleport to=".pop-search">
+            <div class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
+        </Teleport>
     </section>
 </template>
 
@@ -300,6 +302,11 @@ watch(() => route.query.keyword, (val) => {
         right: 3px;
         bottom: 4px;
         // line-height: 16px;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--el-color-primary);
+        }
     }
 }
 </style>

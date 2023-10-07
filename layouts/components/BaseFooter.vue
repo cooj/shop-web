@@ -22,14 +22,14 @@
                 <div class="footer-right">
                     <div class="footer-logo">
                         <NuxtLink to="/">
-                            <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" />
+                            <CoImage class="mb15px h60px w210px" :src="systemInfo?.small_logo" alt="logo" />
                         </NuxtLink>
                         <p>售后电话: {{ systemInfo?.sale_tel }}</p>
                         <p>工作时间: {{ systemInfo?.work_time }}</p>
                     </div>
                     <div class="footer-code">
                         <div class="footer-code-box text-center">
-                            <CoImage class="w110px pb100%" :src="systemInfo?.wx_code" />
+                            <CoImage class="w110px pb100%" :src="systemInfo?.wx_code" alt="公众号二维码" />
                             <div class="mt5px">
                                 公众号二维码
                             </div>
@@ -47,10 +47,10 @@
         <div class="footer-bot">
             <div class="flex justify-between container">
                 <div class="left">
-                    <NuxtLink class="mr5px">
+                    <NuxtLink href="javascript:;" class="mr5px">
                         隐私政策
                     </NuxtLink>
-                    <NuxtLink class="mr5px">
+                    <NuxtLink href="javascript:;" class="mr5px">
                         用户协议
                     </NuxtLink>
                     <NuxtLink to="/list/site" class="link-name mr5px">
@@ -59,7 +59,7 @@
                 </div>
                 <div class="right">
                     {{ systemInfo?.copyright }}
-                    <NuxtLink :to="systemInfo?.filings_url" target="_blank" class="ml5px">
+                    <NuxtLink :to="systemInfo?.filings_url" target="_blank" rel="noopener" class="ml5px">
                         {{ systemInfo?.filings }}
                     </NuxtLink>
                 </div>

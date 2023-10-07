@@ -6,7 +6,8 @@
             <div class="user-login">
                 <div class="flex items-center">
                     <div class="face">
-                        <co-image v-if="user?.user_name && faceImg" class="h55px w55px b-rounded-5px" :src="faceImg" />
+                        <co-image v-if="user?.user_name && faceImg" class="h55px w55px b-rounded-5px" :src="faceImg"
+                            width="55" height="55" :alt="user?.user_name" />
                         <i v-else class="i-carbon-user-avatar-filled-alt block text-48px" />
                     </div>
                     <div class="text-14px font700">
@@ -46,43 +47,50 @@
         <div class="user-warp">
             <ul class="user-warp-ul">
                 <li>
-                    <a target="_blank">
-                        <div class="icon-box"><img src="~assets/images/gyj-huiyuanjia.png">
+                    <a href="javascript:;" class="cursor-default">
+                        <div class="icon-box">
+                            <img src="~assets/images/gyj-huiyuanjia.png" width="24" height="24" alt="专享会员价">
                         </div>
                         <div>专享会员价</div>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank">
-                        <div class="icon-box"><img src="~assets/images/gyj-quanbao.png">
+                    <a href="javascript:;" class="cursor-default">
+                        <div class="icon-box">
+                            <img src="~assets/images/gyj-quanbao.png" width="24" height="24" alt="降本券包">
                         </div>
                         <div>降本券包</div>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank">
-                        <div class="icon-box"><img src="~assets/images/gyj-mianyou.png">
+                    <a href="javascript:;" class="cursor-default">
+                        <div class="icon-box">
+                            <img src="~assets/images/gyj-mianyou.png" width="24" height="24" alt="首单免邮">
                         </div>
                         <div>首单免邮</div>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank">
-                        <div class="icon-box"><img src="~assets/images/gyj-quanyi.png">
+                    <a href="javascript:;" class="cursor-default">
+                        <div class="icon-box">
+                            <img src="~assets/images/gyj-quanyi.png" width="24" height="24" alt="帐期权益">
                         </div>
                         <div>帐期权益</div>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank">
-                        <div class="icon-box"><img src="~assets/images/gyj-zuzhiguanli.png">
+                    <a href="javascript:;" class="cursor-default">
+                        <div class="icon-box">
+                            <img src="~assets/images/gyj-zuzhiguanli.png" width="24" height="24" alt="组织管理">
                         </div>
                         <div>组织管理</div>
                     </a>
                 </li>
                 <li>
-                    <a target="_blank">
-                        <div class="icon-box"><img src="~assets/images/gyj-kefu1.png"></div>
+                    <a href="javascript:;" class="cursor-default">
+                        <div class="icon-box">
+                            <img src="~assets/images/gyj-kefu1.png" width="24" height="24" alt="专属客服">
+                        </div>
                         <div>专属客服</div>
                     </a>
                 </li>

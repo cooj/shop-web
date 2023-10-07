@@ -7,9 +7,9 @@
                         您好！{{ username }}
                     </NuxtLink>
                     <span class="mx5px">欢迎来到工游记商城!</span>
-                    <NuxtLink class="hov-item-exit" @click="onLoginOut">
+                    <span class="hov-item-exit" @click="onLoginOut">
                         退出
-                    </NuxtLink>
+                    </span>
                 </template>
                 <template v-else>
                     <span class="mr10px">欢迎来到工游记商城!</span>
@@ -43,12 +43,9 @@
                     网站导航
                 </NuxtLink>
                 <el-divider direction="vertical" />
-                <NuxtLink>
+                <NuxtLink href="javascript:;">
                     帮助中心
                 </NuxtLink>
-                <!-- <el-button link>
-                    <span>帮助中心</span>
-                </el-button> -->
                 <el-divider direction="vertical" />
                 <NuxtLink to="/sale" class="hov-item">
                     售后中心
