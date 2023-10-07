@@ -288,6 +288,13 @@ const onPayment = async () => {
         defData.chatPayUrl = await QRCode.toDataURL(url, { margin: 2 })
 
         defData.visibleChat = true
+
+        // 监听微信支付是否完成
+        defData.tim = setInterval(async () => {
+            await initDefaultData()
+            if (payStatus.value > 1) onCloseWechatPay() // 关闭 支付及弹窗
+        }, 2500)
+
         return
     }
 
@@ -365,17 +372,26 @@ const setCountDown = () => {
 
 // 微信扫码支付关闭弹窗，查询订单是否支付完成了
 const onClose = async () => {
-    if (defData.update) return
-    defData.update = true
-
+    onCloseWechatPay()
     await initDefaultData()
 
-    defData.update = false
+    // if (defData.update) return
+    // defData.update = true
+
+    // await initDefaultData()
+
+    // defData.update = false
 }
 
 // 关闭支付宝支付弹窗
 const onCloseAlipay = () => {
     defData.visibleAli = false
+    clearInterval(defData.tim)
+}
+
+// 关闭微信支付弹窗
+const onCloseWechatPay = () => {
+    defData.visibleChat = false
     clearInterval(defData.tim)
 }
 
