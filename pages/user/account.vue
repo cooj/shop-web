@@ -51,55 +51,47 @@
             </el-form>
         </div>
         <!-- ***********账户安全**************************************** -->
-        <div mt40px>
-            <el-descriptions title="账户安全" :column="2">
-                <el-descriptions-item label="登录密码：">
-                    联网账号存在被盗风险，建议定期更改密码以保护账户安全
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <NuxtLink to="/user/components/editPwd">
-                        修改
+        <div class="safe mt40px">
+            <div>登录密码：联网账号存在被盗风险，建议定期更改密码以保护账户安全</div>
+            <div class="safe-click">
+                <NuxtLink to="/user/components/editPwd">
+                    修改
+                </NuxtLink>
+            </div>
+        </div>
+        <div class="safe">
+            <div>绑定手机：您已绑定手机：{{ defData.phone }}，若手机丢失或停用，请及时更换</div>
+            <div class="safe-click">
+                <NuxtLink to="/user/components/editPhone">
+                    换绑
+                </NuxtLink>
+            </div>
+        </div>
+        <div class="safe">
+            <div>绑定微信： {{ defData.nickname ? '已绑定' : '暂无绑定' }}{{ defData.nickname }}</div>
+            <div class="safe-click">
+                <div v-if="defData.nickname" @click="delWeChat">
+                    解绑
+                </div>
+                <div v-else>
+                    <NuxtLink :to="weChat" @click="getWeChat">
+                        绑定
                     </NuxtLink>
-                </el-descriptions-item>
-                <el-descriptions-item label="绑定手机：">
-                    您已绑定手机：{{ defData.phone }}，若手机丢失或停用，请及时更换
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <NuxtLink to="/user/components/editPhone">
-                        换绑
-                    </NuxtLink>
-                </el-descriptions-item>
-                <el-descriptions-item label="绑定微信：">
-                    {{ defData.nickname ? '已绑定' : '暂无绑定' }}{{ defData.nickname }}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <div v-if="defData.nickname">
-                        <button @click="delWeChat">
-                            解绑
-                        </button>
-                    </div>
-                    <div v-else>
-                        <NuxtLink to="/user/components/getWeChat">
-                            绑定
-                        </NuxtLink>
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item label="绑定邮箱：">
-                    {{ defData.email ? '您已绑定邮箱' : '暂未绑定' }}{{ defData.email }}
-                    <el-button v-if="defData.email && defData.email_status === 0" :loading="form.loading"
-                        @click="sendEmail">
-                        去激活
-                    </el-button>
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <div @click="defData.visible = true">
-                        修改
-                    </div>
-                </el-descriptions-item>
-            </el-descriptions>
+                </div>
+            </div>
+        </div>
+        <div class="safe">
+            <div>
+                绑定邮箱：{{ defData.email ? '您已绑定邮箱' : '暂未绑定' }}{{ defData.email }}
+                <el-button v-if="defData.email && defData.email_status === 0" :loading="form.loading" @click="sendEmail">
+                    去激活
+                </el-button>
+            </div>
+            <div class="safe-click" @click="defData.visible = true">
+                修改
+            </div>
         </div>
     </LayoutUser>
-
     <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="修改邮箱" width="680px"
         @close="onClose" @cancel="onClose" @confirm="editPwd">
         <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px">
@@ -119,9 +111,11 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { AccountApi } from '~/api/user/account'
+import { LoginApi } from '~/api/login'
 
 const userState = useUserState()
 const user = await userState.getUserInfo()
+const route = useRoute()
 
 const defData = reactive({
     type: 1, // 1个人信息 2修改个人信息
@@ -194,11 +188,61 @@ const onClick = async () => {
     defData.type = 1
 }
 
+// 微信扫码登录 打开微信二维码图片
+const weChat = ref()
+const getWeChat = async () => {
+    const data: LoginApi_getChat = {
+        qrcode_type: 2,
+    }
+    const { data: res } = await LoginApi.getWeChat(data)
+
+    if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
+    weChat.value = res.value?.data.url
+}
+
+// 获取OpenId
+const getOpenId = async () => {
+    if (!route.query.code) return
+    ElMessageBox.confirm('此操作将绑定微信，是否继续?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        buttonSize: 'default',
+    }).then(async () => {
+        const user = await userState.getUserInfo()
+        console.log('user.value :>> ', user.value)
+        if (user.value) {
+            const code: LoginApi_getOpenid = {
+                code: route.query.code as string,
+                user_id: user.value.user_id,
+            }
+            const { data: codeId } = await LoginApi.getOpenid(code)
+            console.log('codeId.value :>> ', codeId.value)
+            if (codeId.value?.code !== 200) {
+                ElMessage.error(codeId.value?.msg)
+            } else {
+                ElMessage.success('绑定成功')
+                navigateTo('/user/Account')
+            }
+            initData()
+        }
+    }).catch(() => { })
+}
+getOpenId()
+
 // 解绑微信
-const delWeChat = async () => {
-    const res = await AccountApi.del_openid()
-    if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
-    ElMessage.success('解绑成功')
+const delWeChat = () => {
+    ElMessageBox.confirm('此操作将解绑微信，是否继续?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        buttonSize: 'default',
+    }).then(async () => {
+        const res = await AccountApi.del_openid()
+        if (res.data.value?.code !== 200) ElMessage.error(res.data.value?.msg)
+        ElMessage.success('解绑成功')
+        initData()
+    }).catch(() => { })
 }
 
 // 发送激活邮件
@@ -263,5 +307,23 @@ definePageMeta({
     width: 178px;
     height: 178px;
     text-align: center;
+}
+
+/* 账户安全 */
+.safe {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    font-size: 15px;
+}
+
+.safe-click {
+    color: rgb(75, 138, 248);
+}
+
+.safe-click:hover {
+    color: var(--el-color-primary);
+    cursor: pointer
 }
 </style>
