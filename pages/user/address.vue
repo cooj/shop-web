@@ -13,7 +13,9 @@
                 <el-breadcrumb-item>
                     账户管理
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>地址管理</el-breadcrumb-item>
+                <el-breadcrumb-item>
+                    地址管理
+                </el-breadcrumb-item>
             </el-breadcrumb>
             <div class="my15px">
                 <el-button type="primary" @click="onAdd">
