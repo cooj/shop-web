@@ -6,12 +6,16 @@ import type { UseFetchOptions } from '#app'
 
 export const useHttp = <T = any>(url: string, data?: RequestDataType, opt?: UseFetchOptions<T>) => {
     const token = useCookie('admin_token')
-    const headers = useRequestHeaders(['token']) // as HeadersInit
+    const headers = useRequestHeaders(['token', 'verifysing']) // as HeadersInit
     // console.log('headers :>> ', headers)
     //   console.log('headers :>> ', headers.cookie)
     const runtimeConfig = useRuntimeConfig()
     //   console.log('runtimeConfig :>> ', runtimeConfig)
     //   useFetch(url, { headers })
+
+    const time = Date.now().toString()
+    const sign = setSignRule(runtimeConfig.public.secret, time)
+    headers.verifysing = `${sign}-${time}`
 
     const options = opt || {}
 

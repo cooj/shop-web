@@ -96,6 +96,7 @@ export default defineNuxtConfig({
             apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
             // apiBase: process.env.VITE_API_BASE || '',
             otherUrl: process.env.OTHER_URL || 'default_other_url',
+            secret: process.env.NUXT_PUBLIC_SECRET, // You can generate one with `openssl rand -base64 32`
         },
     },
     devtools: {
