@@ -165,6 +165,7 @@ const onClick = async () => {
         sms_code: form.sms_code,
         phone: form.phone,
         session_id: defData.session_id,
+        plate_type: 1,
     }
     const { data: res } = await LoginApi.submitIde(data)
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
