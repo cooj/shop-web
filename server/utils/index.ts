@@ -1,5 +1,5 @@
 import type { H3Event } from 'h3'
-import { getCookie, getHeaders, getMethod, getQuery, readBody } from 'h3'
+import { getCookie, getHeaders, getQuery, readBody } from 'h3'
 import { setSignRule } from '~/utils/crypto'
 
 // import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
@@ -15,7 +15,7 @@ import { setSignRule } from '~/utils/crypto'
 export const useServerFetch = async <T = unknown>(event: H3Event, url: string, param?: any, merge?: boolean) => {
     const runtimeConfig = useRuntimeConfig()
     const baseURL = runtimeConfig.public.apiBase || ''
-    const method = getMethod(event)
+    const method = event.method
     const defaultParams = getQuery(event)
     let body = method === 'GET' ? undefined : await readBody(event)
     let params = method === 'GET' && defaultParams ? defaultParams : {}
