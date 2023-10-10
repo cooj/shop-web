@@ -2,8 +2,7 @@
     <div class="index-box">
         <Suspense>
             <HomeMain />
-            <!-- <ClientOnly>
-        </ClientOnly> -->
+            <!-- <ClientOnly></ClientOnly> -->
             <template #fallback>
                 <div class="container">
                     <div class="min-h300px" italic op50>
