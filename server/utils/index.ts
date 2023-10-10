@@ -46,8 +46,8 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string, p
         headers: {
             // 'Content-Type': headers['content-type'] as string,
             // 'Authorization': authorization as string,
-            token: token ?? '', // 注意token会为undefined，会导致接口首次获取不到数据
-            verifysing: `${sign}-${time}`,
+            'token': token ?? '', // 注意token会为undefined，会导致接口首次获取不到数据
+            'verify-sign': `${sign}-${time}`,
         },
         // headers: headers as HeadersInit,
         baseURL,
