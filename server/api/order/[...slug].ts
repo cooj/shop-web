@@ -49,7 +49,7 @@ router.use('/info', defineEventHandler(async (event) => {
  * 订单结算 - 获取信息
  */
 router.use('/confirm', defineEventHandler(async (event) => {
-    const method = getMethod(event)
+    const method = event.method
     const params = method === 'GET' ? getQuery(event) : await readBody(event)
 
     let data: OrderApi_GetSettleResponse | undefined

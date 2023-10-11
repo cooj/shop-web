@@ -17,7 +17,7 @@ export default defineNuxtConfig({
 
     ],
     experimental: {
-        watcher: 'chokidar',
+        // watcher: 'chokidar',
         // writeEarlyHints: false,
         // when using generate, payload js assets included in sw precache manifest
         // but missing on offline, disabling extraction it until fixed
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
         },
         prerender: {
             crawlLinks: false,
-            // routes: ['/'],
+            routes: ['/login'],
             // ignore: ['/hi'],
         },
         // storage: {
@@ -66,6 +66,7 @@ export default defineNuxtConfig({
                 { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
             ],
         },
+        // layoutTransition: { name: 'layout', mode: 'out-in' },
     },
     pwa,
     vite: {
@@ -96,6 +97,7 @@ export default defineNuxtConfig({
             apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
             // apiBase: process.env.VITE_API_BASE || '',
             otherUrl: process.env.OTHER_URL || 'default_other_url',
+            secret: process.env.NUXT_PUBLIC_SECRET, // You can generate one with `openssl rand -base64 32`
         },
     },
     devtools: {

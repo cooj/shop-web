@@ -7,56 +7,60 @@
                         <img class="h50px" :src="systemInfo?.shop_logo" height="50" alt="logo">
                     </NuxtLink>
                 </div>
-                <div class="search-box relative w50%">
-                    <ElAutocomplete ref="autocompleteRef" v-model="search.keyword" :fetch-suggestions="querySearchAsync"
-                        popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
-                        select-when-unmatched label="test" @select="onSearch">
-                        <template #prefix>
-                            <i class="i-ep-search" />
-                        </template>
-                        <!-- <template #prepend>
+                <client-only>
+                    <div class="search-box relative w50%">
+                        <ElAutocomplete ref="autocompleteRef" v-model="search.keyword" :fetch-suggestions="querySearchAsync"
+                            popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
+                            select-when-unmatched label="test" @select="onSearch">
+                            <template #prefix>
+                                <i class="i-ep-search" />
+                            </template>
+                            <!-- <template #prepend>
                             <lazy-el-select v-model="search.select" placeholder="" style="width: 115px">
                                 <el-option label="全部商品" value="1" />
                                 <el-option label="精选商品" value="2" />
                                 <el-option label="特价商品" value="3" />
                             </lazy-el-select>
                         </template> -->
-                        <template #append>
-                            <el-button type="primary" class="btn-search min-w120px" @click="onSearch('')">
-                                搜 索
-                            </el-button>
-                        </template>
-                        <template #default="{ item }">
-                            <div class="pop-item flex justify-between">
-                                <div class="pop-text text-13px" v-html="setHighlightText(item.value)" />
-                                <el-button v-if="item.history" size="small" link @click.stop="onRemoveHistory(item.value)">
-                                    <span class="v1">搜索历史</span>
-                                    <span class="pop-remove">删除</span>
+                            <template #append>
+                                <el-button type="primary" class="btn-search min-w120px" @click="onSearch('')">
+                                    搜 索
                                 </el-button>
-                            </div>
-                        </template>
-                    </ElAutocomplete>
-                    <div v-if="searchHotList.length" class="search-hot">
-                        热门搜索：<span v-for="(item) in searchHotList" :key="item" @click="onSearchHot(item)">{{ item }}</span>
+                            </template>
+                            <template #default="{ item }">
+                                <div class="pop-item flex justify-between">
+                                    <div class="pop-text text-13px" v-html="setHighlightText(item.value)" />
+                                    <el-button v-if="item.history" size="small" link
+                                        @click.stop="onRemoveHistory(item.value)">
+                                        <span class="v1">搜索历史</span>
+                                        <span class="pop-remove">删除</span>
+                                    </el-button>
+                                </div>
+                            </template>
+                        </ElAutocomplete>
+                        <div v-if="searchHotList.length" class="search-hot">
+                            热门搜索：<span v-for="(item) in searchHotList" :key="item" @click="onSearchHot(item)">{{ item
+                            }}</span>
+                        </div>
+                        <Teleport to=".pop-search">
+                            <div v-if="showClear" class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
+                        </Teleport>
                     </div>
-                </div>
-                <div class="cart">
-                    <NuxtLink to="/order/cart">
-                        <el-badge :value="number" class="cart-number">
-                            <el-button type="primary" class="min-w150px">
-                                <i class="i-ep-shopping-cart-full mr8px" />
-                                购物车
-                            </el-button>
-                        </el-badge>
-                    </NuxtLink>
-                </div>
+                    <div class="cart">
+                        <NuxtLink to="/order/cart">
+                            <el-badge :value="number" class="cart-number">
+                                <el-button type="primary" class="min-w150px">
+                                    <i class="i-ep-shopping-cart-full mr8px" />
+                                    购物车
+                                </el-button>
+                            </el-badge>
+                        </NuxtLink>
+                    </div>
+                </client-only>
             </div>
         </el-form>
-        <HeaderIndex />
 
-        <Teleport to=".pop-search">
-            <div class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
-        </Teleport>
+        <HeaderIndex />
     </section>
 </template>
 
@@ -79,6 +83,7 @@ const useSystem = useSystemState()
 const systemInfo = ref(useSystem.system)
 
 const autocompleteRef = ref<InstanceType<typeof ElAutocomplete>>()
+const showClear = ref(false) // 是否显示清除按钮
 
 const searchDataList = useLocalStorage<GoodsSearchItem[]>('searchKeywordList', [])
 
@@ -173,8 +178,10 @@ const querySearchAsync = (queryString: string, callback: (arg: any) => void) => 
 
             callback(results)
         })
+        showClear.value = false
     } else {
         const dat = searchDataList.value.slice(0, 10).map(item => ({ ...item, history: 1 }))
+        if (dat.length) showClear.value = true
         callback(dat)
     }
 }

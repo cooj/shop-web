@@ -1,5 +1,6 @@
 import type { H3Event } from 'h3'
-import { getCookie, getHeaders, getMethod, getQuery, readBody } from 'h3'
+import { getCookie, getHeaders, getQuery, readBody } from 'h3'
+import { setSignRule } from '~/utils/crypto'
 
 // import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
 
@@ -14,7 +15,7 @@ import { getCookie, getHeaders, getMethod, getQuery, readBody } from 'h3'
 export const useServerFetch = async <T = unknown>(event: H3Event, url: string, param?: any, merge?: boolean) => {
     const runtimeConfig = useRuntimeConfig()
     const baseURL = runtimeConfig.public.apiBase || ''
-    const method = getMethod(event)
+    const method = event.method
     const defaultParams = getQuery(event)
     let body = method === 'GET' ? undefined : await readBody(event)
     let params = method === 'GET' && defaultParams ? defaultParams : {}
@@ -37,12 +38,16 @@ export const useServerFetch = async <T = unknown>(event: H3Event, url: string, p
     //     headers.token = token
     // }
 
+    const time = Date.now().toString()
+    const sign = setSignRule(runtimeConfig.public.secret, time)
+
     console.warn(baseURL)
     return $fetch<T>(url, {
         headers: {
             // 'Content-Type': headers['content-type'] as string,
             // 'Authorization': authorization as string,
-            token: token ?? '', // 注意token会为undefined，会导致接口首次获取不到数据
+            'token': token ?? '', // 注意token会为undefined，会导致接口首次获取不到数据
+            'verify-sign': `${sign}-${time}`,
         },
         // headers: headers as HeadersInit,
         baseURL,
