@@ -384,6 +384,7 @@ const initDefaultData = async () => {
 
     // 获取结算商品信息、发票列表
     const res1 = await initGoodsData()
+    await wait(300)
     defData.skeleton = false
     // console.log(res1)
     if (!res1) return defData.ready = false
