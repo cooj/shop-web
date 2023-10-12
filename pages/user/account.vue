@@ -203,30 +203,30 @@ const getWeChat = async () => {
 // 获取OpenId
 const getOpenId = async () => {
     if (!route.query.code) return
-    ElMessageBox.confirm('此操作将绑定微信，是否继续?', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        type: 'warning',
-        buttonSize: 'default',
-    }).then(async () => {
-        const user = await userState.getUserInfo()
-        console.log('user.value :>> ', user.value)
-        if (user.value) {
-            const code: LoginApi_getOpenid = {
-                code: route.query.code as string,
-                user_id: user.value.user_id,
-            }
-            const { data: codeId } = await LoginApi.getOpenid(code)
-            console.log('codeId.value :>> ', codeId.value)
-            if (codeId.value?.code !== 200) {
-                ElMessage.error(codeId.value?.msg)
-            } else {
-                ElMessage.success('绑定成功')
-                navigateTo('/user/Account')
-            }
-            initData()
+    // ElMessageBox.confirm('此操作将绑定微信，是否继续?', '提示', {
+    //     confirmButtonText: '确认',
+    //     cancelButtonText: '取消',
+    //     type: 'warning',
+    //     buttonSize: 'default',
+    // }).then(async () => {
+    const user = await userState.getUserInfo()
+    console.log('user.value :>> ', user.value)
+    if (user.value) {
+        const code: LoginApi_getOpenid = {
+            code: route.query.code as string,
+            user_id: user.value.user_id,
         }
-    }).catch(() => { })
+        const { data: codeId } = await LoginApi.getOpenid(code)
+        console.log('codeId.value :>> ', codeId.value)
+        if (codeId.value?.code !== 200) {
+            ElMessage.error(codeId.value?.msg)
+        } else {
+            ElMessage.success('绑定成功')
+            navigateTo('http://scdev.goyojo.com/user/account')
+        }
+        initData()
+    }
+    // }).catch(() => { })
 }
 getOpenId()
 
