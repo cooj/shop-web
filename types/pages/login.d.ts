@@ -37,6 +37,7 @@ declare interface LoginApi_submitIde {
     vali_code: string // 验证码
     session_id: string
     sms_code: string // 短信验证码
+    plate_type: 1 | 2 //1PC 2小程序
 }
 
 /**
