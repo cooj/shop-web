@@ -71,22 +71,23 @@
                     layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
                     @current-change="onHandleSizeChange" />
             </div>
+
+            <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="新增留言"
+                width="680px" @close="onClose" @cancel="onClose" @confirm="onClick">
+                <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px">
+                    <el-form-item label="留言类型：" prop="type">
+                        <el-select v-model="form.type" placeholder="请选择">
+                            <el-option v-for="item in defData.typeList" :key="item.value" :label="item.label"
+                                :value="item.value" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item prop="content" label="留言：">
+                        <el-input v-model="form.content" placeholder="请输入留言" />
+                    </el-form-item>
+                </el-form>
+            </CoDialog>
         </el-skeleton>
     </LayoutUser>
-
-    <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="新增留言" width="680px"
-        @close="onClose" @cancel="onClose" @confirm="onClick">
-        <el-form ref="formRef" label-width="130px" :rules="rules" :model="form" style="max-width: 500px">
-            <el-form-item label="留言类型：" prop="type">
-                <el-select v-model="form.type" placeholder="请选择">
-                    <el-option v-for="item in defData.typeList" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-            </el-form-item>
-            <el-form-item prop="content" label="留言：">
-                <el-input v-model="form.content" placeholder="请输入留言" />
-            </el-form-item>
-        </el-form>
-    </CoDialog>
 </template>
 
 <script setup lang="ts">
@@ -150,7 +151,8 @@ const initTableData = async () => {
         page_size: defData.pageSize,
     }
     const res = await LeaveWordApi.getList(data)
-    defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
+    await wait(10)
+    defData.skeleton = false
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
 
     defData.tableData = res.data.value.data.lists

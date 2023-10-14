@@ -105,7 +105,8 @@ const initCardData = async () => {
         is_status: defData.is_status as 1 | 2 | 3 | 4,
     }
     const res = await CouponApi.geList(data)
-    defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
+    await wait(10)
+    defData.skeleton = false
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
     defData.MyCouponList = res.data.value.data.lists
 }

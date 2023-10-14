@@ -10,16 +10,14 @@
                 </div>
             </template>
 
-            <div h40px>
-                <el-breadcrumb>
-                    <el-breadcrumb-item>
-                        我关注的
-                    </el-breadcrumb-item>
-                    <el-breadcrumb-item>问答列表</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
+            <el-breadcrumb>
+                <el-breadcrumb-item>
+                    我关注的
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>问答列表</el-breadcrumb-item>
+            </el-breadcrumb>
 
-            <div class="mt20px">
+            <div class="mb15px mt20px">
                 <el-radio-group v-model="defData.type" @change="onclick()">
                     <el-radio-button :label="1">
                         我的提问
@@ -30,93 +28,88 @@
                 </el-radio-group>
             </div>
 
-            <div class="mt10px">
-                <el-table :data="defData.tableData">
-                    <el-table-column prop="type" label="类型" width="90" show-overflow-tooltip align="center">
-                        <template #default="scopes">
-                            {{ scopes.row.type === 1 ? '我的提问' : '我的回答' }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="goods_name" label="商品名称" min-width="80" show-overflow-tooltip align="center">
-                        <template #default="{ row }">
-                            <NuxtLink :to="`/goods/${row.goods_sn}`" target="_blank">
-                                {{ row.goods_name }}
-                            </NuxtLink>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="content" label="内容" min-width="80" show-overflow-tooltip align="center" />
-                    <el-table-column prop="add_time" label="时间" width="170" show-overflow-tooltip align="center">
-                        <template #default="scopes">
-                            {{ formatTime(scopes.row.add_time) }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="operate" width="90" align="center" show-overflow-tooltip>
-                        <template #default="scopes">
-                            <el-button type="primary" link size="small" @click="delClick(scopes.row)">
-                                删除
+            <el-table :data="defData.tableData">
+                <el-table-column prop="type" label="类型" width="90" show-overflow-tooltip align="center">
+                    <template #default="scopes">
+                        {{ scopes.row.type === 1 ? '我的提问' : '我的回答' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="goods_name" label="商品名称" min-width="80" show-overflow-tooltip align="center">
+                    <template #default="{ row }">
+                        <NuxtLink :to="`/goods/${row.goods_sn}`" target="_blank">
+                            {{ row.goods_name }}
+                        </NuxtLink>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="content" label="内容" min-width="80" show-overflow-tooltip align="center" />
+                <el-table-column prop="add_time" label="时间" width="170" show-overflow-tooltip align="center">
+                    <template #default="scopes">
+                        {{ formatTime(scopes.row.add_time) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="operate" width="90" align="center" show-overflow-tooltip>
+                    <template #default="scopes">
+                        <el-button type="primary" link size="small" @click="delClick(scopes.row)">
+                            删除
+                        </el-button>
+                        <div v-if="defData.type === 1">
+                            <el-button v-if="scopes.row.answer_lists.length === 0" type="info" link size="small">
+                                暂无回复
                             </el-button>
-                            <div v-if="defData.type === 1">
-                                <el-button v-if="scopes.row.answer_lists.length === 0" type="info" link size="small">
-                                    暂无回复
-                                </el-button>
-                                <el-button v-else type="primary" link size="small" @click="openView(scopes.row)">
-                                    查看回复
-                                </el-button>
-                            </div>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
+                            <el-button v-else type="primary" link size="small" @click="openView(scopes.row)">
+                                查看回复
+                            </el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
             <div class="goods-pagination">
                 <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
                     layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
                     @current-change="onHandleSizeChange" />
             </div>
+            <el-dialog v-model="defData.myVisible" width="680px" :draggable="true">
+                <el-table :data="defData.myTableData" style="width: 100%" max-height="600" default-expand-all>
+                    <el-table-column type="expand">
+                        <template #default="props">
+                            <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
+                                <span class="mr5px fw-800">答</span>
+                                暂无回答
+                            </div>
+                            <el-table v-else :data="props.row.answer_lists" :show-header="false"
+                                style="--el-table-border-color: none;">
+                                <el-table-column width="49px" />
+                                <el-table-column prop="content">
+                                    <template #default="scopes">
+                                        <span class="mr5px fw-800 c-green">答</span>
+                                        <span>{{ scopes.row.content }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="" width="300" show-overflow-tooltip align="right">
+                                    <template #default="scopes">
+                                        <span class="text-12px font-100"> {{ changeToStar(scopes.row.user_name) }}
+                                            {{ formatTime(scopes.row.add_time) }}</span>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="" prop="content">
+                        <template #default="scopes">
+                            <span class="mr5px fw-800 c-red">问</span>
+                            <span style="font-weight: 800;">{{ scopes.row.content }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="" width="300" show-overflow-tooltip align="right">
+                        <template #default="scopes">
+                            <span class="text-12px font-100"> {{ changeToStar(scopes.row.user_name) }}
+                                {{ formatTime(scopes.row.add_time) }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-dialog>
         </el-skeleton>
     </LayoutUser>
-
-    <el-dialog v-model="defData.myVisible" width="680px" :draggable="true">
-        <el-table :data="defData.myTableData" style="width: 100%" max-height="600" default-expand-all>
-            <el-table-column type="expand">
-                <template #default="props">
-                    <div v-if="props.row.answer_lists.length === 0" class="ml-60px c-#aaa">
-                        <span class="mr5px fw-800">答</span>
-                        暂无回答
-                    </div>
-                    <el-table v-else :data="props.row.answer_lists" :show-header="false"
-                        style="--el-table-border-color: none;">
-                        <el-table-column width="49px" />
-                        <el-table-column prop="content">
-                            <template #default="scopes">
-                                <span class="mr5px fw-800 c-green">答</span>
-                                <span>{{ scopes.row.content }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="" width="300" show-overflow-tooltip align="right">
-                            <template #default="scopes">
-                                <span style="font-weight: 80;font-size: 12px;"> {{
-                                                                                    changeToStar(scopes.row.user_name) }}
-                                    {{ formatTime(scopes.row.add_time) }}</span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </template>
-            </el-table-column>
-            <el-table-column label="" prop="content">
-                <template #default="scopes">
-                    <span class="mr5px fw-800 c-red">问</span>
-                    <span style="font-weight: 800;">{{ scopes.row.content }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="" width="300" show-overflow-tooltip align="right">
-                <template #default="scopes">
-                    <span style="font-weight: 80;font-size: 13px;"> {{
-                                                                        changeToStar(scopes.row.user_name) }}
-                        {{ formatTime(scopes.row.add_time) }}</span>
-                </template>
-            </el-table-column>
-        </el-table>
-    </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -143,6 +136,7 @@ const initTableData = async () => {
         type: defData.type as 1 | 2,
     }
     const { data: res } = await InterListApi.getUserList(data)
+    await wait(100)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     defData.tableData = res.value.data.lists

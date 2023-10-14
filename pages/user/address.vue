@@ -80,8 +80,8 @@ const defData = reactive({
 })
 
 const { data: address, refresh } = await UserAddressApi.getList() // 获取所有地址列表
-await wait(100)
-defData.skeleton = false // 完成屏幕骨架屏操作后，骨架屏展示页面内容。
+// await wait(100)
+// defData.skeleton = false // 完成屏幕骨架屏操作后，骨架屏展示页面内容。
 // const addressList = ref(address.value?.data)
 
 // 地址信息拼接
@@ -124,6 +124,10 @@ const onDel = (row: UserAddressApi_GetListResponse) => { // 选择的地址row�
 const getAddress = () => {
     refresh()
 }
+
+onMounted(() => {
+    defData.skeleton = false // 完成屏幕骨架屏操作后，骨架屏展示页面内容。
+})
 
 definePageMeta({
     layout: 'home',

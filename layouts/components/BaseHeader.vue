@@ -7,8 +7,8 @@
                         <img class="h50px" :src="systemInfo?.shop_logo" height="50" alt="logo">
                     </NuxtLink>
                 </div>
-                <client-only>
-                    <div class="search-box relative w50%">
+                <div class="search-box relative w50%">
+                    <client-only>
                         <ElAutocomplete ref="autocompleteRef" v-model="search.keyword" :fetch-suggestions="querySearchAsync"
                             popper-class="pop-search" class="w100%" :debounce="800" fit-input-width placeholder=""
                             select-when-unmatched label="test" @select="onSearch">
@@ -38,25 +38,34 @@
                                 </div>
                             </template>
                         </ElAutocomplete>
-                        <div v-if="searchHotList.length" class="search-hot">
-                            热门搜索：<span v-for="(item) in searchHotList" :key="item" @click="onSearchHot(item)">{{ item
-                            }}</span>
-                        </div>
-                        <Teleport to=".pop-search">
+                        <Teleport v-if="showTeleport" to=".pop-search">
                             <div v-if="showClear" class="pop-clear i-ep-delete" @click.stop="onRemoveHistoryAll" />
                         </Teleport>
-                    </div>
-                    <div class="cart">
-                        <NuxtLink to="/order/cart">
-                            <el-badge :value="number" class="cart-number">
-                                <el-button type="primary" class="min-w150px">
-                                    <i class="i-ep-shopping-cart-full mr8px" />
-                                    购物车
+                        <template #fallback>
+                            <div class="flex items-center justify-between b-rounded-4px bg-#fff pl15px">
+                                <i class="i-ep-search text-14px c-#a8abb2" />
+                                <el-button type="primary" class="btn-search min-w120px">
+                                    搜 索
                                 </el-button>
-                            </el-badge>
-                        </NuxtLink>
+                            </div>
+                        </template>
+                    </client-only>
+
+                    <div v-if="searchHotList.length" class="search-hot">
+                        热门搜索：<span v-for="(item) in searchHotList" :key="item" @click="onSearchHot(item)">{{ item
+                        }}</span>
                     </div>
-                </client-only>
+                </div>
+                <div class="cart">
+                    <NuxtLink to="/order/cart">
+                        <el-badge :value="number" class="cart-number">
+                            <el-button type="primary" class="min-w150px">
+                                <i class="i-ep-shopping-cart-full mr8px" />
+                                购物车
+                            </el-button>
+                        </el-badge>
+                    </NuxtLink>
+                </div>
             </div>
         </el-form>
 
@@ -83,6 +92,7 @@ const useSystem = useSystemState()
 const systemInfo = ref(useSystem.system)
 
 const autocompleteRef = ref<InstanceType<typeof ElAutocomplete>>()
+const showTeleport = ref(false)
 const showClear = ref(false) // 是否显示清除按钮
 
 const searchDataList = useLocalStorage<GoodsSearchItem[]>('searchKeywordList', [])
@@ -213,6 +223,10 @@ const setHighlightText = (text: string) => {
 
 watch(() => route.query.keyword, (val) => {
     search.keyword = val ? val as string : ''
+})
+onMounted(async () => {
+    await wait(100)
+    showTeleport.value = true
 })
 </script>
 

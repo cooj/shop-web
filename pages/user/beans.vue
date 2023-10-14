@@ -66,8 +66,8 @@ const initTableData = async () => {
         page_size: defData.pageSize,
     }
     const { data: res } = await BeansApi.geList(data)
-
-    defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
+    await wait(10)
+    defData.skeleton = false
     if (res.value?.code !== 200) return ElMessage.error(res.value?.msg)
     defData.tableData = res.value?.data.lists
     defData.total = res.value?.data.total

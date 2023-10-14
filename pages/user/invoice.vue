@@ -130,13 +130,16 @@ const getInvoice = () => {
 
 const initTableData = async () => {
     const res = await UserInvoiceApi.getList()
-    defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
 
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
 
     defData.tableData = res.data.value.data
 }
 initTableData()
+
+onMounted(() => {
+    defData.skeleton = false // 骨架屏展示页面内容。
+})
 
 definePageMeta({
     layout: 'home',

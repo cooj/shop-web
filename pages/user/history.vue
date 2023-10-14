@@ -17,7 +17,7 @@
                 <el-breadcrumb-item>浏览历史</el-breadcrumb-item>
             </el-breadcrumb>
 
-            <ElTable ref="tableRef" :data="defData.tableData" class="mt25px">
+            <ElTable ref="tableRef" :data="defData.tableData" class="mt20px">
                 <el-table-column prop="goods_name" label="商品名称" min-width="180">
                     <template #default="{ row }">
                         <div class="h50px flex">
@@ -89,6 +89,7 @@ const initTableData = async () => {
         page_size: defData.pageSize,
     }
     const res = await RecordApi.getList(data)
+    await wait(10)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
     defData.tableData = res.data.value?.data.lists.map((item) => {
