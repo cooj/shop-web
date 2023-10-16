@@ -102,7 +102,7 @@
                                 </NuxtLink>
                             </dd>
                             <dd>
-                                <NuxtLink to="/user/leaveWord">
+                                <NuxtLink to="/user/message">
                                     我的留言
                                 </NuxtLink>
                             </dd>

@@ -20,57 +20,44 @@
                     新增留言
                 </el-button>
             </div>
-            <el-table :data="defData.tableData" border>
-                <el-table-column prop="type" label="类型" width="120" align="center" show-overflow-tooltip>
-                    <template #default="{ row }">
-                        <el-tag v-if="row.type === 1">
-                            建议
-                        </el-tag>
-                        <el-tag v-else-if="row.type === 2">
-                            投诉
-                        </el-tag>
-                        <el-tag v-else-if="row.type === 3">
-                            商品
-                        </el-tag>
-                        <el-tag v-else-if="row.type === 4">
-                            其他
-                        </el-tag>
-                        <el-tag v-else-if="row.type === 5">
-                            店铺投诉
-                        </el-tag>
-                        <el-tag v-else>
-                            订单问题
-                        </el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="content" label="留言内容" min-width="150" show-overflow-tooltip />
-                <el-table-column prop="add_time" label="留言时间" width="180" show-overflow-tooltip align="center">
-                    <template #default="scopes">
-                        {{ formatTime(scopes.row.add_time) }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="is_reply" label="是否回复" width="83" show-overflow-tooltip>
-                    <template #default="{ row }">
-                        <el-tag v-if="row.is_reply" type="success">
-                            是
-                        </el-tag>
-                        <el-tag v-else type="danger">
-                            否
-                        </el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="reply_content" label="回复内容" width="175" show-overflow-tooltip />
-                <el-table-column prop="reply_time" label="回复时间" width="180" show-overflow-tooltip align="center">
-                    <template #default="scopes">
-                        {{ scopes.row.reply_time ? formatTime(scopes.row.reply_time) : '' }}
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="goods-pagination">
-                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
-                    layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
-                    @current-change="onHandleSizeChange" />
-            </div>
+
+            <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" :data="tableData.data"
+                auto-height scrollbar-always-on border @update:page="onHandleCurrentChange">
+                <template #type="{ scopes }">
+                    <el-tag v-if="scopes.row.type === 1">
+                        建议
+                    </el-tag>
+                    <el-tag v-else-if="scopes.row.type === 2">
+                        投诉
+                    </el-tag>
+                    <el-tag v-else-if="scopes.row.type === 3">
+                        商品
+                    </el-tag>
+                    <el-tag v-else-if="scopes.row.type === 4">
+                        其他
+                    </el-tag>
+                    <el-tag v-else-if="scopes.row.type === 5">
+                        店铺投诉
+                    </el-tag>
+                    <el-tag v-else>
+                        订单问题
+                    </el-tag>
+                </template>
+                <template #is_reply="{ scopes }">
+                    <el-tag v-if="scopes.row.is_reply" type="success">
+                        是
+                    </el-tag>
+                    <el-tag v-else type="info">
+                        否
+                    </el-tag>
+                </template>
+                <template #add_time="{ scopes }">
+                    {{ formatTime(scopes.row.add_time) }}
+                </template>
+                <template #reply_time="{ scopes }">
+                    {{ scopes.row.reply_time ? formatTime(scopes.row.reply_time) : '-' }}
+                </template>
+            </CoTable>
 
             <CoDialog v-model:visible="defData.visible" :loading="defData.btnLoading" auto-height hidden title="新增留言"
                 width="680px" @close="onClose" @cancel="onClose" @confirm="onClick">
@@ -95,11 +82,6 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { LeaveWordApi } from '~/api/user/leaveWord'
 
 const defData = reactive({
-    page: 1,
-    total: 10,
-    pageSize: 11,
-
-    tableData: [] as LeaveWordApi_GetListResponse['lists'],
     skeleton: true,
     typeList: [
         {
@@ -140,23 +122,39 @@ const form = reactive({
 const rules = reactive<FormRules>({
     content: [
         { required: true, whitespace: true, message: '必填项不能为空', trigger: 'blur' }],
-    type: [
-        { required: true, message: '必填项不能为空', trigger: 'blur' }],
+    type: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+})
+
+type TableDataItem = LeaveWordApi_GetListResponse['lists'][0]
+const tableData = reactive<BaseTableDataType<TableDataItem>>({
+    data: [],
+    tableHeader: [
+        { property: 'type', label: '类型', width: 120, align: 'center', slot: true },
+        { property: 'content', label: '留言内容', minWidth: 150 },
+        { property: 'add_time', label: '留言时间', width: 160, slot: true },
+        { property: 'is_reply', label: '是否回复', width: 85, align: 'center', slot: true },
+        { property: 'reply_content', label: '回复内容', width: 175 },
+        { property: 'reply_time', label: '回复时间', width: 160, align: 'center', slot: true },
+        // { property: 'operate', label: '操作', width: 100, align: 'center', slot: true, fixed: 'right' },
+    ],
+    pagination: {
+        ...PAGINATION,
+    },
 })
 
 const initTableData = async () => {
     const data: LeaveWordApi_GetList = {
         is_paging: 1,
-        page: defData.page,
-        page_size: defData.pageSize,
+        page: tableData.pagination.page,
+        page_size: tableData.pagination.page_size,
     }
     const res = await LeaveWordApi.getList(data)
     await wait(10)
     defData.skeleton = false
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
 
-    defData.tableData = res.data.value.data.lists
-    defData.total = res.data.value.data.total
+    tableData.data = res.data.value.data.lists
+    tableData.pagination.total = res.data.value.data.total
 }
 initTableData()
 
@@ -181,8 +179,8 @@ const onClose = () => {
     formRef.value?.resetFields()
 }
 
-// 分页数量点击
-const onHandleSizeChange = () => {
+// 分页跳转
+const onHandleCurrentChange = () => {
     initTableData()
 }
 
@@ -192,14 +190,4 @@ definePageMeta({
 })
 </script>
 
-<style scoped>
-.goods-pagination {
-    padding: 20px 0;
-    --el-pagination-button-bg-color: var(--el-color-white);
-    /* :deep(.el-pagination) {
-    --el-pagination-button-bg-color: var(--el-color-white);
-    justify-content: center;
-    --el-disabled-bg-color: var(--el-border-color);
-  } */
-}
-</style>
+<style scoped></style>

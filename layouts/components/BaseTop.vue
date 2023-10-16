@@ -43,6 +43,7 @@
                     网站导航
                 </NuxtLink>
                 <el-divider direction="vertical" />
+                <!-- <NuxtLink href="/content/help">帮助中心</NuxtLink> -->
                 <NuxtLink href="javascript:;">
                     帮助中心
                 </NuxtLink>

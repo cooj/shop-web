@@ -22,11 +22,17 @@
         <div style="font-weight: bold">
             分享记录
         </div>
-        <el-table :data="defData.tableData" class="mt20px w100%" border>
-            <el-table-column prop="user_name" label="分享成功用户" width="200px" align="center" />
-            <el-table-column prop="run_info" label="操作信息" min-width="200px" align="center" />
-            <el-table-column prop="add_time" label="添加时间" width="200px" align="center" />
-        </el-table>
+        <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" :data="tableData.data"
+            auto-height scrollbar-always-on border @update:page="onHandleCurrentChange">
+            <!-- <template #is_default="{ scopes }">
+                <el-tag v-if="scopes.row.is_default" type="success" size="small">
+                    是
+                </el-tag>
+                <el-tag v-else type="info" size="small">
+                    否
+                </el-tag>
+            </template> -->
+        </CoTable>
     </LayoutUser>
 </template>
 
@@ -38,6 +44,20 @@ const defData = reactive({
     tableData: [] as RecommendApi_getListResponse[],
     shareCode: '', // 分享二维码
     shareLink: '', // 分享的链接地址
+})
+
+type TableDataItem = RecommendApi_getListResponse
+const tableData = reactive<BaseTableDataType<TableDataItem>>({
+    data: [],
+    tableHeader: [
+        { property: 'user_name', label: '分享成功用户', width: 160 },
+        { property: 'run_info', label: '操作信息', minWidth: 160 },
+        { property: 'add_time', label: '添加时间', width: 160 },
+        // { property: 'operate', label: '操作', width: 100, align: 'center', slot: true, fixed: 'right' },
+    ],
+    pagination: {
+        ...PAGINATION,
+    },
 })
 
 const userState = useUserState()
@@ -78,6 +98,11 @@ const initTableData = async () => {
     defData.tableData = res.value?.data
 }
 initTableData()
+
+// 分页跳转
+const onHandleCurrentChange = () => {
+    initTableData()
+}
 
 definePageMeta({
     layout: 'home',

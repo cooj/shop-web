@@ -21,49 +21,37 @@
                     新增发票抬头
                 </el-button>
             </div>
-            <el-table :data="defData.tableData" border>
-                <el-table-column prop="enterprise_name" label="发票抬头" min-width="150" show-overflow-tooltip align="center" />
-                <el-table-column prop="enterprise_email" label="企业邮箱" min-width="120" show-overflow-tooltip align="center" />
-                <!-- <el-table-column prop="header" label="发票抬头" width="150" show-overflow-tooltip /> -->
-                <el-table-column prop="tax_no" label="纳税人识别号" min-width="100" show-overflow-tooltip align="center" />
-                <el-table-column prop="type" label="发票类型" width="120" align="center" show-overflow-tooltip>
-                    <template #default="{ row }">
-                        <el-tag v-if="row.type === 1" type="success">
-                            增值税务发票
-                        </el-tag>
-                        <el-tag v-else-if="row.type === 2" type="danger">
-                            普通发票
-                        </el-tag>
-                        <el-tag v-else type="danger">
-                            普通电子发票
-                        </el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="is_default" label="是否默认" width="83" show-overflow-tooltip>
-                    <template #default="{ row }">
-                        <el-tag v-if="row.is_default" type="success">
-                            是
-                        </el-tag>
-                        <el-tag v-else type="danger">
-                            否
-                        </el-tag>
-                    </template>
-                </el-table-column>
-                <!-- <el-table-column prop="logon_addr" label="注册地址" min-width="150" show-overflow-tooltip />
-                <el-table-column prop="logon_tel" label="注册电话" width="120" show-overflow-tooltip />
-                <el-table-column prop="bank" label="开户银行" min-width="150" show-overflow-tooltip />
-                <el-table-column prop="bank_account" label="开户账户" min-width="150" show-overflow-tooltip /> -->
-                <el-table-column prop="operate" label="操作" width="100" align="center" show-overflow-tooltip fixed="right">
-                    <template #default="{ row }">
-                        <el-button type="primary" link size="small" @click="onEdit(row)">
-                            修改
-                        </el-button>
-                        <el-button type="primary" link size="small" @click="onDel(row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" :data="tableData.data"
+                auto-height scrollbar-always-on border @update:page="onHandleCurrentChange">
+                <template #type="{ scopes }">
+                    <el-tag v-if="scopes.row.type === 1" type="success">
+                        增值税务发票
+                    </el-tag>
+                    <el-tag v-else-if="scopes.row.type === 2" type="danger">
+                        普通发票
+                    </el-tag>
+                    <el-tag v-else type="danger">
+                        普通电子发票
+                    </el-tag>
+                </template>
+                <template #is_default="{ scopes }">
+                    <el-tag v-if="scopes.row.is_default" type="success" size="small">
+                        是
+                    </el-tag>
+                    <el-tag v-else type="info" size="small">
+                        否
+                    </el-tag>
+                </template>
+                <template #operate="{ scopes }">
+                    <el-button type="primary" link size="small" @click="onEdit(scopes.row)">
+                        修改
+                    </el-button>
+                    <el-button type="primary" link size="small" @click="onDel(scopes.row)">
+                        删除
+                    </el-button>
+                </template>
+            </CoTable>
+
             <UserInvoiceModel ref="modelRef" @update="getInvoice" />
         </el-skeleton>
     </LayoutUser>
@@ -80,17 +68,44 @@ const defData = reactive({
 
 })
 
+type TableDataItem = UserInvoiceApi_getListResponse
+const tableData = reactive<BaseTableDataType<TableDataItem>>({
+    data: [],
+    tableHeader: [
+        { property: 'enterprise_name', label: '发票抬头', minWidth: 150 },
+        { property: 'enterprise_email', label: '企业邮箱', minWidth: 120 },
+        { property: 'tax_no', label: '纳税人识别号', minWidth: 100 },
+        { property: 'type', label: '发票类型', width: 120, align: 'center', slot: true },
+        { property: 'is_default', label: '默认地址', width: 85, align: 'center', slot: true },
+        { property: 'operate', label: '操作', width: 100, align: 'center', slot: true, fixed: 'right' },
+    ],
+    pagination: {
+        ...PAGINATION,
+    },
+})
+
+// 获取发票列表
+const initTableData = async () => {
+    const res = await UserInvoiceApi.getList()
+
+    if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
+
+    defData.tableData = res.data.value.data
+    tableData.data = res.data.value.data
+}
+initTableData()
+
 // 新增
 const onAdd = async () => {
     modelRef.value?.onOpenDialog()
 }
 // 修改发票
-const onEdit = (row: UserInvoiceApi_getListResponse) => { // 选择的发票row对象
+const onEdit = (row: UserInvoiceApi_getListResponse) => {
     modelRef.value?.onOpenDialog(row)
 }
 
 // 删除发票
-const onDel = (row: UserInvoiceApi_getListResponse) => { // 选择发票的row对象
+const onDel = (row: UserInvoiceApi_getListResponse) => {
     if (!row.bill_header_id) return false
     ElMessageBox.confirm('此操作将永久删除该条内容，是否继续?', '提示', {
         confirmButtonText: '确认',
@@ -128,14 +143,10 @@ const getInvoice = () => {
     initTableData()
 }
 
-const initTableData = async () => {
-    const res = await UserInvoiceApi.getList()
-
-    if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-
-    defData.tableData = res.data.value.data
+// 分页跳转
+const onHandleCurrentChange = () => {
+    initTableData()
 }
-initTableData()
 
 onMounted(() => {
     defData.skeleton = false // 骨架屏展示页面内容。
