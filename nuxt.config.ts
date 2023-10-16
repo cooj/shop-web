@@ -27,10 +27,11 @@ export default defineNuxtConfig({
         // renderJsonPayloads: true,
         typedPages: true,
     },
-    // css: [
-    //   '@unocss/reset/tailwind.css',
-    //   // '~/assets/scss/app.scss',
-    // ],
+    css: [
+        '@unocss/reset/tailwind.css',
+        '~/assets/scss/index.scss',
+        // '~/assets/scss/app.scss',
+    ],
     colorMode: {
         classSuffix: '',
     },
@@ -70,13 +71,13 @@ export default defineNuxtConfig({
     },
     pwa,
     vite: {
-
+        // additionalData: `@use "@/assets/scss/element/index.scss" as element;`,
         // css: {
-        //   preprocessorOptions: {
-        //     scss: {
-        //       additionalData: '@use "~/assets/scss/default.scss" as *;', // 注意文件路径要配成自己的
+        //     preprocessorOptions: {
+        //         scss: {
+        //             additionalData: '@use "~/assets/scss/default.scss" as element;',
+        //         },
         //     },
-        //   },
         // },
 
         server: {
@@ -102,6 +103,10 @@ export default defineNuxtConfig({
     },
     devtools: {
         enabled: true,
+
+        timeline: {
+            enabled: true,
+        },
     },
     // devServer: {
     //     port: 3300,

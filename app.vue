@@ -10,7 +10,8 @@
 
 <script setup lang="ts">
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import '@unocss/reset/tailwind.css'
+
+// import '@unocss/reset/tailwind.css'
 import '~/assets/scss/default.scss'
 import '~/assets/scss/app.scss'
 
@@ -60,7 +61,7 @@ html.dark {
 .layout-enter-from,
 .layout-leave-to {
     // filter: grayscale(1);
-    zoom: 1 ;
+    zoom: 1;
     // transform:scale(1.2);
     // opacity: 0;
 }
