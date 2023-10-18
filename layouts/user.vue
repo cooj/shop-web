@@ -12,9 +12,12 @@
       </el-main>
     </el-container>
   </div> -->
-        <UserLayout>
+        <!-- <UserLayout>
             <slot />
-        </UserLayout>
+        </UserLayout> -->
+        <LayoutUser>
+            <slot />
+        </LayoutUser>
 
         <BaseFooter />
         <BaseRight />
@@ -29,5 +32,5 @@ import BaseRight from './components/BaseRight.vue'
 import BaseTop from '~/layouts/components/BaseTop.vue'
 
 // import UserAside from '~/layouts/components/UserAside.vue'
-import UserLayout from '~/layouts/components/UserLayout.vue'
+// import UserLayout from '~/layouts/components/UserLayout.vue'
 </script>

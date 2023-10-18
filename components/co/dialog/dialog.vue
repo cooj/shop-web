@@ -1,7 +1,7 @@
 <template>
     <!-- <div v-if="CLIENT"> -->
     <lazy-client-only>
-        <el-dialog v-model="visible" class="co-dialog" v-bind="$attrs" :fullscreen="defData.fullscreen" draggable
+        <el-dialog v-model="visible" class="co-dialog" :fullscreen="defData.fullscreen" draggable v-bind="$attrs"
             @close="onClose">
             <template #header>
                 <span class="el-dialog__title">

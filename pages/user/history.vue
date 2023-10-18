@@ -10,99 +10,84 @@
                 </div>
             </template>
 
-            <el-breadcrumb>
+            <el-breadcrumb class="mb20px">
                 <el-breadcrumb-item>
                     我关注的
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>浏览历史</el-breadcrumb-item>
             </el-breadcrumb>
 
-            <ElTable ref="tableRef" :data="defData.tableData" class="mt20px">
-                <el-table-column prop="goods_name" label="商品名称" min-width="180">
-                    <template #default="{ row }">
-                        <div class="h50px flex">
-                            <div class="goods_img">
-                                <el-image class="h50px w50px" :src="row.goods_img" />
-                            </div>
-                            <div class="pl10px">
-                                <NuxtLink :to="`/goods/${row.goods_sn}`" target="_blank">
-                                    {{ row.goods_name }}
-                                </NuxtLink>
-                            </div>
+            <CoTable v-model:page="tableData.pagination" v-model:table-header="tableData.tableHeader" :data="tableData.data"
+                auto-height scrollbar-always-on border @update:page="onHandleCurrentChange">
+                <template #goods_name="{ scopes }">
+                    <div class="flex items-center">
+                        <co-image class="h50px w50px" :src="scopes.row.goods_img" :icon-size="24" />
+                        <div class="pl10px">
+                            <NuxtLink :to="`/goods/${scopes.row.goods_sn}`" class="hover:c-#d7231e" target="_blank">
+                                {{ scopes.row.goods_name }}
+                            </NuxtLink>
                         </div>
-                    </template>
-                </el-table-column>
-                <!-- <el-table-column prop="goods_code" label="商品型号" width="160" />
-        <el-table-column prop="goods_spec" label="商品规格" width="160" /> -->
-                <el-table-column prop="shop_price" label="价格" width="120" align="center">
-                    <template #default="{ row }">
-                        <div class="shop_price">
-                            {{ row.shop_price }}
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="recent_time" label="浏览时间" width="170px" align="center">
-                    <template #default="{ row }">
-                        {{ formatTime(row.recent_time) }}
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="operate" label="操作" width="100" align="center">
-                    <template #default="{ row }">
-                        <el-button type="primary" link @click="onRemove(row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </ElTable>
-
-            <div class="goods-pagination mt10px">
-                <el-pagination v-model:current-page="defData.page" v-model:page-size="defData.pageSize" small background
-                    layout=" prev, pager, next,total, jumper" :total="defData.total" @size-change="onHandleSizeChange"
-                    @current-change="onHandleSizeChange" />
-            </div>
+                    </div>
+                </template>
+                <template #recent_time="{ scopes }">
+                    {{ formatTime(scopes.row.recent_time) }}
+                </template>
+                <template #operate="{ scopes }">
+                    <el-button type="primary" link size="small" @click="onRemove(scopes.row)">
+                        删除
+                    </el-button>
+                </template>
+            </CoTable>
         </el-skeleton>
     </LayoutUser>
 </template>
 
 <script setup lang="ts">
-import { ElTable } from 'element-plus'
 import { RecordApi } from '~/api/user/record'
 
-const tableRef = ref<InstanceType<typeof ElTable>>()
 const userState = useUserState()
 
 const defData = reactive({
-    tableData: [] as RecordApi_GetListResponse['lists'],
     skeleton: true,
-    page: 1,
-    total: 10,
-    pageSize: 10,
+})
 
+type TableDataItem = RecordApi_GetListResponse['lists'][0]
+const tableData = reactive<BaseTableDataType<TableDataItem>>({
+    data: [],
+    tableHeader: [
+        { property: 'goods_name', label: '商品名称', minWidth: 180, slot: true },
+        { property: 'shop_price', label: '价格', width: 120, align: 'center' },
+        { property: 'recent_time', label: '浏览时间', width: 160, slot: true },
+        { property: 'operate', label: '操作', width: 100, align: 'center', slot: true, fixed: 'right' },
+    ],
+    pagination: {
+        ...PAGINATION,
+    },
 })
 
 const initTableData = async () => {
     const data: RecordApi_GetList = {
         type: 2,
         is_paging: 1,
-        page: defData.page,
-        page_size: defData.pageSize,
+        page: tableData.pagination.page,
+        page_size: tableData.pagination.page_size,
     }
     const res = await RecordApi.getList(data)
     await wait(10)
     defData.skeleton = false// 让每个页面都要加载数据，防止溢出错误。 这会释放页面
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
-    defData.tableData = res.data.value?.data.lists.map((item) => {
+
+    tableData.data = res.data.value?.data.lists.map((item) => {
         item.goods_img = setGoodsOssImg(item.goods_img, 60)
         return item
     })
-    defData.total = res.data.value.data.total
+    tableData.pagination.total = res.data.value.data.total
 }
 initTableData()
 
 // 删除
 const onRemove = async (row: any) => {
-    ElMessageBox.confirm('确定要删除该订单吗？', '提示', {
+    ElMessageBox.confirm('确定要删除该条历史记录吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -125,8 +110,8 @@ const onRemove = async (row: any) => {
     })
 }
 
-// 分页数量点击
-const onHandleSizeChange = () => {
+// 分页跳转
+const onHandleCurrentChange = () => {
     initTableData()
 }
 
@@ -136,4 +121,4 @@ definePageMeta({
 })
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped></style>
