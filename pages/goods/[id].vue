@@ -394,6 +394,7 @@ const form = reactive({
 const param_id = useRouteParam('id')
 
 const goods_sn = param_id.value?.trim() ?? ''
+console.warn(goods_sn)
 // if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
 
 const { data, error } = await GoodsApi.getInfo({ goods_sn })
