@@ -1,9 +1,11 @@
 <!-- 导航菜单 -->
 <template>
-    <nav class="nav-box">
-        <NuxtLink v-for="item in menu?.data" :key="item.nav_id" :to="item.nav_url">
-            {{ item.nav_name }}
-        </NuxtLink>
+    <nav class="nav-box min-h48px">
+        <ClientOnly>
+            <NuxtLink v-for="item in menu?.data" :key="item.nav_id" :to="item.nav_url">
+                {{ item.nav_name }}
+            </NuxtLink>
+        </ClientOnly>
         <!-- <NuxtLink to="/order/cart">
             清仓特卖
         </NuxtLink> -->

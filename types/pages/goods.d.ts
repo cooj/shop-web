@@ -147,7 +147,7 @@ declare interface GoodsApi_GetInfoResponse {
 declare interface GoodsApi_GoodsInfoData {
     "goods_id": 1, //商品id
     "goods_name": "红钐 按键寿命试验机 HSL-TA4 四工位", //商品名称
-    "goods_img": "", //商品主图
+    "goods_img": string, //商品主图
     "goods_sn": "AA00001", //商品编号
     "goods_code": "HSL-TA4", //商品型号
     "shop_price": "10.00", //本店价

@@ -34,15 +34,16 @@
                         </div>
                     </div>
                 </template>
-                <GoodsBreadcrumb class="my15px" :cid="goodsInfo?.cat_id" :name="goodsInfo?.goods_name" />
+                <GoodsBreadcrumb class="my15px" :cid="goodsData.goodsInfo?.cat_id"
+                    :name="goodsData.goodsInfo?.goods_name" />
                 <div class="goods-main">
                     <div class="goods-zoom">
-                        <GoodsImgZoom v-if="(goodsImgList.length > 0)" :images="goodsImgList" />
+                        <GoodsImgZoom v-if="(goodsData.photoList.length > 0)" :images="goodsData.photoList" />
                         <CoImage v-else class="w100% pb100%" style="--el-color-info-light-9:#fff;" />
                     </div>
                     <div class="goods-cen">
                         <div class="goods-tle">
-                            {{ goodsInfo?.goods_name }}
+                            {{ goodsData.goodsInfo?.goods_name }}
                         </div>
                         <ul class="goods-pros">
                             <li class="items-center bg-#f8f8f8">
@@ -51,7 +52,7 @@
                                 </div>
                                 <div class="gt">
                                     <div class="price1">
-                                        <b>￥{{ goodsInfo?.shop_price }}
+                                        <b>￥{{ goodsData.goodsInfo?.shop_price }}
                                             <!-- <span v-if="goodsInfo?.unit">/{{ goodsInfo?.unit}}</span> -->
                                         </b>
                                         <!-- <span class="price2 ml8px">{{ goodsData?.market_price }}</span> -->
@@ -69,14 +70,15 @@
                                     <span class="text-12px c-#666">会员价</span>
                                 </div>
                             </li>
-                            <li v-if="goodsInfo?.coupon_list?.length" class="bg-#f8f8f8">
+                            <li v-if="goodsData.goodsInfo?.coupon_list?.length" class="bg-#f8f8f8">
                                 <div class="lt">
                                     优惠券
                                 </div>
                                 <div class="gt">
                                     <!-- 未登录禁止领取 -->
-                                    <el-popover v-for="item in goodsInfo.coupon_list.slice(0, 5)" :key="item.coupon_id"
-                                        placement="top" :width="75" :popper-style="{ minWidth: '75px' }" trigger="hover"
+                                    <el-popover v-for="item in goodsData.goodsInfo.coupon_list.slice(0, 5)"
+                                        :key="item.coupon_id" placement="top" :width="75"
+                                        :popper-style="{ minWidth: '75px' }" trigger="hover"
                                         :disabled="userData?.user_id ? false : true">
                                         <el-button class="w100%" type="primary" size="small" link
                                             @click="onReceive(item.coupon_id)">
@@ -97,14 +99,16 @@
                             <li class="items-center bg-#f8f8f8 -mt10px">
                                 <div class="lt" />
                                 <div class="gt my5px">
-                                    <el-tag v-if="goodsInfo?.is_best" type="" effect="dark" size="small" class="mr5px">
-                                        精选
-                                    </el-tag>
-                                    <el-tag v-if="goodsInfo?.is_new" type="warning" effect="dark" size="small"
+                                    <el-tag v-if="goodsData.goodsInfo?.is_best" type="" effect="dark" size="small"
                                         class="mr5px">
                                         精选
                                     </el-tag>
-                                    <el-tag v-if="goodsInfo?.is_hot" type="danger" effect="dark" size="small" class="mr5px">
+                                    <el-tag v-if="goodsData.goodsInfo?.is_new" type="warning" effect="dark" size="small"
+                                        class="mr5px">
+                                        精选
+                                    </el-tag>
+                                    <el-tag v-if="goodsData.goodsInfo?.is_hot" type="danger" effect="dark" size="small"
+                                        class="mr5px">
                                         热销
                                     </el-tag>
                                 </div>
@@ -114,7 +118,7 @@
                                     商品编号
                                 </div>
                                 <div class="gt">
-                                    {{ goodsInfo?.goods_sn }}
+                                    {{ goodsData.goodsInfo?.goods_sn }}
                                 </div>
                             </li>
                             <li>
@@ -122,7 +126,7 @@
                                     商品型号
                                 </div>
                                 <div class="gt">
-                                    {{ goodsInfo?.goods_code }}
+                                    {{ goodsData.goodsInfo?.goods_code }}
                                 </div>
                             </li>
                             <li>
@@ -160,7 +164,7 @@
                             <li>
                                 <div class="lt" />
                                 <div class="gt">
-                                    <el-button v-if="goodsInfo?.is_collect" type="primary" text bg size="small"
+                                    <el-button v-if="goodsData.goodsInfo?.is_collect" type="primary" text bg size="small"
                                         @click="onCollect">
                                         <i class="i-carbon-favorite-filled mr3px" />
                                         收藏
@@ -199,8 +203,8 @@
                     <div class="lt">
                         <el-tabs v-model="defData.leftActive" class="goods-lt-tabs">
                             <el-tab-pane label="推荐商品" name="1">
-                                <ul v-if="goodsData?.link_lists" class="goods-list">
-                                    <li v-for="item in goodsData?.link_lists?.slice(0, 10)" :key="item.goods_id">
+                                <ul v-if="goodsData?.linkList" class="goods-list">
+                                    <li v-for="item in goodsData?.linkList" :key="item.goods_id">
                                         <NuxtLink class="pos" :to="`/goods/${item.goods_sn}`">
                                             <CoImage :src="setGoodsOssImg(item.goods_img, 300)"
                                                 class="hov-img w100% pb100%" />
@@ -221,7 +225,7 @@
                     <div class="gt">
                         <el-tabs v-model="defData.rightActive" class="goods-gt-tabs" @tab-change="onRightTabChange">
                             <el-tab-pane label="商品详情" name="1">
-                                <div v-html="goodsInfo?.goods_desc" />
+                                <div v-html="goodsData.goodsInfo?.goods_desc" />
                             </el-tab-pane>
                             <el-tab-pane label="商品问答" name="2" lazy>
                                 <el-button style="background-color: var(--el-color-primary);color: white;"
@@ -374,16 +378,11 @@ const defData = reactive({
     shareLink: '', // 分享的链接地址
     tableData: [] as InterListApi_getListResponse['lists'],
     skeleton: true, // 默认显示骨架屏
-    goods_id: 0, // 当前的商品id
     visible: false,
     type: 1, // 1：提问，2：回答
     btnLoading: false,
     visibleLogin: false,
 })
-// 商品信息
-const goodsData = ref<GoodsApi_GetInfoResponse>()
-const goodsInfo = ref<GoodsApi_GoodsInfoData>()
-const goodsImgList = ref<string[]>([])
 
 const form = reactive({
     number: 1, // 购买数量
@@ -394,50 +393,87 @@ const form = reactive({
 })
 const param_id = useRouteParam('id')
 
+const goods_sn = param_id.value?.trim() ?? ''
+// if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
+
+const { data, error } = await GoodsApi.getInfo({ goods_sn })
+
+// 商品信息
+const goodsData = computed(() => {
+    const goodsInfo = data.value?.data?.goods_info
+    const id = data.value?.data?.goods_info.goods_id || 0
+    const photoList: string[] = goodsInfo?.goods_img ? [goodsInfo?.goods_img] : []
+
+    data.value?.data?.photo_lists.forEach((item) => {
+        if (item.photo_url) photoList.push(item.photo_url)
+    })
+
+    const linkList = data.value?.data?.link_lists.slice(0, 10)
+
+    return {
+        goodsInfo,
+        photoList,
+        linkList,
+        id,
+    }
+})
+
+if (data.value?.data?.goods_info) {
+    const infoData = data.value?.data?.goods_info
+    // 设置seo
+    const meta = []
+    if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
+    if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
+    useHead({
+        title: infoData.web_title || infoData.goods_name,
+        meta,
+    })
+}
+
 // 获取商品信息
 const initGoodsData = async () => {
-    const goods_sn = param_id.value?.trim() ?? ''
-    if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
+    // const goods_sn = param_id.value?.trim() ?? ''
+    // if (!goods_sn) return ElMessage.error('未获取到商品信息,请检查地址是否正确')
 
-    const { data, error } = await GoodsApi.getInfo({ goods_sn })
-    await wait(200)
-    if (error.value) return ElMessage.error('网络错误!')
-    if (data.value?.code === 200) {
-        const dat = data.value.data
-        // console.log(dat)
-        const infoData = dat.goods_info
+    // const { data, error } = await GoodsApi.getInfo({ goods_sn })
+    // await wait(450)
+    // if (error.value) return ElMessage.error('网络错误!')
+    // if (data.value?.code === 200) {
+    //     const dat = data.value.data
+    //     // console.log(dat)
+    //     const infoData = dat.goods_info
 
-        // if (goods.goods_id === id) {
-        if (infoData) {
-            goodsData.value = dat
-            goodsInfo.value = infoData
+    //     // if (goods.goods_id === id) {
+    //     if (infoData) {
+    //         goodsData.value = dat
+    //         goodsInfo.value = infoData
 
-            defData.goods_id = infoData.goods_id
+    //         defData.goods_id = infoData.goods_id
 
-            // 商品图片
-            const imgArr: string[] = infoData.goods_img ? [infoData.goods_img] : []
-            dat.photo_lists.forEach((item) => {
-                if (item.photo_url) imgArr.push(item.photo_url)
-            })
-            goodsImgList.value = imgArr
+    //         // 商品图片
+    //         const imgArr: string[] = infoData.goods_img ? [infoData.goods_img] : []
+    //         dat.photo_lists.forEach((item) => {
+    //             if (item.photo_url) imgArr.push(item.photo_url)
+    //         })
+    //         goodsImgList.value = imgArr
 
-            // 设置seo
-            const meta = []
-            if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
-            if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
-            useHead({
-                title: infoData.web_title || infoData.goods_name,
-                meta,
-            })
+    //         // 设置seo
+    //         const meta = []
+    //         if (infoData.web_desc) meta.push({ name: 'description', content: infoData.web_desc })
+    //         if (infoData.web_keywords) meta.push({ name: 'keywords', content: infoData.web_keywords })
+    //         useHead({
+    //             title: infoData.web_title || infoData.goods_name,
+    //             meta,
+    //         })
 
-            defData.skeleton = false // 关闭骨架屏
-        } else {
-            ElMessage.error('未获取到商品信息,请检查地址是否正确')
-            // navigateTo('/404')
-        }
-    } else {
-        ElMessage.error('未获取到商品信息,请检查地址是否正确')
-    }
+    //         defData.skeleton = false // 关闭骨架屏
+    //     } else {
+    //         ElMessage.error('未获取到商品信息,请检查地址是否正确')
+    //         // navigateTo('/404')
+    //     }
+    // } else {
+    //     ElMessage.error('未获取到商品信息,请检查地址是否正确')
+    // }
 }
 
 // 问答列表 弹窗标题
@@ -458,7 +494,7 @@ const initQuestionData = async () => {
         is_paging: 1,
         page: defData.page,
         pagesize: defData.pageSize,
-        goods_id: defData.goods_id,
+        goods_id: goodsData.value.id,
     }
     const res = await InterListApi.getList(param)
     if (res.data.value?.code !== 200) return ElMessage.error(res.data.value?.msg)
@@ -482,7 +518,7 @@ const answerClick = async () => {
     if (defData.type === 1) { // 提问
         if (!form.question) return ElMessage.error('请先输入提问')
         const info: InterListApi_addList = {
-            goods_id: defData.goods_id,
+            goods_id: goodsData.value.id,
             type: 1,
             q_id: 0,
             content: form.question,
@@ -497,7 +533,7 @@ const answerClick = async () => {
     } else { // 回答
         if (!form.answer) return ElMessage.error('请输入回答')
         const info: InterListApi_addList = {
-            goods_id: defData.goods_id,
+            goods_id: goodsData.value.id,
             type: 2,
             q_id: form.question_id,
             content: form.answer,
@@ -542,38 +578,38 @@ const onCollect = async () => {
         return navigateTo('/login')
     }
     // 已经收藏了，取消收藏状态
-    if (goodsInfo.value?.is_collect) {
+    if (goodsData.value.goodsInfo?.is_collect) {
         // 清除收藏
         const params: RecordApi_Del = {
-            goods_ids: goodsInfo.value.goods_id.toString(),
+            goods_ids: goodsData.value.id.toString(),
             type: 1,
         }
         const { data } = await RecordApi.del(params)
         if (data.value?.code === 200) {
-            goodsInfo.value.is_collect = 0 // 清除收藏标志位
+            goodsData.value.goodsInfo.is_collect = 0 // 清除收藏标记
         }
     } else {
         const params: RecordApi_Add = {
-            goods_id: defData.goods_id,
+            goods_id: goodsData.value.id,
             type: 1,
         }
         const { data } = await RecordApi.add(params)
         if (data.value?.code === 200) {
-            goodsInfo.value!.is_collect = 1
+            goodsData.value.goodsInfo!.is_collect = 1
         }
     }
 }
 
 // 立即购买
 const onBuyGoods = () => {
-    if (!goodsInfo.value?.is_sale) return ElMessage.error('商品已下架')
+    if (!goodsData.value.goodsInfo?.is_sale) return ElMessage.error('商品已下架')
 
-    const price = goodsInfo.value?.shop_price || ''
+    const price = goodsData.value.goodsInfo?.shop_price || ''
     if (Number(price) <= 0) {
         return ElMessage.error('商品价格不正确')
     }
     const param = {
-        goods_id: defData.goods_id,
+        goods_id: goodsData.value.id,
         goods_number: form.number,
     }
 
@@ -585,20 +621,20 @@ const onBuyGoods = () => {
 
 // 加入购物车
 const onAddCart = async () => {
-    if (!goodsInfo.value?.is_sale) return ElMessage.error('商品已下架')
+    if (!goodsData.value.goodsInfo?.is_sale) return ElMessage.error('商品已下架')
     // 用户未登录时，不允许加入购物车页面
     if (!userState.token.value) {
         ElMessage.error('请先登录!')
         return navigateTo('/login')
     }
-    const price = goodsInfo.value?.shop_price || ''
+    const price = goodsData.value.goodsInfo?.shop_price || ''
     if (Number(price) <= 0) {
         return ElMessage.error('商品价格不正确')
     }
 
     const { number } = form
-    if (number > 0 && goodsInfo.value?.goods_id) {
-        const { data } = await GoodsApi.addCart({ goods_id: goodsInfo.value.goods_id, goods_number: number })
+    if (number > 0 && goodsData.value.id) {
+        const { data } = await GoodsApi.addCart({ goods_id: goodsData.value.id, goods_number: number })
         if (data.value?.code === 200) {
             useCartNumber.setCartNumber()
             ElMessage.success('加入购物车成功')
@@ -743,9 +779,9 @@ const onHistory = async () => {
     const newName = useRoute().name
     if (newName !== name) return
 
-    if (userData.value?.user_id && defData.goods_id) {
+    if (userData.value?.user_id && goodsData.value.id) {
         const params: RecordApi_Add = {
-            goods_id: defData.goods_id,
+            goods_id: goodsData.value.id,
             type: 2,
         }
         await RecordApi.add(params)
@@ -753,6 +789,13 @@ const onHistory = async () => {
 }
 
 initGoodsData()
+
+watch(() => goodsData.value.id, async (val) => {
+    if (val) {
+        await wait(150)
+        defData.skeleton = false
+    }
+})
 
 onMounted(() => {
     onHistory()

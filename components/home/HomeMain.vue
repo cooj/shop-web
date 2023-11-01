@@ -1,32 +1,34 @@
 <template>
     <div class="container">
         <div ref="goodsBestRef" />
-        <div v-if="goodsList.length" class="goods-best">
-            <div class="goods-best-tle">
-                <div class="lt">
-                    新品优选<sub>明星产品，趋势热销</sub>
-                </div>
-                <NuxtLink :to="linkGoodsList({ query: {}, url: true })">
-                    <el-button link>
-                        更多
-                        <i class="i-ep-arrow-right" />
-                    </el-button>
-                </NuxtLink>
-            </div>
-            <div class="goods-best-list">
-                <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="v1 goods-link"
-                    :to="`/goods/${item.goods_sn}`">
-                    <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" :alt="item.goods_name" />
-                    <h3 class="tle hov-name">
-                        {{ item.goods_name }}
-                    </h3>
-                    <div class="price">
-                        <span>惊爆价</span>
-                        <em>￥{{ item.shop_price }}</em>
+        <client-only>
+            <div v-if="goodsList.length" class="goods-best">
+                <div class="goods-best-tle">
+                    <div class="lt">
+                        新品优选<sub>明星产品，趋势热销</sub>
                     </div>
-                </NuxtLink>
+                    <NuxtLink :to="linkGoodsList({ query: {}, url: true })">
+                        <el-button link>
+                            更多
+                            <i class="i-ep-arrow-right" />
+                        </el-button>
+                    </NuxtLink>
+                </div>
+                <div class="goods-best-list">
+                    <NuxtLink v-for="item in goodsList" :key="item.goods_id" class="v1 goods-link"
+                        :to="`/goods/${item.goods_sn}`">
+                        <CoImage class="h150px w150px" :src="item.goods_img" loading="lazy" :alt="item.goods_name" />
+                        <h3 class="tle hov-name">
+                            {{ item.goods_name }}
+                        </h3>
+                        <div class="price">
+                            <span>惊爆价</span>
+                            <em>￥{{ item.shop_price }}</em>
+                        </div>
+                    </NuxtLink>
+                </div>
             </div>
-        </div>
+        </client-only>
         <div ref="floorRef" class="floor-box">
             <div v-for="(item, index) in floorList" :id="`fl${item.storey_id}`" :key="item.storey_id" class="floor-item">
                 <div class="left" :style="`background-image: url(${item.storey_img || ''});`">
@@ -44,7 +46,7 @@
                     </ul>
                 </div>
                 <div class="right">
-                    <el-tabs v-model="defData.active[item.storey_id]" class="tabs-box"
+                    <el-tabs v-model="floorActive[item.storey_id]" class="tabs-box"
                         :class="item.class_lists.length <= 1 ? 'one-tab' : ''">
                         <el-tab-pane v-for="(sub, i) in item.class_lists" :key="sub.class_id" :label="sub.class_name"
                             :name="`${index}-${i}`" lazy>
@@ -93,7 +95,7 @@ interface TabActiveType {
 }
 
 const defData = reactive({
-    active: {} as TabActiveType, // 楼层对应tab切换选中项
+    // active: {} as TabActiveType, // 楼层对应tab切换选中项
     ready: false, // 楼层是否加载完成
 })
 
@@ -108,8 +110,12 @@ const floorVisible = useElementVisibility(floorRef)
 const { data: floor } = await HomeApi.getFloor()
 const floorList = computed(() => floor.value?.data || [])
 
-floor.value?.data.forEach((item, index) => {
-    defData.active[item.storey_id] = `${index}-0`
+const floorActive = computed(() => {
+    const active: TabActiveType = {}
+    floor.value?.data.forEach((item, index) => {
+        active[item.storey_id] = `${index}-0`
+    })
+    return active
 })
 
 // 新品商品
